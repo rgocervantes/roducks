@@ -18,12 +18,14 @@
  *
  */
 
+use rdks\core\framework\Path;
+
 $config = [
 	'USER' => [
 		'PREFIX' => "user_",
 		'CLIPPING' => "full",	
-		'DIR_UPLOAD' => DIR_DATA_UPLOADS_USERS,
-		'DIR_UPLOADED' => DIR_DATA_UPLOADED_USERS,
+		'DIR_UPLOAD' => Path::getUploadsUsers(),
+		'DIR_UPLOADED' => Path::getUploadedUsers(),
 		'SQUARED_CLIPPINGS' => [150,90,20],
 		'SIZE' => [200,"KB"],
 		'TYPES' => ['image/jpg','image/png','image/jpeg']
