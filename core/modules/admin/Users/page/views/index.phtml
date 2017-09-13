@@ -1,0 +1,54 @@
+<?php
+
+use rdks\core\page\Block;
+use rdks\core\page\Template;
+use rdks\core\framework\URL;
+use rdks\core\framework\Language;
+?> 
+<div class="container-fluid">
+	
+	<div class="box-white">
+
+	   	<?php Template::view("reset-filters"); ?>
+
+		<?php if($isTrash): ?>		
+			<a href="<?php echo URL::getBaseURL(); ?>" class="btn btn-default"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> <?php echo TEXT_GO_TO . " " . $_PAGE_TITLE; ?></a>
+	<br><br>
+	<div class="alert alert-danger" role="alert">
+		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+		<span class="alert-text">
+			<?php if(Language::english()): ?>
+				<?php echo $_PAGE_TITLE; ?> in trash are <b>disabled</b>. That means They can't log in until They had been restored.
+			<?php else: ?>
+				Los <?php echo $_PAGE_TITLE; ?> en la papelera están <b>deshabilidatos</b>. Eso significa que no pueden iniciar sesión hasta que hayan sido restaurados.
+			<?php endif; ?>
+		</span>
+	</div>
+
+	<div class="alert alert-info" role="alert">
+		<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+		<span class="alert-text">
+			<?php if(Language::english()): ?>
+				<?php echo $_PAGE_TITLE; ?> in trash can be <b>restored</b> by clicking the icon
+			<?php else: ?>
+				Los <?php echo $_PAGE_TITLE; ?> en la papelera se pueden restaurar haciendo clic en el icono  
+			<?php endif; ?>
+			<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+		</span>
+	</div>
+		<?php else : ?>
+			<b><?php echo TEXT_TRASH; ?>:</b>
+			<a href="<?php echo $url; ?>?trash=1" class="btn btn-danger"><span id="trash-count"><?php echo $inTrash; ?></span> <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+		<?php endif; ?>
+		<hr />
+	<?php 
+
+		Template::view("search-filters");
+		Template::view("datepicker-range");
+
+		Block::load("latest-users/grid", ['type' => $type, 'url' => $url, 'access' => $access, 'data' => $data]);
+
+	?>
+	</div>
+</div>
+ 

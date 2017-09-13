@@ -1,0 +1,17 @@
+<?php
+use rdks\core\page\Template;
+?>
+<div class="container-fluid">
+	
+		<?php Template::view($_VIEW_TITLE); ?>
+	<div class="left">
+		<?php Template::view('pager'); ?>
+	</div>
+	<div class="right">
+		<?php if(isset($btnCreateUrl)) Template::view("btn-create"); ?>
+	</div>
+	<div class="clear"></div>
+
+	<div><b><?php echo TEXT_PAGE; ?>: </b><span id="pageControl-pager">1 / 1</span></div>
+
+</div>

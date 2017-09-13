@@ -1,0 +1,58 @@
+<?php 
+use rdks\core\framework\Login; 
+use rdks\core\page\Template; 
+?>
+	<div class="row_">
+		<div class="col-md-6_">
+
+			<div class="well">
+				<h3>Account</h3>
+				<?php if(isset($data['account']) || isset($access['all']) || Login::isSuperAdmin()): ?>
+				<ul class="list-group">
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input type="checkbox" rel="rdks-form-check-all" data-input=".checkbox-subscribers" class="checkbox-permissions"> <b><?php echo TEXT_ALL; ?></b> 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['account']['view'])) );?> type="checkbox" name="data[account][view]" value="1" class="checkbox-subscribers checkbox-permissions"> <?php echo TEXT_VIEW; ?> 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['account']['edit'])) );?> type="checkbox" name="data[account][edit]" value="1" class="checkbox-subscribers checkbox-permissions"> <?php echo TEXT_EDIT; ?> 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['account']['picture'])) );?> type="checkbox" name="data[account][picture]" value="1" class="checkbox-subscribers checkbox-permissions"> <?php echo TEXT_PROFILE_PICTURE; ?>
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['account']['password'])) );?> type="checkbox" name="data[account][password]" value="1" class="checkbox-subscribers checkbox-permissions"> <?php echo TEXT_CHANGE_PASSWORD; ?> 
+						    </label>
+						</div>	
+					</li>					
+				</ul>
+				<?php else: ?>
+					<div class="alert alert-info" role="alert">
+						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						<span class="alert-text"><?php echo TEXT_UNAVAILABLE_ROLE; ?></span>
+					</div>
+				<?php endif; ?>	
+			</div><!-- .well -->
+
+		</div><!-- .col-xs-6 -->
+
+	</div><!-- .row -->

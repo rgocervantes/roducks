@@ -1,0 +1,8 @@
+<?php 
+use rdks\core\framework\Role;
+use rdks\core\page\Block;
+use rdks\core\page\Template;
+
+Block::load("menu/access", ['type' => Role::TYPE_USERS, 'items' => Template::menu("sidebar-users"), 'tpl' => "sidebar"]); 
+
+?>

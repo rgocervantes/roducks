@@ -1,0 +1,102 @@
+/**
+*	rdks-modal
+*/
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes rdksmodal {
+    0% {	-webkit-transform: scale(0.8,0.8); opacity: 0; }
+    50% {	-webkit-transform: scale(1.2,1.2); opacity: 1; }
+	100% {	-webkit-transform: scale(1,1); opacity: 1; } 
+}
+
+/* Standard syntax */
+@keyframes rdksmodal {
+    0% {   transform: scale(0.8,0.8); opacity: 0; }
+    50% {  transform: scale(1.2,1.2); opacity: 1; }
+	100% { transform: scale(1,1); opacity: 1; }  
+}
+
+.rdks-modal-effect{ 
+	animation-name: rdksmodal;  
+	animation-duration: .4s;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in-out;
+	animation-direction: alternate;
+
+	-webkit-animation-name: rdksmodal;  
+	-webkit-animation-duration: .4s;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-timing-function: ease-in-out;
+	-webkit-animation-direction: alternate;
+
+}
+
+
+/* ------ Modal ------ */
+.rdks-modal-layer{ display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url("img/bg-white.png"); z-index: 9999; }
+.rdks-modal-wrapper{ display: block; width: 100%; position: absolute; }
+.rdks-modal-box{ display:none; margin: 0 auto; box-shadow: 0 0 8px #888; }
+.rdks-modal-border{ border:solid 1px #333; }
+
+/* -- Loader -- */
+.rdks-modal-loader{ display:none; width: 45px; height: 45px; margin: 0 auto; }
+.rdks-modal-loader-wrapper{ top: 50%; }
+.rdks-modal-loader-border{}
+.rdks-modal-loader-icon{ width: 45px; height: 45px; background: url("img/ajax-flash-loading.gif") center center no-repeat; }
+
+/* -- Header -- */
+.rdks-modal-header{ background: #333; color: #fff; padding: 10px; /*border-top-left-radius: 8px; border-top-right-radius: 8px;*/ }
+.rdks-modal-header a.cross{ color: #f1f1f1; }
+
+/* -- Content -- */
+.rdks-modal-content-inner{ overflow-x: hidden; overflow-y: scroll; background: #fff; }
+.rdks-modal-content{ background: #fff; }
+.rdks-modal-content h1{ margin: 0; }
+.rdks-modal-padding{ padding: 10px; }
+
+/* -- Footer -- */
+.rdks-modal-footer{ background: #eee; }
+.rdks-modal-footer-pd{ padding: 10px; }
+.rdks-modal-footer-buttons .btn-small{ float: right; }
+.rdks-modal-footer-buttons button.btn-large{ float: left; margin: 0; padding: 15px; border:none; border-radius: 0; }
+.rdks-modal-footer-buttons button.btn-default.btn-large{ background: #eee; }
+
+
+/* ------ Fullscreen ------ */
+.rdks-modal-fullscreen,
+.rdks-modal-noscroll{ overflow: hidden; }
+
+.rdks-modal-fullscreen .rdks-modal-layer,
+.rdks-modal-fullscreen .rdks-modal-border,
+.rdks-modal-fullscreen .rdks-modal-header,
+.rdks-modal-fullscreen .rdks-modal-content-inner,
+.rdks-modal-fullscreen .rdks-modal-content,
+.rdks-modal-fullscreen .rdks-modal-footer{ background: none; }
+
+.rdks-modal-fullscreen .rdks-modal-box{ background: #fff; border-radius: 0; }
+.rdks-modal-fullscreen .rdks-modal-border{ padding: 0; border-radius: 0; border: none; }
+.rdks-modal-fullscreen .rdks-modal-padding{ padding: 0; }
+
+/* -- Header -- */
+.rdks-modal-fullscreen .rdks-modal-header{ color: #444; font-size: 18px; }
+.rdks-modal-fullscreen .rdks-modal-header a.cross{ color: #444; }
+/* -- Footer -- */
+.rdks-modal-fullscreen .rdks-modal-footer{ background: #ccc; }
+
+/* -- Fullscreen Pop -- */
+.rdks-modal-fullscreen #rdks-pop-layer .rdks-modal-content{ background: #fff; }
+.rdks-modal-fullscreen #rdks-pop-layer .rdks-modal-padding{ padding: 10px; }
+
+
+/* ------ Theme: dark ------ */
+.rdks-modal-layer.rdks-theme-dark{ background: url("img/bg-black.png"); }
+.rdks-modal-layer.rdks-theme-dark .rdks-modal-header{ background: #23b2b0; }
+.rdks-modal-layer.rdks-theme-dark .rdks-modal-box{ box-shadow: none; }
+/* -- Theme: dark - Fullscreen -- */
+.rdks-modal-fullscreen .rdks-modal-layer.rdks-theme-dark .rdks-modal-box{ background: url("img/bg-black.png"); border-radius: 0; }
+.rdks-modal-fullscreen .rdks-modal-layer.rdks-theme-dark .rdks-modal-header{ background: none; color: #fff; }
+.rdks-modal-fullscreen .rdks-modal-layer.rdks-theme-dark .rdks-modal-header a.cross{ color: #fff; }
+/* -- Theme: dark - Fullscreen Pop -- */
+.rdks-modal-fullscreen #rdks-pop-layer.rdks-modal-layer.rdks-theme-dark .rdks-modal-header{ background: #23b2b0; }
+
+

@@ -1,0 +1,19 @@
+<form id="form-autocomplete" method="post" name="form-autocomplete" rel="rdks-form" data-focus="true">
+
+<div class="form-group has-feedback">
+  <label class="control-label" for="destination"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <?php echo TEXT_SEARCH; ?></label>
+  <input type="text" class="form-control" 
+  name="autocomplete" 
+  autocomplete="false" 
+  rel="rdks-form-autocomplete" 
+  data-url="<?php echo $urlAutocomplete; ?>" 
+  data-text-results="<?php echo TEXT_NO_RESULTS; ?>..." 
+  data-type="words" 
+  data-alias="q" 
+  data-params='<?php echo $paramsAutocomplete; ?>' 
+  data-callback="<?php echo $cbAutocomplete; ?>"
+  />
+  <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+</div>
+
+</form>

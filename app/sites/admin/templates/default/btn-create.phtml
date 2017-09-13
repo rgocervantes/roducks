@@ -1,0 +1,8 @@
+<?php
+use rdks\core\framework\Login;
+?>
+<?php if(isset($access['create']) || Login::isSuperAdmin()): ?>
+  <a href="<?php echo $btnCreateUrl; ?>" class="btn btn-success btn-lg">
+    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> <?php echo TEXT_CREATE; ?>
+  </a>
+<?php endif; ?>

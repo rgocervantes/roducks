@@ -1,0 +1,106 @@
+<?php use rdks\core\framework\Form; ?>
+<div class="container">
+	
+	<h1><?php echo TEXT_CREATE_ACCOUNT; ?></h1>
+	<div class="row">
+		<div class="col-xs-6">
+
+			<form id="foovar" name="foovar" method="post" 
+			rel="rdks-form" 
+			data-notification="true" 
+			data-callback-success="cbFormRedirectSuccess" 
+			data-callback-loading="cbFormLoading" 
+			data-callback-error="cbFormError" 
+		    data-alert-warning="<?php echo TEXT_FORM_WARNING; ?>" 
+		    data-alert-error="<?php echo TEXT_FORM_ERROR; ?>" 
+		    data-alert-failed="<?php echo TEXT_FORM_FAILED; ?>" 
+			data-reset="true" 
+			data-ajax="true" 
+			data-json="true" 
+			data-focus="true" 
+			action="/account/insert">
+
+			<input type="hidden" name="form-key" value="<?php echo Form::getKey(); ?>" />
+
+			<div class="form-group has-feedback">
+			  <label class="control-label" for="gender"><?php echo TEXT_GENDER; ?></label>
+			  <select name="gender" class="form-control">
+			  		<option value="male"><?php echo TEXT_MALE; ?></option>
+			  		<option value="female"><?php echo TEXT_FEMALE; ?></option>  		
+			  </select>
+			</div>
+
+			<div class="form-group has-feedback">
+				<label class="control-label" for="first_name"><span class="rdks-ui-color-red">*</span> <?php echo TEXT_FIRST_NAME; ?></label>
+				<input type="text" name="first_name" class="form-control" 
+				data-required="true" 
+				data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+				data-type="words" 
+				value=""
+				/>
+				<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+				<span class="help-block"></span>
+			</div>
+
+			<div class="form-group has-feedback">
+				<label class="control-label" for="last_name"><span class="rdks-ui-color-red">*</span> <?php echo TEXT_LAST_NAME; ?></label>
+				<input type="text" name="last_name" class="form-control" 
+				data-required="true" 
+				data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+				data-type="words" 
+				value=""
+				/>
+				<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+				<span class="help-block"></span>
+			</div>
+
+			<div class="form-group has-feedback">
+			  <label class="control-label" for="email"><span class="rdks-ui-color-red">*</span> Email</label>
+				<input type="text" class="form-control" name="email"
+				rel="rdks-form-input-post" 
+				data-url="/account/email" 
+				data-required="true" 
+				data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+				data-type="email" 
+				/>
+			  <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+			  <span class="help-block"></span>
+			</div>		
+
+			<div class="form-group has-feedback">
+				<label class="control-label" for="password"><span class="rdks-ui-color-red">*</span> <?php echo TEXT_PASSWORD; ?></label>
+				<input type="password" name="password" class="form-control" 
+				data-required="true" 
+				data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+				data-minlength="7|<?php echo TEXT_MIN_LENGTH; ?>" 
+				data-type="password" 
+				data-strength="true"
+				/>
+
+				<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+				<span class="help-block"></span>
+			</div>
+
+			<div class="form-group has-feedback">
+				<label class="control-label" for="confirm_password"><span class="rdks-ui-color-red">*</span> <?php echo TEXT_CONFIRM_PASSWORD; ?></label>
+				<input type="password" name="confirm_password" class="form-control" 
+				data-match="input[name='password']|<?php echo TEXT_PASSWORD_NO_MATCH; ?>" 
+				data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+				data-required="true" 
+				data-type="password"
+				/>
+				<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+				<span class="help-block"></span>
+			</div>
+
+			<button type="submit" class="btn btn-lg btn-info navbar-btn">
+				<span class="glyphicon glyphicon-send" aria-hidden="true"></span> <?php echo TEXT_SUBMIT; ?>
+			</button>
+
+			</form>
+
+		</div>
+	</div>
+
+</div>
+<br><br><br><br><br><br>

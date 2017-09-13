@@ -1,0 +1,13 @@
+<?php
+use rdks\core\page\Block;
+use rdks\core\framework\Login;
+
+?>
+<div class="container">
+
+<h1><?php echo Login::getSubscriberFullName(); ?>!</h1>
+<p><?php echo Login::getSubscriberEmail(); ?></p>
+
+<?php Block::load("user/picture/{$picture}/150/original"); ?>
+
+</div>

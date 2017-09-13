@@ -1,0 +1,11 @@
+.footer{ 
+  padding: 20px;
+  display: none;
+  width: 100%;
+  background: #f1f1f1;
+  margin-top: 20px;
+ }
+
+ul.dropdown-menu li a.active{ background: #d5f5f9; }
+
+.bg-home{ background: #e5ece5; display: block; height: 372px; }
