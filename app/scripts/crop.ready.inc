@@ -13,7 +13,7 @@
 			Math.floor($("#btn-upload-box").width()),
 			$("#btn-upload-box").height()
 		], // size
-		url: '/_service/file-ajax/module/global/upload-file',
+		url: '/_service/file-ajax/module/global/user/upload-file',
 		onUpload: function(){
 			$rdks.modal.loader(true);
 		},

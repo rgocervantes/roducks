@@ -24,9 +24,10 @@ use rdks\core\page\Block;
 
 class Uploader extends Block{
 
-	public function output($module = "", $picture = ""){
+	public function output($module = "", $config = "", $picture = ""){
 
 		$this->view->data("module", $module);
+		$this->view->data("config", $config);
 		$this->view->data("picture", $picture);
 		$this->view->load("form");
 

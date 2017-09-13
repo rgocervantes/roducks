@@ -8,6 +8,6 @@ use rdks\core\page\Block;
 	<?php Template::view("btn-back"); ?>
 	<hr />
 
-	<?php Block::load("uploader", ['module' => "global", 'picture' => $picture]); ?>
+	<?php Block::load("uploader", ['module' => "global", 'config' => "user", 'picture' => $picture]); ?>
 	<div id="cropped"><?php Block::load("user/picture/{$picture}/150/original"); ?></div>
 </div>

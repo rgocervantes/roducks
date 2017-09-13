@@ -145,7 +145,7 @@ class FileAjax extends Service{
 		parent::output();
 	}
 
-	public function module($class = "", $action = ""){
+	public function module($class = "", $index = "", $action = ""){
 
 		$this->params([
 			'class' => [$class, 'PARAM', Dispatch::PARAM_STRING],
@@ -155,23 +155,50 @@ class FileAjax extends Service{
 		$method = Helper::getCamelName($action, false);
 		$module = Helper::getCamelName($class);
 		$data = ($class == 'global') ? $this->getGlobalConfig() : $this->getModuleConfig($module);
-		$config = $data['USER_CONFING'];
+		$config = [];
+		$key = strtoupper($index);
 
+		if(isset($data[$key])){
+			$config = $data[$key];
+		} else {
+			$method = "invalid";
+		}
+		
 		switch ($method) {
 			case 'cropSquared':
-				$this->_crop($config['CLIPPING'], $config['DIR_UPLOAD'], $config['DIR_UPLOADED'], $config['SQUARED_CLIPPINGS']);	
+				if(isset($config['CLIPPING']) && isset($config['DIR_UPLOAD']) && isset($config['DIR_UPLOADED']) && isset($config['SQUARED_CLIPPINGS'])){
+					$this->_crop($config['CLIPPING'], $config['DIR_UPLOAD'], $config['DIR_UPLOADED'], $config['SQUARED_CLIPPINGS']);
+				} else {
+					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
+				}
 				break;
 			case 'cropLandscape':
-				$this->_crop($config['CLIPPING'], $config['DIR_UPLOAD'], $config['DIR_UPLOADED'], $config['LANDSCAPE_CLIPPINGS']);
+				if(isset($config['CLIPPING']) && isset($config['DIR_UPLOAD']) && isset($config['DIR_UPLOADED']) && isset($config['LANDSCAPE_CLIPPINGS'])){
+					$this->_crop($config['CLIPPING'], $config['DIR_UPLOAD'], $config['DIR_UPLOADED'], $config['LANDSCAPE_CLIPPINGS']);
+				} else {
+					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
+				}
 				break;
 			case 'uploadFile':
-				$this->_upload($config['PREFIX'], $config['DIR_UPLOAD'], $config['DIR_UPLOADED'], $config['SIZE'], $config['TYPES']);
+				if(isset($config['PREFIX']) && isset($config['DIR_UPLOAD']) && isset($config['DIR_UPLOADED']) && isset($config['SIZE']) && isset($config['TYPES'])){
+					$this->_upload($config['PREFIX'], $config['DIR_UPLOAD'], $config['DIR_UPLOADED'], $config['SIZE'], $config['TYPES']);
+				} else {
+					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
+				}
 				break;
 			case 'deleteFile':
-				$this->_deleteFile($config['PATH']);
+				if(isset($config['PATH'])){
+					$this->_deleteFile($config['PATH']);
+				} else {
+					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
+				}
 				break;
 			case 'deleteCrops':
-				$this->_deleteCrops($config['DIR_UPLOAD'], $config['CLIPPINGS']);
+				if(isset($config['DIR_UPLOAD']) && isset($config['CLIPPINGS'])){
+					$this->_deleteCrops($config['DIR_UPLOAD'], $config['CLIPPINGS']);
+				} else {
+					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
+				}
 				break;
 			default:
 				$this->setError(0, TEXT_SERVICE_UNAVAILABLE);

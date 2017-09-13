@@ -19,7 +19,7 @@
  */
 
 $config = [
-	'USER_CONFING' => [
+	'USER' => [
 		'PREFIX' => "user_",
 		'CLIPPING' => "full",	
 		'DIR_UPLOAD' => DIR_DATA_UPLOADS_USERS,
