@@ -30,7 +30,8 @@
 2.1 - Configure those virtual hosts in the vhosts file of your local server. (This varies depending what local server you installed).
 2.2 - Restart Apache service.
 
-3.- Give some write permissions.
+3.- Make folder data $ mkdir app/data/storage/json/roles
+3.1 - Give some write permissions.
 $ chmod -R 777 app/data
 
 4.- Run the next command.
@@ -66,10 +67,11 @@ Congratulations! You just installed “Roducks” successfully.
 
 1.- Upload files to your Server in Production environment.
 
-2.- Give some write permissions.
+2.- Make folder data $ mkdir app/data/storage/json/roles
+2.1 - Give some write permissions.
 $ chmod -R 777 app/data
 
-3.- Run the next commands.
+3.- Run the next command.
 cp core/data/config/* app/data/storage/json/roles/*
 
 4.- Create a local MySQL database called “roducks”.
