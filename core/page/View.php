@@ -281,7 +281,12 @@ final class View{
 		if(file_exists($dir_layouts)){
 			include $dir_layouts;
 		} else if(file_exists($dir_view) && !empty($this->_view)) {
-			include $dir_view;
+			
+			if(Helper::isPage($dir_view)){
+				Layout::view(null);
+			} else {
+				include $dir_view;
+			}
 		}
 
 		// Load body *ONLY* for 404 templates

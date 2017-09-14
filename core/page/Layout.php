@@ -31,7 +31,8 @@ class Layout {
 	static function view($name){
 		
 		$include = false;
-		$dir_view = self::$path . $name . FILE_TPL;
+		$view = (!is_null($name)) ? $name . FILE_TPL : "";
+		$dir_view = self::$path . $view;
 		$dir_view_core = Core::getCoreModulesPathFrom($dir_view);
 
 		if(file_exists($dir_view)){
