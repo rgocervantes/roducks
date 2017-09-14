@@ -93,9 +93,6 @@ class Core{
 	/**
 	*
 	*/
-	static function getEventsPath($event = ""){
-		return Core::getGlobalPath() . DIR_EVENTS . $event;
-	}
 
 	static function getLanguagesPath($lang){
 		return DIR_APP_LANGUAGES . $lang . FILE_INC;
@@ -123,10 +120,6 @@ class Core{
 		return ['path' => $path, 'service' => $service];
 
 	}
-
-	static function getEmailsPath($tpl){
-		return self::getPath(DIR_EMAILS, $tpl . FILE_TPL, false);		
-	}	
 
 	static function getCoreModulesPath(){
 		return DIR_CORE . DIR_MODULES . RDKS_SITE . self::DS;
@@ -226,6 +219,10 @@ class Core{
 
 	}	
 
+	static function getAllSiteConfigPath($file){
+		return self::getPath(DIR_CONFIG, $file . FILE_INC, false);
+	}
+
 	static function getTemplatesPath($tpl){
 		return self::getPath(DIR_TEMPLATES, $tpl);
 	}	
@@ -237,6 +234,14 @@ class Core{
 	static function getMenuPath($tpl){
 		return self::getPath(DIR_MENUS, $tpl . FILE_INC, false);
 	}			
+
+	static function getEmailsPath($tpl){
+		return self::getPath(DIR_EMAILS, $tpl . FILE_TPL, false);		
+	}
+
+	static function getEventsPath($event = ""){
+		return self::getPath(DIR_EVENTS, $event, false);
+	}
 
 	/**
 	*
@@ -335,7 +340,7 @@ class Core{
 	}	
 
 	static function getEventsFile(){
-		return self::getFileVar(self::getGlobalConfigPath("events"), "events", false);
+		return self::getFileVar(self::getAllSiteConfigPath("events"), "events", false);
 	}
 
 	/**
