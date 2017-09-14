@@ -67,8 +67,8 @@ Congratulations! You just installed `Roducks` successfully.
 
 # Deployment steps:
 
-1. Upload files to your Server in Production environment.
-2. Make folder.
+1. Upload files to your Server in QA `or` Production environment.
+2. Run command below to make `data` folder.
 ```
 mkdir app/data/storage/json/roles
 ```
