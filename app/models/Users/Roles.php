@@ -65,10 +65,10 @@ class Roles extends Model {
 	public function getAll($type, $page, $limit){
 
 		// Get current admin session
-		$role_id = Login::getAdminData('id_role');
+		$id_role = Login::getAdminData('id_role');
 
 		$condition = [
-				'id_role:>' => $role_id,
+				'id_role:>' => $id_role,
 				'type' => $type
 		];
 
@@ -79,12 +79,12 @@ class Roles extends Model {
 	public function getList($type){
 
 		// Get current admin session
-		$role_id = Login::getAdminData('id_role');
+		$id_role = Login::getAdminData('id_role');
 
 		// Role for super admin is protected.
-		$op = ($role_id == 1) ? '>' : '>=';
+		$op = ($id_role == 1) ? '>' : '>=';
 
-		return $this->filter(['id_role:'.$op => $role_id, 'active' => 1, 'type' => $type]);
+		return $this->filter(['id_role:'.$op => $id_role, 'active' => 1, 'type' => $type]);
 
 	}
 

@@ -47,7 +47,7 @@ class Layout {
 			extract(Template::$data);
 			include $file;
 		} else {
-			Error::warning(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $dir_view);
+			Error::warning(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $file);
 		}
 	}
 
