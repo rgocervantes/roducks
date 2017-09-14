@@ -13,7 +13,7 @@
 # Installation steps:
 
 1. Open a terminal.
-1.1 Clone project from Github `https://github.com/rgocervantes/roducks.git` into your “workspace” `The “workspace” directory varies depending what local server you had installed`.
+1.1. Clone project from Github `https://github.com/rgocervantes/roducks.git` into your “workspace” `The “workspace” directory varies depending what local server you had installed`.
 1.2 Move to the project’s directory.
 
 2. Add 2 virtual hosts of your “Domain Name”, One for Front-End and other for Back-End `Admin` in your hosts file `This varies depending of your OS`, for example:
