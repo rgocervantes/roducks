@@ -56,7 +56,7 @@ cp app/config/database.local.inc.sample app/config/database.local.inc
 ```
 17. Edit file `app/config/database.local.inc` and set data of your local Database’s User and Password.
 
-18. Run the command below to create the Super Admin User.
+18. Run the command below to create the **Super Admin User**.
 ```
 time php core/scripts/cli.php script=users env=dev email=<REPLACE_BY_YOUR_EMAIL> password=<REPLACE_BY_YOUR_PASSWORD>
 ```
@@ -85,7 +85,7 @@ cp core/data/config/* app/data/storage/json/roles/*
 7. Import sql script located in: `core/data/install/roducks.sql` into your data base.
 8. Edit file `app/config/config.inc` and change value of `domain_name` by your own “Domain Name” for Production environment.
 9. Edit file `app/config/database.inc` and set data of your Database’s User and Password.
-10. Run the command below to create the Super Admin User.
+10. Run the command below to create the **Super Admin User**.
 ```
 time php core/scripts/cli.php script=users env=pro email=<REPLACE_BY_YOUR_EMAIL> password=<REPLACE_BY_YOUR_PASSWORD>
 ```
