@@ -102,7 +102,7 @@ class Login {
 			return Session::get(self::SESSION_ADMIN);
 		}
 
-		return array();
+		return [];
 	}	
 
 	static function getAdminData($index){
@@ -205,7 +205,7 @@ class Login {
 			return Session::get(self::SESSION_FRONT);
 		}
 
-		return array();
+		return [];
 	}		
 
 	static function getSubscriberData($index){

@@ -82,27 +82,13 @@ class GrantAccess{
 		return $this->_load($name);
 	}
 
-	public function getAdminConfig(){
-		$conf = Login::getAdminData("config");
-		return $this->getFileConfig($conf);
-	}
-
-	public function getSubscriberConfig(){
-		$conf = Login::getSubscriberData("config");
-		return $this->getFileConfig($conf);
-	}	
-
 	public function getConfig(){
+		
+		$name = Login::getData($this->_type, "config");
+		$conf = $this->getFileConfig($name);
 
-		$conf = [];
-
-		switch ($this->_type) {
-			case Role::TYPE_USERS:
-				$conf = $this->getAdminConfig();
-				break;
-			case Role::TYPE_SUBSCRIBERS:
-				$conf = $this->getSubscriberConfig();
-				break;
+		if(empty($conf)){
+			return ['data' => []];
 		}
 
 		return $conf;

@@ -35,7 +35,7 @@ chmod -R 777 app/data
 ```
 9. Run the next command.
 ```
-cp core/data/config/* app/data/storage/json/roles/*
+cp core/data/config/* app/data/storage/json/roles/
 ```
 10. Run command below to create the local config file.
 ```
@@ -78,7 +78,7 @@ chmod -R 777 app/data
 ```
 4. Run the next command.
 ```
-cp core/data/config/* app/data/storage/json/roles/*
+cp core/data/config/* app/data/storage/json/roles/
 ```
 5. Create a local MySQL database called `roducks`.
 6. Create a User and Password for the database you just created and the previous step.
