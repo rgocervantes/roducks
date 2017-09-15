@@ -48,6 +48,10 @@ class Login extends Page{
 				$id_user = LoginAuth::getSubscriberId();
 				LoginAuth::logoutSubscriber();
 				break;
+			case Role::TYPE_CLIENTS:
+				$id_user = LoginAuth::getClientId();
+				LoginAuth::logoutClient();
+				break;				
 		}
 
 		Event::dispatch('onEventLogout', [$id_user]);

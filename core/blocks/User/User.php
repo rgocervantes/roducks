@@ -135,6 +135,9 @@ class User extends Block{
 			case Role::TYPE_SUBSCRIBERS:
 				$img = Login::getSubscriberPicture();
 				break;
+			case Role::TYPE_CLIENTS:
+				$img = Login::getClientPicture();
+				break;				
 		}
 
 		return $this->picture($img, $resize);

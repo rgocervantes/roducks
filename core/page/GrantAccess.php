@@ -31,6 +31,7 @@ class GrantAccess{
 	private $_page;
 	private $_type;
 	private $_view;
+	private $_data = [];
 	private $_json = false;
 
 	private function _pageNotFound(){
@@ -78,11 +79,22 @@ class GrantAccess{
 		$this->_json = true;
 	}
 
+	/**
+	 *	$this->grantAccess->setData(Login::getData(HelperApp::SESSION_SUPPLIER,"config"));
+	 */
+	public function setData($data){
+		$this->_data = $data;
+	}
+
 	public function getFileConfig($name){
 		return $this->_load($name);
 	}
 
 	public function getConfig(){
+
+		if(!empty($this->_data)){
+			return $this->_data;
+		}
 		
 		$name = Login::getData($this->_type, "config");
 		$conf = $this->getFileConfig($name);

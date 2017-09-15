@@ -27,11 +27,13 @@ class Login {
 
 	const SESSION_ADMIN = "RDKS_ADMIN";
 	const SESSION_FRONT = "RDKS_FRONT";
+	const SESSION_CLIENT = "RDKS_CLIENT";
 	const SESSION_SECURITY = "RDKS_SECURITY";
 	const ENCRYPT = "sha512";
 
 	private $_type;
 	private $_url;
+	private $_session = false;
 
 /*
 | -----------------------------
@@ -57,24 +59,49 @@ class Login {
 		return ($db_password == hash(self::ENCRYPT, $input_password . $db_salt));
 	}
 
-	static function getData($session, $index){
-		switch ($session) {
+	static function security($return = true){
+		if($return){
+			return Session::exists(self::SESSION_SECURITY);
+		} else {
+			Session::reset(self::SESSION_SECURITY);
+		}
+	}
+
+	/**
+	*	@return array
+	*/
+	static function getSession($name){
+
+		if(Session::exists($name)){
+			return Session::get($name);
+		}
+
+		return [];
+	}	
+
+	static function getData($type, $index){
+
+		$data = [];
+
+		switch ($type) {
 			case Role::TYPE_USERS:
 				$data = self::getAdmin();
 				break;
 			case Role::TYPE_SUBSCRIBERS:
 				$data = self::getSubscriber();
 				break;
+			case Role::TYPE_CLIENTS:
+				$data = self::getClient();
+				break;				
 			default:
-				return "";
-				break;
+				$data = self::getSession($type, $index);
+				break;	
 		}
 
 		if(is_array($data) && count($data) > 0){
 			if(isset($data[$index])){
 				return $data[$index];
 			}
-			
 		}
 
 		return "";
@@ -266,13 +293,88 @@ class Login {
 		Session::reset(self::SESSION_FRONT);
 	}
 
-	static function security($option = true){
-		if($option){
-			return Session::exists(self::SESSION_SECURITY);
-		} else {
-			Session::reset(self::SESSION_SECURITY);
-		}
+	/*
+	| --------------------------------------------------------
+	|		Client
+	| --------------------------------------------------------
+	*/
+
+	/**
+	*	@return bool
+	*/
+	static function isClientLoggedIn(){
+		return Session::exists(self::SESSION_CLIENT);
 	}
+
+	/**
+	*	@return array
+	*/
+	static function getClient(){
+
+		if(self::isClientLoggedIn()){
+			return Session::get(self::SESSION_CLIENT);
+		}
+
+		return [];
+	}
+
+	static function getClientData($index){
+		return self::getData(Role::TYPE_CLIENTS,$index);
+	}
+
+	static function getClientId(){
+		return self::getClientData('id_user');
+	}	
+
+	static function getClientName(){
+		return self::getClientData('first_name');
+	} 
+
+	static function getClientLastName(){
+		return self::getClientData('last_name');
+	} 	
+
+	static function getClientFullName(){
+		return self::getClientData('first_name') . " " . self::getClientData('last_name');
+	} 
+
+	static function getClientPicture(){
+		return self::getClientData('picture');
+	} 
+
+	static function getClientEmail(){
+		return self::getClientData('email');
+	} 	
+
+	/**
+	*	@param $obj array
+	*/
+	static function setClient($obj){
+
+		$data = self::getClient();
+
+		// if there's data in session, we merge it
+		if(count($data) > 0){
+			$obj = array_merge($data, $obj);
+		}
+		
+		Session::set(self::SESSION_CLIENT, $obj);
+	}	
+
+	/**
+	*	@param $id integer USER ID
+	*	@param $obj array Session data
+	*/	
+	static function updateClient($id, $obj){
+		if($id == self::getClientId()){
+			self::setClient($obj);
+		}
+	}	
+
+	static function logoutClient(){
+		Session::reset(self::SESSION_SECURITY);
+		Session::reset(self::SESSION_CLIENT);
+	}	
 
 /*
 |-----------------------------
@@ -281,14 +383,22 @@ class Login {
 |*/
 
 	private function _getSession(){
+		
+		$session = false;
+
 		switch ($this->_type) {
 			case Role::TYPE_USERS:
-				$session = self::isAdminLoggedIn();
+				$session = $this->isAdminLoggedIn();
 				break;
-
 			case Role::TYPE_SUBSCRIBERS:
-				$session = self::isSubscriberLoggedIn();
+				$session = $this->isSubscriberLoggedIn();
 				break;
+			case Role::TYPE_CLIENTS:
+				$session = $this->isClientLoggedIn();
+				break;				
+			default:
+				$session = $this->_session;
+				break;	
 		}
 
 		return $session;
@@ -299,10 +409,17 @@ class Login {
 |	PUBLIC
 |-----------------------------
 |*/
-
-	public function __construct($type, $url){
+	/**
+	 *	@example 
+	 *	@var $session = HelperApp::SESSION_SUPPLIER;
+	 */
+	public function __construct($type, $url, $session = ""){
 		$this->_type = $type;
 		$this->_url = $url;
+
+		if(!empty($session)){
+			$this->_session = Session::exists($session);
+		}
 	}
 
 	public function required(){
@@ -322,18 +439,6 @@ class Login {
 
 		if($session){
 			Http::redirect($url);
-		}
-	}
-
-	/**
-	*
-	*/
-	public function access(){
-
-		$session = $this->_getSession();
-
-		if(!$session){
-			Http::setHeaderInvalidRequest();
 		}
 	}
 
