@@ -118,6 +118,7 @@ class Dispatch{
 		/* 		LOG OUT
 		/* ------------------------------------*/
 		$secure = true;
+
 		$siteConfig = Core::getSiteConfigFile("config", false);
 
 		if(isset($siteConfig['SESSION_NAME'])){
@@ -145,11 +146,11 @@ class Dispatch{
 				if( $row['active'] == 0 || $row['loggedin'] == 0 ){
 					
 					if($location == $ip && Login::security(true) && $secure === TRUE){
-						$session_type = 0;
 						$user->update(['id_user' => $id_user],['loggedin' => 1]);
+					} else {
+						Login::logout($sessionName);
 					}
 
-					Login::logout($sessionName);
 				}
 			}
 		}
