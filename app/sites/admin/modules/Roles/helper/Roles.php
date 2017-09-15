@@ -34,4 +34,10 @@ class Roles {
 		return array_keys(self::$list);
 	}
 
+	static function getIcon($type){
+		$roles = Role::getList(self::$list);
+
+		return $roles[$type]['icon'];
+	}
+
 }

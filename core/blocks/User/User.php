@@ -24,7 +24,6 @@ use rdks\core\page\Block;
 use rdks\core\framework\Dispatch;
 use rdks\core\framework\Helper;
 use rdks\core\framework\Login;
-use rdks\core\framework\Role;
 use rdks\core\framework\Path;
 use rdks\core\libs\Utils\Date;
 use rdks\app\sites\_global\data\LogData;
@@ -119,26 +118,13 @@ class User extends Block{
 
 	}
 
-	public function output($type, $resize = 150){
+	public function output($session, $resize = 150){
 
 		$this->params([
-			'type' => [$type, 'PARAM', Dispatch::PARAM_INTEGER, Dispatch::values(Role::getIds())],
 			'resize' => [$resize, 'PARAM', Dispatch::PARAM_INTEGER]
 		]);		
 
-		$img = "";
-
-		switch ($type) {
-			case Role::TYPE_USERS:
-				$img = Login::getAdminPicture();
-				break;
-			case Role::TYPE_SUBSCRIBERS:
-				$img = Login::getSubscriberPicture();
-				break;
-			case Role::TYPE_CLIENTS:
-				$img = Login::getClientPicture();
-				break;				
-		}
+		$img = Login::getData($session, "picture");
 
 		return $this->picture($img, $resize);
 

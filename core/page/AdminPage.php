@@ -21,7 +21,6 @@
 namespace rdks\core\page;
 
 use rdks\core\framework\Login;
-use rdks\core\framework\Role;
 use rdks\core\framework\Path;
 
 class AdminPage extends Page {
@@ -29,7 +28,7 @@ class AdminPage extends Page {
 	public function __construct(array $settings, View $view){
 		parent::__construct($settings, $view);	
 
-		$login = new Login(Role::TYPE_USERS, $this->loginUrl);
+		$login = new Login(Login::SESSION_ADMIN, $this->loginUrl);
 		$login->required(); // *Important*
 	}
 

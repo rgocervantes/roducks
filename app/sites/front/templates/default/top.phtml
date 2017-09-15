@@ -42,7 +42,7 @@ use rdks\core\page\Template;
 			
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 			<?php if(Login::isSubscriberLoggedIn()): ?>	
-				<?php Block::load("user", ['type' => Role::TYPE_SUBSCRIBERS, 'size' => 20]); ?> <?php echo Login::getSubscriberName(); ?> <span class="caret"></span>
+				<?php Block::load("user", ['session' => Login::SESSION_FRONT, 'size' => 20]); ?> <?php echo Login::getSubscriberName(); ?> <span class="caret"></span>
 			</a>
 				<?php Block::load("menu/access", ['type' => Role::TYPE_SUBSCRIBERS, 'items' => Template::menu("top-account"), 'tpl' => "top", 'permission' => "account"]); ?>
 			<?php else: ?>

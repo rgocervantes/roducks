@@ -34,6 +34,7 @@ use rdks\app\models\Users\Users as UsersTable;
 use rdks\app\models\Users\Roles as RolesTable;
 use rdks\app\models\Users\UsersRoles;
 use rdks\app\sites\_global\data\UserData;
+use rdks\app\sites\admin\modules\Roles\helper\Roles as RolesHelper;
 
 class Users extends AdminPage{
 
@@ -171,7 +172,7 @@ class Users extends AdminPage{
 		$this->view->data("pageRedirect", URL::build("", ['page' => ""]));
 		$this->view->data("access", $access);
 		$this->view->data("type", $this->_type);
-		$this->view->data("icon", Role::getIcon($this->_type));
+		$this->view->data("icon", RolesHelper::getIcon($this->_type));
 		$this->view->data("url", $this->_url);
 		$this->view->data("trash", $this->trash);
 		$this->view->data("inTrash", $inTrash);

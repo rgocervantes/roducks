@@ -20,13 +20,12 @@
 
 namespace rdks\app\sites\front\modules\Login\page;
 
-use rdks\core\framework\Role;
 use rdks\core\framework\Login as LoginAuth;
 use rdks\core\modules\_global\Login\page\Login as LoginPage;
 
 class Login extends LoginPage{
 
-	protected $_type = Role::TYPE_SUBSCRIBERS;
+	protected $_session = LoginAuth::SESSION_FRONT;
 
 	public function login(){
 

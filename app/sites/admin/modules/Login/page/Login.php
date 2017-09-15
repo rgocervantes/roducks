@@ -20,12 +20,12 @@
 
 namespace rdks\app\sites\admin\modules\Login\page;
 
-use rdks\core\framework\Role;
+use rdks\core\framework\Login as LoginAuth;
 use rdks\core\modules\_global\Login\page\Login as LoginPage;
 
 class Login extends LoginPage{
 
-	protected $_type = Role::TYPE_USERS;
+	protected $_session = LoginAuth::SESSION_ADMIN;
 
 	public function login(){
 

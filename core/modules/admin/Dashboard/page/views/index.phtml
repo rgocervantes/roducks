@@ -6,6 +6,7 @@ use rdks\core\modules\admin\Dashboard\page\Dashboard;
 use rdks\app\sites\admin\modules\Users\helper\Users as UsersHelper;
 use rdks\app\sites\admin\modules\Subscribers\helper\Subscribers as SubscribersHelper;
 use rdks\app\sites\admin\modules\Clients\helper\Clients as ClientsHelper;
+use rdks\app\sites\admin\modules\Roles\helper\Roles as RolesHelper;
 ?>
 <div class="container-fluid">
 
@@ -23,7 +24,7 @@ use rdks\app\sites\admin\modules\Clients\helper\Clients as ClientsHelper;
 
 		<?php if((isset($access['users']) || Login::isSuperAdmin()) && Login::getAdminData('id_role') != 6): ?>
 
-		<div class="left"><h2 style="margin:0;"><span class="glyphicon glyphicon-<?php echo Role::getIcon(Role::TYPE_USERS); ?>" aria-hidden="true"></span> <?php echo TEXT_USERS; ?></h2></div>
+		<div class="left"><h2 style="margin:0;"><span class="glyphicon glyphicon-<?php echo RolesHelper::getIcon(Role::TYPE_USERS); ?>" aria-hidden="true"></span> <?php echo TEXT_USERS; ?></h2></div>
 		<div class="right">
 			<a href="<?php echo UsersHelper::URL; ?>" class="btn btn-default btn-lg">
 				<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> <?php echo TEXT_GO_TO." ".TEXT_USERS; ?>
@@ -39,7 +40,7 @@ use rdks\app\sites\admin\modules\Clients\helper\Clients as ClientsHelper;
 
 		<hr />
 
-		<div class="left"><h2 style="margin:0;"><span class="glyphicon glyphicon-<?php echo Role::getIcon(Role::TYPE_SUBSCRIBERS); ?>" aria-hidden="true"></span> <?php echo TEXT_SUBSCRIBERS; ?></h2></div>
+		<div class="left"><h2 style="margin:0;"><span class="glyphicon glyphicon-<?php echo RolesHelper::getIcon(Role::TYPE_SUBSCRIBERS); ?>" aria-hidden="true"></span> <?php echo TEXT_SUBSCRIBERS; ?></h2></div>
 		<div class="right">
 			<a href="<?php echo SubscribersHelper::URL; ?>" class="btn btn-default btn-lg">
 				<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> <?php echo TEXT_GO_TO." ".TEXT_SUBSCRIBERS; ?>
@@ -54,7 +55,7 @@ use rdks\app\sites\admin\modules\Clients\helper\Clients as ClientsHelper;
 
 		<hr />
 
-		<div class="left"><h2 style="margin:0;"><span class="glyphicon glyphicon-<?php echo Role::getIcon(Role::TYPE_CLIENTS); ?>" aria-hidden="true"></span> <?php echo TEXT_CLIENTS; ?></h2></div>
+		<div class="left"><h2 style="margin:0;"><span class="glyphicon glyphicon-<?php echo RolesHelper::getIcon(Role::TYPE_CLIENTS); ?>" aria-hidden="true"></span> <?php echo TEXT_CLIENTS; ?></h2></div>
 		<div class="right">
 			<a href="<?php echo ClientsHelper::URL; ?>" class="btn btn-default btn-lg">
 				<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> <?php echo TEXT_GO_TO." ".TEXT_CLIENTS; ?>

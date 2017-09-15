@@ -24,6 +24,7 @@ use rdks\core\framework\Core;
 use rdks\core\framework\Dispatch;
 use rdks\core\framework\URL;
 use rdks\core\framework\Login;
+use rdks\core\framework\Role;
 use rdks\core\framework\Error;
 use rdks\core\framework\Helper;
 use rdks\core\libs\Protocol\Http;
@@ -214,7 +215,9 @@ abstract class Frame{
 			$class = Helper::removeSlash($class);
 		}
 
-		$this->grantAccess = new GrantAccess($class, $type);
+		$session = Role::getSession($type);
+		$session = (empty($session)) ? $type : $session;
+		$this->grantAccess = new GrantAccess($class, $session);
 	}	
 
 	protected function initCache(){

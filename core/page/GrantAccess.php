@@ -29,9 +29,8 @@ use rdks\core\libs\Data\Request;
 class GrantAccess{
 
 	private $_page;
-	private $_type;
+	private $_session;
 	private $_view;
-	private $_data = [];
 	private $_json = false;
 
 	private function _pageNotFound(){
@@ -70,20 +69,13 @@ class GrantAccess{
 //	PUBLIC METHODS
 //---------------------------------
 */
-	public function __construct($page, $type){
+	public function __construct($page, $session){
 		$this->_page = $page;
-		$this->_type = $type;
+		$this->_session = $session;
 	}
 
 	public function json(){
 		$this->_json = true;
-	}
-
-	/**
-	 *	$this->grantAccess->setData(Login::getData(HelperApp::SESSION_SUPPLIER,"config"));
-	 */
-	public function setData($data){
-		$this->_data = $data;
 	}
 
 	public function getFileConfig($name){
@@ -92,11 +84,7 @@ class GrantAccess{
 
 	public function getConfig(){
 
-		if(!empty($this->_data)){
-			return $this->_data;
-		}
-		
-		$name = Login::getData($this->_type, "config");
+		$name = Login::getData($this->_session, "config");
 		$conf = $this->getFileConfig($name);
 
 		if(empty($conf)){

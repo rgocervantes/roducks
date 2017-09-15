@@ -28,31 +28,19 @@ use rdks\app\models\Users\Users as UsersTable;
 
 class Login extends Page{
 
-	protected $_type;
+	protected $_session;
 
 	public function login(){
 
-		$login = new LoginAuth($this->_type, $this->loginUrl);
+		$login = new LoginAuth($this->_session, $this->loginUrl);
 		$login->redirect(); // obligatory
 
 	}
 	
 	public function logout(){
 
-		switch ($this->_type) {
-			case Role::TYPE_USERS:
-				$id_user = LoginAuth::getAdminId();
-				LoginAuth::logoutAdmin();
-				break;
-			case Role::TYPE_SUBSCRIBERS:
-				$id_user = LoginAuth::getSubscriberId();
-				LoginAuth::logoutSubscriber();
-				break;
-			case Role::TYPE_CLIENTS:
-				$id_user = LoginAuth::getClientId();
-				LoginAuth::logoutClient();
-				break;				
-		}
+		$id_user = LoginAuth::getId($this->_session);
+		LoginAuth::logout($this->_session);
 
 		Event::dispatch('onEventLogout', [$id_user]);
 

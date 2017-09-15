@@ -30,7 +30,7 @@ class LatestUsers extends Block{
 
 	public function grid($type, $url, $access, $data, $alt = ""){
 
-		$this->view->data("icon", Role::getIcon($type));
+		$this->view->data("icon", RolesHelper::getIcon($type));
 		$this->view->data("url", $url);
 		$this->view->data("access", $access);		
 		$this->view->data("data", $data);

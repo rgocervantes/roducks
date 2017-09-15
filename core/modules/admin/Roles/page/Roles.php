@@ -100,7 +100,7 @@ class Roles extends AdminPage{
 		$this->view->assets->scriptsInline(["pager","grid","popover","roles","roles.modal"]);
 		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","grid.ready"]);
 
-		$this->view->title("Roles - " . Role::getAll($this->type)['title']);
+		$this->view->title("Roles - " . Role::getTitle($this->type));
 		$this->view->viewTitle("title-roles");
 		$this->view->page($this->page);
 

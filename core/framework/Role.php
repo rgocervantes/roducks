@@ -29,55 +29,55 @@ class Role {
 	const TYPE_CLIENTS = 3;
 	const TYPE_SUPPLIERS = 4;
 
-	static function getAll($type = ""){
+	static $types = [
+		self::TYPE_USERS => [
+			'session' => Login::SESSION_ADMIN,
+			'title' => TEXT_USERS,
+			'url' => "/roles/list",
+			'icon' => 'user',
+			'access' => ["roles","view"]
+		],
+		self::TYPE_SUBSCRIBERS => [
+			'session' => Login::SESSION_FRONT,
+			'title' => TEXT_SUBSCRIBERS,
+			'url' => "/roles/list",
+			'icon' => 'user',
+			'access' => ["roles","view"]
+		],
+		self::TYPE_CLIENTS => [
+			'session' => Login::SESSION_CLIENT,
+			'title' => TEXT_CLIENTS,
+			'url' => "/roles/list",
+			'icon' => 'briefcase',
+			'access' => ["roles","view"]
+		],
+		self::TYPE_SUPPLIERS => [
+			'session' => Login::SESSION_SUPPLIER,
+			'title' => TEXT_SUPPLIERS,
+			'url' => "/roles/list",
+			'icon' => 'briefcase',
+			'access' => ["roles","view"]
+		]
+	];
 
-		$url = self::URL . "/list";
-		
-		$types = [
-			self::TYPE_USERS => [
-				'title' => TEXT_USERS,
-				'url' => $url,
-				'icon' => 'user',
-				'access' => ["roles","view"]
-			],
-			self::TYPE_SUBSCRIBERS => [
-				'title' => TEXT_SUBSCRIBERS,
-				'url' => $url,
-				'icon' => 'user',
-				'access' => ["roles","view"]
-			],
-			self::TYPE_CLIENTS => [
-				'title' => TEXT_CLIENTS,
-				'url' => $url,
-				'icon' => 'briefcase',
-				'access' => ["roles","view"]
-			],
-			self::TYPE_SUPPLIERS => [
-				'title' => TEXT_SUPPLIERS,
-				'url' => $url,
-				'icon' => 'briefcase',
-				'access' => ["roles","view"]
-			]
-		];
+	static function getRole($type){
+		return (isset(self::$types[$type])) ? self::$types[$type] : [];
+	}
 
-		if(!empty($type)){
-			return (isset($types[$type])) ? $types[$type] : [];
-		}
-
-		return $types;
-
+	static function getData($type, $index){
+		$role = self::getRole($type);
+		return (isset($role[$index])) ? $role[$index] : '';
 	}
 
 	static function getIds(){
-		return array_keys(self::getAll());
+		return array_keys(self::$types);
 	}
 
 	static function getList(array $list = []){
-		$roles = self::getAll();
 		$ret = [];
 
 		foreach ($list as $type => $role) {
-			$ret[$type] = array_merge($roles[$type], $role);
+			$ret[$type] = array_merge(self::$types[$type], $role);
 		}
 
 		return $ret;
@@ -85,24 +85,29 @@ class Role {
 
 	static function getMenu(array $list = []){
 
-		$roles = self::getAll();
 		$menu = [];
 
 		foreach ($list as $type => $role) {
 			$menu[] = [
-				'link' => URL::build($roles[$type]['url'], ['type' => $type]), 
-				'text' => $roles[$type]['title'],
-				'access' => $roles[$type]['access'],
+				'link' => URL::build(self::$types[$type]['url'], ['type' => $type]), 
+				'text' => self::$types[$type]['title'],
+				'access' => self::$types[$type]['access'],
 			];
 		}
 
 		return $menu;
+	}
 
+	static function getTitle($type){
+		return self::getData($type, "title");
+	}
+
+	static function getSession($type){
+		return self::getData($type, "session");
 	}
 
 	static function getIcon($type){
-		$roles = self::getAll();
-		return (isset($roles[$type]['icon'])) ? $roles[$type]['icon'] : 'user';
+		return self::getData($type, "icon");
 	}
 
 }

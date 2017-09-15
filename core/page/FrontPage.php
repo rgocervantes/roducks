@@ -21,7 +21,6 @@
 namespace rdks\core\page;
 
 use rdks\core\framework\Login;
-use rdks\core\framework\Role;
 
 class FrontPage extends Page {
 
@@ -31,7 +30,7 @@ class FrontPage extends Page {
 		parent::__construct($settings, $view);
 
 		$this->view->meta('name','viewport',"width=device-width,initial-scale=1,shrink-to-fit=no");
-		$this->login = new Login(Role::TYPE_SUBSCRIBERS, $this->loginUrl);
+		$this->login = new Login(Login::SESSION_FRONT, $this->loginUrl);
 	}
 
 } 

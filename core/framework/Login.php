@@ -28,10 +28,10 @@ class Login {
 	const SESSION_ADMIN = "RDKS_ADMIN";
 	const SESSION_FRONT = "RDKS_FRONT";
 	const SESSION_CLIENT = "RDKS_CLIENT";
+	const SESSION_SUPPLIER = "RDKS_SUPPLIER";
 	const SESSION_SECURITY = "RDKS_SECURITY";
 	const ENCRYPT = "sha512";
 
-	private $_type;
 	private $_url;
 	private $_session = false;
 
@@ -79,24 +79,9 @@ class Login {
 		return [];
 	}	
 
-	static function getData($type, $index){
+	static function getData($session, $index){
 
-		$data = [];
-
-		switch ($type) {
-			case Role::TYPE_USERS:
-				$data = self::getAdmin();
-				break;
-			case Role::TYPE_SUBSCRIBERS:
-				$data = self::getSubscriber();
-				break;
-			case Role::TYPE_CLIENTS:
-				$data = self::getClient();
-				break;				
-			default:
-				$data = self::getSession($type);
-				break;	
-		}
+		$data = self::getSession($session);
 
 		if(is_array($data) && count($data) > 0){
 			if(isset($data[$index])){
@@ -106,6 +91,15 @@ class Login {
 
 		return "";
 	}
+
+	static function getId($session){
+		return self::getData($session, "id_user");
+	}
+
+	static function logout($session){
+		Session::reset(self::SESSION_SECURITY);
+		Session::reset($session);
+	}	
 
 	/*
 	| --------------------------------------------------------
@@ -124,16 +118,11 @@ class Login {
 	*	@return array
 	*/
 	static function getAdmin(){
-
-		if(self::isAdminLoggedIn()){
-			return Session::get(self::SESSION_ADMIN);
-		}
-
-		return [];
+		return self::getSession(self::SESSION_ADMIN);
 	}	
 
 	static function getAdminData($index){
-		return self::getData(Role::TYPE_USERS,$index);
+		return self::getData(self::SESSION_ADMIN,$index);
 	}
 
 	static function getAdminId(){
@@ -227,16 +216,11 @@ class Login {
 	*	@return array
 	*/
 	static function getSubscriber(){
-
-		if(self::isSubscriberLoggedIn()){
-			return Session::get(self::SESSION_FRONT);
-		}
-
-		return [];
+		return self::getSession(self::SESSION_FRONT);
 	}		
 
 	static function getSubscriberData($index){
-		return self::getData(Role::TYPE_SUBSCRIBERS,$index);
+		return self::getData(self::SESSION_FRONT,$index);
 	}
 
 	static function getSubscriberId(){
@@ -310,21 +294,16 @@ class Login {
 	*	@return array
 	*/
 	static function getClient(){
-
-		if(self::isClientLoggedIn()){
-			return Session::get(self::SESSION_CLIENT);
-		}
-
-		return [];
+		return self::getSession(self::SESSION_CLIENT);
 	}
 
 	static function getClientData($index){
-		return self::getData(Role::TYPE_CLIENTS,$index);
+		return self::getData(self::SESSION_CLIENT,$index);
 	}
 
 	static function getClientId(){
 		return self::getClientData('id_user');
-	}	
+	}
 
 	static function getClientName(){
 		return self::getClientData('first_name');
@@ -378,55 +357,21 @@ class Login {
 
 /*
 |-----------------------------
-|	PRIVATE
-|-----------------------------
-|*/
-
-	private function _getSession(){
-		
-		$session = false;
-
-		switch ($this->_type) {
-			case Role::TYPE_USERS:
-				$session = $this->isAdminLoggedIn();
-				break;
-			case Role::TYPE_SUBSCRIBERS:
-				$session = $this->isSubscriberLoggedIn();
-				break;
-			case Role::TYPE_CLIENTS:
-				$session = $this->isClientLoggedIn();
-				break;				
-			default:
-				$session = $this->_session;
-				break;	
-		}
-
-		return $session;
-	}
-
-/*
-|-----------------------------
 |	PUBLIC
 |-----------------------------
 |*/
 	/**
 	 *	@example 
-	 *	@var $session = HelperApp::SESSION_SUPPLIER;
+	 *	@var $session = Login::SESSION_ADMIN
 	 */
-	public function __construct($type, $url, $session = ""){
-		$this->_type = $type;
+	public function __construct($session, $url){
+		$this->_session = Session::exists($session);
 		$this->_url = $url;
-
-		if(!empty($session)){
-			$this->_session = Session::exists($session);
-		}
 	}
 
 	public function required(){
 
-		$session = $this->_getSession();
-
-		if(!$session){
+		if(!$this->_session){
 			Http::redirect($this->_url);
 		}
 	}
@@ -435,9 +380,8 @@ class Login {
 	*	@var $url string URL
 	*/	
 	public function redirect($url = "/"){
-		$session = $this->_getSession();
 
-		if($session){
+		if($this->_session){
 			Http::redirect($url);
 		}
 	}

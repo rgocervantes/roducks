@@ -117,46 +117,39 @@ class Dispatch{
 		/* ------------------------------------*/
 		/* 		LOG OUT
 		/* ------------------------------------*/
-		$isLoggedIn = false;
 		$secure = true;
+		$siteConfig = Core::getSiteConfigFile("config", false);
 
-		if(Login::isAdminLoggedIn()){
-			$isLoggedIn = true;
-			$id_user = Login::getAdminId();
-			$session_type = Role::TYPE_USERS;
-		} else if(Login::isSubscriberLoggedIn()){
-			$isLoggedIn = true;
-			$id_user = Login::getSubscriberId();
-			$session_type = Role::TYPE_SUBSCRIBERS;
-		}
+		if(isset($siteConfig['SESSION_NAME'])){
+			$sessionName = $siteConfig['SESSION_NAME'];
+			$isLoggedIn = Session::exists($sessionName);
 
-		if($isLoggedIn){
-			$ip = Http::getIPClient();
-			$db = Core::db(RDKS_ERRORS);
+			if($isLoggedIn){
+				$id_user = Login::getId($sessionName);	
 
-			$user = UsersTable::open($db);
-			$row = $user->row($id_user);
-			$location = (!empty($row['location'])) ? $row['location'] : $ip;
+				$ip = Http::getIPClient();
+				$db = Core::db(RDKS_ERRORS);
 
-			// Expiration account
-			if($row['expires'] == 1 && Date::getCurrentDate() >= Date::parseDate($row['expiration_date'])){
-				$user->update(['id_user' => $id_user],['loggedin' => 0,'active' => 0]);
-				$row['active'] = 0;
-				$secure = false;
-			}
+				$user = UsersTable::open($db);
+				$row = $user->row($id_user);
+				$location = (!empty($row['location'])) ? $row['location'] : $ip;
 
-			// Log Out when user is disabled - or - Admin logged user out
-			if( $row['active'] == 0 || $row['loggedin'] == 0 ){
-				
-				if($location == $ip && Login::security(true) && $secure === TRUE){
-					$session_type = 0;
-					$user->update(['id_user' => $id_user],['loggedin' => 1]);
+				// Expiration account
+				if($row['expires'] == 1 && Date::getCurrentDate() >= Date::parseDate($row['expiration_date'])){
+					$user->update(['id_user' => $id_user],['loggedin' => 0,'active' => 0]);
+					$row['active'] = 0;
+					$secure = false;
 				}
 
-				if($session_type == Role::TYPE_USERS){
-					Login::logoutAdmin();
-				} else if($session_type == Role::TYPE_SUBSCRIBERS) {
-					Login::logoutSubscriber();
+				// Log Out when user is disabled - or - Admin logged user out
+				if( $row['active'] == 0 || $row['loggedin'] == 0 ){
+					
+					if($location == $ip && Login::security(true) && $secure === TRUE){
+						$session_type = 0;
+						$user->update(['id_user' => $id_user],['loggedin' => 1]);
+					}
+
+					Login::logout($sessionName);
 				}
 			}
 		}

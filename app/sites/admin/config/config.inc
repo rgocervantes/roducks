@@ -18,6 +18,8 @@
  *
  */
 
-$config = [
+use rdks\core\framework\Login;
 
+$config = [
+	'SESSION_NAME' => Login::SESSION_ADMIN
 ];

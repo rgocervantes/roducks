@@ -18,6 +18,8 @@
  *
  */
 
+use rdks\core\framework\Login;
+
 $config = [
-	'rodrigo.dev' => 7
+	'SESSION_NAME' => Login::SESSION_FRONT
 ];
