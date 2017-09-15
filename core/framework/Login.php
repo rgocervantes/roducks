@@ -94,7 +94,7 @@ class Login {
 				$data = self::getClient();
 				break;				
 			default:
-				$data = self::getSession($type, $index);
+				$data = self::getSession($type);
 				break;	
 		}
 
