@@ -21,6 +21,7 @@
 use rdks\app\sites\admin\modules\Users\helper\Users;
 use rdks\app\sites\admin\modules\Subscribers\helper\Subscribers;
 use rdks\app\sites\admin\modules\Clients\helper\Clients;
+use rdks\app\sites\admin\modules\Roles\helper\Roles as RolesHelper;
 use rdks\core\framework\Role;
 
 $menu = [
@@ -28,19 +29,19 @@ $menu = [
 		'link' => Users::URL, 
 		'text' => TEXT_USERS, 
 		'access' => ["users","view"],
-		'icon' => "user"
+		'icon' => RolesHelper::getIcon(Role::TYPE_USERS)
 	],
 	[
 		'link' => Subscribers::URL, 
 		'text' => TEXT_SUBSCRIBERS, 
 		'access' => "subscribers",
-		'icon' => "user"		
+		'icon' => RolesHelper::getIcon(Role::TYPE_SUBSCRIBERS)
 	],
 	[
 		'link' => Clients::URL, 
 		'text' => TEXT_CLIENTS, 
 		'access' => "clients",
-		'icon' => "briefcase"		
+		'icon' => RolesHelper::getIcon(Role::TYPE_CLIENTS)
 	],	
 	[
 		'link' => Role::URL, 
