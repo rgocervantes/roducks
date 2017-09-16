@@ -30,12 +30,12 @@ use rdks\core\libs\Utils\Date;
 					<div class="checkbox">
 						<label>
 						<input<?php echo Template::checked($row['active']); ?> type="checkbox" name="active" value="1" /> 
-						Active</label>
+						<?php echo TEXT_ACTIVE; ?></label>
 					</div>
 					
 					<div class="checkbox">
 						<label>
-							<input type="checkbox" name="expires"<?php echo Template::checked( ($row['expires'] == 1) ); ?> rel="rdks-form-on-checked-display" data-display="#expiration" data-effect="toggle" value="1" /> Expires?
+							<input type="checkbox" name="expires"<?php echo Template::checked( ($row['expires'] == 1) ); ?> rel="rdks-form-on-checked-display" data-display="#expiration" data-effect="toggle" value="1" /> <?php echo TEXT_EXPIRES; ?>?
 						</label>
 					</div>
 
@@ -94,7 +94,7 @@ use rdks\core\libs\Utils\Date;
 				<?php if(!$edit): ?>
 					<div class="form-group has-feedback">
 					  <label class="control-label" for="gender"><?php echo TEXT_GENDER; ?></label>
-					  <select name="gender" data-required="true" class="form-control">
+					  <select name="gender" data-required="true" data-alert-warning="<?php echo TEXT_REQUIRED; ?>" class="form-control">
 					  		<option value="default"><?php echo TEXT_CHOOSE_AN_OPTION; ?></option>
 					  		<option value="male"><?php echo TEXT_MALE; ?></option>
 					  		<option value="female"><?php echo TEXT_FEMALE; ?></option>  		
@@ -126,6 +126,7 @@ use rdks\core\libs\Utils\Date;
 						<label class="control-label" for="first_name"><span class="rdks-ui-color-red">*</span> <?php echo TEXT_FIRST_NAME; ?></label>
 						<input type="text" name="first_name" class="form-control" 
 						data-required="true" 
+						data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
 						data-type="words" 
 						value="<?php echo $row['first_name']; ?>"
 						/>
@@ -137,6 +138,7 @@ use rdks\core\libs\Utils\Date;
 						<label class="control-label" for="last_name"><span class="rdks-ui-color-red">*</span> <?php echo TEXT_LAST_NAME; ?></label>
 						<input type="text" name="last_name" class="form-control" 
 						data-required="true" 
+						data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
 						data-type="words" 
 						value="<?php echo $row['last_name']; ?>"
 						/>

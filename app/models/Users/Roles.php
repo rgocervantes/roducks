@@ -48,7 +48,8 @@ class Roles extends Model {
 
 	public function search($value, $type){
 		$ret = [];
-		$this->filter(["name:%like%" => $value, 'type' => $type, 'id_role:>' => 1]);
+		$id_role = Login::getAdminData('id_role');
+		$this->filter(["name:%like%" => $value, 'type' => $type, 'id_role:>' => $id_role]);
 
 		if($this->rows()){
 			while($row = $this->fetch()){

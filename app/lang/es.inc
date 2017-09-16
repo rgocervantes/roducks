@@ -75,6 +75,7 @@ Core::define('TEXT_CHOOSE_AN_OPTION', "Elige una opción.");
 Core::define('TEXT_LATEST', "Últimos");
 Core::define('TEXT_FULL_NAME', "Nombre");
 Core::define('TEXT_VIEW', "Ver");
+Core::define('TEXT_ACTIVE', "Activo");
 Core::define('TEXT_ENABLE_DISABLE', "Activar / Desactivar");
 Core::define('TEXT_MANAGE_DESCENDANTS', "Administrar solo descendientes directos");
 Core::define('TEXT_MANAGE_TREE_DESCENDANTS', "Administrar todos los descendientes");
