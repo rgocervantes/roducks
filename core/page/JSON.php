@@ -116,10 +116,6 @@ class JSON extends GenericPage {
 		$this->_jsonMessage = $message;
 	}	
 
-	protected function getJsonData(){
-		return $this->_jsonData;
-	}
-
 	protected function data($key, $value = ""){
 		if(is_array($key)){
 			$this->_jsonData = array_merge($this->_jsonData, $key);
