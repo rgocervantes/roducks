@@ -24,6 +24,7 @@ use rdks\core\framework\Role;
 
 class Roles {
 
+	static $icon = "tags";
 	static $list = [
 		Role::TYPE_USERS 		=> [],
 		Role::TYPE_SUBSCRIBERS 	=> [],
@@ -34,10 +35,15 @@ class Roles {
 		return array_keys(self::$list);
 	}
 
-	static function getIcon($type){
+	static function getIcon($type = ""){
+		
+		if(empty($type)){
+			return self::$icon;
+		}
+
 		$roles = Role::getList(self::$list);
 
-		return $roles[$type]['icon'];
+		return (isset($roles[$type]['icon'])) ? $roles[$type]['icon'] : self::$icon;
 	}
 
 }
