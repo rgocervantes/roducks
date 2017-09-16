@@ -45,7 +45,7 @@ class GrantAccess{
 
 		$file = DIR_ROLES . $name;
 
-		if(file_exists($file)){
+		if(file_exists($file) && !empty($name)){
 			$config = Request::getContent($file);
 			$json = JSON::decode($config);
 			return $json;

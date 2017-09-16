@@ -142,7 +142,7 @@ class Dispatch{
 					$secure = false;
 				}
 
-				// Log Out when user is disabled - or - Admin logged user out
+				// Log Out when User is disabled - or - Admin forces User to log out
 				if( $row['active'] == 0 || $row['loggedin'] == 0 ){
 					
 					if($location == $ip && Login::security(true) && $secure === TRUE){
