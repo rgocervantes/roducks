@@ -8,7 +8,7 @@ hr{ border-top: 0; border-left: 0; border-right: 0; border-bottom: solid 1px #cc
 
 /* --- Images --- */
 img{ margin: 0; padding: 0; border: 0; }
-img.rdks-image-responsive{ max-width: 100%; /*height: auto !important;*/ }
+img.rdks-image-responsive{ max-width: 100%; height: auto !important; }
 
 /* --- Navigation --- */
 ul{ padding-left: 20px; }

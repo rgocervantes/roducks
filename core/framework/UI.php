@@ -135,6 +135,10 @@ class UI {
 
 	}
 
+	static function getUploadedImage($path, $size = "", array $attrs = []){
+		return self::img(Path::getAppUploadedImage($path), $size, $attrs);
+	}
+
 	static function getImage($path, $size = "", array $attrs = []){
 		return self::img(Path::getAppImage($path), $size, $attrs);
 	}

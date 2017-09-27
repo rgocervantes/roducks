@@ -223,7 +223,11 @@ class Cart{
 
 			if(count($charges) > 0):
 				foreach ($charges as $charge):
-					$this->_total += $charge['value'][$lang];
+					if($charge['type'] == self::TYPE_AMOUNT):
+						$this->_total += $charge['value'][$lang];
+					elseif($charge['type'] == self::TYPE_PERCENTAGE):
+						$this->_total += $this->_percentage($charge['value'][$lang]);
+					endif;
 				endforeach;
 			endif;
 

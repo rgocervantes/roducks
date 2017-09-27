@@ -52,6 +52,10 @@ class Path{
 		return DIR_DATA_UPLOADED_USERS . $file;
 	}	
 
+	static function getAppUploadedImage($file){
+		return [DIR_DATA_UPLOADS_IMAGES, DIR_DATA_UPLOADED_IMAGES, $file];
+	}
+
 	static function getAppImage($file){
 		return [DIR_APP_IMAGES, DIR_ASSETS_IMAGES, $file];
 	}

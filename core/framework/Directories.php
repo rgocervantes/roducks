@@ -31,7 +31,6 @@ define('DIR_VIEWS', "views/");
 define('DIR_TEMPLATES', "templates/");
 define('DIR_LAYOUTS', "layouts/");
 define('DIR_IMAGES', "images/");
-define('DIR_STATIC', "/static/");
 
 define('DIR_APP', "app/");
 	define('DIR_APP_CONFIG', DIR_APP . DIR_CONFIG);
@@ -66,10 +65,10 @@ define('DIR_DATA_UPLOADS', DIR_APP_DATA . "uploads/");
 	define('DIR_DATA_UPLOADS_ZIP', DIR_DATA_UPLOADS . "zip/");
 
 # UPLOADED
-define('DIR_DATA_UPLOADED', "/uploads/");
+define('DIR_DATA_UPLOADED', "/static/");
 define('DIR_DATA_UPLOADED_CSV', DIR_DATA_UPLOADED . "csv/");
-define('DIR_DATA_UPLOADED_IMAGES', DIR_DATA_UPLOADED . "images/");
-	define('DIR_DATA_UPLOADED_USERS', DIR_STATIC . DIR_IMAGES . "users/");
+define('DIR_DATA_UPLOADED_IMAGES', DIR_DATA_UPLOADED . DIR_IMAGES);
+	define('DIR_DATA_UPLOADED_USERS', DIR_DATA_UPLOADED_IMAGES . "users/");
 define('DIR_DATA_UPLOADED_PDF', DIR_DATA_UPLOADED . "pdf/");
 define('DIR_DATA_UPLOADED_ZIP', DIR_DATA_UPLOADED . "zip/");
 
