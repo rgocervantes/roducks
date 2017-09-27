@@ -96,6 +96,20 @@ class Dispatch{
 		return "(".implode("|", $arr).")";
 	}
 
+	static function getLastParams($params){
+		
+		// Avoid empty params
+		$total = count($params) - 1;
+
+		if($total > 2){
+			$last = (isset($params[$total]) && empty($params[$total]));
+		} else {
+			$last = (isset($params[2]) && $params[2] == '0');
+		}
+
+		return $last;
+	}
+
 	static function init(){
 		
 		$URI = URL::getRelativeURL();
@@ -507,12 +521,10 @@ class Dispatch{
 			
 			if($method == "_data_" || $method == "_block_") {
 
-				// Avoid empty params
-				$total = count($params) - 1;
-				$last = (isset($params[$total]) && empty($params[$total]) && $params[$total] != 0);
-				
-				if($last){
-					
+				$invalidParam = self::getLastParams($params);
+
+				if($invalidParam){
+
 					$page = "Page";
 					$method = "pageNotFound";
 					$pagePath = DIR_CORE_PAGE;
@@ -544,11 +556,9 @@ class Dispatch{
 
 			} else if($method == "_service_") {
 
-				// Avoid empty params
-				$total = count($params) - 1;
-				$last = (isset($params[$total]) && empty($params[$total]) && $params[$total] != 0);
+				$invalidParam = self::getLastParams($params);
 				
-				if($last){
+				if($invalidParam){
 					
 					$page = "Page";
 					$method = "pageNotFound";
