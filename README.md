@@ -27,7 +27,7 @@
 
 7. Run command below to make `data` folder.
 ```
-mkdir app/data/storage/json/roles
+mkdir -p app/data/storage/json/roles
 ```
 8. Give some write permissions.
 ```

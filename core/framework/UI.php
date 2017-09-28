@@ -42,11 +42,14 @@ class UI {
 			$src = $path[0].$path[2];
 		}
 
-		if(!file_exists($src)){
+		if(!file_exists($src) || !preg_match('/^.+\.(jpg|jpeg|png)$/i', $src)){
 			$icon = Path::getAppIcon(self::IMAGE_UNAVAILABLE);
 
 			if(file_exists($icon[0].$icon[2])){
 				$src = $icon[0].$icon[2];
+				$resize = Image::getResize($src, $size);
+				$attrs['width'] = $resize[0];
+				$attrs['height'] = $resize[1];				
 			}
 		}
 

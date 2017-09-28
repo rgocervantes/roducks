@@ -100,21 +100,21 @@ class Core{
 
 	static function getServicesPath($service = ""){
 
-		$path0 = DIR_CORE;
 		$path1 = self::getSitePath();
 		$path2 = self::getGlobalPath();
-		$path = $path1;
+		$path3 = DIR_CORE;
+		$path = $path3;
 
-		$core = $path0 . $service . FILE_EXT;
 		$site = $path1 . $service . FILE_EXT;
 		$global = $path2 . $service . FILE_EXT;
+		$core = $path3 . $service . FILE_EXT;
 
-		if(file_exists($core)){
-			$path = $path0;
-		} else if(file_exists($site)) {
+		if(file_exists($site)) {
 			$path = $path1;
 		} else if(file_exists($global)) {
 			$path = $path2;
+		} else if(file_exists($core)){
+			$path = $path3;
 		}
 
 		return ['path' => $path, 'service' => $service];
