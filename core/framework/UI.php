@@ -33,8 +33,9 @@ class UI {
 	static function img($path, $size = "", array $attrs = []){
 		
 		$div = [];
-		$conf = $attrs;
 		$div['style'] = "";
+		$conf = $attrs;
+		$icon = [];
 		$src = $path;
 
 		if(is_array($path)){
@@ -43,8 +44,10 @@ class UI {
 
 		if(!file_exists($src)){
 			$icon = Path::getAppIcon(self::IMAGE_UNAVAILABLE);
-			$src = $icon[0].$icon[2];
-			$path = $src;
+
+			if(file_exists($icon[0].$icon[2])){
+				$src = $icon[0].$icon[2];
+			}
 		}
 
 		if(isset($attrs['square']) && $attrs['square']){
@@ -124,6 +127,10 @@ class UI {
 		}
 
 		$rz = (!isset($conf['square']) && !isset($conf['flex-w']) && !isset($conf['flex-h'])) ? $size : "auto";
+
+		if(!empty($icon)){
+			$path = $icon[1].$icon[2];
+		}
 
 		$img = Html::img($path, $rz, $attrs);
 

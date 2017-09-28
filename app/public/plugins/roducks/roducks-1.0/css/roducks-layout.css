@@ -149,14 +149,14 @@ ul.items-gallery li h2{ word-wrap: break-word; overflow: hidden; font-size: 18px
 .link-btn:hover{ background: #333; }
 
 @media only screen and (max-width: 320px){
-	.rdks-image-responsive{ max-width: 100% !important; height: auto !important; margin: inherit !important; }
+	.rdks-image-responsive{ margin: inherit !important; }
 	.rdks-ui-responsive{ width: inherit !important; height: inherit !important; }
 }
 
 /* --- Responsive Design --- */
 @media only screen and (max-width: 760px){
 
-	.rdks-image-responsive{ max-width: 100% !important; height: auto !important; margin: inherit !important; }
+	.rdks-image-responsive{ margin: inherit !important; }
 	.rdks-ui-responsive{ width: inherit !important; height: inherit !important; }
 
 	nav.nav-collapse,
