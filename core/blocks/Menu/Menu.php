@@ -30,6 +30,16 @@ class Menu extends Block{
 		return $this->view->output();
 	}
 
+	public function simple(array $items = [], $tpl){
+
+		$this->view->data("access", []);
+		$this->view->data("items", $items);
+		$this->view->load($tpl);
+
+		return $this->view->output();
+
+	}
+
 	public function access($type, array $items = [], $tpl, $permission = ""){
 
 		$this->role($type);

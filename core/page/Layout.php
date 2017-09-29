@@ -77,6 +77,10 @@ class Layout {
 		} else {
 			$data = self::$data[$name];
 
+			if(empty($data)){
+				return;
+			}
+
 			if(is_array($data[0])) {
 				foreach ($data as $key => $value) {
 					self::_include($value);
