@@ -42,7 +42,7 @@ class Cart{
 	*	Return price format with symbol & currency
 	*/
 	static public function getPriceFormat($v, $c = 'USD', $s = '$'){
-		return $s . number_format($v,2,'.',',') . ' ' . $c;
+		return $s . " " . number_format($v,2,'.',',') . ' ' . $c;
 	}
 
 	/*
