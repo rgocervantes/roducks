@@ -264,7 +264,16 @@ class Cart{
 	}
 
 	public function getTotalItems(){
-		return count($this->getData());
+		$data = $this->getData();
+		$count = count($data);
+
+		foreach ($data as $item) {
+			if(!empty($item['grouped_products'])){
+				$count += count($item['grouped_products']);
+			}
+		}
+
+		return $count;
 	}
 
 	public function hasItems(){

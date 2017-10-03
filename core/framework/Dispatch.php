@@ -238,6 +238,9 @@ class Dispatch{
 						$router[$mainPath] = $routers[$mainPath];
 						$mainPath = "";
 					}
+				} else {
+					$router = $routers;
+					$mainPath = "";
 				}
 
 			}

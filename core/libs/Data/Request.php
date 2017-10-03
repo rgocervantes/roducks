@@ -46,6 +46,16 @@ Result
 	echo $request->getContentType();
 	echo $request->getHttpCode();
 
+	if($request->json()){
+		$response = $request->getOutput(true);
+	}
+	
+	if($request->success()){
+
+	} else {
+		
+	}
+
 */
 
 namespace rdks\core\libs\Data;
@@ -55,7 +65,7 @@ class Request{
 	private $_ch;
 	private $_url;
 	private $_type;
-	private $_result = null; 
+	private $_result = null;
 	private $_contentType = 'undefined';
 	private $_httpCode = 404;
 	private $_redirect = false; 
@@ -195,8 +205,19 @@ class Request{
 		curl_close($this->_ch);
 	}
 
-	public function getOutput(){
-		return $this->_result;
+	public function success(){
+		return ($this->_httpCode == 200);
+	}
+
+	public function json(){
+		return ($this->_contentType == "application/json; charset=utf-8");
+	}
+
+	public function getOutput($inJSON = false){
+
+		$result = ($this->json() && $inJSON) ? json_decode($this->_result, true) : $this->_result;
+
+		return $result;
 	} 
 
 	public function getError(){

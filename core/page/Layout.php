@@ -35,6 +35,8 @@ class Layout {
 		$dir_view = self::$path . $view;
 		$dir_view_core = Core::getCoreModulesPathFrom($dir_view);
 
+		$file = $dir_view;
+
 		if(file_exists($dir_view)){
 			$include = true;
 			$file = $dir_view;
