@@ -1,5 +1,29 @@
+# Common IDE files
+nbproject
+.~lock.*
+.buildpath
 .idea
+.project
+.settings
+*.iml
+
+# OS X Finder internal system files
 .DS_Store
+.localized
+Icon
+.vscode
+
+# Package manager
+node_modules
+bower_components
+
+# build the extensions
+extensions.js
+
+# deploy the docs
+deploy.sh
+
+# Roducks Local files
 app/data
 app/config/*.local.inc
 app/sites/*/*.local.inc
