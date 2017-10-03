@@ -26,4 +26,4 @@ deploy.sh
 # Roducks Local files
 app/data
 app/config/*.local.inc
-app/sites/*/*.local.inc
+app/sites/*/config/*.local.inc
