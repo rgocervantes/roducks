@@ -20,6 +20,8 @@
 
 namespace rdks\core\framework;
 
+use rdks\core\libs\Output\Html;
+
 class Asset{
 
 	private $_scriptsInline = [];
@@ -64,11 +66,26 @@ class Asset{
 		}
 	}
 	
-	private function _getResource($dir, $scripts, $type){
+	private function _getResource($dir, $script, $type){
+
+		$attrs = [];
+
+		if(is_array($script)){
+			if(isset($script['script'])){
+				$attrs = $script;
+				$script = $script['script'];
+				unset($attrs['script']);
+			} else {
+				$load = false;
+				$script = "unknown{$type}";
+			}
+			
+		}
+
 		$load = true;
-		$resource = Helper::ext($scripts,$type);
+		$resource = Helper::ext($script,$type);
 		
-		if(Helper::isHttp($scripts)){
+		if(Helper::isHttp($script)){
 			$file = $resource;
 		}else{
 			$file = $dir . $resource;
@@ -76,7 +93,7 @@ class Asset{
 			if(!file_exists($file_repo)) $load = false;
 		} 
 
-		return ['load' => $load, 'file' => $file];
+		return ['load' => $load, 'file' => $file, 'attrs' => $attrs];
 
 	}
 
@@ -86,7 +103,9 @@ class Asset{
 			$resource = $this->_getResource($dir, $css, "css");
 			
 			if($resource['load']){
-				$tag = "<link type=\"text/css\" rel=\"stylesheet\" href=\"". $resource['file'] . "\" />\n";
+				$file = $resource['file'];
+				$attrs = (!empty($resource['attrs'])) ? " " . Html::getAttributes($resource['attrs']) : "";
+				$tag = "<link type=\"text/css\" rel=\"stylesheet\" href=\"{$file}\"{$attrs} />\n";
 			
 				if ($alt) {
 					$this->_css .= $tag;
@@ -103,10 +122,9 @@ class Asset{
 			$resource = $this->_getResource($dir, $js, "js");
 			
 			if($resource['load']){
-
 				$file = $resource['file'];
-
-				$tag = "<script type=\"text/javascript\" src=\"{$file}\"></script>\n";
+				$attrs = (!empty($resource['attrs'])) ? " " . Html::getAttributes($resource['attrs']) : "";
+				$tag = "<script type=\"text/javascript\" src=\"{$file}\"{$attrs}></script>\n";
 
 				if ($alt) {
 					$this->_js .= $tag;
