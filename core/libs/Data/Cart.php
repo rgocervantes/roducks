@@ -96,6 +96,10 @@ class Cart{
 		return $value;
 	}
 
+	static function intQty($v){
+		return intval($v);
+	}
+
 //-------------------------------
 //	PRIVATE 
 //-------------------------------
@@ -127,7 +131,7 @@ class Cart{
 		$data = [
 			'index' 			=> $index,
 			'id' 				=> $obj['id'],
-			'qty' 				=> $qty,
+			'qty' 				=> intval($qty),
 			'price' 			=> $obj['price'],
 			'data' 				=> $obj['data'],
 			'attributes' 		=> [],
@@ -484,6 +488,63 @@ class Cart{
 
 	public function getTotal(){
 		return $this->_total;
+	}
+
+	public function getItemsStock(){
+
+		$items = [];
+		$data = $this->getData();
+
+		foreach ($data as $key => $item) {
+
+			$ids = explode("_", $item['index']);
+			$count = count($ids);
+			unset($ids[0]);
+			if($count > 2){
+				$id = intval($ids[1]);
+				unset($ids[1]);
+			}
+			
+			$ids = array_merge(array(), $ids);
+			$ids = array_map("\\rdks\core\libs\Data\Cart::intQty",$ids);
+
+			$items[$id] = [
+				'id_product' => $id,
+				'id_attrs' => $ids,
+				'qty' => $item['qty']
+			];
+
+			foreach ($item['grouped_products'] as $k => $v) {
+				$cids = [];
+
+				if(count($v['attributes']) > 0){
+					foreach ($v['attributes'] as $attr) {
+						$cids[] = $attr['id'];
+					}
+				}
+
+				$items[$v['id']] = [
+					'id_product' => $v['id'],
+					'id_attrs' => $cids,
+					'qty' => $v['qty']
+				];
+			}
+
+		}
+
+		return $items;
+	}
+
+	public function getItemStock($id){
+
+		if(preg_match('/^item_\d+/', $id)){
+			$keys = explode('_', $id);
+			$id = intval($keys[1]);
+		}
+
+		$items = $this->getItemsStock();
+
+		return (isset($items[$id])) ? $items[$id] : [];
 	}
 
 	public function getItemsWeight(){
