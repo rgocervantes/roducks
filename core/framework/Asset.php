@@ -189,7 +189,14 @@ class Asset{
 		foreach ($options as $option) {
 			if(isset($pluginsFile[$option])) {
 				foreach ($pluginsFile[$option] as $file) {
-					$ext = Helper::getFileExt($file);
+
+					$fileExt = $file;
+
+					if(is_array($file)){
+						$fileExt = $file['script'];
+					}
+
+					$ext = Helper::getFileExt($fileExt);
 					$fx = "";
 					switch ($ext) {
 						case 'css':
