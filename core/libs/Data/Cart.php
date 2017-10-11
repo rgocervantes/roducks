@@ -143,7 +143,15 @@ class Cart{
 		}
 
 		if(isset($obj['grouped_products'])){
-			$data['grouped_products'] = $obj['grouped_products'];
+
+			$grouped_products = [];
+
+			foreach ($obj['grouped_products'] as $key => $value) {
+				$idx = $this->_setId($value['id'], $this->_attributes($value['attributes']));
+				$grouped_products[$idx] = $value;
+			}
+
+			$data['grouped_products'] = $grouped_products;
 		}
 
 		return $data;
@@ -358,6 +366,27 @@ class Cart{
 		}	
 	}
 
+	public function removeGrouped($id, $key, $force = false){
+
+		if($this->itemExists($id)){
+			$data = $this->getData();
+			$item = $data[$id];
+
+			if(isset($item['grouped_products'][$key])){
+				if(
+					(isset($item['grouped_products'][$key]["remove"]) && $item['grouped_products'][$key]["remove"] === true) 
+					|| $force
+				){
+					unset($item['grouped_products'][$key]);
+					$this->update($id, null, $item);
+					return true;
+				}	
+			}
+		}
+
+		return false;
+	}
+
 	public function add($item){
 
 		$items = $this->getData();
@@ -497,51 +526,29 @@ class Cart{
 
 		foreach ($data as $key => $item) {
 
-			$ids = explode("_", $item['index']);
-			$count = count($ids);
-			unset($ids[0]);
-			if($count > 2){
-				$id = intval($ids[1]);
-				unset($ids[1]);
-			}
-			
-			$ids = array_merge(array(), $ids);
-			$ids = array_map("\\rdks\core\libs\Data\Cart::intQty",$ids);
-
-			$items[$id] = [
-				'id_product' => $id,
-				'id_attrs' => $ids,
-				'qty' => $item['qty']
-			];
+			$id = $item['index'];
+			$items[$id]['qty'] = $item['qty'];
+			$items[$id]['grouped'] = [];
 
 			foreach ($item['grouped_products'] as $k => $v) {
-				$cids = [];
+				$cids = "";
+				$gp = [];
 
 				if(count($v['attributes']) > 0){
 					foreach ($v['attributes'] as $attr) {
-						$cids[] = $attr['id'];
+						$cids .= "_".$attr['id'];
 					}
 				}
 
-				$items[$v['id']] = [
-					'id_product' => $v['id'],
-					'id_attrs' => $cids,
-					'qty' => $v['qty']
-				];
+				$gp['item_'.$v['id'].$cids]['qty'] = $item['qty'];
+				array_push($items[$id]['grouped'], $gp);
 			}
-
 		}
 
 		return $items;
 	}
 
 	public function getItemStock($id){
-
-		if(preg_match('/^item_\d+/', $id)){
-			$keys = explode('_', $id);
-			$id = intval($keys[1]);
-		}
-
 		$items = $this->getItemsStock();
 
 		return (isset($items[$id])) ? $items[$id] : [];
