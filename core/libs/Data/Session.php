@@ -47,8 +47,34 @@ class Session{
 	}
 	
 	public static function get($n){
-		return  (self::exists($n)) ? $_SESSION[$n] : "";
+		return  (self::exists($n)) ? $_SESSION[$n] : [];
 	}
+
+	public static function update($name, array $data = []){
+
+		if(self::exists($name)){
+			$stored = self::get($name);
+			foreach ($data as $key => $value) {
+				$stored[$key] = $value;
+			}
+			
+			self::set($name, $stored);
+		}
+	}
+
+	public static function remove($name, array $data = []){
+
+		if(self::exists($name)){
+			$stored = self::get($name);
+			foreach ($data as $key) {
+				if(isset($stored[$key])){
+					unset($stored[$key]);
+				}
+			}
+			
+			self::set($name, $stored);
+		}
+	}	
 
 	public static function reset($name){
 		if(self::exists($name)){
