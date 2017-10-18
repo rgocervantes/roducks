@@ -25,6 +25,7 @@ use rdks\core\framework\Asset;
 use rdks\core\framework\Helper;
 use rdks\core\framework\Error;
 use rdks\core\framework\Login;
+use rdks\core\framework\Language;
 use rdks\core\page\Template;
 use rdks\core\page\Layout;
 use rdks\core\libs\Data\Session;
@@ -90,6 +91,7 @@ final class View{
 		}
 		
 		$this->data('_URL_ID', $idUrl);
+		$this->data('_LANG', Language::get());
 	}
 
 	public function data($key, $value = ""){
