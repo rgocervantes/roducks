@@ -67,7 +67,7 @@ class UI {
 					if($attrs['width'] > $attrs['height']){
 						$paddingTop = ceil(($size - $attrs['height']) / 2);
 						if($paddingTop > 0)
-							$div['style'] .= " padding-top:{$paddingTop}px;";
+							$div['style'] .= " padding-top:{$paddingTop}px; text-align:center;";
 
 					} else if($attrs['height'] > $attrs['width']){
 						$div['style'] .= " text-align:center;";
@@ -77,7 +77,7 @@ class UI {
 					if($attrs['width'] > $attrs['height']){
 						$paddingTop = ceil(($size - $resize[1]) / 2);
 						if($paddingTop > 0)
-							$div['style'] .= " padding-top:{$paddingTop}px;";
+							$div['style'] .= " padding-top:{$paddingTop}px; text-align:center;";
 					} else if($attrs['height'] > $attrs['width']){
 						$div['style'] .= " text-align:center;";
 					}
