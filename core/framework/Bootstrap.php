@@ -40,10 +40,15 @@ use rdks\core\framework\Cli;
 
 // Autoload
 spl_autoload_register(function($class){
+
 	$className = $class;
     $class = str_replace("rdks\\","",$class);
     $path = str_replace("\\","/", $class) . FILE_EXT;
     $isEvent = preg_match('#/events/#', $path);
+
+    if(!preg_match('/^rdks\\\.+/', $className)){
+        $path = "app/libs/{$path}";
+    }
 
     if(file_exists($path) || $isEvent){
 
