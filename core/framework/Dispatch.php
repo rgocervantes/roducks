@@ -31,21 +31,28 @@ class Dispatch{
 
 	const PARAM_STRING = 'string';
 	const PARAM_WORD = 'word';
-	const PARAM_PASSWORD = 'password';
-	const PARAM_EMAIL = 'email';
-	const PARAM_CLABE = 'clabe';	
+	const PARAM_WORDS = 'words';
 	const PARAM_INTEGER = 'integer';
 	const PARAM_BOOL = 'bool';
-	const PARAM_HTML = 'html';
-	const PARAM_IMAGE = 'image';
-	const PARAM_JSON = 'json';
-	const PARAM_XML = 'xml';	
+	const PARAM_CLABE = 'clabe';
+	const PARAM_PASSWORD = 'password';
+	const PARAM_EMAIL = 'email';
+	const PARAM_USERNAME = 'username';
 
 	const OPTIONAL_PARAM_STRING = 'optional_string';
 	const OPTIONAL_PARAM_WORD = 'optional_word';
+	const OPTIONAL_PARAM_WORDS = 'optional_words';
 	const OPTIONAL_PARAM_INTEGER = 'optional_integer';
 	const OPTIONAL_PARAM_BOOL = 'optional_bool';
-	const OPTIONAL_PARAM_CLABE = 'optional_clabe';	
+	const OPTIONAL_PARAM_CLABE = 'optional_clabe';
+	const OPTIONAL_PARAM_PASSWORD = 'optional_password';
+	const OPTIONAL_PARAM_EMAIL = 'optional_email';
+	const OPTIONAL_PARAM_USERNAME = 'optional_username';
+
+	const PARAM_HTML = 'html';
+	const PARAM_IMAGE = 'image';
+	const PARAM_JSON = 'json';
+	const PARAM_XML = 'xml';
 
 	static function page($class, $method){
 		$class = Helper::getCamelName($class);
@@ -61,6 +68,11 @@ class Dispatch{
 		$class = Helper::getCamelName($class);
 		return "{$class}/factory/{$class}::{$method}";
 	}	
+
+	static function _factory($class, $method){
+		$class = Helper::getCamelName($class);
+		return "/_factory/{$class}/{$method}";
+	}
 
 	static function json($class, $method){
 		$class = Helper::getCamelName($class);
@@ -222,8 +234,18 @@ class Dispatch{
 				
 				$subRouter = $params;
 				$mainPath = URL::ROOT.$params[0];
+				$altMainPath = $mainPath . URL::ROOT;
 
-				if(isset($routers[$mainPath])){
+				if($altMainPath == $URI){
+					$mainPath = $altMainPath;
+					$params = [];
+				}
+
+				if(isset($routers[$mainPath]) || isset($routers[$altMainPath])){
+
+					if(!isset($routers[$mainPath])){
+						$mainPath = $altMainPath;
+					}
 
 					if(count($params) > 1){
 						unset($subRouter[0]);
@@ -338,20 +360,43 @@ class Dispatch{
 								break;
 
 								case self::PARAM_WORD:
+								case self::OPTIONAL_PARAM_WORD:
 									$regexp = Helper::VALID_WORD;
+								break;
+
+								case self::PARAM_WORDS:
+								case self::OPTIONAL_PARAM_WORDS:
+									$regexp = Helper::VALID_WORDS;
 								break;
 
 								case self::PARAM_INTEGER:
 								case self::OPTIONAL_PARAM_INTEGER:
 									$regexp = Helper::VALID_INTEGER;
 								break;	
+
+								case self::PARAM_BOOL:
+								case self::OPTIONAL_PARAM_BOOL:
+									$regexp = Helper::VALID_BOOL;
+								break;
+
+								case self::PARAM_CLABE:
+								case self::OPTIONAL_PARAM_CLABE:
+									$regexp = Helper::VALID_CLABE;
+								break;
 								
 								case self::PARAM_PASSWORD:
+								case self::OPTIONAL_PARAM_PASSWORD:
 									$regexp = Helper::VALID_PASSWORD;
 								break;
 
 								case self::PARAM_EMAIL:
+								case self::OPTIONAL_PARAM_EMAIL:
 									$regexp = Helper::VALID_EMAIL;
+								break;
+
+								case self::PARAM_USERNAME:
+								case self::OPTIONAL_PARAM_USERNAME:
+									$regexp = Helper::VALID_USERNAME;
 								break;
 
 							}
@@ -427,13 +472,37 @@ class Dispatch{
 										$regexp = Helper::VALID_STRING;
 									break;
 
-									case self::OPTIONAL_PARAM_CLABE:
-										$regexp = Helper::VALID_CLABE;
+									case self::OPTIONAL_PARAM_WORD:
+										$regexp = Helper::VALID_WORD;
+									break;
+
+									case self::OPTIONAL_PARAM_WORDS:
+										$regexp = Helper::VALID_WORDS;
 									break;
 
 									case self::OPTIONAL_PARAM_INTEGER:
 										$regexp = Helper::VALID_INTEGER;
 									break;	
+
+									case self::OPTIONAL_PARAM_BOOL:
+										$regexp = Helper::VALID_BOOL;
+									break;
+
+									case self::OPTIONAL_PARAM_CLABE:
+										$regexp = Helper::VALID_CLABE;
+									break;
+									
+									case self::OPTIONAL_PARAM_PASSWORD:
+										$regexp = Helper::VALID_PASSWORD;
+									break;
+
+									case self::OPTIONAL_PARAM_EMAIL:
+										$regexp = Helper::VALID_EMAIL;
+									break;
+
+									case self::OPTIONAL_PARAM_USERNAME:
+										$regexp = Helper::VALID_USERNAME;
+									break;
 
 								}	
 
@@ -466,13 +535,37 @@ class Dispatch{
 										$regexp = Helper::VALID_STRING;
 									break;
 
-									case self::PARAM_CLABE:
-										$regexp = Helper::VALID_CLABE;
+									case self::PARAM_WORD:
+										$regexp = Helper::VALID_WORD;
+									break;
+
+									case self::PARAM_WORDS:
+										$regexp = Helper::VALID_WORDS;
 									break;
 
 									case self::PARAM_INTEGER:
 										$regexp = Helper::VALID_INTEGER;
 									break;	
+
+									case self::PARAM_BOOL:
+										$regexp = Helper::VALID_BOOL;
+									break;
+
+									case self::PARAM_CLABE:
+										$regexp = Helper::VALID_CLABE;
+									break;
+									
+									case self::PARAM_PASSWORD:
+										$regexp = Helper::VALID_PASSWORD;
+									break;
+
+									case self::PARAM_EMAIL:
+										$regexp = Helper::VALID_EMAIL;
+									break;	
+
+									case self::PARAM_USERNAME:
+										$regexp = Helper::VALID_USERNAME;
+									break;
 
 								}
 
@@ -572,7 +665,7 @@ class Dispatch{
 					list($type, $page) = $params;
 					$method = (!isset($params[2])) ? 'getData' : $params[2];
 					$page = DIR_SERVICES . Helper::getCamelName($page);
-					
+
 					$servicePath = Core::getServicesPath($page);
 					$pagePath = $servicePath['path'];
 			

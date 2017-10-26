@@ -36,7 +36,7 @@ class Helper{
 	const REGEXP_GET_MODULE = '/^([a-zA-Z\-]+)\/.+$/';
 	const REGEXP_IS_URL_DISPATCH = '/^_/';
 	const REGEXP_IS_BLOCK_DISPATCHED = '/^_block/';
-	const REGEXP_IS_SERVICE = '/^services\/[a-zA-Z]+$/';
+	const REGEXP_IS_SERVICE = '/^services\/[a-zA-Z_]+$/';
 	const REGEXP_IS_JSON = '#json#';	
 	const REGEXP_IS_PAGE = '#page#';
 	const REGEXP_IS_BLOCK = '#blocks#';	
@@ -57,6 +57,7 @@ class Helper{
 	const VALID_WORDS = '/^[a-zA-Z\sáéíóúñÁÉÍÓÚÑ]+$/';				
 	const VALID_INTEGER = '/^\d+$/';
 	const VALID_BOOL = '/^(0|1)$/';	
+	const VALID_USERNAME = '/^[a-z]+\.[a-z]+$/';
 	const VALID_HTML = '/\.html$/';
 	const VALID_IMAGE = '/\.(jpeg|jpg|png)$/';
 	const VALID_JSON = '/\.json$/';

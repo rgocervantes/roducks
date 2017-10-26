@@ -92,7 +92,7 @@ abstract class Frame{
 		}
 	}
 
-	private function _urlDispatch(){
+	private function _urlDispatcher(){
 
 		$class = $this->pageObj->className;
 
@@ -122,9 +122,9 @@ abstract class Frame{
 //	PROTECTED METHODS
 //---------------------------------
 */
-	protected function disableUrlDispatch(){
+	protected function disableUrlDispatcher(){
 		$this->_dispatchUrl = false;
-		$this->_urlDispatch();
+		$this->_urlDispatcher();
 	}
 
 	protected function _getParentClassName(){
@@ -381,7 +381,7 @@ abstract class Frame{
 		/* ------------------------------------*/
 		/* 		DISPATCH URL
 		/* ------------------------------------*/		
-		$this->_urlDispatch();
+		$this->_urlDispatcher();
 
 		/* ------------------------------------*/
 		/* 		INITIALIZE VARS

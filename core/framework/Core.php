@@ -396,7 +396,8 @@ class Core{
 
 		$autoload = true;
 		$method = Helper::getCamelName($action, false);
-		$className = $path . Helper::getCamelName($page);
+		$page = (Helper::isService($page)) ? $page : Helper::getCamelName($page);
+		$className = $path . $page;
 		$class = self::getClassNamespace($className);
 		
 		$filePath = preg_replace(Helper::REGEXP_PATH, '$1', $path . $page);

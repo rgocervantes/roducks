@@ -169,11 +169,21 @@ class Asset{
 		$this->_scriptsOnReady = array_merge($this->_scriptsOnReady, $scripts);
 	}
 
-	public function css($arr){
+	public function css($arr, $overwrite = false){
+
+		if($overwrite){
+			$this->_css = "";
+		}
+
 		$this->_cssMeta(DIR_ASSETS_CSS, $arr, true);
 	}
 
-	public function js($arr){
+	public function js($arr, $overwrite = false){
+
+		if($overwrite){
+			$this->_js = "";
+		}
+
 		$this->_jsMeta(DIR_ASSETS_JS, $arr, true);
 	}
 
