@@ -215,6 +215,15 @@ class Query {
 					case 'date:day:>=':
 						$ret .= "EXTRACT( DAY FROM ".$match[1].") >= " . self::_field($value);
 						break;
+					case 'date:year:<>':
+						$ret .= "EXTRACT( YEAR FROM ".$match[1].") != " . self::_field($value);
+						break;
+					case 'date:month:<>':
+						$ret .= "EXTRACT( MONTH FROM ".$match[1].") != " . self::_field($value);
+						break;	
+					case 'date:day:<>':
+						$ret .= "EXTRACT( DAY FROM ".$match[1].") != " . self::_field($value);
+						break;
 					case 'datetime':
 						$ret .= "DATETIME(".$match[1].") = " . self::_field($value);
 						break;						
@@ -246,11 +255,13 @@ class Query {
 						break;	
 					case '>=':
 						$ret .= $match[1] . " >= " . self::_field($value);
+						break;	
+					case '<=':
+						$ret .= $match[1] . " <= " . self::_field($value);
 						break;							
 					default:
 						$ret .= $field . " = " . self::_field($value);
-						break;											
-
+						break;
 				}	
 		}else{
 			$ret = $field . " = " . self::_field($value);

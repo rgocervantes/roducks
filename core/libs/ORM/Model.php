@@ -354,8 +354,8 @@ class Model extends Query{
 		return $this;
 	}
 
-	public function select(array $arguments = [], $fields = "*"){
-		return parent::filter([], $arguments, $fields);
+	public function select($fields = "*"){
+		return parent::filter([], $fields);
 	}
 
 	public function where(array $condition = []){

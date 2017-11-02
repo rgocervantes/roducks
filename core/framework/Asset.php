@@ -187,7 +187,7 @@ class Asset{
 		$this->_jsMeta(DIR_ASSETS_JS, $arr, true);
 	}
 
-	public function plugins(array $options = [], $alt = true){
+	public function plugins(array $options = [], $alt = false){
 
 		if($alt){
 			$this->_css_alt = "";
