@@ -424,10 +424,10 @@ class Query {
 		return self::alias("CONCAT(". implode(",", $values) .")", $field);
 	}
 
-	static function field($field, $concat = ""){
+	static function field($field, $alias = ""){
 
 		if(!empty($concat)){
-			return "{$field}.{$concat}";
+			return self::alias($field, $alias);
 		}
 
 		return $field;
