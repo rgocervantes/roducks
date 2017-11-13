@@ -149,7 +149,7 @@ final class View{
 		$title = $str;
 		
 		if(!$overwrite){
-			$title = PAGE_TITLE . " - " . $str;
+			$title = $str . " - " . PAGE_TITLE;
 		}
 
 		$this->data('_PAGE_TITLE', $str);
