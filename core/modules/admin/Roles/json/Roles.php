@@ -23,14 +23,14 @@ namespace rdks\core\modules\admin\Roles\json;
 use rdks\core\framework\Login;
 use rdks\core\framework\Role;
 use rdks\core\framework\Language;
-use rdks\core\page\JSONProtected;
+use rdks\core\page\_JSON;
 use rdks\core\libs\Utils\Date;
 use rdks\core\libs\Files\Directory;
 use rdks\core\libs\Files\File;
 use rdks\core\libs\Data\Session;
 use rdks\app\models\Users\Roles as RolesTable;
 
-class Roles extends JSONProtected{
+class Roles extends _JSON{
 
 	protected $_dispatchUrl = true;
 

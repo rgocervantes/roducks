@@ -25,12 +25,12 @@ use rdks\core\framework\Role;
 use rdks\core\framework\Form;
 use rdks\core\framework\Helper;
 use rdks\core\framework\Event;
-use rdks\core\page\JSONProtected;
+use rdks\core\page\_JSON;
 use rdks\core\page\View;
 use rdks\core\libs\Utils\Date;
 use rdks\app\models\Users\Users as UsersTable;
 
-class Users extends JSONProtected{
+class Users extends _JSON{
 
 	private $_fields;
 

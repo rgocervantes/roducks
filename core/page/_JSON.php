@@ -20,7 +20,7 @@
 
 namespace rdks\core\page;
 
-class JSONProtected extends JSON {
+class _JSON extends JSON {
 
 	public function __construct(array $settings){
 		parent::__construct($settings);
