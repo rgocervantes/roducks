@@ -22,6 +22,7 @@ namespace rdks\core\page;
 
 use rdks\core\framework\Helper;
 use rdks\core\framework\Core;
+use rdks\core\libs\Protocol\Http;
 
 class Service extends JSON {
 
@@ -35,6 +36,14 @@ class Service extends JSON {
 		$pagePath = $servicePath['path'];
 
 		return Core::loadPage($pagePath, $page, "", array(),array(), true);
+
+	}
+
+	protected function apiMethod($option){
+
+		if(Http::getRequestMethod() != $option){
+			Http::sendMethodNotAllowed();
+		}
 
 	}
 

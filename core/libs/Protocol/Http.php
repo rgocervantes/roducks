@@ -43,6 +43,10 @@ class Http{
 		self::httpHeader(404, "Not Found");	
 	}	
 
+	static function sendMethodNotAllowed(){
+		self::httpHeader(405, "Method Not Allowed");	
+	}		
+
 	static function setHeaderInvalidRequest(){
 		self::httpHeader(501, "Invalid Request");	
 	}
