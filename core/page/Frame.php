@@ -166,6 +166,10 @@ abstract class Frame{
 		return Core::getModuleConfigFile($name, false);
 	}
 
+	protected function getSiteModuleConfig($site, $module){
+		return Core::getSiteModuleConfigFile($site, $module);
+	}
+
 	protected function getViewData(){
 		if($this->view instanceof View){
 			return $this->view->getData();

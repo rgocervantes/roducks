@@ -69,6 +69,10 @@ class Core{
 		return self::getSitePath($site) . DIR_CONFIG . $file . FILE_INC; 		
 	}
 
+	static function getSiteModuleConfigPath($site, $module){
+		return self::getSitePath($site) . DIR_MODULES . $module . self::DS . DIR_CONFIG . "config" . FILE_INC;
+	}
+
 	static function getGlobalConfigPath($file){
 		return self::getGlobalPath() . DIR_CONFIG . $file . FILE_INC; 		
 	}
@@ -310,6 +314,10 @@ class Core{
 
 	static function getSiteConfigFile($name = "config", $required = true){
 		return self::getFileVar(self::getSiteConfigPath($name), $name, $required);
+	}
+
+	static function getSiteModuleConfigFile($site, $module){
+		return self::getFileVar(self::getSiteModuleConfigPath($site, $module), "config", false);
 	}
 
 	static function getRouterFile(){
