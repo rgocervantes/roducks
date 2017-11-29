@@ -72,10 +72,18 @@ $environment = [
 require "./core/framework/Run" . FILE_EXT;
 
 if(isset($params['script'])){
-	$script = "rdks\app\cli\\" . $params['script'];
-	
+
+	$method = "output";
+	$name = $params['script'];
+
+	if(preg_match('#::#', $params['script'])){
+		list($name, $method) = explode("::", $params['script']);
+	}
+
+	$script = "rdks\app\cli\\" . $name;
+
 	$class = new $script($params);
-	$class->output();
+	$class->$method();
 
 }else{
 	Cli::println("Please set a script");
