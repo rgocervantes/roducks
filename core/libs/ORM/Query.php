@@ -290,12 +290,10 @@ class Query {
 		$ret = "";
 
 		if(!is_array($value)){
-			$value = str_replace("'", "\'", $value); // escape single quote
-			$ret = (self::isInteger($value)) ? intval($value) : "'$value'";
+			$ret = (self::isInteger($value)) ? intval($value) : "'{$value}'";
 		}
 
 		return $ret;
-		
 	}
 
 	static private function _operatorCond($field, $value){
@@ -362,7 +360,7 @@ class Query {
 			if(!self::isInteger($v)){
 				$v = $db->real_escape_string($v);
 			}	
-			$ret[] = $k . " = " . self::_field($v);
+			$ret[] = "{$k} = '{$v}'";
 		}
 
 		return implode(", ",$ret);
@@ -723,7 +721,7 @@ class Query {
 					$v = $this->_db->real_escape_string($v);
 				}
 				$fields[] = $k;
-				$values[] = self::_field($v);	
+				$values[] = "'{$v}'";	
 			}
 
 			return $this->_insert($this->_table, implode(",",$fields), implode(",",$values) );
