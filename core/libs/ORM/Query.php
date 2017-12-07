@@ -424,7 +424,7 @@ class Query {
 
 	static function field($field, $alias = ""){
 
-		if(!empty($concat)){
+		if(!empty($alias)){
 			return self::alias($field, $alias);
 		}
 
