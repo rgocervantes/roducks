@@ -472,6 +472,13 @@ class Model extends Query{
 			$this->_joins[$key]['right_join'] = $join;
 		}
 		return $this;
-	}		
+	}	
+
+	protected function filterBy(array $condition, array $fields = []){
+
+        $this->filter($condition, $fields);
+
+        return $this;
+	}
 
 }
