@@ -474,11 +474,4 @@ class Model extends Query{
 		return $this;
 	}	
 
-	protected function filterBy(array $condition, array $fields = []){
-
-        $this->filter($condition, $fields);
-
-        return $this;
-	}
-
 }
