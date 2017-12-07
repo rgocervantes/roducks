@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `updated_date` datetime NOT NULL,   
   PRIMARY KEY (`id_user`),
   UNIQUE INDEX `idx_email` (`email`),
-  CONSTRAINT `id_role` FOREIGN KEY (`id_role`) REFERENCES `roles` (`id_role`) ON DELETE CASCADE ON UPDATE CASCADE  
+  CONSTRAINT `id_role` FOREIGN KEY (`id_role`) REFERENCES `Roles` (`id_role`) ON DELETE CASCADE ON UPDATE CASCADE  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `UrlsLang` (
   `pview` varchar(255) NOT NULL,
   `updated_date` datetime NOT NULL,    
   PRIMARY KEY (`id_url_lang`),
-  CONSTRAINT `id_url` FOREIGN KEY (`id_url`) REFERENCES `urls` (`id_url`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `id_url` FOREIGN KEY (`id_url`) REFERENCES `Urls` (`id_url`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

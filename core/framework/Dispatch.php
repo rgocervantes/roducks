@@ -114,7 +114,7 @@ class Dispatch{
 		$total = count($params) - 1;
 
 		if($total > 2){
-			$last = (isset($params[$total]) && empty($params[$total]));
+			$last = (isset($params[$total]) && empty($params[$total]) && $params[$total] != '0');
 		} else {
 			$last = (isset($params[2]) && $params[2] == '0');
 		}
