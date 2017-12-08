@@ -38,24 +38,25 @@ final class View{
 	/* ------------------------------------*/
 	/* 		VARS
 	/* ------------------------------------*/
-	protected $_template = "";
-	protected $_layout = "";
-	protected $_view = "";
-	protected $_body = "";		
-	protected $_meta = "";
-	protected $_data = [];
-	protected $_url = [];
-	protected $_error = false;
-	protected $_filePath;
-	protected $_parentPage;
+	private $_template = "";
+	private $_layout = "";
+	private $_view = "";
+	private $_body = "";		
+	private $_meta = "";
+	private $_data = [];
+	private $_url = [];
+	private $_error = false;
+	private $_filePath;
+	private $_parentPage;
+	private $_blocks = ['top' => true, 'bottom' => true];
 
 	/* ------------------------------------*/
 	/* 		VIEW GLOBAL VARS
 	/* ------------------------------------*/		
-	protected $_TITLE;
-	protected $_CSS = [];
-	protected $_JS = [];
-	protected $_SCRIPTS = [];
+	private $_TITLE;
+	private $_CSS = [];
+	private $_JS = [];
+	private $_SCRIPTS = [];
 	
 	/* ------------------------------------*/
 	/* 		Public Asset instance
@@ -128,10 +129,13 @@ final class View{
 		$this->_meta .= "<$name $attrs />\n";
 	}
 
-	public function template($template = null){
+	public function template($template = null, $top = true, $bottom = true){
 		if(!is_null($template)){
 			$this->_template = $template;
 		}
+
+		$this->_blocks['top'] = $top;
+		$this->_blocks['bottom'] = $bottom;
 	}
 
 	public function layout($layout = null, array $mapping = []){
@@ -259,7 +263,7 @@ final class View{
 
 				$top = $dir_templates . "top" . FILE_TPL;
 				
-				if(file_exists($top)){
+				if(file_exists($top) && $this->_blocks['top']){
 					include $top;
 				}
 
@@ -302,7 +306,7 @@ final class View{
 				$bottom = $dir_templates . "bottom" . FILE_TPL;
 				$footer = $dir_templates . "footer" . FILE_TPL;
 				
-				if(file_exists($bottom)){
+				if(file_exists($bottom) && $this->_blocks['bottom']){
 					include $bottom;
 				}
 
