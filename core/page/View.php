@@ -149,7 +149,7 @@ final class View{
 		$this->data('_VIEW_TITLE', $str);
 	}
 
-	public function title($str, $overwrite = false){
+	public function title($str, $overwrite = false, $tpl = null){
 		$title = $str;
 		
 		if(!$overwrite){
@@ -158,6 +158,10 @@ final class View{
 
 		$this->data('_PAGE_TITLE', $str);
 		$this->data('_TITLE', $title);
+
+		if(!is_null($tpl)){
+			$this->data('_VIEW_TITLE', $tpl);
+		}
 	}
 
 	public function load($name){
