@@ -163,8 +163,7 @@ class Users extends AdminPage{
 		$this->view->assets->scriptsInline(["pager","grid","popover","users","roles.modal"]);
 		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","grid.ready","datepicker-range.ready"]);		
 		
-		$this->view->title($this->_title);
-		$this->view->viewTitle("title-users");
+		$this->view->title($this->_title, true, "title-users");
 		$this->view->page($this->page);
 		$this->view->data("data", $users);
 		$this->view->data("totals", $totals);
@@ -263,8 +262,7 @@ class Users extends AdminPage{
 		$this->view->assets->scriptsInline(["pager","logs"]);
 		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","datepicker-range.ready.inc"]);		
 
-		$this->view->title("Logs: " . $this->_title);
-		$this->view->viewTitle("title-logs");
+		$this->view->title("Logs: " . $this->_title, true, "title-logs");
 		$this->view->page($this->page);
 		$this->view->data("data", $data['data']);
 		$this->view->data("isFiltered", $isFiltered);

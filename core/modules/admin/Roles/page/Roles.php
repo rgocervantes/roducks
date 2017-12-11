@@ -50,8 +50,7 @@ class Roles extends AdminPage{
 
 	private function _form(){
 
-		$this->view->title("Roles");
-		$this->view->viewTitle("title-roles");
+		$this->view->title("Roles", true, "title-roles");
 		$this->view->assets->scriptsInline(["form","tooltip"]);
 		$this->view->assets->scriptsOnReady(["roles.ready"]);
 
@@ -65,8 +64,7 @@ class Roles extends AdminPage{
 
 		$roles = Role::getList(RolesHelper::$list);
 
-		$this->view->title("Roles");
-		$this->view->viewTitle("title-roles");
+		$this->view->title("Roles", true, "title-roles");
 		$this->view->data("roles", $roles);
 
 		$this->view->layout("sidebar-content",[
@@ -100,8 +98,7 @@ class Roles extends AdminPage{
 		$this->view->assets->scriptsInline(["pager","grid","popover","roles","roles.modal"]);
 		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","grid.ready"]);
 
-		$this->view->title("Roles - " . Role::getTitle($this->type));
-		$this->view->viewTitle("title-roles");
+		$this->view->title("Roles - " . Role::getTitle($this->type), true, "title-roles");
 		$this->view->page($this->page);
 
 		$this->view->data('data', $data);

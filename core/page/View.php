@@ -145,10 +145,6 @@ final class View{
 		}
 	}	
 
-	public function viewTitle($str){
-		$this->data('_VIEW_TITLE', $str);
-	}
-
 	public function title($str, $overwrite = false, $tpl = null){
 		$title = $str;
 		
