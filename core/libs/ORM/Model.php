@@ -261,8 +261,13 @@ class Model extends Query{
 					case self::TYPE_BLOB:
 						$regexp = '/^.+$/';
 						break;
-					case self::TYPE_DATETIME:	
-						$regexp = '/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/';
+					case self::TYPE_DATETIME:
+						if($value == 'NOW()'){
+							$regexp = '/^(NOW)\(\)$/';
+						} else {
+							$regexp = '/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/';
+						}
+						
 						break;
 					case self::TYPE_DATE:
 						$regexp = '/^\d{4}-\d{2}-\d{2}$/';

@@ -68,6 +68,7 @@ class Query {
 	const DATA_OBJECT = "object";
 	const DATA_ARRAY = "array";
 	const DATA_ASSOC = "assoc";
+	const NOW = "NOW()";
 
 	private $_db,	
 		$_statment, 
@@ -351,6 +352,14 @@ class Query {
 		return $ret;
 	}
 
+	static private function _value($v){
+		if($v == 'NOW()'){
+			return $v;
+		}
+
+		return "'{$v}'";
+	}
+
 	static private function _values($values, $db){
 
 		$i = 0;
@@ -359,8 +368,9 @@ class Query {
 		foreach($values as $k => $v){ $i++;
 			if(!self::isInteger($v)){
 				$v = $db->real_escape_string($v);
-			}	
-			$ret[] = "{$k} = '{$v}'";
+			}
+			$v = self::_value($v);
+			$ret[] = "{$k} = {$v}";
 		}
 
 		return implode(", ",$ret);
@@ -721,7 +731,7 @@ class Query {
 					$v = $this->_db->real_escape_string($v);
 				}
 				$fields[] = $k;
-				$values[] = "'{$v}'";	
+				$values[] = self::_value($v);	
 			}
 
 			return $this->_insert($this->_table, implode(",",$fields), implode(",",$values) );
