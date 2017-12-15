@@ -25,5 +25,6 @@ $modules = [
 	'Sample'		=> true,
 	'Subscribers' 	=> true,
 	'Users' 		=> true,
-	'Clients' 		=> true
+	'Clients' 		=> true,
+	'Posts'			=> true
 ];

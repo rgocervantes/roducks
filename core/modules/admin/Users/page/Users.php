@@ -167,8 +167,8 @@ class Users extends AdminPage{
 		$this->view->page($this->page);
 		$this->view->data("data", $users);
 		$this->view->data("totals", $totals);
-		$this->view->data("totalPages", $users->getTotalPages());
-		$this->view->data("pageRedirect", URL::build("", ['page' => ""]));
+		$this->view->tpl("totalPages", $users->getTotalPages());
+		$this->view->tpl("pageRedirect", URL::build("", ['page' => ""]));
 		$this->view->data("access", $access);
 		$this->view->data("type", $this->_type);
 		$this->view->data("icon", RolesHelper::getIcon($this->_type));
@@ -181,7 +181,7 @@ class Users extends AdminPage{
 		$this->view->data("end_date", Date::convertToDMY($end_date, "/"));			
 		$this->view->data("urlDatepicker", "{$this->_url}/search");
 		$this->view->data("urlReset", "{$this->_url}/reset-filter{$paramTrash}");		
-		$this->view->data("btnCreateUrl", "{$this->_url}/add");		
+		$this->view->tpl("btnCreateUrl", "{$this->_url}/add");		
 
 		$this->view->layout("sidebar-content",[
 			'CONTENT' => [
@@ -202,7 +202,7 @@ class Users extends AdminPage{
 		return $this->view->output();
 	}
 
-	public function resetFilter($url){
+	public function resetFilter(){
 		Session::reset(self::DATE_RANGE_USERS);
 		$paramTrash = "";
 
@@ -210,7 +210,7 @@ class Users extends AdminPage{
 			$paramTrash = URL::build("", ['trash' => $this->trash]);
 		}
 
-		$this->redirect("{$url}{$paramTrash}");
+		$this->redirect("{$this->_url}{$paramTrash}");
 	}
 
 	public function resetLogs(){
@@ -271,8 +271,8 @@ class Users extends AdminPage{
 		$this->view->data("urlDatepicker", "{$this->_url}/logs/datepicker/id/{$id_user}");
 		$this->view->data("urlReset", "{$this->_url}/reset-logs/id/{$id_user}");
 		$this->view->data("id_user", $id_user);
-		$this->view->data("totalPages", $data['pages']);
-		$this->view->data("pageRedirect", URL::build("", ['page' => ""]));		
+		$this->view->tpl("totalPages", $data['pages']);
+		$this->view->tpl("pageRedirect", URL::build("", ['page' => ""]));		
 
 		$this->view->layout("sidebar-content",[
 			'CONTENT' => [

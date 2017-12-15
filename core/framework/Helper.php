@@ -32,7 +32,7 @@ class Helper{
 	const REGEXP_API = '(?P<API>[0-9\.]+)';
 	const REGEXP_STRING_ALL = '/^.+$/';
 	const REGEXP_FILE_EXT = '/\.([a-z]+)$/';
-	const REGEXP_URL_DISPATCH = '[a-z0-9\-\/_]+';
+	const REGEXP_URL_DISPATCH = '[a-z\-\_]+(\/[a-z\-_]+(\/[a-zA-Z0-9\-\+\/_]+)?)?';
 	const REGEXP_GET_MODULE = '/^([a-zA-Z\-]+)\/.+$/';
 	const REGEXP_IS_URL_DISPATCH = '/^_/';
 	const REGEXP_IS_BLOCK_DISPATCHED = '/^_block/';
@@ -182,9 +182,32 @@ class Helper{
 		return preg_replace('/^.+\\\([a-zA-Z_]+)$/', '$1', $class);
 	}	
 
+	static function replaceJsonAcents($str, $inverse = false, $esc = true){
+		$slash = ($esc) ? '\\' : '';
+	    $chars = ['á','é','í','ó','ú','ñ','Á','É','í','Ó','Ú','Ñ'];
+	    $replacement = [$slash.'u00e1',$slash.'u00e9',$slash.'u00ed',$slash.'u00f3',$slash.'u00fa',$slash.'u00f1',$slash.'u00c1',$slash.'u00c9',$slash.'u00cd',$slash.'u00d3',$slash.'u00da',$slash.'u00d1'];
+
+	    if($inverse){
+	    	return str_replace($replacement, $chars, $str);
+	    }
+	                 
+		return str_replace($chars, $replacement, $str);        
+	}
+
+	static function replaceAcents($str, $inverse = false){
+	    $chars = ['á','é','í','ó','ú','ñ','Á','É','í','Ó','Ú','Ñ'];
+	    $replacement = ['a','e','i','o','u','n','A','E','I','O','U','N'];
+
+	    if($inverse){
+	    	return str_replace($replacement, $chars, $str);
+	    }
+
+		return str_replace($chars, $replacement, $str);        
+	}
+
 	static function removeSpecialChars($str){
 		$str = strtolower($str);
-		$str = self::removeAcents($str);
+		$str = self::replaceAcents($str);
 		$str = str_replace(array("#","@","$","%","&","/","(",")","=","?","¿","¡","!","'",'"',"*","+",",",".","-"), "", $str);
 		$str = str_replace(" ", "-", $str);
 		
@@ -211,11 +234,6 @@ class Helper{
 	static function getUserIcon($gender){
 		$rand = rand(1,4);
 		return "user_{$gender}_{$rand}.jpg";
-	}
-
-	static function removeAcents($str){
-		return str_replace(array("á","é","í","ó","ú","Á","É","Í","Ó","Ú","ñ","Ñ"), 
-							array("a","e","i","o","u","A","E","I","O","U","n","N"), $str);
 	}
 
 	static function integerLength($value, $n){
@@ -365,6 +383,30 @@ class Helper{
 		unset($params[2]);
 
 		return self::resetArray($params);
+	}
+
+	static function getPairParams(array $params = []){
+		$ret = [];
+		$i = 0;
+
+		if(count($params) % 2 == 1){
+			return $params;
+		}
+
+		foreach ($params as $key => $param) {
+			$pair = ($i % 2);
+			if($pair == 0) {
+				$param = self::replaceJsonAcents($param, true, false);
+				$value = (isset($params[$i+1])) ? $params[$i+1] : "";
+				$value = self::replaceJsonAcents($value, true, false);
+				$value = str_replace("+", " ", $value);
+				$ret[$param] = $value;
+			}
+
+			$i++;
+		}
+
+		return $ret;
 	}
 
 	static function removeFileExt($str){

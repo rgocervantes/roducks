@@ -400,9 +400,10 @@ class Core{
 		}
 	}
 	
-	static function loadPage($path, $page, $action, $urlParam = array(), $params = array(), $return = false, array $url = []){
+	static function loadPage($path, $page, $action, array $urlParam = [], array $params = [], $return = false, array $url = []){
 
 		$autoload = true;
+		$isBlock = false; 
 		$method = Helper::getCamelName($action, false);
 		$page = (Helper::isService($page)) ? $page : Helper::getCamelName($page);
 		$className = $path . $page;
@@ -461,6 +462,7 @@ class Core{
 
 			    $classFile = str_replace("rdks\\","",$class);
 			    $path = str_replace("\\","/", $classFile) . FILE_EXT;
+			    $isBlock = true;
 
 			    if(file_exists($path)){
 
@@ -479,6 +481,10 @@ class Core{
 			if($autoload){
 				// Call page and pass view
 				$obj = new $class($pageObj, $view);
+
+				if($isBlock){
+					$obj->setVars($urlParam);
+				}
 			}
 
 		} else {

@@ -44,6 +44,7 @@ final class View{
 	private $_body = "";		
 	private $_meta = "";
 	private $_data = [];
+	private $_tpl = [];
 	private $_url = [];
 	private $_error = false;
 	private $_filePath;
@@ -102,6 +103,10 @@ final class View{
 			$this->_data[$key] = $value;
 		}	
 		
+	}
+
+	public function tpl($key, $value = ""){
+		$this->_tpl[$key] = $value;
 	}
 
 	public function getData(){
@@ -191,6 +196,10 @@ final class View{
 		}
 	}
 
+	public function setError(){
+		$this->_error = true;
+	}
+
 	public function error($visibility, $method = "", $alert = "An error ocurred in this method"){
 
 		if(Helper::regexp('#app#', $this->_filePath)){
@@ -222,6 +231,10 @@ final class View{
 
 	public function output($header_footer = true, $scripts = true){
 
+		if($this->_error){
+			return false;
+		}
+
 		$this->_urlData();
 
 		$dir_templates = Core::getTemplatesPath($this->_template);
@@ -244,6 +257,8 @@ final class View{
 		if(!file_exists($dir_layouts) && !empty($this->_layout)){
 			Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $dir_layouts);
 		}
+
+		$this->data("tpl", $this->_tpl);
 
 		// Get Stylesheets & javascripts
 		$this->data('_CSS', $this->assets->getCss());

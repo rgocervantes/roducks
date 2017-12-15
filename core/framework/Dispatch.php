@@ -53,6 +53,8 @@ class Dispatch{
 	const PARAM_IMAGE = 'image';
 	const PARAM_JSON = 'json';
 	const PARAM_XML = 'xml';
+	const PARAM_ARRAY = 'array';
+	const PARAM_NOT_EMPTY_ARRAY = 'not_empty_array';
 
 	static function page($class, $method){
 		$class = Helper::getCamelName($class);
@@ -116,7 +118,7 @@ class Dispatch{
 		if($total > 2){
 			$last = (isset($params[$total]) && empty($params[$total]) && $params[$total] != '0');
 		} else {
-			$last = (isset($params[2]) && $params[2] == '0');
+			$last = (isset($params[2]) && ($params[2] == '0' || $params[2] == ""));
 		}
 
 		return $last;
@@ -321,8 +323,19 @@ class Dispatch{
 			// Let's take a look if there's POST Params
 			if(isset($dispatcher['POST']) && is_array($dispatcher['POST'])) {
 
-				Post::stRequired();
-
+				if(isset($dispatcher['POST'][':required'])){
+					if(!Post::stSentData()){
+						if(Helper::regexp('#::#', $dispatcher['POST'][':required'])) {
+							list($page,$method) = explode("::", $dispatcher['POST'][':required']);
+						} else {
+							Error::debug("Bad dispatcher syntax",__LINE__, __FILE__, $routerPath);
+						}
+					}
+					unset($dispatcher['POST'][':required']);
+				} else {
+					Post::stRequired();
+				}
+				
 				foreach ($dispatcher['POST'] as $key => $value) {
 
 					$val = (is_array($value)) ? array_keys($value)[0] : $value;
@@ -639,6 +652,7 @@ class Dispatch{
 						case '_block_':
 							$pagePath = Core::getBlocksPath($page);
 							$action = 'output';
+							$urlPattern = [];
 							break;
 					}
 

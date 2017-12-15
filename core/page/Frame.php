@@ -251,6 +251,7 @@ abstract class Frame{
 		$relativeUrl = URL::getRelativeURL();
 		$getGETParams = URL::getGETParams();
 		$alert = "debug";
+		$title = "Unexpected value";
 
 		if($this->_pageType == 'BLOCK'){
 			$alert = "warning";
@@ -278,6 +279,33 @@ abstract class Frame{
 			if(isset($value[0]) && isset($value[1]) && isset($value[2])){
 				
 				if($value[1] == 'PARAM'){
+
+					if($value[2] == Dispatch::PARAM_ARRAY){
+						if(is_array($value[0])){
+							continue;
+						} else {
+							$error = "Param <b>{$p}</b> must be <b>{$value[2]}</b>";
+							Error::$alert("Missing value",__LINE__, __FILE__, $this->pageObj->fileName, $error);
+							$this->view->setError();
+							$value[0] = Dispatch::PARAM_ARRAY;
+							$value[2] = Dispatch::PARAM_STRING;
+						}
+					}
+
+					if($value[2] == Dispatch::PARAM_NOT_EMPTY_ARRAY){
+						
+						if(is_array($value[0]) && !empty($value[0])){
+							continue;
+						}
+
+						$error = "Param <b>{$p}</b> must not be an <b style=\"color:#c00;\">EMPTY</b> <b>Array</b>";
+						Error::$alert("Missing value",__LINE__, __FILE__, $this->pageObj->fileName, $error);
+						$this->view->setError();
+						$value[0] = Dispatch::PARAM_ARRAY;
+						$value[2] = Dispatch::PARAM_STRING;
+
+					}
+
 					if($skip){
 						continue;
 					}
@@ -285,12 +313,14 @@ abstract class Frame{
 					$i = $count;
 					$count++;
 
+/*
 					if(empty($value[0])){
 						$autocomplete = (isset($value[3])) ? $value[3] : "[{$value[2]}]";
 						$error = "Complete URL params:<br><br><span style=\"color:#c00;\">{$relativeUrl}/</span><b>{$autocomplete}</b>";
 						Error::$alert("Missing value",__LINE__, __FILE__, $this->pageObj->fileName, $error);
+						$this->view->setError();
 					}
-
+*/
 					if($this->_pageType == 'BLOCK'){
 						$total++;
 					}
@@ -314,11 +344,20 @@ abstract class Frame{
 
 				if($value[1] == 'PARAM'){
 					$key = (isset($params[$i])) ? $params[$i] : $value[0];
-					$error = "Unreconignized param <b>{$key}</b>, it must be <b>{$value[2]}</b>";
-					$err = "Unreconignized param <b>{$key}</b>";
+
+					if(empty($key)){
+						$ruleRegExp = (isset($value[3])) ? " that must match this regular expression {$value[3]}" : "";
+						$error = "Param <b>{$p}</b> must be <b>{$value[2]}</b>{$ruleRegExp}";
+						$err = $error;
+						$title = "Missing value";
+					} else {
+						$error = "Unreconignized param <b>{$key}</b>, it must be <b>{$value[2]}</b>";
+						$err = "Unreconignized param <b>{$key}</b>";
+					}
+
 				} else {
 					$key = $p;
-					$error = "Param '{$key}' must be <b>{$value[2]}</b>";
+					$error = "Param <b>{$key}</b> must be <b>{$value[2]}</b>";
 					if(isset($getGETParams[$key])){
 						$err = "Invalid value for GET param: <b>{$key}</b>";
 					} else {
@@ -327,7 +366,7 @@ abstract class Frame{
 					
 				}	
 				
-				if(isset($value[3])){
+				if(isset($value[3]) && !empty($value[0])){
 					$regexp = $value[3];
 					$error = "Param <b>{$key}</b> does not match with this regular expression: {$regexp}";
 	
@@ -339,7 +378,8 @@ abstract class Frame{
 				}
 
 				if(!Helper::regexp($regexp, $value[0])){
-					Error::$alert("Unexpected value",__LINE__, __FILE__, $this->pageObj->fileName, $error);
+					Error::$alert($title,__LINE__, __FILE__, $this->pageObj->fileName, $error);
+					$this->view->setError();
 				}
 			}
 
@@ -352,6 +392,7 @@ abstract class Frame{
 			}
 			
 			Error::debug("Unexpected params",__LINE__, __FILE__, $this->pageObj->fileName, "Expected {$count} params, {$total} given instead:<br><br>{$error}");
+			$this->view->setError();
 		}
 
 	}
@@ -393,6 +434,14 @@ abstract class Frame{
 		$this->_autoLoad(URL::getGETParams());
 
 	}	
+
+	public function setVars(array $params = []){
+		if(empty($params)){
+			return;
+		}
+
+		$this->_autoLoad($params);
+	}
 
 	public function getParentClassName(){
 		return '\\'.$this->_getParentClassName();

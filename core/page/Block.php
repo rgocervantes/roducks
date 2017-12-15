@@ -37,6 +37,20 @@ class Block extends Frame {
 
 	}
 
+	protected function getArray($values){
+
+		if(empty($values)){
+			return [];
+		}
+
+		if(!is_array($values)){
+			$values = explode("_", $values);
+			$values = Helper::getPairParams($values);
+		}
+
+		return $values;
+	}
+
 	static private function _getBlockPath($path){
 
 		$params = [];
@@ -69,7 +83,7 @@ class Block extends Frame {
 	*	Block::load("Home/output/bar/12345");
 	*	Block::load("Home", ["foo" => "bar", 'id' => 12345] );	
 	*/
-	static function load($path, array $extraParams = []){
+	static function load($path, array $extraParams = [], array $queryString = []){
 
 		list($block, $method, $params) = self::_getBlockPath($path);
 		$block = Helper::getCamelName($block);
@@ -79,7 +93,7 @@ class Block extends Frame {
 			$params = array_merge($params, $extraParams);
 		}
 
-		Core::loadPage(Core::getBlocksPath($block), $block, $method, $params, $params);
+		Core::loadPage(Core::getBlocksPath($block), $block, $method, $queryString, $params);
 
 	}
 

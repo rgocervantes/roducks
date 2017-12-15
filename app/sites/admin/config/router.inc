@@ -103,7 +103,8 @@ $router = [
 					'email' => Dispatch::OPTIONAL_PARAM_STRING,
 					'id_user' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'start_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD]							
+					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
+					':required' => Dispatch::page("users", "reset-filter")						
 				]
 			],	
 			'/picture(/id/(?P<userId>\d+))?' => [
@@ -137,7 +138,8 @@ $router = [
 				],				
 				'POST' => [
 					'start_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD]	
+					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
+					':required' => Dispatch::page("users", "reset-filter")
 				]
 			]
 		]
@@ -166,7 +168,8 @@ $router = [
 					'email' => Dispatch::OPTIONAL_PARAM_STRING,
 					'id_user' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'start_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD]		
+					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
+					':required' => Dispatch::page("subscribers", "reset-filter")
 				]
 			],		
 			'/picture/id/(?P<userId>\d+)' => [
@@ -200,7 +203,8 @@ $router = [
 				],				
 				'POST' => [
 					'start_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD]	
+					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
+					':required' => Dispatch::page("subscribers", "reset-filter")
 				]
 			]
 		]
@@ -229,7 +233,8 @@ $router = [
 					'email' => Dispatch::OPTIONAL_PARAM_STRING,
 					'id_user' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'start_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD]		
+					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
+					':required' => Dispatch::page("clients", "reset-filter")		
 				]
 			],		
 			'/picture/id/(?P<userId>\d+)' => [
@@ -263,10 +268,12 @@ $router = [
 				],				
 				'POST' => [
 					'start_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD]	
+					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
+					':required' => Dispatch::page("clients", "reset-filter")
 				]
 			]
 		]
-	]
+	],
+
 ];
 

@@ -165,17 +165,9 @@ class URL{
 	static function getPairParams(){
 
 		$params = self::getRealParams();
-		$ret = [];
-
-		foreach ($params as $key => $value) {
-			$pair = ($key % 2);
-			if($pair == 0) {
-				$ret[$value] = (isset($params[$key+1])) ? $params[$key+1] : "";
-			}
-		}
+		$ret = Helper::getPairParams($params);
 
 		return $ret;
-
 	}
 
 	static function getRelativeURL(){

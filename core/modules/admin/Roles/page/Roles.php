@@ -102,14 +102,19 @@ class Roles extends AdminPage{
 		$this->view->page($this->page);
 
 		$this->view->data('data', $data);
-		$this->view->data("totalPages", $data->getTotalPages());	
-		$this->view->data("pageRedirect", URL::build("", ['page' => ""]));	
-		$this->view->data("btnCreateUrl", "/roles/add");	
-		$this->view->data("urlAutocomplete", "/_json/roles/search");
-		$this->view->data("redirectAutocomplete", "/roles/edit/id/");
-		$this->view->data("cbAutocomplete", "cbRolesAutocomplete");
-		$this->view->data("paramsAutocomplete", JSON::encode(['type' => $this->type]));
-		$this->view->data("access", $access);			
+		$this->view->data("access", $access);
+
+		$autocomplete = [
+			'url' => "/_json/roles/search",
+			'redirect' => "/roles/edit/id/",
+			'callback' => "cbRolesAutocomplete",
+			'params' => JSON::encode(['type' => $this->type])
+		];
+
+		$this->view->tpl("totalPages", $data->getTotalPages());
+		$this->view->tpl("pageRedirect", URL::build("", ['page' => ""]));
+		$this->view->tpl("btnCreateUrl", "/roles/add");
+		$this->view->tpl("autocomplete", $autocomplete);
 
 		$this->view->layout("sidebar-content",[
 			'CONTENT' => [
