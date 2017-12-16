@@ -171,6 +171,7 @@ class Core{
 		$alert = "debug";
 
 		$coreModules = DIR_CORE . DIR_MODULES;
+		$coreBlocks = DIR_CORE . DIR_BLOCKS;
 		$siteBlocks = self::getSitePath() . DIR_BLOCKS;
 		$globalBlocks = self::getGlobalPath() . DIR_BLOCKS;
 
@@ -200,7 +201,6 @@ class Core{
 
 			if(Helper::isBlock($path)) {
 				$alert = "warning";
-				$path = $pathCore;
 
 				if(file_exists($siteBlocks.$file.$view) && !empty($tpl)){
 					$path = $siteBlocks.$file;
@@ -208,10 +208,10 @@ class Core{
 				} else if(file_exists($globalBlocks.$file.$view) && !empty($tpl)){
 					$path = $globalBlocks.$file;
 					$found = true;
-				} else if(file_exists($path.$view) && !empty($tpl)){
+				} else if(file_exists($coreBlocks.$file.$view) && !empty($tpl)){
+					$path = $coreBlocks.$file;
 					$found = true;
 				}
-
 			}
 		}
 
