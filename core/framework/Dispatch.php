@@ -691,7 +691,7 @@ class Dispatch{
 
 		}
 
-		// avoid dispatch page if factory exists
+		// Avoid dispatching a page if factory exists
 		Error::cantDispatchFactory($pagePath, $page);
 
 		// Load page
