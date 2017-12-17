@@ -19,9 +19,9 @@
  *	-----------------
  *	COMMAND LINE
  *	-----------------
- *	time php core/scripts/cli.php script=users env=pro email=dummy@yoursite.com password=duke017
- *	time php core/scripts/cli.php script=users env=pro email=dummy@yoursite.com password=duke017 reset=true 
- *	time php core/scripts/cli.php script=users env=pro superadmin=true  
+ *	time php core/scripts/cli.php script=users::create env=pro email=dummy@yoursite.com password=duke017
+ *	time php core/scripts/cli.php script=users::reset env=pro email=dummy@yoursite.com password=duke017
+ *	time php core/scripts/cli.php script=users::who env=pro
  */
 
 namespace rdks\app\cli;
@@ -34,7 +34,7 @@ use rdks\app\models\Users\Users as UsersTable;
 
 class users extends Cli {
 
-	private function _create(){
+	public function create(){
 		
 		$email = $this->getParam('email', "");
 		$password = $this->getParam('password', "");
@@ -84,9 +84,11 @@ class users extends Cli {
 			$this->setWarning("Email and Password are required.");
 		}
 
+		parent::output();
+
 	}
 
-	private function _reset(){
+	public function reset(){
 
 		$email = $this->getParam('email', "");
 		$password = $this->getParam('password', "");
@@ -110,9 +112,11 @@ class users extends Cli {
 			$this->setWarning("Email and Password are required.");
 		}
 
+		parent::output();
+
 	}
 
-	private function _superAdmin(){
+	public function who(){
 		$db = $this->db();
 		$user = UsersTable::open($db)->load(1);
 
@@ -123,19 +127,8 @@ class users extends Cli {
 			$this->setWarning("Super Admin does not exist yet.");
 		}
 
-	}
-
-	public function output(){
-
-		if(!empty($this->getParam('superadmin', ""))){
-			$this->_superAdmin();
-		} else if(!empty($this->getParam('reset', ""))){
-			$this->_reset();
-		} else {
-			$this->_create();
-		}
-
 		parent::output();
 
 	}
+
 }
