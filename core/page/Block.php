@@ -100,9 +100,9 @@ class Block extends Frame {
 	/**
 	*	Block::getData("Home")->results();
 	*/
-	static function getData($path){
+	static function getData($block){
 
-		list($block, $method, $params) = self::getBlockPath($path);
+		$block = Helper::getCamelName($block);
 
 		return Core::loadPage(Core::getBlocksPath($block), $block, "output", array(), array(), true);
 		
