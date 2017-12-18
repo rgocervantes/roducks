@@ -70,8 +70,8 @@ abstract class Frame{
 				if(!is_array($value)){
 					$value = (Helper::isInteger($value)) ? intval($value) : $value;	
 				}
-				
-				if(!empty($value)) {
+
+				if(!empty($value) || $value == 0) {
 					$this->$key = $value;
 				}
 
