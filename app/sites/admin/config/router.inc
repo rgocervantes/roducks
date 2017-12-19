@@ -128,8 +128,17 @@ $router = [
 			'/reset-logs/id/(?P<userId>\d+)' => [
 				'dispatch' => Dispatch::page("users", "reset-logs")
 			],
-			'/logs(/id/(?P<userId>\d+))?' => [
-				'dispatch' => Dispatch::page("users", "logs")
+			'/logs' => [
+				'dispatch' => Dispatch::page("users", "logs"),
+				'GET' => [
+					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
+				]
+			],	
+			'/logs/id/(?P<userId>\d+)' => [
+				'dispatch' => Dispatch::page("users", "logs"),
+				'GET' => [
+					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
+				]
 			],			
 			'/logs/datepicker/id/(?P<userId>\d+)' => [
 				'dispatch' => Dispatch::page("users", "logs"),
@@ -193,6 +202,12 @@ $router = [
 			'/reset-logs/id/(?P<userId>\d+)' => [
 				'dispatch' => Dispatch::page("subscribers", "reset-logs")
 			],			
+			'/logs' => [
+				'dispatch' => Dispatch::page("subscribers", "logs"),
+				'GET' => [
+					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
+				]
+			],	
 			'/logs/id/(?P<userId>\d+)' => [
 				'dispatch' => Dispatch::page("subscribers", "logs")
 			],
@@ -258,6 +273,12 @@ $router = [
 			'/reset-logs/id/(?P<userId>\d+)' => [
 				'dispatch' => Dispatch::page("clients", "reset-logs")
 			],			
+			'/logs' => [
+				'dispatch' => Dispatch::page("clients", "logs"),
+				'GET' => [
+					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
+				]
+			],	
 			'/logs/id/(?P<userId>\d+)' => [
 				'dispatch' => Dispatch::page("clients", "logs")
 			],
