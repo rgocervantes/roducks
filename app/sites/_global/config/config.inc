@@ -27,7 +27,7 @@ $config = [
 		'DIR_UPLOAD' => Path::getUploadsUsers(),
 		'DIR_UPLOADED' => Path::getUploadedUsers(),
 		'SQUARED_CLIPPINGS' => [150,90,20],
-		'SIZE' => [200,"KB"],
+		'SIZE' => [400,"KB"],
 		'TYPES' => ['image/jpg','image/png','image/jpeg']
 	]
 ];

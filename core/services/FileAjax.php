@@ -89,7 +89,8 @@ class FileAjax extends Service{
 
 		$data = [
 			'dir' => $dir2,
-			'img' => Path::getCropName($file, 150),
+			'img_full' => $file,
+			'img_cropped' => Path::getCropName($file, 150),
 			'name' => $file
 		];
 
@@ -149,7 +150,8 @@ class FileAjax extends Service{
 
 		$this->params([
 			'class' => [$class, 'PARAM', Dispatch::PARAM_STRING],
-			'action' => [$action, 'PARAM', Dispatch::PARAM_STRING]			
+			'index' => [$index, 'PARAM', Dispatch::PARAM_STRING],
+			'action' => [$action, 'PARAM', Dispatch::PARAM_STRING]
 		]);
 
 		$method = Helper::getCamelName($action, false);

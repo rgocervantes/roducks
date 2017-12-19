@@ -37,6 +37,7 @@ class Image {
     private function ext($str){
 
         $ext = substr($str, -4);
+        $type = 'JPEG';
 
         switch($ext){
         	case '.png':

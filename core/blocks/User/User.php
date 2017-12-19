@@ -21,6 +21,7 @@
 namespace rdks\core\blocks\User;
 
 use rdks\core\page\Block;
+use rdks\core\page\JSON;
 use rdks\core\framework\Dispatch;
 use rdks\core\framework\Helper;
 use rdks\core\framework\Login;
@@ -116,6 +117,11 @@ class User extends Block{
 
 		return $this->view->output();
 
+	}
+
+	public function getUploadSize(){
+		$config = $this->getGlobalConfig();
+		return (isset($config['USER']['SIZE'])) ? JSON::encode($config['USER']['SIZE']) : JSON::encode([100,"KB"]);
 	}
 
 	public function output($session, $resize = 150){

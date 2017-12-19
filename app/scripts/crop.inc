@@ -35,9 +35,9 @@ function cropComplete() {
 function cbCropSuccess(response) {
 	
 	if(response.success) {
-		var img = response.data.dir + response.data.img;
-		var file = response.data.dir + response.data.cropper;
-		$("#cropped").html( $rdks.html.a('javascript:;', $rdks.html.img( img ) , {"onclick":"$rdks.alert.image({\"src\": \""+file+"\"});"}) );
+		var img_full = response.data.dir + response.data.img_full,
+			img_cropped = response.data.dir + response.data.img_cropped;
+		$("#cropped").html( $rdks.html.a('javascript:;', $rdks.html.img( img_cropped ) , {"onclick":"$rdks.alert.image({&quot;src&quot;: &quot;"+img_full+"&quot;});"}) );
 
 		$rdks.http.postJson('<?php echo $url_json_picture; ?>', {picture: response.data.name}, function(response){
 			cropComplete();

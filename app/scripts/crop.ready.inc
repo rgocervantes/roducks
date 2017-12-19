@@ -2,7 +2,7 @@
 			'jpg'
 		];
 
-	var size = [200,"KB"];	
+	var size = <?php echo \rdks\core\page\Block::getData("user")->getUploadSize(); ?>;	
 
 	uploader.init({
 		id: '#btn-upload', // .btn-upload
