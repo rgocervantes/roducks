@@ -55,7 +55,8 @@ class Block extends Frame {
 
 		$params = [];
 		$block = $path;
-		$method = "output";
+		$default = "output";
+		$method = $default;
 
 		if(Helper::hasSlashes($path)){
 
@@ -65,7 +66,7 @@ class Block extends Frame {
 			unset($slashes[0]);
 			
 			if(isset($slashes[1])){
-				$method = $slashes[1];
+				$method = (!empty($slashes[1])) ? $slashes[1] : $default;
 				unset($slashes[1]);
 			} 
 
