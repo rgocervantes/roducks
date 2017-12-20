@@ -83,7 +83,7 @@ class Account extends FrontPage {
 		$this->view->assets->scriptsOnReady(["crop.ready"]);
 
 		$this->view->title("Foto");
-		$this->view->data("url_json_picture", "/_json/account/picture");
+		$this->view->tpl("urlJsonPicture", "/_json/account/picture");
 		$this->view->data("picture", Login::getSubscriberPicture());
 		$this->view->load("picture");
 

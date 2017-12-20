@@ -451,7 +451,7 @@ class Users extends AdminPage{
 		$this->view->assets->scriptsOnReady(["crop.ready"]);
 
 		$this->view->title(TEXT_PROFILE_PICTURE);
-		$this->view->data("url_json_picture", "/_json{$this->_url}/picture/id/{$id_user}");
+		$this->view->tpl("urlJsonPicture", "/_json{$this->_url}/picture/id/{$id_user}");
 		$this->view->data("picture", $row['picture']);
 		$this->view->data("gender", $row['gender']);
 

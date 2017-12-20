@@ -39,7 +39,7 @@ function cbCropSuccess(response) {
 			img_cropped = response.data.dir + response.data.img_cropped;
 		$("#cropped").html( $rdks.html.a('javascript:;', $rdks.html.img( img_cropped ) , {"onclick":"$rdks.alert.image({&quot;src&quot;: &quot;"+img_full+"&quot;});"}) );
 
-		$rdks.http.postJson('<?php echo $url_json_picture; ?>', {picture: response.data.name}, function(response){
+		$rdks.http.postJson('<?php echo $tpl['urlJsonPicture']; ?>', {picture: response.data.name}, function(response){
 			cropComplete();
 		});
 
