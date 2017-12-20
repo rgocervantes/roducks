@@ -19,9 +19,9 @@
  *	-----------------
  *	COMMAND LINE
  *	-----------------
- *	time php core/scripts/cli.php script=users::create env=pro email=dummy@yoursite.com password=duke017
- *	time php core/scripts/cli.php script=users::reset env=pro email=dummy@yoursite.com password=duke017
- *	time php core/scripts/cli.php script=users::who env=pro
+ *	time php core/scripts/cli.php script=user::create env=pro email=dummy@yoursite.com password=duke017
+ *	time php core/scripts/cli.php script=user::reset env=pro email=dummy@yoursite.com password=duke017
+ *	time php core/scripts/cli.php script=user::who env=pro
  */
 
 namespace rdks\app\cli;
@@ -32,7 +32,7 @@ use rdks\core\framework\Helper;
 use rdks\core\libs\Utils\Date;
 use rdks\app\models\Users\Users as UsersTable;
 
-class Users extends Cli {
+class User extends Cli {
 
 	public function create(){
 		
