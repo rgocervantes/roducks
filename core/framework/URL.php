@@ -211,13 +211,13 @@ class URL{
 		return $url;
 	}
 
-	static function build($url = "/", array $params = []){
+	static function build($url = "/", array $params = [], $complete = true){
 
 		if(count($params) == 0){
 			return $url;
 		}
 
-		$getParams = self::getGETParams();
+		$getParams = ($complete) ? self::getGETParams() : [];
 
 		$arr = array_merge($getParams, $params);
 		$ret = [];
