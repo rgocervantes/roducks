@@ -21,7 +21,7 @@
  *	-----------------
  *	time php core/scripts/cli.php script=user::create env=pro email=dummy@yoursite.com password=duke017
  *	time php core/scripts/cli.php script=user::reset env=pro email=dummy@yoursite.com password=duke017
- *	time php core/scripts/cli.php script=user::who env=pro
+ *	time php core/scripts/cli.php script=user::who env=pro id=1
  */
 
 namespace rdks\app\cli;
@@ -117,14 +117,15 @@ class User extends Cli {
 	}
 
 	public function who(){
+		$id = $this->getParam('id', 1);
 		$db = $this->db();
-		$user = UsersTable::open($db)->load(1);
+		$user = UsersTable::open($db)->load($id);
 
 		if($user->rows()){
 			$this->setResult( $user->getFirstName() . " " . $user->getLastName() );
 			$this->setResult( $user->getEmail() );
 		} else {
-			$this->setWarning("Super Admin does not exist yet.");
+			$this->setWarning("Invalid user ID.");
 		}
 
 		parent::output();
