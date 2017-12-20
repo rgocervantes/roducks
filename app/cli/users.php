@@ -32,7 +32,7 @@ use rdks\core\framework\Helper;
 use rdks\core\libs\Utils\Date;
 use rdks\app\models\Users\Users as UsersTable;
 
-class users extends Cli {
+class Users extends Cli {
 
 	public function create(){
 		

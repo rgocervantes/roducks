@@ -40,6 +40,7 @@ require "./core/framework/Bootstrap.php";
 use rdks\core\framework\Core;
 use rdks\core\framework\Cli;
 use rdks\core\framework\Environment;
+use rdks\core\framework\Helper;
 
 Core::loadFile(DIR_APP_LANGUAGES, 'en' . FILE_INC);
 
@@ -80,6 +81,7 @@ if(isset($params['script'])){
 		list($name, $method) = explode("::", $params['script']);
 	}
 
+	$name = Helper::getCamelName($name);
 	$script = "rdks\app\cli\\" . $name;
 
 	$class = new $script($params);
