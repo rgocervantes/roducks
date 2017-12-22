@@ -72,13 +72,13 @@ $environment = [
 */
 require "./core/framework/Run" . FILE_EXT;
 
-if(isset($params['script'])){
+if(isset($params['cmd'])){
 
 	$method = "output";
-	$name = $params['script'];
+	$name = $params['cmd'];
 
-	if(preg_match('#::#', $params['script'])){
-		list($name, $method) = explode("::", $params['script']);
+	if(preg_match('#::#', $params['cmd'])){
+		list($name, $method) = explode("::", $params['cmd']);
 	}
 
 	$name = Helper::getCamelName($name);

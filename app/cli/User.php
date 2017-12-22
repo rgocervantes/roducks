@@ -19,9 +19,9 @@
  *	-----------------
  *	COMMAND LINE
  *	-----------------
- *	time php core/scripts/cli.php script=user::create env=pro email=dummy@yoursite.com password=duke017
- *	time php core/scripts/cli.php script=user::reset env=pro email=dummy@yoursite.com password=duke017
- *	time php core/scripts/cli.php script=user::who env=pro id=1
+ *	time php core/scripts/cli.php cmd=user::create env=pro email=dummy@yoursite.com password=duke017
+ *	time php core/scripts/cli.php cmd=user::reset env=pro email=dummy@yoursite.com password=duke017
+ *	time php core/scripts/cli.php cmd=user::who env=pro id=1
  */
 
 namespace rdks\app\cli;
@@ -125,7 +125,7 @@ class User extends Cli {
 			$this->setResult( $user->getFirstName() . " " . $user->getLastName() );
 			$this->setResult( $user->getEmail() );
 		} else {
-			$this->setWarning("Invalid user ID.");
+			$this->setError("Invalid user ID.");
 		}
 
 		parent::output();
