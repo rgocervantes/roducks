@@ -69,7 +69,7 @@ spl_autoload_register(function($class){
             if(!$isEvent)
                 Error::debug(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $path);
         } else {
-            Cli::println("Script file does not exist.");
+            Cli::println("Script file not found: {$path}");
         }  
     }
 });
