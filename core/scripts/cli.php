@@ -81,12 +81,17 @@ if(isset($params['cmd'])){
 		list($name, $method) = explode("::", $params['cmd']);
 	}
 
+	$cls = $name;
 	$name = Helper::getCamelName($name);
 	$script = "rdks\app\cli\\" . $name;
 
 	$class = new $script($params);
-	$class->$method();
-
+	if(method_exists($class, $method)){
+		$class->$method();
+	} else {
+		Cli::println("Unknown command: {$cls}::{$method}");
+	}
+	
 }else{
 	Cli::println("Please set a script");
 }
