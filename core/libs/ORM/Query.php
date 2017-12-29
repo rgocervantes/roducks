@@ -57,8 +57,8 @@ namespace rdks\core\libs\ORM;
 	// PARENTHESIS 
 
 		$filter['[BEGIN_COND]'] = "(";
-			$filter['[COND_AND]u.id_user_parent:>'] = Login::getAdminData('id_user_parent');
-			$filter['[COND_OR]u.id_role:>'] = Login::getAdminData('id_role');
+			$filter['[NON]u.id_user_parent:>'] = Login::getAdminData('id_user_parent');
+			$filter['[OR]u.id_role:>'] = Login::getAdminData('id_role');
 		$filter['[END_COND]'] = ")";	
 
 */
@@ -267,17 +267,14 @@ class Query {
 		}else{
 			$ret = $field . " = " . self::_field($value);
 
-
-			switch ($field) {
-				case '[BEGIN_COND_AND]':
-					$ret = " AND $value ";
-					break;
-				case '[BEGIN_COND_OR]':
-					$ret = " OR $value ";
-					break;					
+			switch ($field) {			
 				case '[BEGIN_COND]':
-					$ret = " $value ";
+					$ret = " {$value} ";
 					break;
+			}
+
+			if(preg_match('/^\[COND_\d+\]$/', $field)){
+				$ret = " {$value} ";
 			}
 
 		}
@@ -299,17 +296,13 @@ class Query {
 
 	static private function _operatorCond($field, $value){
 
-		if($field == '[END_COND]'){
+		if($field == '[END_COND]' || preg_match('/^\[COND_\d+\]$/', $field)){
 			return [" {$value} ", ""];
 		}
 		
 		$operator = " AND "; // default
 
-		if($field == '[BEGIN_COND_AND]' || $field == '[BEGIN_COND_OR]'){
-			$operator = "";
-		}
-
-		if(preg_match('/^\[(\w+)\](.+)$/i', $field, $match)){
+		if(preg_match('/^\[([A-Z0-9_]+)\](.+)$/i', $field, $match)){
 			$op = strtoupper($match[1]);
 			$field = $match[2];
 			switch ($op) {
@@ -317,17 +310,19 @@ class Query {
 				case 'AND':
 					$operator = " {$op} ";
 					break;
-				case 'COND_OR':
-					$operator = " OR ";
-					break;					
-				case 'COND_AND':
-					$operator = "";
-					break;	
-
 			}
+
+			if(preg_match('/^NON(_\d+)?$/', $op)){
+				$operator = "";
+			}
+
+			if(preg_match('/^AND(_\d+)?$/', $op)){
+				$operator = " AND ";
+			}
+
 		}
 
-		return array(self::_dataType($field,$value), $operator);
+		return [self::_dataType($field,$value), $operator];
 	}
 
 	static private function _conditions(array $arguments = [], $db){
@@ -677,10 +672,15 @@ class Query {
 		return $this;
 	}
 
-	public function groupby($field){
+	public function groupBy($field){
 		$this->_filter['groupby'] = $field;
 		return $this;		
 	}
+
+	public function orderBy($field){
+		$this->_filter['orderby'] = $field;
+		return $this;		
+	}	
 
 	public function pagination(array $condition, array $orderby, $page, $limit, $fields = "*"){
 
