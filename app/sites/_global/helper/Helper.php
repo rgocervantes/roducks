@@ -20,6 +20,8 @@
 
 namespace rdks\app\sites\_global\helper;
 
-class Helper {
+use rdks\core\page\HelperPage;
+
+class Helper extends HelperPage {
 
 }
