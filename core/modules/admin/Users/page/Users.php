@@ -92,16 +92,16 @@ class Users extends AdminPage{
 
 			if($this->grantAccess->hasAccess("tree") && Login::roleSuperAdmin()){
 				$filter['[BEGIN_COND]'] = "(";
-					$filter['[COND_AND]u.id_user_parent:>'] = Login::getAdminData('id_user_parent');
-					$filter['[COND_OR]u.id_role:>'] = Login::getAdminData('id_role');
+					$filter['[NON]u.id_user_parent:>'] = Login::getAdminData('id_user_parent');
+					$filter['[OR]u.id_role:>'] = Login::getAdminData('id_role');
 				$filter['[END_COND]'] = ")";
 
 				if($this->tree == 1){
 					unset($access['tree']);
 
 					unset($filter['[BEGIN_COND]']);
-					unset($filter['[COND_AND]u.id_user_parent:>']);
-					unset($filter['[COND_OR]u.id_role:>']);
+					unset($filter['[NON]u.id_user_parent:>']);
+					unset($filter['[OR]u.id_role:>']);
 					unset($filter['[END_COND]']);
 
 					$filter['u.id_user_tree:%like%'] = Login::getAdminId();

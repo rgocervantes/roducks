@@ -72,8 +72,8 @@ class LatestUsers extends Block{
 
 			if($this->grantAccess->hasAccess("tree") && Login::roleSuperAdmin()){
 				$filter['[BEGIN_COND]'] = "(";
-					$filter['[COND_AND]u.id_user_parent:>'] = Login::getAdminData('id_user_parent');
-					$filter['[COND_OR]u.id_role:>'] = Login::getAdminData('id_role');
+					$filter['[NON]u.id_user_parent:>'] = Login::getAdminData('id_user_parent');
+					$filter['[OR]u.id_role:>'] = Login::getAdminData('id_role');
 				$filter['[END_COND]'] = ")";
 			}
 		} else {
