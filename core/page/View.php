@@ -200,7 +200,7 @@ final class View{
 		$this->_error = true;
 	}
 
-	public function error($visibility, $method = "", $alert = "An error ocurred in this method"){
+	public function error($visibility = "", $method = "", $alert = "An error ocurred in this method"){
 
 		if(Helper::regexp('#app#', $this->_filePath)){
 
