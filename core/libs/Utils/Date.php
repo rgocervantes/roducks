@@ -125,14 +125,32 @@ class Date{
 
     static function getFormatDMY($sep = "-"){
         return implode($sep, ["dd","mm","yyyy"]);
-    }       
+    }
 
     static function getFlatDate($str){
         return str_replace(array("-","/",":"," "), "", $str);
     }
 
-    static function getCurrentDate($sep = "-"){
-        return date(implode($sep,['Y','m','d']));
+    static function getCurrentDate($sep = "-", $ymd = true){
+        if($ymd){
+            return date(implode($sep,['Y','m','d']));
+        }
+
+        return date(implode($sep,['d','m','Y']));
+    }
+
+    static function getDateArray($dateStr){
+        $d = explode("-", $dateStr);
+
+        return [
+            'y' => intval($d[0]),
+            'm' => intval($d[1]),
+            'd' => intval($d[2])
+        ];
+    }
+
+    static function getCurrentDateArray(){
+        return self::getDateArray(self::getCurrentDate());
     }
 
     static function getCurrentDateFlat(){
@@ -270,10 +288,6 @@ class Date{
         $days = self::getWeekDays($lg);  
 
         return $days[$D];        
-    }
-
-    static function getDateFormatDMY(){
-        return date("d-m-Y");
     }
 
     # Ex. June 19th of 2014
