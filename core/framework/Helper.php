@@ -253,6 +253,10 @@ class Helper{
 		return "$n.00";
 	}
 
+	static function dataType($value){
+		return (self::isInteger($value)) ? intval($value) : $value;
+	}
+
 	static function truncate($str, $chars = 50, $points = "..."){
 		$len = strlen($str);
 
@@ -436,7 +440,7 @@ class Helper{
 	*	Clean POST data
 	*/
 	static function cleanData($arr){
-		$clean = array();
+		$clean = [];
 
 		foreach($arr as $key => $value):
 			$clean[$key] = strip_tags(trim($value));

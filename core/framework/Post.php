@@ -125,7 +125,7 @@ class Post {
 		}
 
 		$ret = new \stdClass;
-		$ret->value = $value;
+		$ret->value = Helper::dataType($value);
 		$ret->text = $text;
 
 		return $ret;
