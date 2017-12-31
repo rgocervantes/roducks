@@ -272,10 +272,26 @@ class Error{
 	static function defaultPageIsMissing($title, $line, $path, $file){
 
 		$error = "<span style=\"color:#f46536;\">\$router</span> <span style=\"color:#c00;\">=</span> [<br>";
+		$error .= "...<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3F51B5; \">'/'</span> <span style=\"color:#c00;\">=></span> [<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#c00;\">^</span><br>";
-		$error .= "<span style=\"color:#c00; background:#eee; border:solid 1px #ccc; padding:4px;\">Make sure to add a 'slash' as default page</span><br><br>";
-		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#3F51B5; \">'dispatch'</span> <span style=\"color:#c00;\">=></span> <span style=\"color:purple; font-weight:bold;\">Dispatch</span><b style=\"color:#C00;\">::</b><span style=\"color:green; font-weight:bold;\">page</span>(<span style=\"color:#3F51B5; \">\"Home\"</span>,<span style=\"color:#3F51B5; \">\"index\"</span>)<br>";
+		$error .= "<span style=\"color:#c00; background:#eee; border:solid 1px #ccc; padding:4px;\">Make sure to add a 'slash' as default page.</span><br><br>";
+		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#3F51B5; \">'dispatch'</span> <span style=\"color:#c00;\">=></span> <span style=\"color:purple; font-weight:bold;\">Dispatch</span><b style=\"color:#C00;\">::</b><span style=\"color:green; font-weight:bold;\">page</span>(<span style=\"color:#3F51B5; \">\"home\"</span>,<span style=\"color:#3F51B5; \">\"index\"</span>)<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;],<br>";
+		$error .= "...<br>";
+		$error .= "];<br>";
+
+		self::debug($title, $line, $path, $file, $error);	
+	}
+
+	static function missionDispatchIndex($url, $title, $line, $path, $file){
+
+		$error = "<span style=\"color:#f46536;\">\$router</span> <span style=\"color:#c00;\">=</span> [<br>";
+		$error .= "...<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3F51B5; \">'{$url}'</span> <span style=\"color:#c00;\">=></span> [<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#3F51B5; \">'dispatch'</span> <span style=\"color:#c00;\">=></span> <span style=\"color:purple; font-weight:bold;\">Dispatch</span><b style=\"color:#C00;\">::</b><span style=\"color:green; font-weight:bold;\">page</span>(<span style=\"color:#3F51B5; \">\"home\"</span>,<span style=\"color:#3F51B5; \">\"index\"</span>)<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#c00;\">^</span><br>";
+		$error .= "<span style=\"color:#c00; background:#eee; border:solid 1px #ccc; padding:4px;\">Make sure this index is defined.</span><br><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;],<br>";
 		$error .= "...<br>";
 		$error .= "];<br>";

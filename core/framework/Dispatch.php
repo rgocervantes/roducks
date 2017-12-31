@@ -305,7 +305,7 @@ class Dispatch{
 				Error::debug("Bad dispatcher syntax",__LINE__, __FILE__, $routerPath);
 			}
 		} else {
-			Error::debug('Missing index "dispatch" on $router var',__LINE__, __FILE__, $routerPath);
+			Error::missionDispatchIndex($URI ,'Missing "dispatch" index',__LINE__, __FILE__, $routerPath);
 		}
 
 		// Modules Map
