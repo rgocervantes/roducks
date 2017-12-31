@@ -45,14 +45,20 @@ class Page extends GenericPage {
 		Http::redirect($url);
 	}
 
-	protected function contentExists($bool){
+	protected function hasData($bool){
 		if(!$bool){
 			$this->pageNotFound();
 		}
 	}
 
+	protected function isData(array $data){
+		if(empty($data)){
+			$this->pageNotFound();
+		}
+	}
+
 	protected function forbiddenRequest(){
-		$this->contentExists(false);
+		$this->hasData(false);
 	}
 
 	protected function accountSubscriber($url = "/"){
@@ -76,6 +82,7 @@ class Page extends GenericPage {
 	}
 
 	public function pageNotFound(){
+		$this->view->assets->scriptsOnReady(["page-404"]);
 		$this->view->template("404");
 		$this->view->body();
 		$this->view->output();

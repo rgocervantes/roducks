@@ -227,7 +227,7 @@ class Users extends AdminPage{
 		$db = $this->db();
 		$user = UsersTable::open($db);		
 		$row = $user->row($id_user);
-		$this->contentExists( $user->rows() );
+		$this->hasData( $user->rows() );
 		
 		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, Login::getAdminId()), "logs");
 
@@ -305,7 +305,7 @@ class Users extends AdminPage{
 		$userJoin = UsersRoles::open($db);
 		$row = $userJoin->getUser($id_user)->fetch();
 
-		$this->contentExists( $userJoin->rows() );
+		$this->hasData( $userJoin->rows() );
 		
 		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, Login::getAdminId()), "edit");
 
@@ -393,7 +393,7 @@ class Users extends AdminPage{
 		$db = $this->db();
 		$user = UsersTable::open($db);
 		$row = $user->row($id_user);
-		$this->contentExists( $user->rows() );
+		$this->hasData( $user->rows() );
 
 		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, Login::getAdminId()), "reset");
 
@@ -437,7 +437,7 @@ class Users extends AdminPage{
 		$db = $this->db();
 		$user = UsersTable::open($db);		
 		$row = $user->row($id_user);
-		$this->contentExists( $user->rows() );
+		$this->hasData( $user->rows() );
 
 		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, Login::getAdminId()), "picture");
 

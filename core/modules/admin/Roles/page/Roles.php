@@ -177,7 +177,7 @@ class Roles extends AdminPage{
 		$RolesTable = RolesTable::open($db);
 
 		$role = $RolesTable->row( $id_role );
-		$this->contentExists( $RolesTable->rows() );
+		$this->hasData( $RolesTable->rows() );
 		
 		// get File
 		$config = $this->grantAccess->getFileConfig( $role['config'] );
