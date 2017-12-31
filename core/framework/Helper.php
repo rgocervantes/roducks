@@ -32,6 +32,7 @@ class Helper{
 	const REGEXP_API = '(?P<API>[0-9\.]+)';
 	const REGEXP_STRING_ALL = '/^.+$/';
 	const REGEXP_FILE_EXT = '/\.([a-z]+)$/';
+	const REGEXP_FILE_EXT_VERSION = '/\.([a-z]+)(\?v=[0-9.]+)?$/';	
 	const REGEXP_URL_DISPATCH = '[a-z\-\_]+(\/[a-z\-_]+(\/[a-zA-Z0-9\-\+\/_]+)?)?';
 	const REGEXP_GET_MODULE = '/^([a-zA-Z\-]+)\/.+$/';
 	const REGEXP_IS_URL_DISPATCH = '/^_/';
@@ -76,7 +77,7 @@ class Helper{
 			return $matches[1];
 		}
 
-		return array();
+		return [];
 	}
 
 	static function isDispatch($dispatch){
@@ -143,6 +144,10 @@ class Helper{
 	static function getFileExt($str){
 		return self::getMatches(self::REGEXP_FILE_EXT, $str);
 	}
+
+	static function getFileExtVersion($str){
+		return self::getMatches(self::REGEXP_FILE_EXT_VERSION, $str);
+	}	
 
 	static function getOptions($str){
 		return str_replace(["(",")"], "", implode(", ", explode("|", $str)));

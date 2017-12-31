@@ -53,14 +53,14 @@ class Asset{
 	}
 
 	static function includeOnLoad($scripts, $data){
-		echo "$(window).load(function(){\n\n";
+		echo "\n$(window).load(function(){\n\n";
 		self::load($scripts, $data);	
 		echo "\n});\n\n";
 	}
 
 	static function includeOnReady($scripts, $data){
 		if(count($scripts) > 0){
-			echo "$(document).ready(function(){\n\n";
+			echo "\n$(document).ready(function(){\n\n";
 			self::load($scripts, $data);	
 			echo "\n});\n\n";			
 		}
@@ -71,10 +71,10 @@ class Asset{
 		$attrs = [];
 
 		if(is_array($script)){
-			if(isset($script['script'])){
+			if(isset($script['src'])){
 				$attrs = $script;
-				$script = $script['script'];
-				unset($attrs['script']);
+				$script = $script['src'];
+				unset($attrs['src']);
 			} else {
 				$load = false;
 				$script = "unknown{$type}";
@@ -83,7 +83,8 @@ class Asset{
 		}
 
 		$load = true;
-		$resource = Helper::ext($script,$type);
+		//$resource = Helper::ext($script,$type);
+		$resource = preg_replace('/^(.+)\?v=[0-9.]+$/', '$1', $script);
 		
 		if(Helper::isHttp($script)){
 			$file = $resource;
@@ -93,7 +94,7 @@ class Asset{
 			if(!file_exists($file_repo)) $load = false;
 		} 
 
-		return ['load' => $load, 'file' => $file, 'attrs' => $attrs];
+		return ['load' => $load, 'file' => $dir.$script, 'attrs' => $attrs];
 
 	}
 
@@ -198,15 +199,18 @@ class Asset{
 
 		foreach ($options as $option) {
 			if(isset($pluginsFile[$option])) {
-				foreach ($pluginsFile[$option] as $file) {
+				foreach ($pluginsFile[$option] as $src => $value) {
 
-					$fileExt = $file;
-
-					if(is_array($file)){
-						$fileExt = $file['script'];
+					if(is_array($value)){
+						$value['src'] = $src;
+						$file = $value;
+						$fileExt = $src;
+					} else {
+						$file = $value;
+						$fileExt = $file;
 					}
 
-					$ext = Helper::getFileExt($fileExt);
+					$ext = Helper::getFileExtVersion($fileExt);
 					$fx = "";
 					switch ($ext) {
 						case 'css':

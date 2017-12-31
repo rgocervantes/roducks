@@ -20,17 +20,18 @@
 
 $plugins = [
 	'bootstrap' => [
-		'bootstrap-3.3.5/css/bootstrap.min.css',
-		'bootstrap-3.3.5/js/bootstrap.min.js'
+		'bootstrap-3.3.5/css/bootstrap.min.css?v=1.0',
+		'bootstrap-3.3.5/js/bootstrap.min.js?v=1.0'
 	], 
 	'jquery-jcrop' => [
-		'jquery-jcrop-0.9.12/css/jquery.jcrop.css',
-		'jquery-jcrop-0.9.12/js/jquery.jcrop.min.js'
+		'jquery-jcrop-0.9.12/css/jquery.jcrop.css?v=1.0',
+		'jquery-jcrop-0.9.12/js/jquery.jcrop.min.js?v=1.0'
 	],
 	'roducks' => [
-		'roducks-1.0/css/roducks.css',
-		'roducks-1.0/css/themes/default/roducks-modal.css',
-		'roducks-1.0/js/roducks.min.js'
-	]
+		'roducks-1.0/css/roducks.css?v=1.0',
+		'roducks-1.0/css/themes/default/roducks-modal.css?v=1.0',
+		'roducks-1.0/js/roducks.min.js?v=1.1'
+	],
+
 ];
 
