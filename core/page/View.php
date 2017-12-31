@@ -26,6 +26,7 @@ use rdks\core\framework\Helper;
 use rdks\core\framework\Error;
 use rdks\core\framework\Login;
 use rdks\core\framework\Language;
+use rdks\core\framework\Path;
 use rdks\core\page\Template;
 use rdks\core\page\Layout;
 use rdks\core\libs\Data\Session;
@@ -72,6 +73,11 @@ final class View{
 			if(!empty($this->_layout))
 				$this->_layout = $this->_url['layout'];
 		}
+	}
+
+	public function _htmlTag($name, array $arr){
+		$attrs = Html::getAttributes($arr);
+		return "<{$name} {$attrs} />\n";
 	}
 
 	/* ------------------------------------*/
@@ -126,12 +132,11 @@ final class View{
 	}
 
 	public function meta($attr, $name, $content){
-		$this->_meta .= "<meta $attr=\"$name\" content=\"$content\" />\n";
+		$this->_meta .= $this->_htmlTag("meta", [$attr => $name, 'content' => $content]);
 	}
 
 	public function htmlTag($name, array $arr){
-		$attrs = Html::getAttributes($arr);
-		$this->_meta .= "<$name $attrs />\n";
+		$this->_meta .= $this->_htmlTag($name, $arr);
 	}
 
 	public function template($template = null, $top = true, $bottom = true){
@@ -267,6 +272,9 @@ final class View{
 		// Get meta tags
 		$this->data('_META', $this->_meta);
 
+		// Favicon
+		$this->data('_FAVICON', $this->_htmlTag('link',['rel' => "shortcut icon", 'type' => "image/png", 'href' => Path::getIcon("favicon.png")]));
+
 		// Get data passed from page
 		extract($this->_data);
 		
@@ -326,7 +334,7 @@ final class View{
 				}
 
 				if($scripts){
-					echo "\n\n<script type=\"text/javascript\">\n\n";
+					echo "\n\n<script type=\"text/javascript\">\n";
 					Asset::includeInLine($this->assets->getScriptsInline(),$this->_data);
 					Asset::includeOnReady($this->assets->getScriptsOnReady(),$this->_data);
 					echo "</script>\n";

@@ -29,8 +29,7 @@ class FrontPage extends Page {
 	public function __construct(array $settings, View $view){
 		parent::__construct($settings, $view);
 
-		$this->view->meta('name','viewport',"width=device-width,initial-scale=1,shrink-to-fit=no");
 		$this->login = new Login(Login::SESSION_FRONT, $this->loginUrl);
 	}
 
-} 
+}

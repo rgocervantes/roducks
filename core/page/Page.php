@@ -34,6 +34,7 @@ class Page extends GenericPage {
 	
 	protected $loginUrl = "/login";
 	protected $_pageType = 'PAGE';
+	protected $viewport = true;
 
 /*
 //---------------------------------
@@ -77,8 +78,7 @@ class Page extends GenericPage {
 
 		$this->view = $view;
 		$this->view->parentPage($this->_getParentClassName());
-		$this->view->htmlTag('link',['rel' => "shortcut icon", 'type' => "image/png", 'href' => Path::getIcon("favicon.png")]);			
-
+		if($this->viewport) $this->view->meta('name','viewport',"width=device-width,initial-scale=1,shrink-to-fit=no");
 	}
 
 	public function pageNotFound(){

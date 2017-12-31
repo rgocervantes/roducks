@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title><?php echo $_TITLE;  ?></title>
 	<?php echo $_META; ?>
-	<?php echo $_CSS; ?>
+    <title><?php echo $_TITLE; ?></title>
+    <?php echo $_FAVICON; ?>
+    <?php echo $_CSS; ?>
+    <?php echo $_JS; ?>
 <style type="text/css">
 
 body{
@@ -14,6 +16,7 @@ body{
 }
 
 .page-not-found{
+	display: none;
 	width: 600px;
 	background: #FFF;
 	padding: 40px;
