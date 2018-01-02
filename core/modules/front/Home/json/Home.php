@@ -87,10 +87,10 @@ class Home extends JSON{
 		}
 
 		$form = Form::validation([
-			[Form::FILTER_STRING 	=> $fields['email']],
-			[Form::FILTER_STRING 	=> $fields['first_name']],
-			[Form::FILTER_STRING 	=> $fields['last_name']],
-			[Form::FILTER_STRING 	=> $fields['password']]
+			Form::filter(Form::FILTER_STRING, $fields['email']),
+			Form::filter(Form::FILTER_STRING, $fields['first_name']),
+			Form::filter(Form::FILTER_STRING, $fields['last_name']),
+			Form::filter(Form::FILTER_STRING, $fields['password'])
 		]);
 
 		if(Form::isValid($form)){
@@ -128,8 +128,8 @@ class Home extends JSON{
 		$password = $this->post->password('password');
 
 		$form = Form::validation([
-			[Form::FILTER_STRING 	=> $token],
-			[Form::FILTER_STRING 	=> $password]
+			Form::filter(Form::FILTER_STRING, $token),
+			Form::filter(Form::FILTER_STRING, $password)
 		]);
 
 		if(Form::isValid($form)){

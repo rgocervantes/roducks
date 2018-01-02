@@ -57,6 +57,7 @@ class Helper{
 	const VALID_WORD = '/^[a-zA-ZáéíóúñÁÉÍÓÚÑ]+$/';	
 	const VALID_WORDS = '/^[a-zA-Z\sáéíóúñÁÉÍÓÚÑ]+$/';				
 	const VALID_INTEGER = '/^\d+$/';
+	const VALID_DECIMAL = '/^\d+\.\d{2}$/';	
 	const VALID_BOOL = '/^(0|1)$/';	
 	const VALID_USERNAME = '/^[a-z]+\.[a-z]+$/';
 	const VALID_HTML = '/\.html$/';
@@ -256,6 +257,10 @@ class Helper{
 		}
 
 		return "$n.00";
+	}
+
+	static function fixDecimal($value, $decimals = 2){
+		return number_format($value,$decimals,'.','');
 	}
 
 	static function dataType($value){

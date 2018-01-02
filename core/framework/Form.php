@@ -36,6 +36,7 @@ class Form {
 	const FILTER_WORD = 7;
 	const FILTER_WORDS = 8;
 	const FILTER_DATETIME = 9;
+	const FILTER_DECIMAL = 10;
 
 	static function getKey(){
 		$token = Login::getToken();
@@ -51,81 +52,109 @@ class Form {
 		}
 	}
 
-	/**
-	*	@param $arr array	
-	*	@return array|false
-	*/
-	static function validation($arr){
+	static function filter($filter, $data, $message = "Error", $field = ""){
+		return [
+			'field' => $field,
+			'filter' => $filter,
+			'data' => $data,
+			'message' => $message
+		];
+	}
 
-		$filters = [];
-		$total = count($arr);
-		$count = 0;
+	static function values(array $values){
+		return $values;
+	}
+
+	static function match($text){
+		return self::values([$text]);
+	}
+
+	/**
+	*	@param $filters array	
+	*	@return bool
+	*/
+	static function validation($filters){
+
+		$alert = [];
+		$error = 0;
 		$valid = true;
 
-		foreach($arr as $key => $value):
+		foreach($filters as $value):
 
-			$k = array_keys($value);
-			$v = array_values($value);
-			
-			switch ($k[0]):
-				case self::FILTER_STRING:
-					$rule = Helper::VALID_STRING; // allows *everything*
-					break;
+			if(is_array($value['filter'])){
+				
+				if(!in_array($value['data'], $value['filter'])){
+					$error++;
+					array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
+				}
 
-				case self::FILTER_WORD:
-					$rule = Helper::VALID_WORD;
-					break;					
+			} else {
 
-				case self::FILTER_WORDS:
-					$rule = Helper::VALID_WORDS;
-					break;	
+				switch ($value['filter']):
+					case self::FILTER_STRING:
+						$rule = Helper::VALID_STRING; // allows *everything*
+						break;
 
-				case self::FILTER_INTEGER:
-					$rule = Helper::VALID_INTEGER;
-					break;
+					case self::FILTER_WORD:
+						$rule = Helper::VALID_WORD;
+						break;					
 
-				case self::FILTER_DATETIME:
-					$rule = Helper::VALID_DATETIME;
-					break;
+					case self::FILTER_WORDS:
+						$rule = Helper::VALID_WORDS;
+						break;	
 
-				case self::FILTER_DATE_YYYY_MM_DD:
-					$rule = Helper::VALID_DATE_YYYY_MM_DD;
-					break;
+					case self::FILTER_INTEGER:
+						$rule = Helper::VALID_INTEGER;
+						break;
 
-				case self::FILTER_DATE_DD_MM_YYYY:
-					$rule = Helper::VALID_DATE_DD_MM_YYYY;
-					break;
+					case self::FILTER_DECIMAL:
+						$rule = Helper::VALID_DECIMAL;
+						break;
 
-				case self::FILTER_EMAIL:
-					$rule = Helper::VALID_EMAIL;
-					break;
+					case self::FILTER_DATETIME:
+						$rule = Helper::VALID_DATETIME;
+						break;
 
-				case self::FILTER_URL:
-					$rule = Helper::VALID_URL;
-					break;									
-			endswitch;
+					case self::FILTER_DATE_YYYY_MM_DD:
+						$rule = Helper::VALID_DATE_YYYY_MM_DD;
+						break;
 
-			if(Helper::regexp($rule, $v[0])){
-				$count++;
-			}
+					case self::FILTER_DATE_DD_MM_YYYY:
+						$rule = Helper::VALID_DATE_DD_MM_YYYY;
+						break;
 
-			$filters[] = $v[0];
+					case self::FILTER_EMAIL:
+						$rule = Helper::VALID_EMAIL;
+						break;
 
-		endforeach;		
+					case self::FILTER_URL:
+						$rule = Helper::VALID_URL;
+						break;	
+				endswitch;
 
-		if($count < $total){
+				if(!Helper::regexp($rule, $value['data'])){
+					$error++;
+					array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
+				}
+
+			}	
+
+		endforeach;
+
+		if($error > 0){
 			$valid = false;
+		} else {
+			array_push($alert, ['message' => "Error", 'field' => ""]);
 		}
 
-		return ['valid' => $valid, 'filters' => $filters];
+		return ['valid' => $valid, 'error' => ['message' => $alert[0]['message'], 'field' => $alert[0]['field']]];
 	}
 
 	static function isValid($form){
 		if($form['valid'] !== FALSE){
 			return true;
 		}
-
 		return false;
-	}
+	}	
 
 }

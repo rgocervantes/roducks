@@ -169,8 +169,8 @@ class Users extends _JSON{
 		$this->grantAccess->editDescendent($id, $row, $this->_user->isDescendent($id, Login::getAdminId()), "trash");
 
 		$form = Form::validation([
-			[Form::FILTER_INTEGER => $id],
-			[Form::FILTER_INTEGER => $value]			
+			Form::filter(Form::FILTER_INTEGER, $id),
+			Form::filter(Form::FILTER_INTEGER, $value)			
 		]);
 
 		if(Form::isValid($form)){
@@ -205,8 +205,8 @@ class Users extends _JSON{
 		$this->grantAccess->editDescendent($id, $row, $this->_user->isDescendent($id, Login::getAdminId()), "visibility");
 
 		$form = Form::validation([
-			[Form::FILTER_INTEGER => $id],
-			[Form::FILTER_INTEGER => $active]
+			Form::filter(Form::FILTER_INTEGER, $id),
+			Form::filter(Form::FILTER_INTEGER, $active)
 		]);
 
 		if(Form::isValid($form)){
@@ -240,14 +240,12 @@ class Users extends _JSON{
 		$row = $this->_user->row($id);
 		$this->grantAccess->editDescendent($id, $row, $this->_user->isDescendent($id, Login::getAdminId()), "expiration");
 
-		$filters = Form::validation([
-			[Form::FILTER_INTEGER 			=> $id],
-			[Form::FILTER_DATE_YYYY_MM_DD 	=> $date]			
+		$form = Form::validation([
+			Form::filter(Form::FILTER_INTEGER, $id),
+			Form::filter(Form::FILTER_DATE_YYYY_MM_DD, $date)			
 		]);
 
-		$this->data('filters', $filters['filters']);
-
-		if(Form::isValid($filters)){
+		if(Form::isValid($form)){
 
 			if($id != Login::getAdminId() || Login::isSuperAdmin()){
 				$user = $this->_user->row($id);
