@@ -674,6 +674,15 @@ class Date{
  
         return $date;
     }   
+
+    static function getLastDaysInMonth($year, $month){
+        $date = $year."-".$month."-1";
+        return date("t", strtotime($date));
+    }
+
+    static function getLastDaysOfCurrentMonth(){
+        return self::getLastDaysInMonth(self::getCurrentYear(),self::getCurrentMonth());
+    }
  
 }
 
