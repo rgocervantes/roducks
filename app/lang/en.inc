@@ -37,6 +37,7 @@ Core::define('TEXT_MONTH', "Month");
 Core::define('TEXT_PREVIOUS', "Previous");
 Core::define('TEXT_NEXT', "Next");
 Core::define('TEXT_FILTER', "Filter");
+Core::define('TEXT_TO_FILTER', "Filter");
 Core::define('TEXT_RESET', "Reset");
 Core::define('TEXT_SEARCH', "Search");
 Core::define('TEXT_DESCENDANTS', "Descendants");
