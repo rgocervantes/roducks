@@ -77,6 +77,8 @@ table.rdks-table th{ background: linear-gradient(#f5f5f5, #ddd); color: #333; te
 table.rdks-table tr.rdks-ui-row-disabled{ background: #f9f9f9; }
 table.rdks-table tr.rdks-grid-header{ position: fixed; top: 0; left: 0; z-index: 999; }
 table.rdks-table-hover tr:not(.rdks-ui-row-collapse):hover td{ background: #ffffeb; }
+table.rdks-table tr.highlight td{ background: #ffffeb; }
+table.rdks-table tr.selected td{ background: #ebfff3; }
 
 table.rdks-cart{ border-collapse: collapse; background: #fff; }
 table.rdks-cart td,
