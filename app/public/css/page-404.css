@@ -1,0 +1,23 @@
+/**
+ *	Page Not Found
+ *
+ */
+
+body{
+	background: #F5F5F5;
+	font-family: Arial;
+	padding: 0;
+	margin: 0;
+}
+
+#page-not-found{
+	display: none;
+}
+
+.page-not-found{
+	width: 600px;
+	background: #FFF;
+	padding: 40px;
+	text-align: center;
+  	box-shadow: 0 0 2px 1px #999;
+}
