@@ -359,6 +359,10 @@ class Model extends Query{
 		return $this;
 	}
 
+	public function getId(){
+		return parent::rows();
+	}
+
 	public function select($fields = "*"){
 		return parent::filter([], $fields);
 	}
@@ -392,6 +396,11 @@ class Model extends Query{
 	public function delete($id = "", array $condition = []){
 		
 		if($this->_ORM){
+
+			if(!parent::rows()){
+				return false;
+			}
+
 			if(is_array($id)){
 				$condition = $id;
 			}
