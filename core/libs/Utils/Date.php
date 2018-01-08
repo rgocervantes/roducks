@@ -24,7 +24,7 @@ class Date{
 
     const REGEXP_DATE_YYYY_MM_DD = '/^(\d{4})-(\d{2})-(\d{2})$/';
     const REGEXP_DATE_DD_MM_YYYY = '/^(\d{2})-(\d{2})-(\d{4})$/';
-    const REGEXP_DATETIME = '/^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})$/';
+    const REGEXP_DATETIME = '/^(\d{4}-\d{2}-\d{2})\s(\d{2}:\d{2}:\d{2})$/';
     const DATE_NOT_VALID = "Invalid Date.";
 
     /*----------------------------*/

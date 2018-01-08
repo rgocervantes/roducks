@@ -69,6 +69,18 @@ class Form {
 		return self::values([$text]);
 	}
 
+	static function regexp($rule){
+		return self::values(['regexp' => $rule]);
+	}
+
+	static function greaterThan($n){
+		return self::values(['greater_than' => $n]);
+	}
+
+	static function lessThan($n){
+		return self::values(['less_than' => $n]);
+	}
+
 	/**
 	*	@param $filters array	
 	*	@return bool
@@ -83,9 +95,36 @@ class Form {
 
 			if(is_array($value['filter'])){
 				
-				if(!in_array($value['data'], $value['filter'])){
-					$error++;
-					array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
+				if(is_array($value['filter'])){
+
+					if(isset($value['filter']['regexp'])){
+
+						if(!Helper::regexp($value['filter']['regexp'], $value['data'])){
+							$error++;
+							array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
+						}
+
+					} else if(isset($value['filter']['greater_than'])){
+
+						if(intval($value['data']) < $value['filter']['greater_than']){
+							$error++;
+							array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
+						}					
+
+					} else if(isset($value['filter']['less_than'])){
+
+						if(intval($value['data']) > $value['filter']['less_than']){
+							$error++;
+							array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
+						}
+
+					} else {
+
+						if(!in_array($value['data'], $value['filter'])){
+							$error++;
+							array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
+						}
+					}
 				}
 
 			} else {

@@ -28,6 +28,10 @@ abstract class Event extends Frame{
 
 	static function dispatch($e, $settings){
 
+		if(!is_array($settings)){
+			$settings = [$settings];
+		}
+
 		$events = Core::getEventsFile();
 		if(isset($events[$e])){
 			$dispatch = $events[$e];
