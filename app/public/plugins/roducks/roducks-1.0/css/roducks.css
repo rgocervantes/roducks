@@ -90,6 +90,7 @@ table.rdks-cart tr.separator td table.rdks-table td,
 table.rdks-cart tr.line td table.rdks-table td{ padding: 5px; }
 table.rdks-cart-grouped{ background: #f1fbed; }
 
+.rdks-form-select{ display: none; }
 .rdks-form-uploader{ opacity: 0;  }
 
 .rdks-form-password{ display: block; height: 3px; background: #eee; }
