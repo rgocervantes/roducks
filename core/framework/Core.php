@@ -481,6 +481,7 @@ class Core{
 			if($autoload){
 				// Call page and pass view
 				$obj = new $class($pageObj, $view);
+				$obj->setLang(Language::get());
 
 				if($isBlock){
 					$obj->setVars($urlParam);

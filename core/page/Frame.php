@@ -41,6 +41,8 @@ abstract class Frame{
 	protected $_dispatchUrl = false;
 	protected $_pageType = 'FRAME'; // PAGE|BLOCK|FACTORY
 
+	private $_lang;
+
 /*
 //---------------------------------
 //	PRIVATE METHODS
@@ -122,6 +124,10 @@ abstract class Frame{
 //	PROTECTED METHODS
 //---------------------------------
 */
+	protected function lang(){
+		return $this->_lang;
+	}
+
 	protected function disableUrlDispatcher(){
 		$this->_dispatchUrl = false;
 		$this->_urlDispatcher();
@@ -441,6 +447,10 @@ abstract class Frame{
 		}
 
 		$this->_autoLoad($params);
+	}
+
+	public function setLang($iso){
+		$this->_lang = $iso;
 	}
 
 	public function getParentClassName(){

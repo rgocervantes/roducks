@@ -23,7 +23,7 @@ require "Bootstrap.php";
 use rdks\core\framework\Core;
 use rdks\core\framework\Dispatch;
 use rdks\core\framework\Environment;
-use rdks\core\framework\Language;
+//use rdks\core\framework\Language;
 
 /*
 |--------------------------------|
