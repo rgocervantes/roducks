@@ -209,6 +209,16 @@ class Model extends Query{
 //----------------------	
 */
  
+	private function _invokeJoin($key, $table, $type, array $join = []){
+		$table = self::_getTable($table);
+		$this->_joins[$key] = ['table' => $table];	
+		if(count($join) > 0){
+			$this->_joins[$key][$type] = $join;
+		}
+
+		return $this;
+	}
+
 	private function _autoload($data){
 
 		$this->_ORM = true;
@@ -458,31 +468,15 @@ class Model extends Query{
 	}
 
 	protected function join($key, $table, array $join = []){
-		$table = self::_getTable($table);
-		$this->_joins[$key] = ['table' => $table];	
-		if(count($join) > 0){
-			$this->_joins[$key]['join'] = $join;
-		}
-
-		return $this;
+		return $this->_invokeJoin($key, $table, 'join', $join);
 	}
 
 	protected function leftJoin($key, $table, array $join = []){
-		$table = self::_getTable($table);
-		$this->_joins[$key] = ['table' => $table];	
-		if(count($join) > 0){
-			$this->_joins[$key]['left_join'] = $join;
-		}
-		return $this;
+		return $this->_invokeJoin($key, $table, 'left_join', $join);
 	}	
 
 	protected function rightJoin($key, $table, array $join = []){
-		$table = self::_getTable($table);
-		$this->_joins[$key] = ['table' => $table];	
-		if(count($join) > 0){
-			$this->_joins[$key]['right_join'] = $join;
-		}
-		return $this;
+		return $this->_invokeJoin($key, $table, 'right_join', $join);
 	}	
 
 }
