@@ -431,7 +431,9 @@ class Model extends Query{
 			return false;
 		}
 
-		return parent::insertOnce($data, $condition);
+		$where = $this->_where($condition);
+
+		return parent::insertOnce($data, $where);
 	}	
 
 	public function lastId($data = "", array $condition = []){
