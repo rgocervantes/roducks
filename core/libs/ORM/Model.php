@@ -139,7 +139,6 @@ class Model extends Query{
 	private $_ORM = false;
 	private $_joins = [];
 	private $_data = [];
-	private $_condition = [];
 	private $_id;
 
 /*
@@ -219,15 +218,6 @@ class Model extends Query{
 	           	$this->_data[$key] = $value;
 	        }
 	    }
-	}
-
-	private function _where(array $condition = []){
-
-		if(count($this->_condition) > 0){
-			return $this->_condition;
-		}
-
-		return $condition;
 	}
 
 	private function _unexcepted(array $condition = []){
@@ -367,10 +357,6 @@ class Model extends Query{
 		return parent::filter([], $fields);
 	}
 
-	public function where(array $condition = []){
-		$this->_condition = $condition;
-	}
-
 	public function update($id = "", array $data = [], array $condition = []){
 		
 		if($this->_ORM){
@@ -448,12 +434,21 @@ class Model extends Query{
 		return parent::insertOnce($data, $condition);
 	}	
 
-	public function lastId($field, array $condition = []){
+	public function lastId($data = "", array $condition = []){
+
+		if($this->_ORM){
+			if(is_array($data)){
+				$condition = $data;
+			}
+		}
+
 		if($this->_unexcepted($condition)){
 			return false;
 		}
 
-		return parent::lastId($this->id, $condition);
+		$where = $this->_where($condition);
+
+		return parent::lastId($this->id, $where);
 	}
 
 	public function getTableTotalRows(){

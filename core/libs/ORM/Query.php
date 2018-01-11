@@ -78,6 +78,8 @@ class Query {
 		$_queryString = "",
 		$_table = "";	
 
+	protected $_condition = [];	
+
 /*
 //----------------------
 //		STATIC
@@ -519,10 +521,25 @@ class Query {
 	}
 
 	private function _operator($operator, $table, $id, array $arguments = []){
-		$this->filter($arguments, ["{$operator}($id) AS total"]);
+		$this->filter($arguments, ["{$operator}({$id}) AS total"]);
 		$row = $this->fetch();
 		return $row['total'];
 	}	
+
+/*
+//----------------------
+//		PROTECTED
+//----------------------	
+*/
+
+	protected function _where(array $condition = []){
+
+		if(count($this->_condition) > 0){
+			return $this->_condition;
+		}
+
+		return $condition;
+	}
 
 /*
 //----------------------
@@ -667,6 +684,10 @@ class Query {
 		return $this;
 	}
 
+	public function where(array $condition = []){
+		$this->_condition = $condition;
+	}
+
 	public function having(array $args){
 		$this->_filter['having'] = $args;
 		return $this;
@@ -805,89 +826,87 @@ class Query {
 	/**
 	 *	@param $table string
 	 *	@param $id string	
-	 *	@param $arguments array	
+	 *	@param $condition array	
 	 *	@return integer
 	 */
 	public function avg($id, array $condition = []){
-		return $this->_operator("AVG", $this->_table, $id, $condition);
+		$where = $this->_where($condition);
+		return $this->_operator("AVG", $this->_table, $id, $where);
 	}
 
 	/**
 	 *	@param $table string
 	 *	@param $id string	
-	 *	@param $arguments array	
+	 *	@param $condition array	
 	 *	@return integer
 	 */
 	public function max($id, array $condition = []){
-		return $this->_operator("MAX", $this->_table, $id, $condition);
+		$where = $this->_where($condition);
+		return $this->_operator("MAX", $this->_table, $id, $where);
 	}
 
 	/**
 	 *	@param $table string
 	 *	@param $id string	
-	 *	@param $arguments array	
+	 *	@param $condition array	
 	 *	@return integer
 	 */
 	public function min($id, array $condition = []){
-		return $this->_operator("MIN", $this->_table, $id, $condition);
+		$where = $this->_where($condition);
+		return $this->_operator("MIN", $this->_table, $id, $where);
 	}	
 
 	/**
 	 *	@param $field string
-	 *	@param $arguments array	
+	 *	@param $condition array	
 	 *	@return integer
 	 */
 	public function lastId($field, array $condition = []){
-		return $this->max($field, ['condition' => $condition]);
+		$where = $this->_where($condition);
+		return $this->max($field, $where);
 	} 
 
 	/**
 	 *	@param $table string
 	 *	@param $id string	
-	 *	@param $arguments array	
+	 *	@param $condition array	
 	 *	@return integer
 	 */
 	public function sum($id, array $condition = []){
-		return $this->_operator("SUM", $this->_table, $id, $condition);
+		$where = $this->_where($condition);
+		return $this->_operator("SUM", $this->_table, $id, $where);
 	}
 
 	/**
 	 *	@param $table string
 	 *	@param $id string	
-	 *	@param $arguments array	
-	 *	@return integer
-	 */
-	public function total($id, array $condition = []){
-		return $this->_operator("TOTAL", $this->_table, $id, $condition);
-	}	
-
-	/**
-	 *	@param $table string
-	 *	@param $id string	
-	 *	@param $arguments array	
+	 *	@param $condition array	
 	 *	@return integer
 	 */
 	public function count($id, array $condition = []){
-		return $this->_operator("COUNT", $this->_table, $id, $condition);
+		$where = $this->_where($condition);
+		return $this->_operator("COUNT", $this->_table, $id, $where);
 	}			
 
 	/**
 	 *	@param $table string
 	 *	@param $id string	
-	 *	@param $arguments array	
+	 *	@param $condition array	
 	 *	@return resource
 	 */
 	public function distinct($id, array $condition = []){
-		return $this->filter($condition, ["DISTINCT($id)"]);
+		$where = $this->_where($condition);
+		return $this->filter($where, ["DISTINCT($id)"]);
 	}
 
 	/**
 	 *	@param $table string
-	 *	@param $arguments array
+	 *	@param $condition array
 	 *	@return bool
 	 */
-	public function results(array $arguments = []){	
-		$this->filter($arguments);
+	public function results(array $condition = []){
+		$where = $this->_where($condition);	
+		$this->filter($condition);
 		return $this->rows();	
 	}
 
