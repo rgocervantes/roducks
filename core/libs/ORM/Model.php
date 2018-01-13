@@ -467,6 +467,18 @@ class Model extends Query{
 		return $this->count($this->id);
 	}
 
+	public function getUniques($field){
+
+		$results = parent::distinct($field);
+		$ret = [];
+		if($results->rows()): while($row = $results->fetch()):
+		        $ret[] = $row[$field];
+		endwhile; endif;
+
+		return $ret;
+
+	}
+
 	protected function join($key, $table, array $join = []){
 		return $this->_invokeJoin($key, $table, 'join', $join);
 	}
