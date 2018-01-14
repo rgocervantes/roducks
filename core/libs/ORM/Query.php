@@ -322,6 +322,10 @@ class Query {
 				$operator = " AND ";
 			}
 
+			if(preg_match('/^OR(_\d+)?$/', $op)){
+				$operator = " OR ";
+			}
+
 		}
 
 		return [self::_dataType($field,$value), $operator];
