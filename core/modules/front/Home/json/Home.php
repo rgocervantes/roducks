@@ -46,7 +46,7 @@ class Home extends JSON{
 	*/
 	public function createAccount(){
 
-		Form::hash($this->post->hidden('form-key'));		
+		Form::setKey($this->post->hidden('form-key'));		
 
 		if(Login::isSubscriberLoggedIn()){
 			Http::sendHeaderForbidden();
@@ -203,7 +203,7 @@ class Home extends JSON{
 
 	public function contactUsSubmit(){
 
-  		Form::hash($this->post->hidden('form-key'));
+  		Form::setKey($this->post->hidden('form-key'));
 
   		$headers = [
    			'to' => EMAIL_TO,

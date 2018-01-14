@@ -44,7 +44,7 @@ class Form {
 		return $token;
 	}
 
-	static function hash($token = ""){
+	static function setKey($token = ""){
 		if( (Session::exists(self::HASH_KEY) && $token != Session::get(self::HASH_KEY)) || empty($token) ){
 			Http::setHeaderInvalidRequest();
 		} else {
