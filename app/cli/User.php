@@ -19,9 +19,9 @@
  *	-----------------
  *	COMMAND LINE
  *	-----------------
- *	time php core/scripts/cli.php cmd=user::create env=pro email=dummy@yoursite.com password=duke017
- *	time php core/scripts/cli.php cmd=user::reset env=pro email=dummy@yoursite.com password=duke017
- *	time php core/scripts/cli.php cmd=user::who env=pro id=1
+ *	time php roducks cmd=user:create env=pro email=dummy@yoursite.com password=duke017
+ *	time php roducks cmd=user:reset env=pro email=dummy@yoursite.com password=duke017
+ *	time php roducks cmd=user:who env=pro id=1
  */
 
 namespace rdks\app\cli;

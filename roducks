@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /**
  *
@@ -77,8 +78,8 @@ if(isset($params['cmd'])){
 	$method = "output";
 	$name = $params['cmd'];
 
-	if(preg_match('#::#', $params['cmd'])){
-		list($name, $method) = explode("::", $params['cmd']);
+	if(preg_match('#:#', $params['cmd'])){
+		list($name, $method) = explode(":", $params['cmd']);
 	}
 
 	$cls = $name;
