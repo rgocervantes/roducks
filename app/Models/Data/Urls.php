@@ -18,9 +18,9 @@
  *
  */
 
-namespace App\models\Data;
+namespace App\Models\Data;
 
-use Roducks\libs\ORM\Model;
+use Roducks\Libs\ORM\Model;
 
 class Urls extends Model {
 
