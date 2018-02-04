@@ -1,5 +1,0 @@
-<?php
-
-$modules = [
-   'Posts' => true
-];

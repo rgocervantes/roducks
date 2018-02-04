@@ -1,6 +1,0 @@
-<?php use rdks\core\framework\Language; ?>
-<hr />
-<?php if($hasItems): ?>
-<div class="right"><button id="btn-checkout" onclick="$rdks.http.redirect('/cart/checkout');" type="button" class="btn btn-lg btn-warning"><span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> <?php echo Language::translate("Checkout","Procesar"); ?></button></div>
-<div class="clear"></div>
-<?php endif; ?>

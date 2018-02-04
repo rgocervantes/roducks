@@ -1,6 +1,0 @@
-<?php 
-use rdks\core\framework\Language; 
-use rdks\core\libs\Data\Cart as ShoppingCart;
-?>
-<a href="/cart"><h1><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> (<?php echo $counter; ?>) <?php echo Language::translate("Items","Productos"); ?></h1></a>
-<h2>Subtotal: <span class="rdks-ui-color-red"><?php echo ShoppingCart::getPriceFormat($subtotal,$currency); ?></h2>
