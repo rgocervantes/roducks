@@ -1,8 +1,0 @@
-<?php
-use Roducks\Framework\Login;
-?>
-<?php if(isset($access['create']) || Login::isSuperAdmin()): ?>
-  <a href="<?php echo $tpl['btnCreateUrl']; ?>" class="btn btn-success btn-lg">
-    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> <?php echo TEXT_NEW; ?>
-  </a>
-<?php endif; ?>

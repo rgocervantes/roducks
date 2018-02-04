@@ -1,1 +1,0 @@
-var pageControl = new $rdks.pager();
