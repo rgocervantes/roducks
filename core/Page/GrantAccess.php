@@ -24,7 +24,7 @@ use Roducks\Framework\Login;
 use Roducks\Framework\Role;
 use Roducks\Framework\Helper;
 use Roducks\Framework\Error;
-use Roducks\Libs\Data\Request;
+use Roducks\Libs\Request\Request;
 
 class GrantAccess{
 
@@ -44,14 +44,15 @@ class GrantAccess{
 	private function _load($name){
 
 		$file = DIR_ROLES . $name;
+		list($realPath, $fileExists) = \App::getRealPath($file);
 
-		if(file_exists($file) && !empty($name)){
-			$config = Request::getContent($file);
+		if($fileExists && !empty($name)){
+			$config = Request::getContent($realPath);
 			$json = JSON::decode($config);
 			return $json;
 		} else {
 			if(!Login::isSuperAdmin()){
-				Error::debug("Role config file was not found", __LINE__, __FILE__, $file, 'Make sure it exists in: <b>' . DIR_ROLES . "</b>");
+				Error::debug("Role config file was not found", __LINE__, __FILE__, $file, 'Make sure it exists in: <b>' . $realPath . "</b>");
 			}
 		}
 

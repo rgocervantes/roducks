@@ -30,11 +30,13 @@ use Roducks\Libs\Files\File;
 use Roducks\Libs\Files\Directory;
 use Roducks\Libs\Utils\Date;
 
-class FileAjax extends Service{
+class FileAjax extends Service
+{
 
 	protected $_dispatchUrl = true;
 
-	private function __makeCrops($fx, $dir, $f, array $cuts = []){
+	private function __makeCrops($fx, $dir, $f, array $cuts = [])
+	{
 
 		$w = $this->post->param("w");
 		$h = $this->post->param("h");
@@ -61,7 +63,8 @@ class FileAjax extends Service{
 	}
 
 	// delete old image when uploading a new one.
-	private function __deleteCrops($path, array $cuts = []){
+	private function __deleteCrops($path, array $cuts = [])
+	{
 		$file = File::init();
 
 		$copy = $this->post->param('copy');
@@ -75,12 +78,14 @@ class FileAjax extends Service{
 		endif;			
 	}
 
-	private function _deleteCrops($path, array $cuts = []){
+	private function _deleteCrops($path, array $cuts = [])
+	{
 		$this->__deleteCrops($path, $cuts);
 		parent::output();
 	}	
 	
-	private function _crop($fx, $dir, $dir2, $cuts){
+	private function _crop($fx, $dir, $dir2, $cuts)
+	{
 		
 		$file = $this->post->param("cropper");
 		$this->__makeCrops($fx, $dir, $file, $cuts);
@@ -100,7 +105,8 @@ class FileAjax extends Service{
 		parent::output();
 	}
 	
-	private function _upload($prefix, $dir, $dir2, array $size = [], array $types = []){
+	private function _upload($prefix, $dir, $dir2, array $size = [], array $types = [])
+	{
 
 		$file = File::init();
 		if(count($types) > 0) $file->type($types);
@@ -139,14 +145,16 @@ class FileAjax extends Service{
 	
 	}
 	
-	private function _deleteFile($dir){
+	private function _deleteFile($dir)
+	{
 		$file = File::init();
 		$file->delete($dir, $this->post->param("file"));		
 
 		parent::output();
 	}
 
-	public function module($class = "", $index = "", $action = ""){
+	public function module($class = "", $index = "", $action = "")
+	{
 
 		$this->params([
 			'class' => [$class, 'PARAM', Dispatch::PARAM_STRING],
@@ -169,21 +177,21 @@ class FileAjax extends Service{
 		switch ($method) {
 			case 'cropSquared':
 				if(isset($config['CLIPPING']) && isset($config['DIR_UPLOAD']) && isset($config['DIR_UPLOADED']) && isset($config['SQUARED_CLIPPINGS'])){
-					$this->_crop($config['CLIPPING'], $config['DIR_UPLOAD'], $config['DIR_UPLOADED'], $config['SQUARED_CLIPPINGS']);
+					$this->_crop($config['CLIPPING'], \App::getRealFilePath($config['DIR_UPLOAD']), $config['DIR_UPLOADED'], $config['SQUARED_CLIPPINGS']);
 				} else {
 					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
 				break;
 			case 'cropLandscape':
 				if(isset($config['CLIPPING']) && isset($config['DIR_UPLOAD']) && isset($config['DIR_UPLOADED']) && isset($config['LANDSCAPE_CLIPPINGS'])){
-					$this->_crop($config['CLIPPING'], $config['DIR_UPLOAD'], $config['DIR_UPLOADED'], $config['LANDSCAPE_CLIPPINGS']);
+					$this->_crop($config['CLIPPING'], \App::getRealFilePath($config['DIR_UPLOAD']), $config['DIR_UPLOADED'], $config['LANDSCAPE_CLIPPINGS']);
 				} else {
 					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
 				break;
 			case 'uploadFile':
 				if(isset($config['PREFIX']) && isset($config['DIR_UPLOAD']) && isset($config['DIR_UPLOADED']) && isset($config['SIZE']) && isset($config['TYPES'])){
-					$this->_upload($config['PREFIX'], $config['DIR_UPLOAD'], $config['DIR_UPLOADED'], $config['SIZE'], $config['TYPES']);
+					$this->_upload($config['PREFIX'], \App::getRealFilePath($config['DIR_UPLOAD']), $config['DIR_UPLOADED'], $config['SIZE'], $config['TYPES']);
 				} else {
 					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
@@ -197,7 +205,7 @@ class FileAjax extends Service{
 				break;
 			case 'deleteCrops':
 				if(isset($config['DIR_UPLOAD']) && isset($config['CLIPPINGS'])){
-					$this->_deleteCrops($config['DIR_UPLOAD'], $config['CLIPPINGS']);
+					$this->_deleteCrops(\App::getRealFilePath($config['DIR_UPLOAD']), $config['CLIPPINGS']);
 				} else {
 					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
 				}

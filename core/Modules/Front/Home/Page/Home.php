@@ -22,7 +22,7 @@ namespace Roducks\Modules\Front\Home\Page;
 
 use Roducks\Framework\Login;
 use Roducks\Page\FrontPage;
-use App\models\Users\Users as UsersTable;
+use App\Models\Users\Users as UsersTable;
 
 class Home extends FrontPage {
 
