@@ -104,9 +104,9 @@ return [
 					'id_user' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'start_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					':required' => Dispatch::page("users", "reset-filter")						
+					':empty' => Dispatch::page("users", "reset-filter")						
 				]
-			],	
+			],
 			'/picture(/id/(?P<userId>\d+))?' => [
 				'dispatch' => Dispatch::page("users", "picture")
 			],
@@ -148,7 +148,7 @@ return [
 				'POST' => [
 					'start_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					':required' => Dispatch::page("users", "reset-filter")
+					':empty' => Dispatch::page("users", "reset-filter")
 				]
 			]
 		]
@@ -178,7 +178,7 @@ return [
 					'id_user' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'start_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					':required' => Dispatch::page("subscribers", "reset-filter")
+					':empty' => Dispatch::page("subscribers", "reset-filter")
 				]
 			],		
 			'/picture/id/(?P<userId>\d+)' => [
@@ -219,7 +219,7 @@ return [
 				'POST' => [
 					'start_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					':required' => Dispatch::page("subscribers", "reset-filter")
+					':empty' => Dispatch::page("subscribers", "reset-filter")
 				]
 			]
 		]
@@ -249,7 +249,7 @@ return [
 					'id_user' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'start_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					':required' => Dispatch::page("clients", "reset-filter")		
+					':empty' => Dispatch::page("clients", "reset-filter")		
 				]
 			],		
 			'/picture/id/(?P<userId>\d+)' => [
@@ -290,51 +290,11 @@ return [
 				'POST' => [
 					'start_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					':required' => Dispatch::page("clients", "reset-filter")
+					':empty' => Dispatch::page("clients", "reset-filter")
 				]
 			]
 		]
 	],
 
-	/*
-	|---------------------------------
-	|				POSTS
-	|---------------------------------
-	*/
-	'/posts' => [
-		'path' => [
-			/**
-			 *	Post
-			 */
-			'/add/category/id/(?P<categoryId>\d+)' => [
-				'dispatch' => Dispatch::page("posts", "addPost")
-			],
-			'/edit/id/(?P<postId>\d+)' => [
-				'dispatch' => Dispatch::page("posts", "editPost")
-			],
-			/**
-			 *	Categories
-			 */
-			'/categories/listing' => [
-				'dispatch' => Dispatch::page("posts", "list-categories"),
-				'GET' => [
-					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
-				]
-			],
-			'/categories/id/(?P<categoryId>\d+)' => [
-				'dispatch' => Dispatch::page("posts", "by-category-id"),
-				'GET' => [
-					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
-				]
-			],
-			'/categories/add' => [
-				'dispatch' => Dispatch::page("posts", "addCategory")
-			],	
-			'/categories/edit/id/(?P<categoryId>\d+)' => [
-				'dispatch' => Dispatch::page("posts", "editCategory")
-			]
-
-		]
-	],
 ];
 

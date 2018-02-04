@@ -234,7 +234,7 @@ class Dispatch{
 		/* ------------------------------------*/
 		/* 		INITIAL VARS
 		/* ------------------------------------*/
-		$requestMethod = 'GET';
+		$requestMethod = Http::getRequestMethod();
 		$getGETParams = URL::getGETParams();
 		$routerPath = Core::getSiteConfigPath("router");
 		$params = URL::getParams();
@@ -374,21 +374,20 @@ class Dispatch{
 
 			if(Helper::isApi($page)){
 				$allowedMethods = self::httpRequestMethods($dispatcher);
-				$requestMethod = Http::getRequestMethod();
 			}
 
 			// Let's take a look if there's POST Params
 			if(isset($dispatcher['POST']) && is_array($dispatcher['POST']) && $requestMethod == 'POST') {
 
-				if(isset($dispatcher['POST'][':required'])){
+				if(isset($dispatcher['POST'][':empty'])){
 					if(!Post::stSentData()){
-						if(Helper::regexp('#::#', $dispatcher['POST'][':required'])) {
-							list($page,$method) = explode("::", $dispatcher['POST'][':required']);
+						if(Helper::regexp('#::#', $dispatcher['POST'][':empty'])) {
+							list($page,$method) = explode("::", $dispatcher['POST'][':empty']);
 						} else {
 							Error::debug("Bad dispatcher syntax",__LINE__, __FILE__, $routerPath);
 						}
 					}
-					unset($dispatcher['POST'][':required']);
+					unset($dispatcher['POST'][':empty']);
 				} else {
 					Post::stRequired();
 				}
