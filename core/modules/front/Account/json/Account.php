@@ -18,14 +18,14 @@
  *
  */
 
-namespace rdks\core\modules\front\Account\json;
+namespace Roducks\Modules\Front\Account\JSON;
 
-use rdks\core\page\JSON;
-use rdks\core\page\View;
-use rdks\core\framework\Login;
-use rdks\core\framework\Role;
-use rdks\core\libs\Utils\Date;
-use rdks\app\models\Users\Users as UsersTable;
+use Roducks\Page\JSON;
+use Roducks\Page\View;
+use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use Roducks\Libs\Utils\Date;
+use App\Models\Users\Users as UsersTable;
 
 class Account extends JSON{
 

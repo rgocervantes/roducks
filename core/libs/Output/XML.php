@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\core\libs\Output;
+namespace Roducks\Libs\Output;
 
 class XML{
 

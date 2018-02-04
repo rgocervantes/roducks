@@ -33,7 +33,7 @@
 	echo $xmlResponse;   
 
 */
-namespace rdks\core\libs\Data;
+namespace Roducks\Libs\Data;
 
 
 class Cache{

@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\core\services;
+namespace Roducks\Services;
 
-use rdks\core\page\Service;
-use rdks\app\models\Users\Users as UsersTable;
+use Roducks\Page\Service;
+use App\Models\Users\Users as UsersTable;
 
 class Account extends Service{
 

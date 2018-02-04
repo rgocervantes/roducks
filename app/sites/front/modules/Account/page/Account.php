@@ -18,11 +18,10 @@
  *
  */
 
-namespace rdks\app\sites\front\modules\Account\page;
+namespace App\Sites\Front\Modules\Account\Page;
 
-use rdks\core\modules\front\Account\page\Account as AccountPage;
+use Roducks\Modules\Front\Account\Page\Account as AccountPage;
 
 class Account extends AccountPage {
 
-} 
-
+}

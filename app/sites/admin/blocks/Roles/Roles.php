@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\app\sites\admin\blocks\Roles;
+namespace App\Sites\Admin\Blocks\Roles;
 
-use rdks\core\blocks\Roles\Roles as RolesCore;
+use Roducks\Blocks\Roles\Roles as RolesCore;
 
 class Roles extends RolesCore{
 

@@ -18,17 +18,17 @@
  *
  */
 
-namespace rdks\core\page;
+namespace Roducks\Page;
 
-use rdks\core\framework\Core;
-use rdks\core\framework\Login;
-use rdks\core\framework\Language;
-use rdks\core\framework\URL;
-use rdks\core\framework\Error;
-use rdks\core\framework\Helper;
-use rdks\core\framework\Path;
-use rdks\core\libs\Protocol\Http;
-use rdks\core\libs\Data\Session;
+use Roducks\Framework\Core;
+use Roducks\Framework\Login;
+use Roducks\Framework\Language;
+use Roducks\Framework\URL;
+use Roducks\Framework\Error;
+use Roducks\Framework\Helper;
+use Roducks\Framework\Path;
+use Roducks\Libs\Request\Http;
+use Roducks\Libs\Data\Session;
 
 class Page extends GenericPage {
 	
@@ -150,5 +150,10 @@ class Page extends GenericPage {
 		endif;	
 
 	}
+
+	public function _media(){
+		\Roducks\Libs\Files\Download::attachment(DIR_DATA_UPLOADS_IMAGES . $_GET['uri']);
+	}
+
 
 }

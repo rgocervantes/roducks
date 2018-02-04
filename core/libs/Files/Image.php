@@ -27,7 +27,7 @@
 *	
 */
 
-namespace rdks\core\libs\Files;
+namespace Roducks\Libs\Files;
 
 class Image {
   
@@ -382,11 +382,12 @@ class Image {
 	static function getSize($img){
 
 		$img = preg_replace('/^\/(.+)/', '$1', $img);
+		list($realPath, $fileExists) = \App::getRealPath($img);
 
-		if(!empty($img) && file_exists($img)){
+		if(!empty($img) && $fileExists){
 
 			// get image size
-			list($w, $h) = getimagesize($img);
+			list($w, $h) = getimagesize($realPath);
 
 			return [$w, $h];
 
@@ -405,11 +406,12 @@ class Image {
 			}
 
 			$img = preg_replace('/^\/(.+)/', '$1', $img);
+			list($realPath, $fileExists) = \App::getRealPath($img);
 
-			if(!empty($img) && file_exists($img)){
+			if(!empty($img) && $fileExists){
 
 				// get image size
-				list($w, $h) = getimagesize($img);
+				list($w, $h) = getimagesize($realPath);
 
 				// square	
 				if($w == $h && $rz < $w && $rz < $h){

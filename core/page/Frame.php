@@ -18,16 +18,16 @@
  *
  */
 
-namespace rdks\core\page;
+namespace Roducks\Page;
 
-use rdks\core\framework\Core;
-use rdks\core\framework\Dispatch;
-use rdks\core\framework\URL;
-use rdks\core\framework\Login;
-use rdks\core\framework\Role;
-use rdks\core\framework\Error;
-use rdks\core\framework\Helper;
-use rdks\core\libs\Protocol\Http;
+use Roducks\Framework\Core;
+use Roducks\Framework\Dispatch;
+use Roducks\Framework\URL;
+use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use Roducks\Framework\Error;
+use Roducks\Framework\Helper;
+use Roducks\Libs\Request\Http;
 
 abstract class Frame{
 
@@ -53,7 +53,7 @@ abstract class Frame{
 		$class = $this->pageObj->className;
 
 		// Avoid autoload for "Page Not Found"
-		if($class == "rdks\core\page\Page"){
+		if($class == Helper::PAGE_NOT_FOUND){
 			return;
 		}
 
@@ -66,7 +66,7 @@ abstract class Frame{
 			if(!Helper::regexp(Helper::VALID_PARAM, $key)){
 				Error::debug("Invalid param", __LINE__, __FILE__, $this->pageObj->fileName, "Param <b style=\"color: #c00;\">{$key}</b> contains invalid chars. [\-0-9]");
 			}
-		
+
 			if(property_exists($class, $key)){
 
 				if(!is_array($value)){
@@ -78,6 +78,7 @@ abstract class Frame{
 				}
 
 			}else{
+				/*
 				$url = URL::getParams();
 				$tag = (isset($url[0])) ? $url[0] : "";
 
@@ -88,8 +89,9 @@ abstract class Frame{
 					($this->_pageType == 'PAGE' && $tag != '_page') || 
 					($this->_pageType == 'FRAME')
 				) {
+					*/
 					Error::undefinedVariable("Undefined variable", $this->pageObj->className, __LINE__, __FILE__, $this->pageObj->fileName, $key, $this->getParentClassName());
-				}
+				//}
 			}	
 		}
 	}
@@ -98,14 +100,14 @@ abstract class Frame{
 
 		$class = $this->pageObj->className;
 
-		if($this->_dispatchUrl || $class == "rdks\core\page\Page"){
+		if($this->_dispatchUrl || $class == Helper::PAGE_NOT_FOUND){
 			return;
 		}
 
 		$url = URL::getParams();
 		$total = count($url) - 1;
 		if(isset($url[0]) && isset($url[1]) && !empty($url[$total])){
-			if(preg_match('/^_(page|block|json|xml|service|factory)$/', $url[0])){
+			if(preg_match('/^_(page|api|block|json|xml|service|factory)$/', $url[0])){
 				if(
 					(!$this->_dispatchUrl && $this->_pageType == 'FRAME' && preg_match('/^_(json|service|xml)$/', $url[0])) || 
 					(!$this->_dispatchUrl && $this->_pageType == 'PAGE' && $url[0] == '_page') || 
@@ -319,14 +321,6 @@ abstract class Frame{
 					$i = $count;
 					$count++;
 
-/*
-					if(empty($value[0])){
-						$autocomplete = (isset($value[3])) ? $value[3] : "[{$value[2]}]";
-						$error = "Complete URL params:<br><br><span style=\"color:#c00;\">{$relativeUrl}/</span><b>{$autocomplete}</b>";
-						Error::$alert("Missing value",__LINE__, __FILE__, $this->pageObj->fileName, $error);
-						$this->view->setError();
-					}
-*/
 					if($this->_pageType == 'BLOCK'){
 						$total++;
 					}
@@ -370,7 +364,7 @@ abstract class Frame{
 						$err = "Missing GET param: <b>{$key}</b>";
 					}
 					
-				}	
+				}
 				
 				if(isset($value[3]) && !empty($value[0])){
 					$regexp = $value[3];
@@ -437,9 +431,13 @@ abstract class Frame{
 		/* ------------------------------------*/
 		/* 		INITIALIZE VARS
 		/* ------------------------------------*/
-		$this->_autoLoad(URL::getGETParams());
+		$url = URL::getParams();
+		$tag = (isset($url[0])) ? $url[0] : "";
 
-	}	
+		if($this->_pageType == 'PAGE' || Helper::isDispatch($tag))
+			$this->_autoLoad(URL::getGETParams());
+
+	}
 
 	public function setVars(array $params = []){
 		if(empty($params)){

@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\core\libs\ORM;
+namespace Roducks\Libs\ORM;
 
 class DB{
 

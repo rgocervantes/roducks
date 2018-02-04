@@ -18,10 +18,10 @@
  *
  */
 
-use rdks\core\framework\Role;
-use rdks\app\sites\admin\modules\Roles\helper\Roles as RolesHelper;
+use Roducks\Framework\Role;
+use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 
-$menu = [
+return [
 	[
 		'text' => "Roles", 
 		'link' => Role::URL,

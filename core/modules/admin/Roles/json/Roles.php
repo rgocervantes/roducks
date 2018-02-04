@@ -18,17 +18,17 @@
  *
  */
 
-namespace rdks\core\modules\admin\Roles\json;
+namespace Roducks\Modules\Admin\Roles\JSON;
 
-use rdks\core\framework\Login;
-use rdks\core\framework\Role;
-use rdks\core\framework\Language;
-use rdks\core\page\_JSON;
-use rdks\core\libs\Utils\Date;
-use rdks\core\libs\Files\Directory;
-use rdks\core\libs\Files\File;
-use rdks\core\libs\Data\Session;
-use rdks\app\models\Users\Roles as RolesTable;
+use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use Roducks\Framework\Language;
+use Roducks\Page\_JSON;
+use Roducks\Libs\Utils\Date;
+use Roducks\Libs\Files\Directory;
+use Roducks\Libs\Files\File;
+use Roducks\Libs\Data\Session;
+use App\Models\Users\Roles as RolesTable;
 
 class Roles extends _JSON{
 

@@ -18,13 +18,13 @@
  *
  */
 
-namespace rdks\core\blocks\LatestUsers;
+namespace Roducks\Blocks\LatestUsers;
 
-use rdks\core\page\Block;
-use rdks\core\framework\Login;
-use rdks\core\framework\Role;
-use rdks\app\models\Users\UsersRoles;
-use rdks\app\sites\admin\modules\Roles\helper\Roles as RolesHelper;
+use Roducks\Page\Block;
+use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use App\Models\Users\UsersRoles;
+use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 
 class LatestUsers extends Block{
 

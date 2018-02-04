@@ -18,13 +18,13 @@
  *
  */
 
-namespace rdks\core\page;
+namespace Roducks\Page;
 
-use rdks\core\framework\Login;
-use rdks\core\framework\Role;
-use rdks\core\framework\Helper;
-use rdks\core\framework\Error;
-use rdks\core\libs\Data\Request;
+use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use Roducks\Framework\Helper;
+use Roducks\Framework\Error;
+use Roducks\Libs\Data\Request;
 
 class GrantAccess{
 

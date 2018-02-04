@@ -2,7 +2,7 @@
 			'jpg'
 		];
 
-	var size = <?php echo \rdks\core\page\Block::getData("user")->getUploadSize(); ?>;	
+	var size = <?php echo \Roducks\page\Block::getData("user")->getUploadSize(); ?>;	
 
 	uploader.init({
 		id: '#btn-upload', // .btn-upload

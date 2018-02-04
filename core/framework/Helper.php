@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
 class Helper{
 
@@ -37,12 +37,13 @@ class Helper{
 	const REGEXP_GET_MODULE = '/^([a-zA-Z\-]+)\/.+$/';
 	const REGEXP_IS_URL_DISPATCH = '/^_/';
 	const REGEXP_IS_BLOCK_DISPATCHED = '/^_block/';
-	const REGEXP_IS_SERVICE = '/^services\/[a-zA-Z_]+$/';
-	const REGEXP_IS_JSON = '#json#';	
-	const REGEXP_IS_PAGE = '#page#';
-	const REGEXP_IS_BLOCK = '#blocks#';	
-	const REGEXP_IS_XML = '#xml#';
-	const REGEXP_IS_FACTORY = '#factory#';
+	const REGEXP_IS_SERVICE = '/^Services\/[a-zA-Z_]+$/';
+	const REGEXP_IS_API = '/^Api\/[a-zA-Z_]+$/';
+	const REGEXP_IS_JSON = '#JSON#';	
+	const REGEXP_IS_PAGE = '#Page#';
+	const REGEXP_IS_BLOCK = '#Blocks#';	
+	const REGEXP_IS_XML = '#XML#';
+	const REGEXP_IS_FACTORY = '#Factory#';
 	const REGEXP_PATH = '/^([a-zA-Z_\/]+\/)(\w+)$/';
 
 	const VALID_DATETIME = '/^(\d{4}-\d{2}-\d{2})\s(\d{2}:\d{2}:\d{2})$/';
@@ -64,6 +65,8 @@ class Helper{
 	const VALID_IMAGE = '/\.(jpeg|jpg|png)$/';
 	const VALID_JSON = '/\.json$/';
 	const VALID_XML = '/\.xml$/';
+
+	const PAGE_NOT_FOUND = "Roducks\Page\Page";
 
 	static function regexp($regexp, $param){
 		if(preg_match($regexp, $param)){
@@ -100,6 +103,10 @@ class Helper{
 
 	static function isService($str){
 		return self::regexp(self::REGEXP_IS_SERVICE, $str);
+	}
+
+	static function isApi($str){
+		return self::regexp(self::REGEXP_IS_API, $str);
 	}
 
 	static function isJson($str){
@@ -174,6 +181,17 @@ class Helper{
 
 	static function getBlockName($path){
 		return preg_replace('#('.DIR_BLOCKS.')_([a-zA-Z]+/)#', '$1$2', $path);
+	}
+
+	static function getBlockClassName($class){
+
+		if(preg_match('/^core\\\Blocks\\\/', $class)){
+			$class = CORE_NS . "\\" . preg_replace('/^core\\\(.+)$/', '$1', $class);
+		} else if(preg_match('/^app\\\Blocks\\\/', $class)){
+			$class = APP_NS . "\\" . preg_replace('/^app\\\(.+)$/', '$1', $class);
+		}
+
+		return $class;
 	}
 
 	static function pageByFactory($str){

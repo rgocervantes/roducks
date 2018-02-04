@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\app\sites\admin\blocks\_User;
+namespace App\Sites\Admin\Blocks\_User;
 
-use rdks\core\page\View;
-use rdks\core\blocks\User\User;
+use Roducks\Page\View;
+use Roducks\Blocks\User\User;
 
 class _User extends User{
 

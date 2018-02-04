@@ -27,24 +27,24 @@
 
 7. Run command below to make `data` folder.
 ```
-mkdir -p app/data/storage/json/roles
+mkdir -p app/Data/Storage/JSON/Roles
 ```
 8. Give some write permissions.
 ```
-chmod -R 777 app/data
+chmod -R 777 app/Data
 ```
 9. Run the next command.
 ```
-cp core/data/config/* app/data/storage/json/roles/
+cp core/Data/Config/* app/Data/storage/json/roles/
 ```
 10. Run command below to create the local config file.
 ```
-cp app/config/config.local.inc.sample app/config/config.local.inc
+cp app/Config/config.local.inc.sample app/Config/config.local.inc
 ```
 11. Edit file `app/config/config.local.inc` and change value of `domain_name` by your own “Domain Name” for Development environment.
 12. Run command below to create the local environments file.
 ```
-cp app/config/environments.local.inc.sample app/config/environments.local.inc
+cp app/Config/environments.local.inc.sample app/Config/environments.local.inc
 ```
 13. Create a local MySQL database called `roducks`.
 14. Create a User and Password for the database you just created and the previous step.
@@ -52,9 +52,9 @@ cp app/config/environments.local.inc.sample app/config/environments.local.inc
 
 16. Run command below to create the local Database file.
 ```
-cp app/config/database.local.inc.sample app/config/database.local.inc
+cp app/Config/database.local.inc.sample app/Config/database.local.inc
 ```
-17. Edit file `app/config/database.local.inc` and set data of your local Database’s User and Password.
+17. Edit file `app/Config/database.local.inc` and set data of your local Database’s User and Password.
 
 18. Run the command below to create the **Super Admin User**.
 ```
@@ -70,15 +70,15 @@ Congratulations! You just installed `Roducks` successfully.
 1. Upload files to your Server in QA `or` Production environment.
 2. Run command below to make `data` folder.
 ```
-mkdir -p app/data/storage/json/roles
+mkdir -p app/Data/Storage/JSON/Roles
 ```
 3. Give some write permissions.
 ```
-chmod -R 777 app/data
+chmod -R 777 app/Data
 ```
 4. Run the next command.
 ```
-cp core/data/config/* app/data/storage/json/roles/
+cp core/Data/Config/* app/Data/storage/json/roles/
 ```
 5. Create a local MySQL database called `roducks`.
 6. Create a User and Password for the database you just created and the previous step.

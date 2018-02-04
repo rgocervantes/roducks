@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\core\page;
+namespace Roducks\Page;
 
 class HelperPage extends Frame {
 

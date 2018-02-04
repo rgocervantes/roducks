@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Subscribers\helper;
+namespace App\Sites\Admin\Modules\Subscribers\Helper;
 
 class Subscribers {
 

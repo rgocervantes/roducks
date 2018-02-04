@@ -18,7 +18,7 @@
  *
  */
 
-$modules = [
+return [
 	'Account' 	=> true,
 	'Home' 		=> true,
 	'Login' 	=> true,

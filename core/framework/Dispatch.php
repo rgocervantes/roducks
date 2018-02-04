@@ -18,16 +18,19 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
-use rdks\core\page\JSON;
-use rdks\core\libs\Data\Session;
-use rdks\core\libs\Utils\Date;
-use rdks\core\libs\Protocol\Http;
-use rdks\app\models\Data\UrlsUrlsLang;
-use rdks\app\models\Users\Users as UsersTable;
+use Roducks\Page\JSON;
+use Roducks\Libs\Data\Session;
+use Roducks\Libs\Utils\Date;
+use Roducks\Libs\Request\Http;
+use Roducks\Libs\Request\CORS;
+use App\Models\Data\UrlsUrlsLang;
+use App\Models\Users\Users as UsersTable;
 
 class Dispatch{
+
+	static $httpMethods = ['GET','POST','OPTIONS','PUT','PATCH','DELETE'];
 
 	const PARAM_STRING = 'string';
 	const PARAM_WORD = 'word';
@@ -58,7 +61,7 @@ class Dispatch{
 
 	static function page($class, $method){
 		$class = Helper::getCamelName($class);
-		return "{$class}/page/{$class}::{$method}";
+		return "{$class}/Page/{$class}::{$method}";
 	}
 
 	static function _page($class, $method){
@@ -68,7 +71,7 @@ class Dispatch{
 
 	static function factory($class, $method){
 		$class = Helper::getCamelName($class);
-		return "{$class}/factory/{$class}::{$method}";
+		return "{$class}/Factory/{$class}::{$method}";
 	}	
 
 	static function _factory($class, $method){
@@ -78,32 +81,42 @@ class Dispatch{
 
 	static function json($class, $method){
 		$class = Helper::getCamelName($class);
-		return "{$class}/json/{$class}::{$method}";
+		return "{$class}/JSON/{$class}::{$method}";
 	}
 
 	static function _json($class, $method){
 		$class = Helper::getCamelName($class);
 		return "/_json/{$class}/{$method}";
-	}	
+	}
 
 	static function xml($class, $method){
 		$class = Helper::getCamelName($class);
-		return "{$class}/xml/{$class}::{$method}";
+		return "{$class}/XML/{$class}::{$method}";
 	}
 
 	static function _xml($class, $method){
 		$class = Helper::getCamelName($class);
 		return "/_xml/{$class}/{$method}";
-	}	
+	}
 
 	static function service($class, $method){
 		$class = Helper::getCamelName($class);
-		return "services/{$class}::{$method}";
-	}		
+		return "Services/{$class}::{$method}";
+	}
 
 	static function _service($class, $method){
 		$class = Helper::getCamelName($class);
 		return "/_service/{$class}/{$method}";
+	}
+
+	static function api($class, $method = ""){
+		$class = Helper::getCamelName($class);
+		return "Api/{$class}::{$method}";
+	}		
+
+	static function _api($class, $method = ""){
+		$class = Helper::getCamelName($class);
+		return "/_api/{$class}/{$method}";
 	}	
 
 	static function values($arr){
@@ -122,6 +135,41 @@ class Dispatch{
 		}
 
 		return $last;
+	}
+
+	static function httpRequestMethods($dispatcher){
+
+		$methods = self::$httpMethods;
+		$allowedMethods = [];
+
+		foreach ($methods as $method) {
+			if(isset($dispatcher[$method])){
+				array_push($allowedMethods, $method);
+			}
+		}
+
+		if(!in_array(Http::getRequestMethod(), $allowedMethods)){
+			Http::sendMethodNotAllowed();
+		}
+
+		return $allowedMethods;
+
+	}
+
+	static function getRequestBody(array $values = []){
+
+		if(count($values) > 0){
+			$obj = new \stdClass;
+			foreach ($values as $key => $value) {
+				$value = (Helper::isInteger($value)) ? intval($value) : $value;
+				$obj->$key = $value;
+			}
+
+			return $obj;
+		}
+
+		return false;
+
 	}
 
 	static function init(){
@@ -186,10 +234,11 @@ class Dispatch{
 		/* ------------------------------------*/
 		/* 		INITIAL VARS
 		/* ------------------------------------*/
+		$requestMethod = 'GET';
 		$getGETParams = URL::getGETParams();
 		$routerPath = Core::getSiteConfigPath("router");
 		$params = URL::getParams();
-		$dispatcher = ['dispatch' => 'Page::pageNotFound'];
+		$dispatcher = ['dispatch' => Helper::PAGE_NOT_FOUND . '::pageNotFound'];
 		
 		$found = false;
 		$rowUrl = [];
@@ -199,9 +248,10 @@ class Dispatch{
 		$routers = [];
 		$subRouter = [];
 		$urlPattern = [];
+		$allowedMethods = [];
 		$missingGETParams = [];
 		$missingPOSTParams = [];
-		$unknownGETParams = [];		
+		$unknownGETParams = [];
 		/* ------------------------------------*/
 
 
@@ -209,11 +259,13 @@ class Dispatch{
 		/* 		ROUTER URLS
 		/* ------------------------------------*/
 		$routers = Core::getRouterFile();
-		$router['/_email/(?P<TEMPLATE>[a-z\-]+)'] = ['dispatch' => 'Page::_email'];
-		$router['/_lang/(?P<LANG>\w{2}).*'] = ['dispatch' => 'Page::_lang'];
+		$routers['/static/images/[a-zA-Z0-9_\-\.\/]+'] = ['dispatch' => Helper::PAGE_NOT_FOUND . '::_media'];
+		$router['/_email/(?P<TEMPLATE>[a-z\-]+)'] = ['dispatch' => Helper::PAGE_NOT_FOUND . '::_email'];
+		$router['/_lang/(?P<LANG>\w{2}).*'] = ['dispatch' => Helper::PAGE_NOT_FOUND . '::_lang'];
 		$router['/_(page|json|xml|factory)/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_data_'];
 		$router['/_block/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_block_'];
 		$router['/_service/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_service_'];
+		$router['/_api/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_api_'];
 
 		/* ------------------------------------*/
 		/* 		DISPATCHER
@@ -315,13 +367,18 @@ class Dispatch{
 		// Let's see if module is enabled
 		if( 
 			(!isset($modulesMap[$module]) || $modulesMap[$module] === FALSE) 
-		&& ($page != 'Output' && !Helper::isService($page) && $page != "Page") 
+		&& ($page != 'Output' && !Helper::isService($page) && !Helper::isApi($page) && $page != Helper::PAGE_NOT_FOUND) 
 		){
 			Error::moduleDisabled("Module is disabled or undefined", __LINE__, __FILE__, Core::getSiteConfigPath("modules"), $module);	
 		} else {
 
+			if(Helper::isApi($page)){
+				$allowedMethods = self::httpRequestMethods($dispatcher);
+				$requestMethod = Http::getRequestMethod();
+			}
+
 			// Let's take a look if there's POST Params
-			if(isset($dispatcher['POST']) && is_array($dispatcher['POST'])) {
+			if(isset($dispatcher['POST']) && is_array($dispatcher['POST']) && $requestMethod == 'POST') {
 
 				if(isset($dispatcher['POST'][':required'])){
 					if(!Post::stSentData()){
@@ -335,7 +392,7 @@ class Dispatch{
 				} else {
 					Post::stRequired();
 				}
-				
+
 				foreach ($dispatcher['POST'] as $key => $value) {
 
 					$val = (is_array($value)) ? array_keys($value)[0] : $value;
@@ -423,7 +480,7 @@ class Dispatch{
 
 				// Send Error
 				if(count($missingPOSTParams) > 0){
-					if($params[0] == '_json' || preg_match('#json#', $page)) {
+					if($params[0] == '_json' || preg_match('#JSON#', $page)) {
 						
 						$jsonData = (Environment::inDEV()) ? $missingPOSTParams : [];
 						
@@ -441,7 +498,7 @@ class Dispatch{
 			}
 
 			// Let's take a look if there's GET Params
-			if(isset($dispatcher['GET']) && is_array($dispatcher['GET'])){
+			if(isset($dispatcher['GET']) && is_array($dispatcher['GET']) && $requestMethod == 'GET'){
 
 				foreach($dispatcher['GET'] as $key => $value){
 				
@@ -455,19 +512,28 @@ class Dispatch{
 						$value = $k[0];
 
 						$err = "Param <b>{$key}</b> does not match with this regular expression: {$match}";
-						$regexp_rule = $match;
-
-						if(Helper::isConditional($match)){
-							$err = "Param <b>{$key}</b> <b style=\"color: #c00;\">ONLY</b> allows the next values: " . Helper::getOptions($match);
-							$regexp_rule = '/^'.$match.'$/';
-						}
+						$regexp = $match;
 						
 						if(isset($getGETParams[$key])){
 
-							if(!Helper::regexp($regexp_rule, $getGETParams[$key])){
+							if(!Helper::regexp($regexp, $getGETParams[$key])){
 								Error::debug("Unexpected value",__LINE__, __FILE__, $routerPath,$err);
 							}
 						}
+					}
+
+					if(isset($getGETParams[$key])){
+
+						if(Helper::isConditional($value)){
+							$err = "Param <b>{$key}</b> <b style=\"color: #c00;\">ONLY</b> allows the next values: <b>" . Helper::getOptions($value) . "</b>";
+							$regexp = '/^'.$value.'$/';
+
+							if(!Helper::regexp($regexp, $getGETParams[$key])){
+								Error::debug("Unexpected value",__LINE__, __FILE__, $routerPath,$err);
+							}
+
+						}
+
 					}
 					
 					/* ----------------------------------------------*/
@@ -617,15 +683,96 @@ class Dispatch{
 				}
 
 			}
-			
+
+			/* ----------------------------------------------*/
+			// Cross Domain
+			/* ----------------------------------------------*/
+			$cors = new CORS;
+
+			if(count($allowedMethods) > 0){
+				$cors->methods($allowedMethods);
+
+				$params = [];
+				$urlParams = 0;
+
+				if(isset($dispatcher['jwt']) && $dispatcher['jwt'] === TRUE) {
+					$params['jwt'] = true;
+				}
+
+				if (Helper::isApi($page) && empty($method)) {
+					switch ($requestMethod) {
+						case 'POST':
+							$method = 'store';
+							break;
+						case 'PUT':
+							$method = 'update';
+							break;
+						case 'DELETE':
+							$method = 'remove';
+							break;
+					}
+
+					if(in_array($requestMethod, ['PUT','DELETE'])) {
+						$request = Http::getBody();
+					}
+
+					if($requestMethod == 'GET'){
+						$request = $getGETParams;
+					}
+
+					if($requestMethod == 'POST'){
+						$request = Post::stData();
+					}
+
+					$params['request'] = self::getRequestBody($request);
+
+				}
+
+				foreach ($urlPattern as $key => $value) {
+					if(!Helper::isInteger($key)) {
+						$params[$key] = (Helper::isInteger($value)) ? intval($value) : $value;
+						$urlParams++;
+					}
+				}
+
+				if($requestMethod == 'GET') {
+
+					if($urlParams > 0) {
+						$method = 'row';
+						unset($params['request']);
+					} else {
+						$method = 'get-all';
+					}
+
+				}
+
+			}
+
+			if(isset($dispatcher['headers'])){
+				$cors->headers($dispatcher['headers']);
+			}
+
+			if(isset($dispatcher['cors'])){
+				
+				$cors->allowDomains($dispatcher['cors']);
+
+				if(isset($dispatcher['max-age'])){
+					$cors->maxAge($dispatcher['max-age']);
+				} else {
+					$cors->maxAge();
+				}
+
+			}
+
 			/* ----------------------------------------------*/
 			// Dispatch page
 			/* ----------------------------------------------*/
-			if(Helper::isService($page)) {
+			if(Helper::isService($page) || Helper::isApi($page)) {
 				$servicePath = Core::getServicesPath($page);
+				$page = $servicePath['service'];
 				$pagePath = $servicePath['path'];
 			} else {
-				$pagePath = ($page == 'Page') ? DIR_CORE_PAGE : Core::getModulesPath();
+				$pagePath = ($page == Helper::PAGE_NOT_FOUND) ? '' : Core::getModulesPath();
 			}
 			
 			if($method == "_data_" || $method == "_block_") {
@@ -634,7 +781,7 @@ class Dispatch{
 
 				if($invalidParam){
 
-					$page = "Page";
+					$page = Helper::PAGE_NOT_FOUND;
 					$method = "pageNotFound";
 					$pagePath = DIR_CORE_PAGE;
 
@@ -664,13 +811,13 @@ class Dispatch{
 					}
 				}
 
-			} else if($method == "_service_") {
+			} else if(($method == "_service_" || $method == "_api_")) {
 
 				$invalidParam = self::getLastParams($params);
 				
 				if($invalidParam){
 					
-					$page = "Page";
+					$page = Helper::PAGE_NOT_FOUND;
 					$method = "pageNotFound";
 					$pagePath = DIR_CORE_PAGE;
 
@@ -681,6 +828,7 @@ class Dispatch{
 					$page = DIR_SERVICES . Helper::getCamelName($page);
 
 					$servicePath = Core::getServicesPath($page);
+					$page = $servicePath['service'];
 					$pagePath = $servicePath['path'];
 			
 					$params = Helper::getUrlParams($params);

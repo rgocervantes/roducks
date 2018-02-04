@@ -18,19 +18,17 @@
  *
  */
 
-namespace rdks\core\page;
+namespace Roducks\Page;
 
-use rdks\core\framework\Core;
-use rdks\core\framework\Asset;
-use rdks\core\framework\Helper;
-use rdks\core\framework\Error;
-use rdks\core\framework\Login;
-use rdks\core\framework\Language;
-use rdks\core\framework\Path;
-use rdks\core\page\Template;
-use rdks\core\page\Layout;
-use rdks\core\libs\Data\Session;
-use rdks\core\libs\Output\Html;
+use Roducks\Framework\Core;
+use Roducks\Framework\Asset;
+use Roducks\Framework\Helper;
+use Roducks\Framework\Error;
+use Roducks\Framework\Login;
+use Roducks\Framework\Language;
+use Roducks\Framework\Path;
+use Roducks\Libs\Data\Session;
+use Roducks\Libs\Output\Html;
 
 final class View{
 
@@ -223,10 +221,9 @@ final class View{
 		} else {
 		
 			$filePath = Helper::getClassName($this->_parentPage, '$1');
-			$filePath = str_replace("rdks/","", $filePath);
 			$class = Helper::getClassName($this->_parentPage);
 			$filePath = $filePath . "/" . $class . FILE_EXT;
-			$extend = '\rdks\core\page\Block';
+			$extend = '\Roducks\Page\Block';
 		
 		}
 
@@ -283,29 +280,24 @@ final class View{
 			$header = $dir_templates . "header" . FILE_TPL;
 			if(file_exists($header)){
 				include $header;
-
 				$top = $dir_templates . "top" . FILE_TPL;
 				
 				if(file_exists($top) && $this->_blocks['top']){
 					include $top;
 				}
-
 				if(Session::exists(Login::SESSION_SECURITY)){
 					Error::security();
 					Login::security(false);
 				} 
-
 			}else{
 				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $header);
 			}
 		}
-
 		// Set template data
 		if(!Helper::isBlock($this->_filePath)) {
 			Template::$data = array_merge(Template::$data,$this->_data);
 		}
 		Template::$path = $dir_templates;
-
 		// Load layout if exists
 		if(file_exists($dir_layouts)){
 			include $dir_layouts;
@@ -320,7 +312,14 @@ final class View{
 
 		// Load body *ONLY* for 404 templates
 		if(!empty($this->_body)){
-			Core::loadFile($dir_templates,$this->_body.FILE_TPL);
+			//Core::loadFile($dir_templates,$this->_body.FILE_TPL);
+			$body = $dir_templates.$this->_body.FILE_TPL;
+
+			if(file_exists($body)){
+				include $body;
+			}else{
+				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $body);
+			}
 		}
 
 		// Include Bottom & Footer

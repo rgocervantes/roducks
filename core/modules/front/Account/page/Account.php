@@ -18,13 +18,13 @@
  *
  */
 
-namespace rdks\core\modules\front\Account\page;
+namespace Roducks\Modules\Front\Account\Page;
 
-use rdks\core\page\View;
-use rdks\core\page\FrontPage;
-use rdks\core\framework\Login;
-use rdks\core\framework\Role;
-use rdks\app\models\Users\Users as UsersTable;
+use Roducks\Page\View;
+use Roducks\Page\FrontPage;
+use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use App\Models\Users\Users as UsersTable;
 
 class Account extends FrontPage {
 

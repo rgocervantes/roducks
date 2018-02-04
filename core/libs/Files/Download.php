@@ -23,7 +23,7 @@
     Download::attachment("my_file.zip", "myCustomDownloadFile-0001");
 */
 
-namespace rdks\core\libs\Files;
+namespace Roducks\Libs\Files;
  
 class Download{
 
@@ -51,7 +51,9 @@ class Download{
  
     public static function attachment($file_name, $download_name = ""){
 
-        if(!file_exists($file_name)){
+        list($realFilePath, $fileExists) = \App::getRealPath($file_name);
+
+        if(!$fileExists){
             header("HTTP/1.1 404 Not Found");
             die("File Not Found.");
         }
@@ -71,7 +73,7 @@ class Download{
      
                     header ("Content-Type: application/octet-stream");
                     header ("Accept-Ranges: bytes");
-                    header ("Content-Length: ".filesize($file_name));
+                    header ("Content-Length: ".filesize($realFilePath));
                     header ("Content-Disposition: attachment; filename=". $file . '.' . $type);           
      
                 break;
@@ -107,8 +109,8 @@ class Download{
   
                 break;
             }
-     
-            readfile($file_name);
+
+            readfile($realFilePath);
  
         }
 

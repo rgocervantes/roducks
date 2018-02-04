@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
-use rdks\core\libs\Data\Cookie;
-use rdks\core\libs\Protocol\Http;
+use Roducks\Libs\Data\Cookie;
+use Roducks\Libs\Request\Http;
 
 class Language{
 

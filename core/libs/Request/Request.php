@@ -58,7 +58,7 @@ Result
 
 */
 
-namespace rdks\core\libs\Data;
+namespace Roducks\Libs\Request;
 
 class Request{
 
@@ -71,7 +71,7 @@ class Request{
 	private $_redirect = false; 
 	private $_effectiveURL = '';
 
-	static function getContent($url){
+	static function getContent($url = ""){
 		if(empty($url)) return "";
 		return file_get_contents($url);
 	}
@@ -98,7 +98,7 @@ class Request{
 
 	}
 
-	public function params(array $values = []){
+	public function params($values){
 
 		switch ($this->_type) {
 			case 'GET':
@@ -106,8 +106,10 @@ class Request{
 				break;
 			
 			case 'POST':
-				curl_setopt($this->_ch, CURLOPT_POST, count($values));
-				curl_setopt($this->_ch, CURLOPT_POSTFIELDS, http_build_query($values));
+				$count = (is_array($values)) ? count($values) : 1;
+				$body = (is_array($values)) ? http_build_query($values) : $values;
+				curl_setopt($this->_ch, CURLOPT_POST, $count);
+				curl_setopt($this->_ch, CURLOPT_POSTFIELDS, $body);
 				break;
 		}
 
@@ -174,15 +176,20 @@ class Request{
 	}
 
 	/*
-		$h = [
-			"Content-Type: application/json; charset=utf-8",
-			"Content-Length: " . strlen(json_encode(array("data" => ".framework")))
+		$headers = [
+			'Content-Type' => "application/json; charset=utf-8",
+			'Content-Length' => strlen(json_encode(['data' => "roducks.framework"]))
 		];
 	*/
-	public function headers(array $h = []){
+	public function headers(array $values = []){
 
-		if(count($h) > 0){
-			curl_setopt($this->_ch, CURLOPT_HTTPHEADER, $h);
+		$headers = [];
+
+		if(count($values) > 0){
+			foreach ($values as $key => $value) {
+				array_push($headers, "{$key}: {$value}");
+			}
+			curl_setopt($this->_ch, CURLOPT_HTTPHEADER, $headers);
 		}
 
 		return $this;

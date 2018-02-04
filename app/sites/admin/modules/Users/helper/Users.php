@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Users\helper;
+namespace App\Sites\Admin\Modules\Users\Helper;
 
 class Users {
 

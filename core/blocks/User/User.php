@@ -18,17 +18,17 @@
  *
  */
 
-namespace rdks\core\blocks\User;
+namespace Roducks\Blocks\User;
 
-use rdks\core\page\Block;
-use rdks\core\page\JSON;
-use rdks\core\framework\Dispatch;
-use rdks\core\framework\Helper;
-use rdks\core\framework\Login;
-use rdks\core\framework\Path;
-use rdks\core\libs\Utils\Date;
-use rdks\app\sites\_global\data\LogData;
-use rdks\app\models\Users\UsersRoles;
+use Roducks\Page\Block;
+use Roducks\Page\JSON;
+use Roducks\Framework\Dispatch;
+use Roducks\Framework\Helper;
+use Roducks\Framework\Login;
+use Roducks\Framework\Path;
+use Roducks\Libs\Utils\Date;
+use App\Sites\_Global\Data\LogData;
+use App\Models\Users\UsersRoles;
 
 class User extends Block{
 
@@ -45,13 +45,13 @@ class User extends Block{
 
 			$cropped = Path::getCropName($img, $resize);
 			
-			if(file_exists( Path::getUploadsUsers($cropped) )){
+			if(\App::fileExists( Path::getUploadsUsers($cropped) )){
 				$squared = Path::getUploadedUsers($cropped);
 			} else {
 				$cropped = Path::getCropName($img, 'full');
 			}
 
-			if(file_exists( Path::getUploadsUsers($img) )){
+			if(\App::fileExists( Path::getUploadsUsers($img) )){
 				$original = Path::getUploadedUsers($img);
 			} 
 

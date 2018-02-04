@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\core\page;
+namespace Roducks\Page;
 
-use rdks\core\framework\Core;
+use Roducks\Framework\Core;
 
 class Factory extends Frame{
 

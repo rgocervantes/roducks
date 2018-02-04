@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
 class Settings extends EAV{
 

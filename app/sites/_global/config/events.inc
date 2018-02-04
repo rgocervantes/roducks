@@ -18,7 +18,7 @@
  *
  */
 
-$events = [
+return [
 	'onEventLogin' 			 => 'Register::onLogin',
 	'onEventLogout' 		 => 'Register::onLogout',
 	'onEventCreateAccount'	 => 'Register::onCreateAccount'

@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\core\page;
+namespace Roducks\Page;
 
-use rdks\core\framework\Login;
+use Roducks\Framework\Login;
 
 class FrontPage extends Page {
 

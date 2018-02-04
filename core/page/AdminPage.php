@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\core\page;
+namespace Roducks\Page;
 
-use rdks\core\framework\Login;
-use rdks\core\framework\Path;
+use Roducks\Framework\Login;
+use Roducks\Framework\Path;
 
 class AdminPage extends Page {
 

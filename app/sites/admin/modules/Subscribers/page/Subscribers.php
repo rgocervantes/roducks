@@ -18,12 +18,12 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Subscribers\page;
+namespace App\Sites\Admin\Modules\Subscribers\Page;
 
-use rdks\core\page\View;
-use rdks\core\framework\Role;
-use rdks\core\modules\admin\Users\page\Users as UsersPage;
-use rdks\app\sites\admin\modules\Subscribers\helper\Subscribers as SubscribersHelper;
+use Roducks\Page\View;
+use Roducks\Framework\Role;
+use Roducks\Modules\Admin\Users\Page\Users as UsersPage;
+use App\Sites\Admin\Modules\Subscribers\Helper\Subscribers as SubscribersHelper;
 
 class Subscribers extends UsersPage{
 

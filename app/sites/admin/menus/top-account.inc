@@ -18,9 +18,9 @@
  *
  */
 
-use rdks\app\sites\admin\modules\Users\helper\Users;
+use App\Sites\Admin\Modules\Users\Helper\Users;
 
-$menu = [
+return [
 	[
 		'link' => Users::URL . "/edit", 
 		'text' => TEXT_EDIT_ACCOUNT, 

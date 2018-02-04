@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Roles\page;
+namespace App\Sites\Admin\Modules\Roles\Page;
 
-use rdks\core\modules\admin\Roles\page\Roles as RolesPage;
+use Roducks\Modules\Admin\Roles\Page\Roles as RolesPage;
 
 class Roles extends RolesPage{
 

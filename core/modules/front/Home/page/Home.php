@@ -18,11 +18,11 @@
  *
  */
 
-namespace rdks\core\modules\front\Home\page;
+namespace Roducks\Modules\Front\Home\Page;
 
-use rdks\core\framework\Login;
-use rdks\core\page\FrontPage;
-use rdks\app\models\Users\Users as UsersTable;
+use Roducks\Framework\Login;
+use Roducks\Page\FrontPage;
+use App\models\Users\Users as UsersTable;
 
 class Home extends FrontPage {
 

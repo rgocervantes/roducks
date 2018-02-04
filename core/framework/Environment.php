@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
-use rdks\core\libs\Protocol\Http;
+use Roducks\Libs\Request\Http;
 
 class Environment{
 

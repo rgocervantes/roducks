@@ -18,8 +18,8 @@
  *
  */
 
-use rdks\core\framework\Core;
-use rdks\core\framework\Error;
+use Roducks\Framework\Core;
+use Roducks\Framework\Error;
 
 /*
 |--------------------------------|
@@ -28,27 +28,26 @@ use rdks\core\framework\Error;
 */
 
 // Only in devel mode errors should be displayed
-Core::define('RDKS_ERRORS', $environment['errors']);
-Core::define('RDKS_SITE', $environment['site']);
-Core::define('RDKS_MODE', $environment['mode']); // LOCAL | QA | PRO
-Core::define('RDKS_SUBDOMAIN', $environment['subdomain']);
+App::define('RDKS_ERRORS', $environment['errors']);
+App::define('RDKS_SITE', $environment['site']);
+App::define('RDKS_MODE', $environment['mode']); // LOCAL | QA | PRO
+App::define('RDKS_SUBDOMAIN', $environment['subdomain']);
 
 // In case subdomain folder does not exist
-if(!file_exists(Core::getSitePath()) || empty($environment['site'])){
+if(!App::fileExists(Core::getSitePath()) || empty($environment['site'])){
 	Error::siteFolderNotFound("Folder was not found.", __LINE__, __FILE__, Core::getAppConfigPath("environments.local"), DIR_APP_SITES);
-}	
+}
 
 /*
 |--------------------------------|
 |		  APP DATABASE 			 |
 |--------------------------------|
 */
-
 $siteDbConfig = Core::getSiteConfigPath($environment['database']);
 $appDbConfig = Core::getAppConfigPath($environment['database']);
 
 // get site data base config if exists
-if(file_exists($siteDbConfig)){
+if(App::fileExists($siteDbConfig)){
 	$dbConfig = Core::getDbSiteConfigFile($environment['database'], false);
 	$dbFile = $siteDbConfig;
 }else{
@@ -67,10 +66,10 @@ if(!isset($dbConfig['host'])){
 	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $dbFile, 'password', 'xxxxxx');
 }
 
-Core::define('DB_HOST', $dbConfig['host']); // localhost
-Core::define('DB_NAME', $dbConfig['name']);
-Core::define('DB_USER', $dbConfig['user']);
-Core::define('DB_PASSWORD', $dbConfig['password']);
+App::define('DB_HOST', $dbConfig['host']); // localhost
+App::define('DB_NAME', $dbConfig['name']);
+App::define('DB_USER', $dbConfig['user']);
+App::define('DB_PASSWORD', $dbConfig['password']);
 
 /*
 |--------------------------------|

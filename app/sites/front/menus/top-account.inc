@@ -18,9 +18,9 @@
  *
  */
 
-use rdks\app\sites\front\modules\Account\helper\Account;
+use App\Sites\Front\Modules\Account\Helper\Account;
 
-$menu = [
+return [
 	[
 		'link' => Account::URL, 
 		'text' => TEXT_ACCOUNT, 

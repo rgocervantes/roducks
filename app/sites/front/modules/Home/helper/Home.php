@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Home\helper;
+namespace App\Sites\Front\Modules\Home\Helper;
 
 class Home {
 

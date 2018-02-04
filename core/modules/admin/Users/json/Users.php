@@ -18,17 +18,17 @@
  *
  */
 
-namespace rdks\core\modules\admin\Users\json;
+namespace Roducks\Modules\Admin\Users\JSON;
 
-use rdks\core\framework\Login;
-use rdks\core\framework\Role;
-use rdks\core\framework\Form;
-use rdks\core\framework\Helper;
-use rdks\core\framework\Event;
-use rdks\core\page\_JSON;
-use rdks\core\page\View;
-use rdks\core\libs\Utils\Date;
-use rdks\app\models\Users\Users as UsersTable;
+use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use Roducks\Framework\Form;
+use Roducks\Framework\Helper;
+use Roducks\Framework\Event;
+use Roducks\Page\_JSON;
+use Roducks\Page\View;
+use Roducks\Libs\Utils\Date;
+use App\Models\Users\Users as UsersTable;
 
 class Users extends _JSON{
 

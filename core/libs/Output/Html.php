@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\core\libs\Output;
+namespace Roducks\Libs\Output;
 
-use rdks\core\libs\Files\Image;
+use Roducks\Libs\Files\Image;
 
 class Html {
 

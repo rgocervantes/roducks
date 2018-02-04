@@ -18,16 +18,16 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
-use rdks\core\libs\Protocol\Http;
+use Roducks\Libs\Request\Http;
 
 class URL{
 
 	const ROOT = "/";
 
 	const CSRF_ATTACK_BASE_URL = '"\'\\(\){}<>\[\]=!@$%;'; // Forbidden chars
-	const CSRF_ATTACK_GET_PARAMS = '\.\/\'\\(\){}<>\[\]!@$%'; // No dots nor slashes are allowed
+	const CSRF_ATTACK_GET_PARAMS = '\/\'\\(\){}<>\[\]!@$%'; // No dots nor slashes are allowed
 	const CSRF_ATTACK_RULE_1 = '\.{2,}'; // More than 1 dot
 	const CSRF_ATTACK_RULE_2 = '\.(exe|ini|inc|doc|php|phtml|sql)$'; // extensions
 	const CSRF_ATTACK_END_URL = '[\?&=\.\-,;:\$\(\)%*@]$';
@@ -53,7 +53,6 @@ class URL{
 			if(preg_match('/['.self::CSRF_ATTACK_GET_PARAMS .']+/', $GETParams)){
 				Http::sendHeaderForbidden();
 			}
-
 		}
 
 	}
@@ -84,42 +83,14 @@ class URL{
 		return $baseURL[1];
 	}	
 
-	static function serializeParams($p){
-
-		$params = array();
-
-		if(preg_match('#&#', $p)){
-			$args = explode("&", $p);
-			foreach ($args as $arg) {
-				if(preg_match('#=#', $arg)){
-					list($key,$value) = explode("=", $arg);
-					$params[$key] = $value;	
-				}else{
-					$params[$arg] = "";	
-				}
-
-			}
-		}else{
-			if(preg_match('#=#', $p)){
-				list($key,$value) = explode("=", $p);
-				$params[$key] = $value;					
-			}else{
-				$params[$p] = "";
-			}				
-		}
-
-		return $params;
-
-	}
-
 	static function serializeGETParams($url){
 
-		$params = array();
+		$params = [];
 
 		if(preg_match('#^'.self::REGEXP_GET.'$#', $url)){
 			list($qm, $p) = explode("?", $url);
 			
-			$params = self::serializeParams($p);
+			$params = Http::serializeParams($p);
 			
 		}
 
@@ -150,7 +121,7 @@ class URL{
 
 	static function getRealParams(){
 		$params = self::getParams();
-		$ret = array();
+		$ret = [];
 
 		foreach($params as $param){
 			if(!empty($param)){

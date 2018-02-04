@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Clients\helper;
+namespace App\Sites\Admin\Modules\Clients\Helper;
 
 class Clients {
 

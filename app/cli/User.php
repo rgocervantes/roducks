@@ -24,12 +24,12 @@
  *	time php roducks cmd=user:who env=pro id=1
  */
 
-namespace rdks\app\cli;
+namespace App\Cli;
 
-use rdks\core\framework\Cli;
-use rdks\core\framework\Helper;
-use rdks\core\libs\Utils\Date;
-use rdks\app\models\Users\Users as UsersTable;
+use Roducks\Framework\Cli;
+use Roducks\Framework\Helper;
+use Roducks\Libs\Utils\Date;
+use App\Models\Users\Users as UsersTable;
 
 class User extends Cli {
 
@@ -120,7 +120,7 @@ class User extends Cli {
 		$db = $this->db();
 		$user = UsersTable::open($db)->load($id);
 
-		if($user->rows()){
+		if($user->getId()){
 			$this->setResult( $user->getFirstName() . " " . $user->getLastName() );
 			$this->setResult( $user->getEmail() );
 		} else {

@@ -1,7 +1,7 @@
 <?php 
-use rdks\core\page\Block;
-use rdks\core\page\Template;
-use rdks\core\framework\Login;
+use Roducks\Page\Block;
+use Roducks\Page\Template;
+use Roducks\Framework\Login;
 ?>
 <div class="text-centered"><h1 style="margin: 0 0 10px 0;"><?php echo TEXT_WELCOME; ?></h1></div>
 <div class="text-centered profile-dashboard"><?php Block::load("user", ['session' => Login::SESSION_ADMIN]); ?></div>

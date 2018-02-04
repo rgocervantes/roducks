@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\app\sites\front\modules\Home\json;
+namespace App\Sites\Front\Modules\Home\JSON;
 
-use rdks\core\modules\front\Home\json\Home as HomeJSON;
-use rdks\core\framework\Form;
+use Roducks\Modules\Front\Home\JSON\Home as HomeJSON;
+use Roducks\Framework\Form;
 
 class Home extends HomeJSON{
 

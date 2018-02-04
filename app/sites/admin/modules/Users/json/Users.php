@@ -18,12 +18,12 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Users\json;
+namespace App\Sites\Admin\Modules\Users\JSON;
 
-use rdks\core\page\View;
-use rdks\core\framework\Role;
-use rdks\core\modules\admin\Users\json\Users as UsersJSON;
-use rdks\app\sites\admin\modules\Users\helper\Users as UsersHelper;
+use Roducks\Page\View;
+use Roducks\Framework\Role;
+use Roducks\Modules\Admin\Users\JSON\Users as UsersJSON;
+use App\Sites\Admin\Modules\Users\Helper\Users as UsersHelper;
 
 class Users extends UsersJSON{
 
@@ -38,4 +38,4 @@ class Users extends UsersJSON{
 
 	}
 
-} 
+}

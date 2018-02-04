@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\core\libs\Protocol;
+namespace Roducks\Libs\Request;
 
 class Http{
 
@@ -26,13 +26,13 @@ class Http{
 		header($name . " " . $value);
 	}
 
-	static function httpHeader($code, $message){
+	static function httpHeader($code, $message, $die = true){
 		self::setHeader("HTTP/1.1","$code $message");
-		die("<h1>{$message}</h1>");
+		if($die) die("<h1>{$message}</h1>");
 	}
 
-	static function sendHeaderAuthenticationFailed(){
-		self::httpHeader(401, "Authentication failed");	
+	static function sendHeaderAuthenticationFailed($die = true){
+		self::httpHeader(401, "Authentication failed", $die);	
 	}
 
 	static function sendHeaderForbidden(){
@@ -128,6 +128,51 @@ class Http{
 
 	static function getRequestHeader($name){
 		return @$_SERVER['HTTP_X_'.strtoupper($name)];
+	}
+
+	static function getAuthorizationHeader(){
+		return @$_SERVER['HTTP_AUTHORIZATION'];
+	}
+
+	static function serializeParams($p){
+
+		$params = [];
+
+		if(preg_match('#&#', $p)){
+			$args = explode("&", $p);
+			foreach ($args as $arg) {
+				if(preg_match('#=#', $arg)){
+					list($key,$value) = explode("=", $arg);
+					$params[$key] = $value;	
+				}else{
+					$params[$arg] = "";	
+				}
+
+			}
+		}else{
+			if(preg_match('#=#', $p)){
+				list($key,$value) = explode("=", $p);
+				$params[$key] = $value;					
+			}else{
+				$params[$p] = "";
+			}				
+		}
+
+		return $params;
+
+	}
+
+	static function getBody(){
+		$params = file_get_contents("php://input");
+
+		if(is_array($params)){
+			$values = $params[0];
+		} else {
+			$values = $params; 
+		}
+
+		return self::serializeParams($values);
+
 	}
 
 }

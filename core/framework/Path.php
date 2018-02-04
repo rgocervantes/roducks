@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
 class Path{
 
@@ -78,6 +78,10 @@ class Path{
 
 	static function getImageAbsolute($file){
 		return URL::getURL() . self::getImage($file);
+	}
+
+	static function getPublicUploadedUsers($file){
+		return URL::getURL() . self::getUploadedUsers($file);
 	}
 
 

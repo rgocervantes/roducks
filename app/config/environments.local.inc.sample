@@ -31,15 +31,15 @@
  *									    ^
  */
 
-use rdks\core\framework\Environment;
+use Roducks\Framework\Environment;
 
-$environments = [
+return [
 	'local' => [
-		'site' => "front",
+		'site' => "Front",
 		'mode' => Environment::DEV
 	],
 	'admin.local' => [
-		'site' => "admin",
+		'site' => "Admin",
 		'mode' => Environment::DEV
 	]
 ];

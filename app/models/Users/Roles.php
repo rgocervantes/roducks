@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\app\models\Users;
+namespace App\Models\Users;
 
-use rdks\core\libs\ORM\Model;
-use rdks\core\framework\Login;
+use Roducks\Libs\ORM\Model;
+use Roducks\Framework\Login;
 
 class Roles extends Model {
 

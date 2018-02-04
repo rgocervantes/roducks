@@ -18,18 +18,18 @@
  *
  */
 
-namespace rdks\core\modules\front\Home\json;
+namespace Roducks\Modules\Front\Home\JSON;
 
-use rdks\core\framework\Login;
-use rdks\core\framework\Role;
-use rdks\core\framework\Form;
-use rdks\core\framework\Helper;
-use rdks\core\framework\Event;
-use rdks\core\page\JSON;
-use rdks\core\libs\Protocol\Http;
-use rdks\core\libs\Utils\Date;
-use rdks\app\models\Users\Users as UsersTable;
-use rdks\core\services\Auth as LoginAuth;
+use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use Roducks\Framework\Form;
+use Roducks\Framework\Helper;
+use Roducks\Framework\Event;
+use Roducks\Page\JSON;
+use Roducks\Libs\Request\Http;
+use Roducks\Libs\Utils\Date;
+use App\Models\Users\Users as UsersTable;
+use Roducks\Services\Auth as LoginAuth;
 
 class Home extends JSON{
 

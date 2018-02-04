@@ -18,23 +18,23 @@
  *
  */
 
-namespace rdks\core\modules\admin\Users\page;
+namespace Roducks\Modules\Admin\Users\Page;
 
-use rdks\core\framework\Login;
-use rdks\core\framework\Role;
-use rdks\core\framework\URL;
-use rdks\core\framework\Post;
-use rdks\core\framework\Helper;
-use rdks\core\page\AdminPage;
-use rdks\core\page\View;
-use rdks\core\page\JSON;
-use rdks\core\libs\Data\Session;
-use rdks\core\libs\Utils\Date;
-use rdks\app\models\Users\Users as UsersTable;
-use rdks\app\models\Users\Roles as RolesTable;
-use rdks\app\models\Users\UsersRoles;
-use rdks\app\sites\_global\data\UserData;
-use rdks\app\sites\admin\modules\Roles\helper\Roles as RolesHelper;
+use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use Roducks\Framework\URL;
+use Roducks\Framework\Post;
+use Roducks\Framework\Helper;
+use Roducks\Page\AdminPage;
+use Roducks\Page\View;
+use Roducks\Page\JSON;
+use Roducks\Libs\Data\Session;
+use Roducks\Libs\Utils\Date;
+use App\models\Users\Users as UsersTable;
+use App\models\Users\Roles as RolesTable;
+use App\models\Users\UsersRoles;
+use App\Sites\_Global\Data\UserData;
+use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 
 class Users extends AdminPage{
 

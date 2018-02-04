@@ -18,17 +18,17 @@
  *
  */
 
-namespace rdks\core\services;
+namespace Roducks\Services;
 
-use rdks\core\framework\Login;
-use rdks\core\framework\Role;
-use rdks\core\framework\Event;
-use rdks\core\page\Service;
-use rdks\core\libs\Protocol\Http;
-use rdks\core\libs\Data\Session;
-use rdks\core\libs\Utils\Date;
-use rdks\app\models\Users\Users as UsersTable;
-use rdks\app\models\Users\UsersRoles;
+use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use Roducks\Framework\Event;
+use Roducks\Page\Service;
+use Roducks\Libs\Request\Http;
+use Roducks\Libs\Data\Session;
+use Roducks\Libs\Utils\Date;
+use App\Models\Users\Users as UsersTable;
+use App\Models\Users\UsersRoles;
 
 class Auth extends Service{
 

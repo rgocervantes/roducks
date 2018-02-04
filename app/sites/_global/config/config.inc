@@ -18,9 +18,9 @@
  *
  */
 
-use rdks\core\framework\Path;
+use Roducks\Framework\Path;
 
-$config = [
+return [
 	'USER' => [
 		'PREFIX' => "user_",
 		'CLIPPING' => "full",	

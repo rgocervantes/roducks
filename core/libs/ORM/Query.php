@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\core\libs\ORM;
+namespace Roducks\Libs\ORM;
 
 /*
 
@@ -440,6 +440,10 @@ class Query {
 		}
 
 		return $field;
+	}
+
+	static function now(){
+		return self::NOW;
 	}
 
 /*

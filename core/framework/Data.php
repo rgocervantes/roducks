@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
-use rdks\core\page\XML;
-use rdks\core\libs\Files\Directory;
+use Roducks\Page\XML;
+use Roducks\Libs\Files\Directory;
 
 abstract class Data extends XML{
 

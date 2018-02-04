@@ -18,12 +18,12 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Clients\json;
+namespace App\Sites\Admin\Modules\Clients\JSON;
 
-use rdks\core\page\View;
-use rdks\core\framework\Role;
-use rdks\core\modules\admin\Users\json\Users as UsersJSON;
-use rdks\app\sites\admin\modules\Clients\helper\Clients as ClientsHelper;
+use Roducks\Page\View;
+use Roducks\Framework\Role;
+use Roducks\Modules\Admin\Users\JSON\Users as UsersJSON;
+use App\Sites\Admin\Modules\Clients\Helper\Clients as ClientsHelper;
 
 class Clients extends UsersJSON{
 

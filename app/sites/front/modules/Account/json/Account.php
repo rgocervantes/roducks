@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\app\sites\front\modules\Account\json;
+namespace App\Sites\Front\Modules\Account\JSON;
 
-use rdks\core\modules\front\Account\json\Account as AccountJSON;
+use Roducks\Modules\Front\Account\JSON\Account as AccountJSON;
 
 class Account extends AccountJSON{
 
-} 
+}

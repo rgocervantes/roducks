@@ -18,17 +18,17 @@
  *
  */
 
-namespace rdks\core\modules\admin\Roles\page;
+namespace Roducks\Modules\Admin\Roles\Page;
 
-use rdks\core\page\View;
-use rdks\core\page\JSON;
-use rdks\core\page\AdminPage;
-use rdks\core\framework\URL;
-use rdks\core\framework\Login;
-use rdks\core\framework\Role;
-use rdks\core\libs\Data\Session;
-use rdks\app\models\Users\Roles as RolesTable;
-use rdks\app\sites\admin\modules\Roles\helper\Roles as RolesHelper;
+use Roducks\Page\View;
+use Roducks\Page\JSON;
+use Roducks\Page\AdminPage;
+use Roducks\Framework\URL;
+use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use Roducks\Libs\Data\Session;
+use App\Models\Users\Roles as RolesTable;
+use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 
 class Roles extends AdminPage{
 

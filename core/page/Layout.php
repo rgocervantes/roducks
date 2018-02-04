@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\core\page;
+namespace Roducks\Page;
 
-use rdks\core\framework\Core;
-use rdks\core\framework\Error;
+use Roducks\Framework\Core;
+use Roducks\Framework\Error;
 
 class Layout {
 

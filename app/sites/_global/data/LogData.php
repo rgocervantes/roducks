@@ -18,11 +18,11 @@
  *
  */
 
-namespace rdks\app\sites\_global\data;
+namespace App\Sites\_Global\Data;
 
-use rdks\core\framework\Data;
-use rdks\core\libs\Utils\Date;
-use rdks\core\libs\Output\XML;
+use Roducks\Framework\Data;
+use Roducks\Libs\Utils\Date;
+use Roducks\Libs\Output\XML;
 
 class LogData extends Data{
 

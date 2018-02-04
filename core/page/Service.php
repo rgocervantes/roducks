@@ -18,11 +18,11 @@
  *
  */
 
-namespace rdks\core\page;
+namespace Roducks\Page;
 
-use rdks\core\framework\Helper;
-use rdks\core\framework\Core;
-use rdks\core\libs\Protocol\Http;
+use Roducks\Framework\Helper;
+use Roducks\Framework\Core;
+use Roducks\Libs\Request\Http;
 
 class Service extends JSON {
 

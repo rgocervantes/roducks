@@ -18,14 +18,10 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
-use rdks\core\libs\Utils\Date;
-use rdks\core\libs\Protocol\Http;
-
-if(!defined('RDKS_ERRORS')){
-	define('RDKS_ERRORS', false);
-}
+use Roducks\Libs\Utils\Date;
+use Roducks\Libs\Request\Http;
 
 class Error{
 
@@ -55,7 +51,7 @@ class Error{
 
 	static function pageNotFound(){
 		$data = array();
-		Core::loadPage(DIR_CORE_PAGE, "Page", "pageNotFound", $data, $data);
+		Core::loadPage(DIR_CORE_PAGE, "Roducks\page\Page", "pageNotFound", $data, $data);
 		exit;
 	}
 
@@ -241,7 +237,7 @@ class Error{
 		$subdomain = RDKS_SUBDOMAIN;
 		$site = RDKS_SITE;
 
-		$error = "<span style=\"color:purple; font-weight:bold;\">use</span> rdks\core\\framework\Environment;<br><br>";
+		$error = "<span style=\"color:purple; font-weight:bold;\">use</span> Roducks\\framework\Environment;<br><br>";
 
 		$error .= "<span style=\"color:#f46536;\">\$config</span> <span style=\"color:#c00;\">=</span> [<br>";
 		$error .= "...<br>";		

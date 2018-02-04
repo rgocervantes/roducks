@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\app\sites\admin\blocks\_Roles;
+namespace App\Sites\Admin\Blocks\_Roles;
 
-use rdks\core\page\View;
-use rdks\core\blocks\Roles\Roles;
+use Roducks\Page\View;
+use Roducks\Blocks\Roles\Roles;
 
 class _Roles extends Roles{
 

@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\app\sites\front\modules\Account\helper;
+namespace App\Sites\Front\Modules\Account\Helper;
 
 class Account {
 

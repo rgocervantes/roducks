@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\app\sites\admin\services;
+namespace App\Sites\Admin\Services;
 
-use rdks\core\page\Service;
-use rdks\core\framework\URL;
+use Roducks\Page\Service;
+use Roducks\Framework\URL;
 
 class Foo extends Service{
 
@@ -29,10 +29,10 @@ class Foo extends Service{
 
 	public function cross(){
 
-		$this->crossDomain(["POST"], URL::goToFront());
+		//$this->crossDomain(["POST"], URL::goToFront());
 		$this->data("id", $this->post->param("id"));
 
 		parent::output();
 	}	
 
-} 
+}

@@ -31,11 +31,11 @@
  *									    ^
  */
 
-$environments = [
+return [
 	'www' => [
-		'site' => "front",
+		'site' => "Front",
 	],
 	'admin' => [
-		'site' => "admin",
+		'site' => "Admin",
 	]
 ];

@@ -18,11 +18,11 @@
  *
  */
 
-namespace rdks\app\models\Users;
+namespace App\Models\Users;
 
-use rdks\core\framework\Login;
-use rdks\core\libs\Utils\Date;
-use rdks\core\libs\ORM\Model;
+use Roducks\Framework\Login;
+use Roducks\Libs\Utils\Date;
+use Roducks\Libs\ORM\Model;
 
 class Users extends Model {
 

@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\app\sites\_global\helper;
+namespace App\Sites\_Global\Helper;
 
-use rdks\core\page\HelperPage;
+use Roducks\Page\HelperPage;
 
 class Helper extends HelperPage {
 

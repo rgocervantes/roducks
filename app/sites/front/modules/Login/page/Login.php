@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\app\sites\front\modules\Login\page;
+namespace App\Sites\Front\Modules\Login\Page;
 
-use rdks\core\framework\Login as LoginAuth;
-use rdks\core\modules\_global\Login\page\Login as LoginPage;
+use Roducks\Framework\Login as LoginAuth;
+use Roducks\modules\_Global\Login\Page\Login as LoginPage;
 
 class Login extends LoginPage{
 
@@ -40,6 +40,4 @@ class Login extends LoginPage{
 
 	}
 
-} 
-
-
+}

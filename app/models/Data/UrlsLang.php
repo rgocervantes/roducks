@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\app\models\Data;
+namespace App\models\Data;
 
-use rdks\core\libs\ORM\Model;
+use Roducks\libs\ORM\Model;
 
 class UrlsLang extends Model {
 

@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\core\libs\Data;
+namespace Roducks\Libs\Data;
 
 class Cookie{
 

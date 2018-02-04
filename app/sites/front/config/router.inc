@@ -18,10 +18,10 @@
  *
  */
 
-use rdks\core\framework\Dispatch;
-use rdks\app\sites\front\modules\Account\helper\Account;
+use Roducks\Framework\Dispatch;
+use App\Sites\Front\Modules\Account\Helper\Account;
 
-$router = [
+return [
 	/*
 	|---------------------------------
 	|				FRONT

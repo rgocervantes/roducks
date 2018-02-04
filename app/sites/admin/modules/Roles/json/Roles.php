@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Roles\json;
+namespace App\Sites\Admin\Modules\Roles\JSON;
 
-use rdks\core\modules\admin\Roles\json\Roles as RolesJSON;
+use Roducks\Modules\Admin\Roles\JSON\Roles as RolesJSON;
 
 class Roles extends RolesJSON{
 

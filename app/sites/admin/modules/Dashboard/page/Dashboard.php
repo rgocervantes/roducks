@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Dashboard\page;
+namespace App\Sites\Admin\Modules\Dashboard\Page;
 
-use rdks\core\modules\admin\Dashboard\page\Dashboard as DashboardPage;
+use Roducks\Modules\Admin\Dashboard\Page\Dashboard as DashboardPage;
 
 class Dashboard extends DashboardPage{
 

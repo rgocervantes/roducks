@@ -18,19 +18,18 @@
  *
  */
 
-namespace rdks\core\page;
+namespace Roducks\Page;
 
-use rdks\core\framework\URL;
-use rdks\core\framework\Post;
-use rdks\core\libs\Protocol\Http;
-use rdks\core\libs\Protocol\CORS;
+use Roducks\Framework\URL;
+use Roducks\Framework\Post;
+use Roducks\Libs\Request\Http;
+use Roducks\Libs\Request\CORS;
 
 class JSON extends GenericPage {
 
 	protected $post;
 
 	private $_crossDomain = false;
-	private $_allowRequest = false;
 	private $_methods = [];
 	private $_domains;
 
@@ -39,7 +38,7 @@ class JSON extends GenericPage {
 	/* ------------------------------------*/	
 	private $_jsonCode = 200;
 	private $_jsonMessage = "OK!";
-	private $_jsonSuccess = true;	
+	private $_jsonSuccess = true;
 	
 	static function encode($str){
 		return json_encode($str);
@@ -126,23 +125,14 @@ class JSON extends GenericPage {
 
 	protected function output($format = true){
 
-		$url = URL::getURL();
-		$origin = Http::getOrigin();
-
 		if($this->_crossDomain){
 			$cors = new CORS;
 			$cors->allowDomains($this->_domains);
 			$cors->methods($this->_methods);
 			$cors->maxAge();
-		} else if(!empty($origin) && $url != $origin && !$this->_allowRequest){
-			Http::sendHeaderForbidden();
 		}
 
 		$this->_jsonOutput($format);
-	}
-
-	protected function allowRequest(){
-		$this->_allowRequest = true;
 	}
 
 	protected function crossDomain(array $options = [], $domains = "*"){

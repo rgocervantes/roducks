@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\app\sites\front\blocks\Menu;
+namespace App\Sites\Front\Blocks\Menu;
 
-use rdks\core\blocks\Menu\Menu as MenuBlock;
+use Roducks\Blocks\Menu\Menu as MenuBlock;
 
 class Menu extends MenuBlock {
 

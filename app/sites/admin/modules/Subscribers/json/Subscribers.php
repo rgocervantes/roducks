@@ -18,12 +18,12 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Subscribers\json;
+namespace App\Sites\Admin\Modules\Subscribers\JSON;
 
-use rdks\core\page\View;
-use rdks\core\framework\Role;
-use rdks\core\modules\admin\Users\json\Users as UsersJSON;
-use rdks\app\sites\admin\modules\Subscribers\helper\Subscribers as SubscribersHelper;
+use Roducks\Page\View;
+use Roducks\Framework\Role;
+use Roducks\Modules\Admin\Users\JSON\Users as UsersJSON;
+use App\Sites\Admin\Modules\Subscribers\Helper\Subscribers as SubscribersHelper;
 
 class Subscribers extends UsersJSON{
 	
@@ -38,4 +38,4 @@ class Subscribers extends UsersJSON{
 
 	}
 
-} 
+}

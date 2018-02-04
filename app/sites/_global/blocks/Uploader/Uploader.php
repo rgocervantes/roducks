@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\app\sites\_global\blocks\Uploader;
+namespace App\Sites\_Global\Blocks\Uploader;
 
-use rdks\core\page\Block;
+use Roducks\Page\Block;
 
 class Uploader extends Block{
 

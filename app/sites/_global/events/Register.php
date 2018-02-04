@@ -18,13 +18,13 @@
  *
  */
 
-namespace rdks\app\sites\_global\events;
+namespace App\Sites\_Global\Events;
 
-use rdks\core\framework\Event;
-use rdks\core\libs\Protocol\Http;
-use rdks\core\libs\Utils\Date;
-use rdks\app\sites\_global\data\LogData;
-use rdks\app\sites\_global\data\UserData;
+use Roducks\Framework\Event;
+use Roducks\Libs\Request\Http;
+use Roducks\Libs\Utils\Date;
+use App\Sites\_Global\Data\LogData;
+use App\Sites\_Global\Data\UserData;
 
 class Register extends Event{
 

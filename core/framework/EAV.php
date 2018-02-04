@@ -18,12 +18,12 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
-use rdks\core\framework\Helper;
-use rdks\core\page\Frame;
-use rdks\core\libs\Utils\Date;
-use rdks\app\models\Data\EAV as EAVTable;
+use Roducks\Framework\Helper;
+use Roducks\Page\Frame;
+use Roducks\Libs\Utils\Date;
+use App\Models\Data\EAV as EAVTable;
 
 class EAV extends Frame{
 

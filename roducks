@@ -36,12 +36,12 @@ endif;
 |		 LOAD BOOTSTRAP			 |
 |--------------------------------|
 */
-require "./core/framework/Bootstrap.php";
+require "./core/Framework/Bootstrap.php";
 
-use rdks\core\framework\Core;
-use rdks\core\framework\Cli;
-use rdks\core\framework\Environment;
-use rdks\core\framework\Helper;
+use Roducks\Framework\Core;
+use Roducks\Framework\Cli;
+use Roducks\Framework\Environment;
+use Roducks\Framework\Helper;
 
 Core::loadFile(DIR_APP_LANGUAGES, 'en' . FILE_INC);
 
@@ -71,7 +71,7 @@ $environment = [
 |			RUN SCRIPT  		 |
 |--------------------------------|
 */
-require "./core/framework/Run" . FILE_EXT;
+require "./core/Framework/Run" . FILE_EXT;
 
 if(isset($params['cmd'])){
 
@@ -84,7 +84,7 @@ if(isset($params['cmd'])){
 
 	$cls = $name;
 	$name = Helper::getCamelName($name);
-	$script = "rdks\app\cli\\" . $name;
+	$script = "App\Cli\\" . $name;
 
 	$class = new $script($params);
 	if(method_exists($class, $method)){

@@ -18,34 +18,39 @@
  *
  */
 
-namespace rdks\core\libs\Protocol;
+require "Bootstrap.php";
 
-class CORS{
+use Roducks\Framework\Core;
+use Roducks\Framework\Dispatch;
+use Roducks\Framework\Environment;
 
-	static function accessControl($key,$value){
-		Http::setHeader("Access-Control-$key", $value);
-	}
-	
-	/**
-	*	GET, POST, OPTIONS, PUT, DELETE
-	*/
-	public function methods(array $arr = []){
-		if(is_array($arr) && count($arr) > 0){
-			self::accessControl("Allow-Methods:",implode(", ",$arr));	
-		}
-	}
+/*
+|--------------------------------|
+|		  LANGUAGE FILE  		 |
+|--------------------------------|
+*/
+Core::loadAppLanguages();
 
-	public function allowDomains($domains = "*"){
-		$domains = (is_array($domains)) ? implode(" ", $domains) : $domains;
-		self::accessControl("Allow-Origin:", $domains);
-	}
+/*
+|--------------------------------|
+|		 GET ENVIRONMENT  		 |
+|--------------------------------|
+*/
+$environment = Environment::getConfig();
 
-	public function credentails(){
-		self::accessControl("Allow-Credentials:", "true");
-	}	
 
-	public function maxAge($value = 1728000){
-		self::accessControl("Max-Age:", $value);
-	}
+/*
+|--------------------------------|
+|			 RUN APP 			 |
+|--------------------------------|
+*/
+require "Run" . FILE_EXT;
 
-}
+
+/*
+|--------------------------------|
+|		     DISPATCH  	 		 |
+|--------------------------------|
+*/
+Dispatch::init();
+

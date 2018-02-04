@@ -18,12 +18,12 @@
  *
  */
 
-namespace rdks\core\blocks\Language;
+namespace Roducks\Blocks\Language;
 
-use rdks\core\framework\URL;
-use rdks\core\framework\Language as LanguageCore;
-use rdks\core\page\Block;
-use rdks\app\models\Data\UrlsLang;
+use Roducks\Framework\URL;
+use Roducks\Framework\Language as LanguageCore;
+use Roducks\Page\Block;
+use App\Models\Data\UrlsLang;
 
 class Language extends Block{
 

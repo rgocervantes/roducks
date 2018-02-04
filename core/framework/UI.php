@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
-use rdks\core\libs\Output\Html;
-use rdks\core\libs\Files\Image;
+use Roducks\Libs\Output\Html;
+use Roducks\Libs\Files\Image;
 
 class UI {
 
@@ -42,10 +42,10 @@ class UI {
 			$src = $path[0].$path[2];
 		}
 
-		if(!file_exists($src) || !preg_match('/^.+\.(jpg|jpeg|png)$/i', $src)){
+		if(!\App::fileExists($src) || !preg_match('/^.+\.(jpg|jpeg|png)$/i', $src)){
 			$icon = Path::getAppIcon(self::IMAGE_UNAVAILABLE);
 
-			if(file_exists($icon[0].$icon[2])){
+			if(\App::fileExists($icon[0].$icon[2])){
 				$src = $icon[0].$icon[2];
 				$resize = Image::getResize($src, $size);
 				$attrs['width'] = $resize[0];

@@ -24,7 +24,7 @@
  *
  */
 
-namespace rdks;
+namespace Roducks;
 
 if(isset($_GET['uri']) && $_GET['uri'] == 'security'){
 	header("HTTP/1.1 403 Forbidden Request");
@@ -32,7 +32,7 @@ if(isset($_GET['uri']) && $_GET['uri'] == 'security'){
 }
 
 # Run App
-$app = "core/framework/App.php";
+$app = __DIR__ . "/../core/Framework/Web.php";
 
 if(file_exists($app)){
 	require_once $app;

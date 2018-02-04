@@ -18,14 +18,14 @@
  *
  */
 
-namespace rdks\core\page;
+namespace Roducks\Page;
 
-use rdks\core\framework\Helper;
-use rdks\core\framework\URL;
-use rdks\core\framework\Post;
-use rdks\core\libs\Protocol\Http;
-use rdks\core\libs\Data\Session;
-use rdks\core\libs\Data\Request;
+use Roducks\Framework\Helper;
+use Roducks\Framework\URL;
+use Roducks\Framework\Post;
+use Roducks\Libs\Request\Http;
+use Roducks\Libs\Request\Request;
+use Roducks\Libs\Data\Session;
 
 class GenericPage extends Frame {
 

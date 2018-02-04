@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\core\page;
+namespace Roducks\Page;
 
-use rdks\core\libs\Output\XML as XMLDoc;
+use Roducks\Libs\Output\XML as XMLDoc;
 
 class XML extends Frame{
 

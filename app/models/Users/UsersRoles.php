@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\app\models\Users;
+namespace App\Models\Users;
 
-use rdks\core\libs\ORM\Model;
+use Roducks\Libs\ORM\Model;
 
 class UsersRoles extends Model {
 	

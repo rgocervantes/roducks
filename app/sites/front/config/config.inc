@@ -18,8 +18,8 @@
  *
  */
 
-use rdks\core\framework\Login;
+use Roducks\Framework\Login;
 
-$config = [
+return [
 	'SESSION_NAME' => Login::SESSION_FRONT
 ];

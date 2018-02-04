@@ -1,9 +1,9 @@
 <?php
-use rdks\core\page\Template;
-use rdks\core\framework\Login;
-use rdks\core\framework\Helper;
-use rdks\core\framework\Language;
-use rdks\core\libs\Utils\Date;
+use Roducks\Page\Template;
+use Roducks\Framework\Login;
+use Roducks\Framework\Helper;
+use Roducks\Framework\Language;
+use Roducks\Libs\Utils\Date;
 ?>
 <div class="container">
 	<div class="box-white">
@@ -94,8 +94,7 @@ use rdks\core\libs\Utils\Date;
 				<?php if(!$edit): ?>
 					<div class="form-group has-feedback">
 					  <label class="control-label" for="gender"><?php echo TEXT_GENDER; ?></label>
-					  <select name="gender" data-required="true" data-alert-warning="<?php echo TEXT_REQUIRED; ?>" class="form-control">
-					  		<option value="default"><?php echo TEXT_CHOOSE_AN_OPTION; ?></option>
+					  <select name="gender" rel="rdks-form-select" data-required="true" data-alert-warning="<?php echo TEXT_REQUIRED; ?>" class="form-control">
 					  		<option value="male"><?php echo TEXT_MALE; ?></option>
 					  		<option value="female"><?php echo TEXT_FEMALE; ?></option>  		
 					  </select>

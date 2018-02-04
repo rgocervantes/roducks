@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\app\sites\_global\data;
+namespace App\Sites\_Global\Data;
 
-use rdks\core\framework\EAV;
-use rdks\app\models\Users\Users;
+use Roducks\framework\EAV;
+use App\Models\Users\Users;
 
 class UserData extends EAV{
 

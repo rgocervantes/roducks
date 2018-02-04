@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
-use rdks\core\libs\Data\Session;
-use rdks\core\libs\Protocol\Http;
+use Roducks\Libs\Data\Session;
+use Roducks\Libs\Request\Http;
 
 class Form {
 

@@ -18,17 +18,17 @@
  *
  */
 
-namespace rdks\core\services;
+namespace Roducks\Services;
 
-use rdks\core\page\Service;
-use rdks\core\page\JSON;
-use rdks\core\framework\Dispatch;
-use rdks\core\framework\Helper;
-use rdks\core\framework\Path;
-use rdks\core\libs\Files\Image;
-use rdks\core\libs\Files\File;
-use rdks\core\libs\Files\Directory;
-use rdks\core\libs\Utils\Date;
+use Roducks\Page\Service;
+use Roducks\Page\JSON;
+use Roducks\Framework\Dispatch;
+use Roducks\Framework\Helper;
+use Roducks\Framework\Path;
+use Roducks\Libs\Files\Image;
+use Roducks\Libs\Files\File;
+use Roducks\Libs\Files\Directory;
+use Roducks\Libs\Utils\Date;
 
 class FileAjax extends Service{
 

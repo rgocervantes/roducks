@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
-use rdks\core\page\Frame;
+use Roducks\Page\Frame;
 
 abstract class Event extends Frame{
 

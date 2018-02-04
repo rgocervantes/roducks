@@ -16,32 +16,32 @@
  *    You should have received a copy of the GNU General Public License
  *    along with Roducks.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
+ */	
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
-use rdks\core\libs\ORM\DB;
-use rdks\core\page\View;
+use Roducks\Libs\ORM\DB;
+use Roducks\Page\View;
 
 class Core{
 
 	const DS = "/";
 	const DEFAULT_SUBDOMAIN = 'www';
 	const ADMIN_SUBDOMAIN = 'admin';
-	const GLOBAL_DIRECTORY = '_global';
-
-	static function define($name, $value){
-		if(!defined($name)){
-			define($name, $value);
-		}
-	}
+	const GLOBAL_DIRECTORY = '_Global';
 
 	static function getVersion(){
 		return RDKS_VERSION;
 	}
 
 	static function getClassNamespace($class){
-		return 'rdks\\' . str_replace('/', '\\', $class);
+		if($class == Helper::PAGE_NOT_FOUND){
+			return $class;
+		}
+
+		$class = str_replace("app/", "App/", $class);
+
+		return str_replace('/', '\\', $class);
 	}
 
 	static function db($display_errors = false){
@@ -85,10 +85,12 @@ class Core{
 
 		$ds = ($slash) ? self::DS : '';
 		$global = self::getGlobalPath() . $dir . $tpl . $ds;
+		$global = \App::getRealFilePath($global);
 		$site = self::getSitePath() . $dir . $tpl . $ds;
+		list($realPath, $fileExists) = \App::getRealPath($site);
 
-		if(file_exists($site)) {
-			return $site;
+		if($fileExists) {
+			return $realPath;
 		}
 
 		return $global;
@@ -113,20 +115,27 @@ class Core{
 		$global = $path2 . $service . FILE_EXT;
 		$core = $path3 . $service . FILE_EXT;
 
-		if(file_exists($site)) {
+		if(\App::fileExists($site)) {
 			$path = $path1;
-		} else if(file_exists($global)) {
+		} else if(\App::fileExists($global)) {
 			$path = $path2;
-		} else if(file_exists($core)){
-			$path = $path3;
+		} else if(\App::fileExists($core)){
+			$path = "Roducks\\";
 		}
 
 		return ['path' => $path, 'service' => $service];
 
 	}
 
-	static function getCoreModulesPath(){
-		return DIR_CORE . DIR_MODULES . RDKS_SITE . self::DS;
+	static function getCoreModulesPath($ns = true){
+
+		$namespace = CORE_NS;
+
+		if(!$ns){
+			$namespace = "";
+		}
+
+		return $namespace . self::DS . DIR_CORE . DIR_MODULES . RDKS_SITE . self::DS;
 	}
 
 	static function getModulesPath(){
@@ -134,7 +143,7 @@ class Core{
 	}
 
 	static function getCoreModulesPathFrom($path){
-		return str_replace(self::getModulesPath(), self::getCoreModulesPath(), $path);
+		return str_replace(self::getModulesPath(), self::getCoreModulesPath(false), $path);
 	}
 
 	static function getBlocksPath($tpl){
@@ -148,11 +157,11 @@ class Core{
 		$site = $path1 . $tpl . FILE_EXT;
 		$global = $path2 . $tpl . FILE_EXT;
 
-		if(file_exists($site)) {
+		if(\App::fileExists($site)) {
 			$path = $path1;
-		} else if(file_exists($global)) {
+		} else if(\App::fileExists($global)) {
 			$path = $path2;
-		} else if(file_exists($core)){
+		} else if(\App::fileExists($core)){
 			$path = $path0;
 		}
 
@@ -162,7 +171,7 @@ class Core{
 
 	static function getViewsPath($parentPage, $path, $tpl){
 
-		if($path == DIR_CORE_PAGE) {
+		if($path == Helper::PAGE_NOT_FOUND) {
 			return DIR_CORE;
 		}
 
@@ -170,13 +179,12 @@ class Core{
 		$found = false;
 		$alert = "debug";
 
-		$coreModules = DIR_CORE . DIR_MODULES;
+		$coreModules = "Roducks/" . DIR_MODULES;
 		$coreBlocks = DIR_CORE . DIR_BLOCKS;
 		$siteBlocks = self::getSitePath() . DIR_BLOCKS;
 		$globalBlocks = self::getGlobalPath() . DIR_BLOCKS;
 
 		$parentPath = Helper::getClassName($parentPage, '$1');
-		$parentPath = str_replace("rdks/","", $parentPath);
 		$pathCore = $parentPath . self::DS;
 		$file = Helper::getClassName($path);
 
@@ -185,14 +193,16 @@ class Core{
 			$path = Helper::getBlockName($path);
 		}
 
-		if(file_exists($path.$view)) {
+		if(\App::fileExists($path.$view)) {
 
 			$found = true;
 
-		} else if(Helper::regexp('#^'. $coreModules .'.+$#', $parentPath)){
-			$path = $pathCore;
+		} else if(Helper::regexp('#^'. $coreModules .'#', $parentPath)){
 
-			if(file_exists($path.$view)){
+			$file = str_replace($coreModules, "", $parentPath);
+			$path = DIR_CORE . DIR_MODULES . $file . self::DS;
+
+			if(\App::fileExists($path.$view)){
 				$found = true;
 			}	
 		} else {
@@ -202,13 +212,13 @@ class Core{
 			if(Helper::isBlock($path)) {
 				$alert = "warning";
 
-				if(file_exists($siteBlocks.$file.$view) && !empty($tpl)){
+				if(\App::fileExists($siteBlocks.$file.$view) && !empty($tpl)){
 					$path = $siteBlocks.$file;
 					$found = true;
-				} else if(file_exists($globalBlocks.$file.$view) && !empty($tpl)){
+				} else if(\App::fileExists($globalBlocks.$file.$view) && !empty($tpl)){
 					$path = $globalBlocks.$file;
 					$found = true;
-				} else if(file_exists($coreBlocks.$file.$view) && !empty($tpl)){
+				} else if(\App::fileExists($coreBlocks.$file.$view) && !empty($tpl)){
 					$path = $coreBlocks.$file;
 					$found = true;
 				}
@@ -219,7 +229,7 @@ class Core{
 			Error::$alert(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $path.$view);
 		}
 
-		return $path.$view;
+		return \App::getRealFilePath($path.$view);
 
 	}	
 
@@ -255,11 +265,14 @@ class Core{
 		$siteMemcache = self::getSiteConfigPath("memcache{$local}");
 		$appMemcache = self::getAppConfigPath("memcache{$local}");
 
-		if(file_exists($siteMemcache)){
-			include_once $siteMemcache;
+		list($realPath1, $fileExists1) = \App::getRealPath($siteMemcache);
+		list($realPath2, $fileExists2) = \App::getRealPath($appMemcache);
+
+		if($fileExists1){
+			include_once $realPath1;
 			return $memcache;
-		} else if(file_exists($appMemcache)){
-			include_once $appMemcache;
+		} else if($fileExists2){
+			include_once $realPath2;
 			return $memcache;
 		}
 
@@ -268,9 +281,14 @@ class Core{
 
 	static function getFileVar($path, $name, $required = true){
 
-		if(file_exists($path)){
-			include $path;
-			return $$name;
+		list($realPath, $fileExists) = \App::getRealPath($path);
+		if($name == "menu"){
+			$fileExists = file_exists($path);
+			$realPath = $path;
+		}
+
+		if($fileExists){
+			return include $realPath;
 		} else {
 			if ($required) {
 				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $path);
@@ -285,7 +303,9 @@ class Core{
 		$local = "{$name}.local";
 		$file_local = self::getAppConfigPath($local);
 
-		$file = (file_exists($file_local)) ? $local : $name;
+		list($realPath, $fileExists) = \App::getRealPath($file_local);
+
+		$file = ($fileExists) ? $local : $name;
 
 		return self::getFileVar(self::getAppConfigPath($file), $var);		
 	}
@@ -376,8 +396,11 @@ class Core{
 		if(empty($path) || empty($file)) return false;
 
 		$resource = $path.$file;
-		if(file_exists($resource)){
-			include_once $resource;
+
+		list($realPath, $fileExists) = \App::getRealPath($resource);
+
+		if($fileExists){
+			include_once $realPath;
 		}else{
 			Error::debug("File Not Found", __LINE__, __FILE__, $resource);
 		}
@@ -406,9 +429,9 @@ class Core{
 		$isBlock = false; 
 		$method = Helper::getCamelName($action, false);
 		$page = (Helper::isService($page)) ? $page : Helper::getCamelName($page);
-		$className = $path . $page;
+		$className = ($path . $page);
 		$class = self::getClassNamespace($className);
-		
+
 		$filePath = preg_replace(Helper::REGEXP_PATH, '$1', $path . $page);
 		$filePath = Helper::pageByFactory($filePath);
 		$fileName = preg_replace(Helper::REGEXP_PATH, '$2', $page);
@@ -460,13 +483,14 @@ class Core{
 
 			if(Helper::isBlock($class)){
 
-			    $classFile = str_replace("rdks\\","",$class);
-			    $path = str_replace("\\","/", $classFile) . FILE_EXT;
+			    $path = str_replace("\\","/", $class) . FILE_EXT;
+			    $class = Helper::getBlockClassName($class);
 			    $isBlock = true;
+			    list($realPath, $fileExists) = \App::getRealPath($path);
 
-			    if(file_exists($path)){
+			    if($fileExists){
 
-					include_once $path;
+					include_once $realPath;
 
 					if(!class_exists($class)) {
 						$autoload = false;
@@ -479,7 +503,7 @@ class Core{
 			}
 
 			if($autoload){
-				// Call page and pass view
+				// Call Page|JSON|Block and pass View
 				$obj = new $class($pageObj, $view);
 				$obj->setLang(Language::get());
 
@@ -490,8 +514,14 @@ class Core{
 
 		} else {
 
-			// Call page
+			// Call Api|Service
 			$obj = new $class($pageObj);
+
+			if(Helper::isApi($page) && isset($params['jwt'])){
+				unset($params['jwt']);
+				$obj->verifyToken();
+			}
+
 		}	
 
 		if(!Helper::isFactory($class)) {

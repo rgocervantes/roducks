@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
-use rdks\core\libs\Utils\Date;
-use rdks\core\page\Frame;
+use Roducks\Libs\Utils\Date;
+use Roducks\Page\Frame;
 
 class Cli extends Frame{
 

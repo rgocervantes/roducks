@@ -18,13 +18,13 @@
  *
  */
 
-namespace rdks\core\modules\_global\Login\page;
+namespace Roducks\Modules\_Global\Login\Page;
 
-use rdks\core\framework\Role;
-use rdks\core\framework\Event;
-use rdks\core\framework\Login as LoginAuth;
-use rdks\core\page\Page;
-use rdks\app\models\Users\Users as UsersTable;
+use Roducks\Framework\Role;
+use Roducks\Framework\Event;
+use Roducks\Framework\Login as LoginAuth;
+use Roducks\Page\Page;
+use App\Models\Users\Users as UsersTable;
 
 class Login extends Page{
 

@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\core\framework;
+namespace Roducks\Framework;
 
-use rdks\core\libs\Output\Html;
+use Roducks\Libs\Output\Html;
 
 class Asset{
 
@@ -40,8 +40,9 @@ class Asset{
 			extract($data);
 			foreach ($scripts as $script) {
 				$script_path = DIR_ASSETS_SCRIPTS . Helper::ext($script,"inc");
-				if(file_exists($script_path)){
-					include $script_path;
+				list($realPath, $fileExists) = \App::getRealPath($script_path);
+				if($fileExists){
+					include $realPath;
 					echo "\n";
 				}
 			}
@@ -85,13 +86,14 @@ class Asset{
 		$load = true;
 		//$resource = Helper::ext($script,$type);
 		$resource = preg_replace('/^(.+)\?v=[0-9.]+$/', '$1', $script);
-		
+
 		if(Helper::isHttp($script)){
 			$file = $resource;
 		}else{
 			$file = $dir . $resource;
-			$file_repo = DIR_APP . preg_replace('/^\/(.+)$/', '$1', $file);
-			if(!file_exists($file_repo)) $load = false;
+			$file_repo =  str_replace('/public/', 'public/assets/', $file);
+			//echo "{$file_repo}<br>";
+			if(!\App::fileExists($file_repo)) $load = false;
 		} 
 
 		return ['load' => $load, 'file' => $dir.$script, 'attrs' => $attrs];

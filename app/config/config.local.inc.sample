@@ -18,11 +18,11 @@
  *
  */
 
-$config = [
+return [
 //-------------------------------------------------------------------
 //  Your Domain Name (WITHOUT www or any subdomain)
 //-------------------------------------------------------------------
-	'domain_name' 					=> "", // Example: yoursite.dev
+	'domain_name' 					=> "", // Example: yoursite.com
 //-------------------------------------------------------------------
 //  Default Title for all pages
 //-------------------------------------------------------------------	
@@ -50,7 +50,7 @@ $config = [
 //-------------------------------------------------------------------
 //  Subscribers expires in ? days
 //-------------------------------------------------------------------	
-	'subscribers_expire'			=> true,
+	'subscribers_expire'			=> false,
 	'subscribers_expire_time'		=> 'MONTHS', // DAYS | MONTHS
 	'subscribers_expire_in' 		=> 2,
 //-------------------------------------------------------------------

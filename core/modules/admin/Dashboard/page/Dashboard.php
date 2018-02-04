@@ -18,11 +18,11 @@
  *
  */
 
-namespace rdks\core\modules\admin\Dashboard\page;
+namespace Roducks\Modules\Admin\Dashboard\Page;
 
-use rdks\core\page\AdminPage;
-use rdks\core\framework\Role;
-use rdks\app\sites\admin\modules\Users\helper\Users as UsersHelper;
+use Roducks\Page\AdminPage;
+use Roducks\Framework\Role;
+use App\Sites\Admin\Modules\Users\Helper\Users as UsersHelper;
 
 class Dashboard extends AdminPage{
 

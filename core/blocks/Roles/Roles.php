@@ -18,10 +18,9 @@
  *
  */
 
-namespace rdks\core\blocks\Roles;
+namespace Roducks\Blocks\Roles;
 
-use rdks\core\page\Block;
-use rdks\core\framework\Error;
+use Roducks\Page\Block;
 
 class Roles extends Block{
 

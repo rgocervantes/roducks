@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\app\sites\front\modules\Home\page;
+namespace App\Sites\Front\Modules\Home\Page;
 
-use rdks\core\modules\front\Home\page\Home as HomePage;
+use Roducks\Modules\Front\Home\Page\Home as HomePage;
 
 class Home extends HomePage {
 

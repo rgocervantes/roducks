@@ -18,7 +18,7 @@
  *
  */
 
-$menu = [
+return [
 	[
 		'text' => "Dashboard", 
 		'link' => "/",

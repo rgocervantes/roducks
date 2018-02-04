@@ -18,12 +18,12 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Clients\page;
+namespace App\Sites\Admin\Modules\Clients\Page;
 
-use rdks\core\page\View;
-use rdks\core\framework\Role;
-use rdks\core\modules\admin\Users\page\Users as UsersPage;
-use rdks\app\sites\admin\modules\Clients\helper\Clients as ClientsHelper;
+use Roducks\Page\View;
+use Roducks\Framework\Role;
+use Roducks\Modules\Admin\Users\Page\Users as UsersPage;
+use App\Sites\Admin\Modules\Clients\Helper\Clients as ClientsHelper;
 
 class Clients extends UsersPage{
 

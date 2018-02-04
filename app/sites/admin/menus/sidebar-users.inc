@@ -18,11 +18,11 @@
  *
  */
 
-use rdks\app\sites\admin\modules\Users\helper\Users;
-use rdks\app\sites\admin\modules\Subscribers\helper\Subscribers;
-use rdks\app\sites\admin\modules\Clients\helper\Clients;
+use App\Sites\Admin\Modules\Users\Helper\Users;
+use App\Sites\Admin\Modules\Subscribers\Helper\Subscribers;
+use App\Sites\Admin\Modules\Clients\Helper\Clients;
 
-$menu = [
+return [
 	[
 		'text' => TEXT_USERS, 
 		'link' => Users::URL,

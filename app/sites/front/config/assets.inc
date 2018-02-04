@@ -22,7 +22,7 @@
  *	These assets will be loaded in *ALL* pages
  */
 
-$assets = [
+return [
 	'CSS' => [
 		'front.css'
 	],

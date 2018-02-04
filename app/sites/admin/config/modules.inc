@@ -18,7 +18,7 @@
  *
  */
 
-$modules = [
+return [
 	'Dashboard' 	=> true,
 	'Login' 		=> true,
 	'Roles' 		=> true,

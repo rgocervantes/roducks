@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\core\blocks\Menu;
+namespace Roducks\Blocks\Menu;
 
-use rdks\core\page\Block;
-use rdks\core\framework\Login;
+use Roducks\Page\Block;
+use Roducks\Framework\Login;
 
 class Menu extends Block{
 

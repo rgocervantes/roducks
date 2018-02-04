@@ -18,9 +18,9 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Roles\helper;
+namespace App\Sites\Admin\Modules\Roles\Helper;
 
-use rdks\core\framework\Role;
+use Roducks\Framework\Role;
 
 class Roles {
 

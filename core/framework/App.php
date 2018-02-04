@@ -18,40 +18,40 @@
  *
  */
 
-require "Bootstrap.php";
+class App {
 
-use rdks\core\framework\Core;
-use rdks\core\framework\Dispatch;
-use rdks\core\framework\Environment;
-//use rdks\core\framework\Language;
+	static function define($name, $value){
+		if(!defined($name)){
+			define($name, $value);
+		}
+	}
 
-/*
-|--------------------------------|
-|		  LANGUAGE FILE  		 |
-|--------------------------------|
-*/
-Core::loadAppLanguages();
+	static function text($name, $value){
+		self::define("TEXT_{$name}", $value);
+	}
 
-/*
-|--------------------------------|
-|		 GET ENVIRONMENT  		 |
-|--------------------------------|
-*/
-$environment = Environment::getConfig();
+	static function getRealPath($path){
 
+	    if(preg_match('/^core\/Framework/', $path)){
+	        $path = str_replace('core/Framework/', '', $path);
+	        $fileExists = file_exists(__DIR__  . "/" . $path);
+	    } else {
+	    	$dir = preg_replace('/^(.+)core\/Framework$/', '$1', __DIR__);
+	        $path = $dir.$path;
+	        $fileExists = file_exists($path);
+	    }
 
-/*
-|--------------------------------|
-|			 RUN APP 			 |
-|--------------------------------|
-*/
-require "Run" . FILE_EXT;
+	    return [$path, $fileExists];
+	}
 
+	static function getRealFilePath($path){
+		list($realPath, $fileExists) = self::getRealPath($path);
+		return $realPath;
+	}
 
-/*
-|--------------------------------|
-|		     DISPATCH  	 		 |
-|--------------------------------|
-*/
-Dispatch::init();
+	static function fileExists($path){
+		list($realPath, $fileExists) = self::getRealPath($path);
+		return $fileExists;
+	}
 
+}

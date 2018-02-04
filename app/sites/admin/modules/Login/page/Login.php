@@ -18,10 +18,10 @@
  *
  */
 
-namespace rdks\app\sites\admin\modules\Login\page;
+namespace App\Sites\Admin\Modules\Login\Page;
 
-use rdks\core\framework\Login as LoginAuth;
-use rdks\core\modules\_global\Login\page\Login as LoginPage;
+use Roducks\Framework\Login as LoginAuth;
+use Roducks\Modules\_Global\Login\Page\Login as LoginPage;
 
 class Login extends LoginPage{
 

@@ -5,6 +5,7 @@ nbproject
 .idea
 .project
 .settings
+.vagrant
 *.iml
 
 # OS X Finder internal system files
@@ -16,6 +17,7 @@ Icon
 # Package manager
 node_modules
 bower_components
+vendor
 
 # build the extensions
 extensions.js
@@ -24,6 +26,6 @@ extensions.js
 deploy.sh
 
 # Roducks Local files
-app/data
-app/config/*.local.inc
-app/sites/*/config/*.local.inc
+app/Data
+app/Config/*.local.inc
+app/Sites/*/Config/*.local.inc

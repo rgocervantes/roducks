@@ -40,7 +40,7 @@
 
 */
 
-namespace rdks\core\libs\Files;		
+namespace Roducks\Libs\Files;
 
 class Zip{
 

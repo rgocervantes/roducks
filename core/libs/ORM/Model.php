@@ -18,7 +18,7 @@
  *
  */
 
-namespace rdks\core\libs\ORM;
+namespace Roducks\Libs\ORM;
 
 /*
 
@@ -133,7 +133,8 @@ class Model extends Query{
 	const TYPE_TIME = 9;
 	
 	var 
-		$id, 
+		$id,
+		$table = null,
 		$fields = [];
 
 	private $_ORM = false;
@@ -324,6 +325,7 @@ class Model extends Query{
 
 	public function __construct(\mysqli $mysqli, $tbl = ""){
 
+		$tbl = (!is_null($this->table)) ? $this->table : $tbl;
 		$table = (count($this->_joins) > 0) ? $this->_joins : $tbl;
 		parent::__construct($mysqli, $table);
 	}

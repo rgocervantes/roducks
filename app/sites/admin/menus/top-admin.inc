@@ -18,13 +18,13 @@
  *
  */
 
-use rdks\app\sites\admin\modules\Users\helper\Users;
-use rdks\app\sites\admin\modules\Subscribers\helper\Subscribers;
-use rdks\app\sites\admin\modules\Clients\helper\Clients;
-use rdks\app\sites\admin\modules\Roles\helper\Roles as RolesHelper;
-use rdks\core\framework\Role;
+use App\Sites\Admin\Modules\Users\Helper\Users;
+use App\Sites\Admin\Modules\Subscribers\Helper\Subscribers;
+use App\Sites\Admin\Modules\Clients\Helper\Clients;
+use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
+use Roducks\Framework\Role;
 
-$menu = [
+return [
 	[
 		'link' => Users::URL, 
 		'text' => TEXT_USERS, 
