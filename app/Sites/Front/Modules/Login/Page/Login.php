@@ -21,7 +21,7 @@
 namespace App\Sites\Front\Modules\Login\Page;
 
 use Roducks\Framework\Login as LoginAuth;
-use Roducks\modules\_Global\Login\Page\Login as LoginPage;
+use Roducks\Modules\_Global\Login\Page\Login as LoginPage;
 
 class Login extends LoginPage{
 
