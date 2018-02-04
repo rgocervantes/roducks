@@ -1,0 +1,200 @@
+<?php
+use Roducks\Page\Template;
+use Roducks\Framework\Login;
+use Roducks\Framework\Helper;
+use Roducks\Framework\Language;
+use Roducks\Libs\Utils\Date;
+?>
+<div class="container">
+	<div class="box-white">
+		<br>
+		<div class="row">
+			<div class="col-xs-6">
+
+				<form id="foovar" name="foovar" method="post" 
+				rel="rdks-form" 
+				data-notification="true" 
+				data-callback-success="<?php echo Template::equals($action,'insert','cbFormUsersSuccess','cbFormRedirectSuccess'); ?>" 
+				data-callback-loading="cbFormLoading" 
+				data-callback-error="cbFormError" 
+			    data-alert-warning="<?php echo TEXT_FORM_WARNING; ?>" 
+			    data-alert-error="<?php echo TEXT_FORM_ERROR; ?>" 
+			    data-alert-failed="<?php echo TEXT_FORM_FAILED; ?>" 
+				data-reset="<?php echo Template::conditional($edit,'false','true'); ?>" 
+				data-ajax="true" 
+				data-json="true" 
+				data-focus="true" 
+				action="<?php echo "/_json{$url}/{$action}"; ?>">
+
+					<?php if(Login::getAdminId() != $row['id_user']): ?>
+					<div class="checkbox">
+						<label>
+						<input<?php echo Template::checked($row['active']); ?> type="checkbox" name="active" value="1" /> 
+						<?php echo TEXT_ACTIVE; ?></label>
+					</div>
+					
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" name="expires"<?php echo Template::checked( ($row['expires'] == 1) ); ?> rel="rdks-form-on-checked-display" data-display="#expiration" data-effect="toggle" value="1" /> <?php echo TEXT_EXPIRES; ?>?
+						</label>
+					</div>
+
+					<div id="expiration" class="well display-<?php echo Template::equals($row['expires'],1,'block','none'); ?>">
+						<div class="form-group has-feedback ">
+							<label class="control-label" for="expiration_date"><span class="rdks-ui-color-red">*</span> Expiration Date</label>
+							<input type="hidden" id="expiration_date" name="expiration_date" 
+							rel="rdks-datepicker" 
+							data-text="<?php echo $row['expiration_format']; ?>" 
+							data-ignore="true" 
+							data-type="datepicker" 
+							data-format="dd/mm/yyyy" 
+							data-conf='{"lang":"<?php echo Language::get(); ?>","speller":1,"remain":true, <?php echo $date_config; ?>}' 						
+							data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+							value="<?php echo $row['expiration_date']; ?>" class="form-control" 
+							/>
+						</div>
+					</div>
+					
+					<div class="form-group has-feedback">
+						<label class="control-label" for="id_role"><?php echo TEXT_ROLE; ?></label>
+						<input type="hidden" name="id_role" 
+						data-text="<?php echo $row['role']; ?>" 
+						data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+						data-required="true" 
+						data-text-results="<?php echo TEXT_NOT_FOUND; ?>" 
+						data-callback="cbChoiceRole" 
+						rel="rdks-form-dropdown" 
+						value="<?php echo $row['id_role']; ?>"
+						/>
+						
+				        <div id="id_role-data" style="display:none;">
+				            <ul>
+				            	<?php if($roles->rows()): while($role = $roles->fetch()): ?>
+				                <li class="active<?php echo Template::equals($row['id_role'],$role['id_role'],' selected')?>" style="display: list-item;">
+				                    <a href="javascript:;" data-text="<?php echo $role['name']; ?>" onclick="$rdks.form.filter.choice('id_role', '<?php echo $role['name']; ?>', <?php echo $role['id_role']; ?>, {title: '<?php echo $role['name']; ?>',config:'<?php echo Helper::removeFileExt($role['config']); ?>', 'type':'<?php echo $role['type']; ?>'});"><span class="speller"><?php echo $role['name']; ?></span></a>
+				                </li>
+	    						<?php endwhile; endif; ?>
+				            </ul>
+						</div><!-- .listing -->
+
+					</div><!-- countries -->
+
+					<?php endif; ?>
+
+				<?php if($edit): ?>	
+				<div class="form-group has-feedback">
+					<?php if(1 == $row['id_role']): ?>
+						<button type="button" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <?php echo $row['role']; ?></button>
+					<?php else: ?>
+						<button type="button" onclick="modalRoles('<?php echo $row['role']; ?>','<?php echo Helper::removeFileExt($row['config']); ?>',<?php echo $row['rtype']; ?>);" class="btn btn-sm btn-primary"><span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span> <?php echo $row['role']; ?></button>
+					<?php endif; ?>
+				</div>
+				<?php endif; ?>
+
+				<?php if(!$edit): ?>
+					<div class="form-group has-feedback">
+					  <label class="control-label" for="gender"><?php echo TEXT_GENDER; ?></label>
+					  <select name="gender" rel="rdks-form-select" data-required="true" data-alert-warning="<?php echo TEXT_REQUIRED; ?>" class="form-control">
+					  		<option value="male"><?php echo TEXT_MALE; ?></option>
+					  		<option value="female"><?php echo TEXT_FEMALE; ?></option>  		
+					  </select>
+					</div>
+				<?php else: ?>
+				<div class="form-group has-feedback">
+					<label class="control-label"><?php echo TEXT_GENDER; ?></label>
+					<div class="form-control color-<?php echo $row['gender']; ?>"><?php echo Helper::getGender($row['gender']); ?></div>
+				</div>	
+
+				<label class="control-label" for="id_role"><?php echo TEXT_CREATED_ON; ?></label>
+				<div class="alert alert-info" role="alert" style="margin:0; padding:5px;">
+					<span class="alert-text">
+						<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> <?php echo Date::getDateFormat(Date::extractDate($row['created_date']), Language::get()); ?><br>
+						<span class="glyphicon glyphicon-time" aria-hidden="true"></span> <?php echo Date::extractTime($row['created_date']); ?>
+					</span>
+				</div>	
+				<?php endif; ?>
+
+				<?php if($row['id_user'] > 0): ?>
+				<div class="form-group has-feedback">
+					<label class="control-label" for="first_name">ID</label>
+					<div class="form-control"><?php echo $row['id_user']; ?></div>
+				</div>	
+				<?php endif; ?>
+
+					<div class="form-group has-feedback">
+						<label class="control-label" for="first_name"><span class="rdks-ui-color-red">*</span> <?php echo TEXT_FIRST_NAME; ?></label>
+						<input type="text" name="first_name" class="form-control" 
+						data-required="true" 
+						data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+						data-type="words" 
+						value="<?php echo $row['first_name']; ?>"
+						/>
+						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+						<span class="help-block"></span>
+					</div>
+
+					<div class="form-group has-feedback">
+						<label class="control-label" for="last_name"><span class="rdks-ui-color-red">*</span> <?php echo TEXT_LAST_NAME; ?></label>
+						<input type="text" name="last_name" class="form-control" 
+						data-required="true" 
+						data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+						data-type="words" 
+						value="<?php echo $row['last_name']; ?>"
+						/>
+						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+						<span class="help-block"></span>
+					</div>
+
+					<?php if(!$edit): ?>
+					
+					<div class="form-group has-feedback">
+						<label class="control-label" for="email"><span class="rdks-ui-color-red">*</span> Email</label>
+						<input type="text" class="form-control" name="email"
+						rel="rdks-form-input-post" 
+						data-url="/_service/account/email-exists" 
+						data-required="true" 
+						data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+						data-alert-error="<?php echo TEXT_INVALID_EMAIL; ?>" 
+						data-type="email" 
+						/>
+						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+						<span class="help-block"></span>
+					</div>		
+
+					<div class="form-group has-feedback">
+						<label class="control-label" for="password"><span class="rdks-ui-color-red">*</span> <?php echo TEXT_PASSWORD; ?></label>
+						<input type="password" name="password" class="form-control" 
+						data-required="true" 
+						data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+						data-minlength="7|<?php echo TEXT_MIN_LENGTH; ?>" 
+						data-type="password" 
+						data-strength="true"
+						/>
+						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+						<span class="help-block"></span>
+					</div>
+
+					<div class="form-group has-feedback">
+						<label class="control-label" for="confirm_password"><span class="rdks-ui-color-red">*</span> <?php echo TEXT_CONFIRM_PASSWORD; ?></label>
+						<input type="password" name="confirm_password" class="form-control" 
+						data-match="input[name='password']|<?php echo TEXT_PASSWORD_NO_MATCH; ?>" 
+						data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+						data-required="true" 
+						data-type="password"
+						/>
+						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+						<span class="help-block"></span>
+					</div>
+
+					<?php endif; ?>
+
+					<button type="submit" class="btn btn-lg btn-warning navbar-btn">
+						<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> <?php echo TEXT_SAVE; ?>
+					</button>
+
+				</form>
+
+			</div>
+		</div>
+	</div>
+</div>

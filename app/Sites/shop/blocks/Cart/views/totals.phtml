@@ -1,0 +1,61 @@
+<?php 
+use rdks\core\libs\Data\Cart; 
+use rdks\core\framework\Language;
+
+$colspan = 7;
+?>	
+	<tr class="rdks-cart-refresh">
+		<td colspan="<?php echo $colspan; ?>" align="right" style="color: #555;"><b>Subtotal</b></td>
+		<td style="color: #0e5da0"><?php echo Cart::getPriceFormat($subtotal,$currency); ?></td>
+	</tr>
+	<?php if($hasItems): ?>
+	<?php if($tax['percentage'] > 0): ?>
+	<tr class="rdks-cart-refresh">
+		<td colspan="<?php echo $colspan; ?>" align="right" style="color: #555;"><b><?php echo Language::translate("Tax","IVA"); ?> <?php echo $tax['percentage']; ?>%</b></td>
+		<td  style="color: #0e5da0"><?php echo Cart::getPriceFormat($tax['value'],$currency); ?></td>
+	</tr>	
+	<?php endif; ?>
+	<?php if(count($charges) > 0): foreach($charges as $charge): ?>
+	<tr class="rdks-cart-refresh">
+		<td colspan="<?php echo $colspan; ?>" align="right" style="color: #555;"><b>
+
+		<?php if($charge['type'] == Cart::TYPE_AMOUNT): ?>
+			<?php echo $charge['name'][$lang]; ?>
+		<?php elseif($charge['type'] == Cart::TYPE_PERCENTAGE): ?>
+			<?php echo $charge['name'][$lang]; ?> <?php echo $charge['value'][$lang]; ?>%
+		<?php endif; ?>
+
+		</b></td>
+		<td style="color: #0e5da0">
+			<?php if($charge['type'] == Cart::TYPE_AMOUNT): ?>
+				<?php echo Cart::getPriceFormat($charge['value'][$lang], $currency); ?>
+			<?php elseif($charge['type'] == Cart::TYPE_PERCENTAGE): ?>
+				<?php echo Cart::getPriceFormat(Cart::getPercentageValue($subtotal, $charge['value'][$lang]), $currency); ?>
+			<?php endif; ?>	
+		</td>
+	</tr>
+<?php endforeach; endif; ?>
+	<?php if(count($discounts) > 0): foreach($discounts as $discount): ?>
+	<tr class="rdks-cart-refresh">
+		<td colspan="<?php echo $colspan; ?>" align="right" style="color: #555;"><b>
+		<?php if($discount['type'] == Cart::TYPE_AMOUNT): ?>
+			<?php echo $discount['name'][$lang]; ?>
+		<?php elseif($discount['type'] == Cart::TYPE_PERCENTAGE): ?>
+			<?php echo $discount['name'][$lang]; ?> ( - <?php echo $discount['value'][$lang]; ?>%)
+		<?php endif; ?>
+
+		</b></td>
+		<td class="rdks-ui-color-red"> - 
+			<?php if($discount['type'] == Cart::TYPE_AMOUNT): ?>
+				<?php echo Cart::getPriceFormat($discount['value'][$lang], $currency); ?>
+			<?php elseif($discount['type'] == Cart::TYPE_PERCENTAGE): ?>
+				<?php echo Cart::getPriceFormat(Cart::getPercentageValue($subtotal, $discount['value'][$lang]), $currency); ?>
+			<?php endif; ?>	
+		</td>
+	</tr>
+<?php endforeach; endif; ?>
+<?php endif; ?>
+	<tr class="rdks-cart-refresh">
+		<td colspan="<?php echo $colspan; ?>" align="right"><b>Total</b></td>
+		<td class="rdks-ui-color-red" style="background: #fcf8e3; "><b><?php echo Cart::getPriceFormat($total,$currency); ?></b></td>
+	</tr>

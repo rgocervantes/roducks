@@ -1,0 +1,6 @@
+<?php if($isFiltered): ?>
+<div class="alert alert-info" role="alert">
+	<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+	<span class="alert-text"><?php echo TEXT_FILTERED_RESULT; ?> <a href="<?php echo $urlReset; ?>" class="btn btn-primary"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> <?php echo TEXT_RESET; ?></a></span>
+</div>
+<?php endif; ?>

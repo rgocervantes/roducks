@@ -1,0 +1,12 @@
+<?php use rdks\core\page\Template; ?>
+<div class="container-fluid">
+
+<?php Template::view("btn-back"); ?>
+
+	<div class="box-white">
+		<h1><?php echo $post['title']; ?></h1>
+		<span>By: <?php echo $post['author']; ?></span> | <span><?php echo $post['category']; ?></span>
+		<p><?php echo $post['post']; ?></p>
+	</div>
+
+</div>

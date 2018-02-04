@@ -1,0 +1,14 @@
+<?php 
+use Roducks\Page\Layout;
+use Roducks\Page\Template;
+?>
+<div class="container">
+	<?php Template::view($_VIEW_TITLE); ?>
+	<?php Template::view("btn-back"); ?>
+	<hr />
+	<div class="row">
+		<div class="col-xs-6">
+			<?php Layout::container('FORM'); ?>
+		</div>	
+	</div>
+</div>

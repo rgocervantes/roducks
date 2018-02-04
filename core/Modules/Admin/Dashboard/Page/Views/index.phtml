@@ -1,0 +1,71 @@
+<?php
+use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use Roducks\Page\Block;
+use Roducks\Modules\Admin\Dashboard\Page\Dashboard;
+use App\Sites\Admin\Modules\Users\Helper\Users as UsersHelper;
+use App\Sites\Admin\Modules\Subscribers\Helper\Subscribers as SubscribersHelper;
+use App\Sites\Admin\Modules\Clients\Helper\Clients as ClientsHelper;
+use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
+?>
+<div class="container-fluid">
+
+	<?php if(Login::roleAdmin()): ?>
+		<h1><span class="glyphicon glyphicon-bookmark icon-rdks" aria-hidden="true"></span> Dashboard</h1>
+	<?php else: ?>
+		<h1><span class="glyphicon glyphicon-stats icon-rdks" aria-hidden="true"></span> <?php echo TEXT_LATEST . " (" . Dashboard::ROWS_PER_PAGE . ")"; ?></h1>
+	<?php endif; ?>
+	
+	<div class="box-white">
+
+		<?php if(Login::roleAdmin()): ?>
+			<?php Block::load("latest-users/current", ['type' => Role::TYPE_USERS, 'url' => "users"]); ?>
+		<?php endif; ?>
+
+		<?php if((isset($access['users']) || Login::isSuperAdmin()) && Login::getAdminData('id_role') != 6): ?>
+
+		<div class="left"><h2 style="margin:0;"><span class="glyphicon glyphicon-<?php echo RolesHelper::getIcon(Role::TYPE_USERS); ?>" aria-hidden="true"></span> <?php echo TEXT_USERS; ?></h2></div>
+		<div class="right">
+			<a href="<?php echo UsersHelper::URL; ?>" class="btn btn-default btn-lg">
+				<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> <?php echo TEXT_GO_TO." ".TEXT_USERS; ?>
+			</a>
+		</div>
+		<div class="clear"></div>
+
+		<?php Block::load("latest-users", ['type' => Role::TYPE_USERS, 'url' => UsersHelper::URL, 'limit' => Dashboard::ROWS_PER_PAGE]); ?>
+
+		<?php endif; ?>
+
+		<?php if(isset($access['subscribers']) || Login::isSuperAdmin()): ?>
+
+		<hr />
+
+		<div class="left"><h2 style="margin:0;"><span class="glyphicon glyphicon-<?php echo RolesHelper::getIcon(Role::TYPE_SUBSCRIBERS); ?>" aria-hidden="true"></span> <?php echo TEXT_SUBSCRIBERS; ?></h2></div>
+		<div class="right">
+			<a href="<?php echo SubscribersHelper::URL; ?>" class="btn btn-default btn-lg">
+				<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> <?php echo TEXT_GO_TO." ".TEXT_SUBSCRIBERS; ?>
+			</a>
+		</div>
+		<div class="clear"></div>
+		<?php Block::load("latest-users", ['type' => Role::TYPE_SUBSCRIBERS, 'url' => SubscribersHelper::URL, 'limit' => Dashboard::ROWS_PER_PAGE, 'alt' => "subscribers"]); ?>
+
+		<?php endif; ?>
+
+		<?php if(isset($access['clients']) || Login::isSuperAdmin()): ?>
+
+		<hr />
+
+		<div class="left"><h2 style="margin:0;"><span class="glyphicon glyphicon-<?php echo RolesHelper::getIcon(Role::TYPE_CLIENTS); ?>" aria-hidden="true"></span> <?php echo TEXT_CLIENTS; ?></h2></div>
+		<div class="right">
+			<a href="<?php echo ClientsHelper::URL; ?>" class="btn btn-default btn-lg">
+				<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> <?php echo TEXT_GO_TO." ".TEXT_CLIENTS; ?>
+			</a>
+		</div>
+		<div class="clear"></div>
+		<?php Block::load("latest-users", ['type' => Role::TYPE_CLIENTS, 'url' => ClientsHelper::URL, 'limit' => Dashboard::ROWS_PER_PAGE, 'alt' => "clients"]); ?>
+
+		<?php endif; ?>
+
+	</div>
+	
+</div>

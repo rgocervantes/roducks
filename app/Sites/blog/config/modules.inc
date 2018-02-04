@@ -1,0 +1,5 @@
+<?php
+
+$modules = [
+   'Posts' => true
+];

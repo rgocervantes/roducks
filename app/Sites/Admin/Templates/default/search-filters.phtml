@@ -1,0 +1,26 @@
+<?php
+use Roducks\Page\Template;
+?>
+<div class="row">
+	<div class="col-md-2">
+	<form rel="rdks-form" name="search-user" method="post" action="<?php echo $url; ?>/search<?php echo Template::conditional($isTrash,'?trash=1');?>">
+		<label><span class="glyphicon glyphicon-filter" aria-hidden="true"></span> ID</label>
+		<div class="input-group">
+			<input type="text" class="form-control" autocomplete="false" name="id_user" data-type="int">
+			<input type="hidden" class="form-control" name="trash" value="<?php echo $trash; ?>">
+			<span class="input-group-btn"><button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></span>
+		</div>
+	</form>
+	</div>
+	<div class="col-md-4">
+	<form rel="rdks-form" name="search-email" method="post" action="<?php echo $url; ?>/search<?php echo Template::conditional($isTrash,'?trash=1');?>">
+		<label><span class="glyphicon glyphicon-filter" aria-hidden="true"></span> Email</label>
+		<div class="input-group">
+			<input type="text" class="form-control" autocomplete="false" name="email" data-type="email">
+			<input type="hidden" class="form-control" name="trash" value="<?php echo $trash; ?>">
+			<span class="input-group-btn"><button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button></span>
+		</div>
+	</form>
+	</div>
+</div>
+<br>

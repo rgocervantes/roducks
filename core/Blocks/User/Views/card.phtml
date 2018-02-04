@@ -1,0 +1,16 @@
+<?php 
+use Roducks\Page\Template; 
+use Roducks\Framework\Helper;
+?>
+<div class="box-white">
+	<div class="left">
+		<img src="<?php echo $squared; ?>" width="<?php echo $resize; ?>" height="<?php echo $resize; ?>" class="picture" />
+	</div>
+	<div class="left ml-20">
+		<h3><?php echo $first_name; ?></h3>
+		<p><span class="glyphicon glyphicon-star<?php echo Template::equals($id_role,1,'','-empty'); ?>" aria-hidden="true"></span> <?php echo $role; ?></p>
+		<p><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <?php echo $email; ?></p>
+		<p><span class="glyphicon glyphicon-user icon-<?php echo $gender; ?>" aria-hidden="true"></span> <?php echo Helper::getGender($gender); ?></p>
+	</div>
+	<div class="clear"></div>
+</div>

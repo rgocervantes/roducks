@@ -1,0 +1,138 @@
+<?php
+use Roducks\Page\Block;
+use Roducks\Page\Template;
+use Roducks\Framework\Helper;
+use Roducks\Framework\URL;
+use Roducks\Framework\Login;
+use Roducks\Framework\Language;
+use Roducks\Libs\Utils\Date;
+
+?>
+<?php if(isset($access['tree'])): ?>
+				<a href="<?php echo URL::build($url, ['tree' => 1]); ?>" class="btn btn-default"><span class="glyphicon glyphicon-<?php echo $icon; ?>" aria-hidden="true"></span> <?php echo TEXT_DESCENDANTS; ?></a><br><br>
+<?php endif; ?>
+	<table id="data-grid<?php echo Template::notEmpty($alt,'-'.$alt); ?>" width="100%" cellpadding="0" cellspacing="0" class="rdks-table rdks-table-hover" data-url-remove="/_json<?php echo $url; ?>/trash" data-url-visibility="/_json<?php echo $url; ?>/visibility">
+		<tr>
+			<th width="5%"><?php echo TEXT_PICTURE; ?></th>
+			<th width="3%"><?php echo TEXT_PARENT; ?></th>
+			<th width="10%"><?php echo TEXT_ROLE; ?></th>
+			<th><?php echo TEXT_DATA; ?></th>
+			<th>Email</th>
+			<th width="3%"><?php echo TEXT_EXPIRES; ?>?</th>
+			<th width="15%"><?php echo TEXT_EXPIRATION_DATE; ?></th>
+			<th width="3%">&nbsp;</th>
+			<th width="3%">&nbsp;</th>
+			<th width="3%">&nbsp;</th>			
+			<th width="3%">&nbsp;</th>
+			<th width="3%">&nbsp;</th>
+			<th width="3%">&nbsp;</th>						
+		</tr>	
+	<?php if($data->rows()): while($row = $data->fetch()): ?>
+		<tr class="<?php echo Template::equals($row['active'], 0, 'rdks-ui-row-disabled', ''); ?>">
+			<td align="center">
+				<?php if(isset($access['picture']) || Login::isSuperAdmin() || $row['id_user'] == Login::getAdminId()): ?>
+					<a href="<?php echo $url; ?>/picture/id/<?php echo $row['id_user']; ?>"><?php Block::load("user/picture/{$row['picture']}/90");?></a>
+				<?php endif; ?>
+			</td>
+			<td align="center">
+				<?php if($row['id_user_parent'] > 0): ?>
+				<button type="button" onclick="userCard(<?php echo $row['id_user_parent']; ?>);" class="btn btn-default"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></button>
+				<?php endif; ?>
+			</td>			
+			<td align="center">
+				<?php if($row['id_role'] == 1): ?>
+					<button type="button" class="btn btn-sm btn-warning"><span class="glyphicon glyphicon-star" aria-hidden="true"></span> <?php echo $row['role']; ?></button>
+
+				<?php else: ?>
+					<button type="button" onclick="modalRoles('<?php echo $row['role']; ?>','<?php echo Helper::removeFileExt($row['config']); ?>',<?php echo $row['rtype']; ?>);" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span> <?php echo $row['role']; ?></button>
+				<?php endif; ?>
+			</td>		
+			<td>
+				<b>ID:</b> <button type="button" onclick="userId('<?php echo $row['id_user']; ?>');" class="btn btn-sm btn-default"><?php echo Helper::truncate($row['id_user'],15); ?></button><br>
+				<button type="button" onclick="userCard(<?php echo $row['id_user']; ?>);" class="btn btn-default mtb-10">
+					<span class="glyphicon glyphicon-<?php echo $icon; ?> icon-<?php echo $row['gender']; ?>" aria-hidden="true"></span> <b><?php echo $row['first_name'] . " " . $row['last_name']; ?></b>
+				</button><br>
+
+				<div class="alert alert-info" role="alert" style="margin:0; padding:5px;">
+					<span class="alert-text">
+						<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> <?php echo Date::getDateFormat(Date::extractDate($row['created_date']), Language::get()); ?><br>
+						<span class="glyphicon glyphicon-time" aria-hidden="true"></span> <?php echo Date::extractTime($row['created_date']); ?>
+					</span>
+				</div>
+
+			</td>
+			<td><?php echo $row['email']; ?></td>
+			<td align="center">
+				<?php if( (isset($access['expiration']) || Login::isSuperAdmin()) && ($row['id_user'] != Login::getAdminId() && $row['id_user'] != 1)): ?>
+					<button type="button" onclick="expirationDate(<?php echo $row['id_user']; ?>,'<?php echo Date::parseDate($row['expiration_date']); ?>')" class="btn btn-info"><span class="glyphicon glyphicon-time" aria-hidden="true"></span></button>
+				<?php endif; ?>
+			</td>
+			<td align="center">
+				<span id="exp-<?php echo $row['id_user']; ?>">
+					<?php if($row['expiration_date'] != Date::getEmptyDate()): ?>
+						<?php echo Date::getDateFormat(Date::parseDate($row['expiration_date']), Language::get()); ?>
+					<?php endif; ?>
+				</span>
+			</td>
+			<td align="center">
+				<?php if( (isset($access['visibility']) || Login::isSuperAdmin()) && ($row['id_user'] != Login::getAdminId() && $row['id_user'] != Login::getSuperAdminId())): ?>
+
+				<button type="button" class="btn rdks-ui-btn-<?php echo Template::equals($row['active'], 1,"enabled","disabled"); ?>" 
+				rel="rdks-popOver"
+				data-title="<?php echo TEXT_SURE; ?>" 
+				data-callback="cbVisibility<?php echo ucfirst($alt); ?>" 
+				data-buttons='["No","<?php echo TEXT_YES; ?>"]'  
+				data-id="<?php echo $row['id_user']; ?>" 
+				data-value="<?php echo $row['active']; ?>" 
+				data-params='{"type": "foo"}' 
+				><span class="glyphicon glyphicon-eye-<?php echo Template::equals($row['active'], 1, "open","close"); ?>" aria-hidden="true"></span></button>
+				<?php endif; ?>
+			</td>
+			<td align="center">
+				<?php if( (isset($access['trash']) || Login::isSuperAdmin()) && ($row['id_user'] != Login::getAdminId() && $row['id_user'] != Login::getSuperAdminId())): ?>
+
+					<button type="button" class="btn btn-<?php echo Template::equals($row['trash'],0,'danger','default')?>" 
+					rel="rdks-popOver"
+					data-title="<?php echo TEXT_SURE; ?>" 
+					data-callback="cbRemove" 
+					data-placement="left" 
+					data-buttons='["No","<?php echo TEXT_YES; ?>"]' 					
+					data-id="<?php echo $row['id_user']; ?>" 
+					data-value="<?php echo Template::equals($row['trash'],0,1,0)?>"
+					><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+
+				<?php endif; ?>
+			</td>
+			<td align="center">
+				<?php if( ( isset($access['edit']) && $row['id_user'] > Login::getSuperAdminId() ) || Login::isSuperAdmin() ): ?>
+					<a href="<?php echo $url; ?>/edit/id/<?php echo $row['id_user']; ?>" class="btn btn-success"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+				<?php endif; ?>
+			</td>
+			<td align="center">
+				<?php if( (isset($access['reset']) || Login::isSuperAdmin()) && ($row['id_user'] != Login::getAdminId()) && $row['id_user'] != Login::getSuperAdminId()): ?>
+					<a href="<?php echo $url; ?>/reset-password/id/<?php echo $row['id_user']; ?>" class="btn btn-warning"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></a>
+				<?php endif; ?>
+			</td>		
+			<td align="center">
+				<?php if( ( isset($access['logs']) && $row['id_user'] > Login::getSuperAdminId() ) || Login::isSuperAdmin() ): ?>
+					<a href="<?php echo $url; ?>/logs/id/<?php echo $row['id_user']; ?>" class="btn btn-primary"><span class="glyphicon glyphicon-off" aria-hidden="true"></span></a>
+				<?php endif; ?>				
+			</td>			
+			<td align="center">
+				<?php if( (isset($access['logout']) || Login::isSuperAdmin()) && ($row['id_user'] != Login::getAdminId() && $row['id_user'] != Login::getSuperAdminId())): ?>
+					<button type="button" <?php echo Template::equals($row['loggedin'],1,'rel','data-rel'); ?>="rdks-action-post" data-url="/_service/auth/logout" data-params='{"id":<?php echo $row['id_user']; ?>}' data-callback="cbLogout" class="btn btn-<?php echo Template::equals($row['loggedin'],0,'default disabled','info'); ?>"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span></button>
+				<?php endif; ?>
+			</td>							
+		</tr>
+	<?php endwhile; else: ?>
+		<tr>
+			<td colspan="13">
+				<div class="alert alert-warning" role="alert" style="margin:0;">
+					<span class="alert-text">
+						<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo TEXT_NO_RESULTS; ?>
+					</span>
+				</div>
+			</td>
+		</tr>
+	<?php endif; ?>	
+	</table>

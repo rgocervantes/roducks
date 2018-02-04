@@ -1,0 +1,173 @@
+<?php 
+use Roducks\Framework\Login;
+use Roducks\Framework\Language; 
+use Roducks\Page\Template; 
+?>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="well">
+				<h3><?php echo TEXT_CLIENTS; ?></h3>
+				<?php if(isset($data['clients']) || isset($access['all']) || Login::isSuperAdmin() || Login::roleSuperAdmin()): ?>
+				<ul class="list-group">
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input type="checkbox" rel="rdks-form-check-all" data-input=".checkbox-clients" class="checkbox-permissions"> <b><?php echo TEXT_ALL; ?></b> 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['clients']['descendants'])) );?> type="checkbox" name="data[clients][descendants]" value="1" class="checkbox-clients checkbox-permissions"> <?php echo TEXT_MANAGE_DESCENDANTS; ?> 
+
+						      <span id="help-clients" data-text="<?php echo TEXT_MANAGE_DESCENDANTS_DESC; ?>"  class="help"></span>
+						   
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['clients']['tree'])) );?> type="checkbox" name="data[clients][tree]" value="1" class="checkbox-clients checkbox-permissions"> <?php echo TEXT_MANAGE_TREE_DESCENDANTS; ?> 
+
+						      <span id="help-subcribers-alt" data-text="<?php echo TEXT_MANAGE_TREE_DESCENDANTS_DESC; ?>" class="help"></span>
+						   
+						    </label>
+						</div>	
+					</li>					
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['clients']['reset'])) );?> type="checkbox" name="data[clients][reset]" value="1" class="checkbox-clients checkbox-permissions"> <?php echo TEXT_RESET_PASSWORD; ?>  
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['clients']['view'])) );?> type="checkbox" name="data[clients][view]" value="1" class="checkbox-clients checkbox-permissions"> <?php echo TEXT_VIEW; ?> 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['clients']['create'])) );?> type="checkbox" name="data[clients][create]" value="1" class="checkbox-clients checkbox-permissions"> <?php echo TEXT_CREATE; ?> 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['clients']['edit'])) );?> type="checkbox" name="data[clients][edit]" value="1" class="checkbox-clients checkbox-permissions"> <?php echo TEXT_EDIT; ?> 
+						    </label>
+						</div>	
+					</li>			
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['clients']['visibility'])) );?> type="checkbox" name="data[clients][visibility]" value="1" class="checkbox-clients checkbox-permissions"> <?php echo TEXT_ENABLE_DISABLE; ?> 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['clients']['trash'])) );?> type="checkbox" name="data[clients][trash]" value="1" class="checkbox-clients checkbox-permissions"> <?php echo TEXT_TRASH; ?> 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['clients']['expiration'])) );?> type="checkbox" name="data[clients][expiration]" value="1" class="checkbox-clients checkbox-permissions"> <?php echo TEXT_EXPIRATION_DATE; ?> 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['clients']['picture'])) );?> type="checkbox" name="data[clients][picture]" value="1" class="checkbox-clients checkbox-permissions"> <?php echo TEXT_EDIT . " " . TEXT_PROFILE_PICTURE; ?> 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['clients']['logs'])) );?> type="checkbox" name="data[clients][logs]" value="1" class="checkbox-clients checkbox-permissions"> Logs 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['clients']['logout'])) );?> type="checkbox" name="data[clients][logout]" value="1" class="checkbox-clients checkbox-permissions"> <?php echo Language::translate("Force to log out","Forzar salida"); ?> 
+						    </label>
+						</div>	
+					</li>	
+				</ul>
+				<?php else: ?>
+					<div class="alert alert-info" role="alert">
+						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						<span class="alert-text"><?php echo TEXT_UNAVAILABLE_ROLE; ?></span>
+					</div>
+				<?php endif; ?>	
+			</div><!-- .well -->
+
+		</div><!-- .col-md-6 -->
+
+		<div class="col-md-6">
+
+			<div class="well">
+				<h3>Account</h3>
+				<?php if(isset($data['account']) || isset($access['all']) || Login::isSuperAdmin()): ?>
+				<ul class="list-group">
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input type="checkbox" rel="rdks-form-check-all" data-input=".checkbox-subscribers" class="checkbox-permissions"> <b><?php echo TEXT_ALL; ?></b> 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['account']['view'])) );?> type="checkbox" name="data[account][view]" value="1" class="checkbox-subscribers checkbox-permissions"> <?php echo TEXT_VIEW; ?> 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['account']['edit'])) );?> type="checkbox" name="data[account][edit]" value="1" class="checkbox-subscribers checkbox-permissions"> <?php echo TEXT_EDIT; ?> 
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['account']['picture'])) );?> type="checkbox" name="data[account][picture]" value="1" class="checkbox-subscribers checkbox-permissions"> <?php echo TEXT_PROFILE_PICTURE; ?>
+						    </label>
+						</div>	
+					</li>
+					<li class="list-group-item">
+						<div class="checkbox" style="margin:0;">
+						    <label>
+						      <input<?php echo Template::checked( (isset($data['account']['reset'])) );?> type="checkbox" name="data[account][reset]" value="1" class="checkbox-subscribers checkbox-permissions"> <?php echo TEXT_RESET_PASSWORD; ?> 
+						    </label>
+						</div>	
+					</li>					
+				</ul>
+				<?php else: ?>
+					<div class="alert alert-info" role="alert">
+						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						<span class="alert-text"><?php echo TEXT_UNAVAILABLE_ROLE; ?></span>
+					</div>
+				<?php endif; ?>	
+			</div><!-- .well -->
+
+		</div><!-- .col-xs-6 -->
+
+
+	</div><!-- .row -->

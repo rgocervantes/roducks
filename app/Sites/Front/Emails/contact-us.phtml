@@ -1,0 +1,30 @@
+<?php
+use Roducks\Framework\UI;
+use Roducks\Framework\URL;
+?>
+<?php echo UI::getLogo(300, [
+	'http' => URL::getPublicURL(),
+	'flex-h' => true, // width: 300px, height: auto
+	'center' => true, 
+	'bg' => UI::BG_TRANSPARENT, // UI::BG_WHITE | UI::BG_BLACK
+]); ?>
+<br>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="border:solid 1px #CCC; background:#FFF; border-collapse:collapse; font-family:Arial;">
+	<tr>
+		<td width="30%" style="border:solid 1px #CCC; padding:5px; background:#f0f0f0; font-weight:bold;"><?php echo TEXT_FIRST_NAME; ?>:</td>
+		<td style="border:solid 1px #CCC; padding:5px;"><?php echo $form['firt_name']?></td>
+	</tr>
+	<tr>
+		<td width="30%" style="border:solid 1px #CCC; padding:5px; background:#f0f0f0; font-weight:bold;"><?php echo TEXT_LAST_NAME; ?>:</td>
+		<td style="border:solid 1px #CCC; padding:5px;"><?php echo $form['last_name']?></td>
+	</tr>	
+	<tr>
+		<td width="30%" style="border:solid 1px #CCC; padding:5px; background:#f0f0f0; font-weight:bold;">Email:</td>
+		<td style="border:solid 1px #CCC; padding:5px;"><?php echo $form['email']?></td>
+	</tr>
+	<tr>
+		<td width="30%" style="border:solid 1px #CCC; padding:5px; background:#f0f0f0; font-weight:bold;"><?php echo TEXT_COMMENT; ?>:</td>
+		<td style="border:solid 1px #CCC; padding:5px;"><?php echo $form['comment']?></td>
+	</tr>				
+</table>

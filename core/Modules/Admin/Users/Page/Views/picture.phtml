@@ -1,0 +1,14 @@
+<?php
+use Roducks\Page\Template;
+use Roducks\Page\Block;
+?>
+<div class="container-fluid">
+		<?php Template::view("title"); ?>
+		<?php Template::view("btn-back"); ?>
+		<hr />	
+	<div class="box-white">
+
+		<?php Block::load("uploader", ['module' => "global", 'config' => "user", 'picture' => $picture]); ?>
+		<div id="cropped"><?php Block::load("user/picture/{$picture}/150/original"); ?></div>
+	</div>
+</div>

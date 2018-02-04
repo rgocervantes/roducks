@@ -1,0 +1,88 @@
+<?php
+use rdks\core\page\Template;
+use rdks\core\framework\Language;
+use rdks\app\sites\admin\modules\Posts\helper\Posts as PostsHelper;
+?>
+<div class="container">
+	<?php Template::view("btn-back"); ?>
+	<br><br>
+	<div class="box-white">
+		<?php Template::view("title"); ?>
+		<div class="row">
+			<div class="col-xs-6">
+				<?php if($row['postId'] > 0): ?>
+				<a href="<?php echo PostsHelper::getPostPublicLink($row['postId']); ?>" target="_blank" class="btn btn-info"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span> See Post</a>
+				<?php endif; ?>
+
+				<form id="foovar" name="foovar" method="post" 
+				rel="rdks-form" 
+				data-notification="true" 
+				data-callback-success="cbFormSuccess" 
+				data-callback-loading="cbFormLoading" 
+				data-callback-error="cbFormError" 
+			    data-alert-warning="<?php echo TEXT_FORM_WARNING; ?>" 
+			    data-alert-error="<?php echo TEXT_FORM_ERROR; ?>" 
+			    data-alert-failed="<?php echo TEXT_FORM_FAILED; ?>" 
+				data-reset="<?php echo Template::conditional($edit,'false','true'); ?>" 
+				data-ajax="true" 
+				data-json="true" 
+				data-focus="true" 
+				action="<?php echo "/_json{$url}/{$action}"; ?>">
+
+					<div class="checkbox">
+						<label>
+						<input<?php echo Template::checked($row['active']); ?> type="checkbox" name="active" value="1" /> 
+						<?php echo TEXT_ACTIVE; ?></label>
+					</div>
+
+					<div class="form-group has-feedback">
+						<label class="control-label" for="title"><span class="rdks-ui-color-red">*</span> <?php echo Language::translate("Title", "Título"); ?></label>
+						<input type="text" name="title" class="form-control" 
+						data-required="true" 
+						data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+						value="<?php echo $row['title']; ?>"
+						/>
+						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+						<span class="help-block"></span>
+					</div>
+
+					<div class="form-group has-feedback">
+						<label class="control-label" for="body"><span class="rdks-ui-color-red">*</span> <?php echo Language::translate("Post", "Publicación"); ?></label>
+						<textarea name="body" class="form-control" rows="10" 
+						data-required="true" 
+						data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+						><?php echo $row['post']; ?></textarea>
+						<span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+						<span class="help-block"></span>
+					</div>
+
+					<?php if($edit): ?>
+
+					<div class="form-group has-feedback">
+					    <select name="id_category" rel="rdks-form-select" class="rdks-form-select" data-text="Choose an option">
+					    <?php if($categories->rows()): while($category = $categories->fetch()): ?>	
+					            <option<?php echo Template::selected(($row['id_category'] == $category['id_category']));?> value="<?php echo $category['id_category']; ?>"><?php echo $category['title'];?></option>
+						<?php endwhile; endif; ?>
+					    </select>
+					</div>
+
+					<?php else: ?>
+						<input type="hidden" name="id_category" class="form-control" 
+						data-required="true" 
+						data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+						data-type="int" 
+						value="<?php echo $row['id_category']; ?>"
+						/>
+
+					<?php endif; ?>
+
+					<button type="submit" class="btn btn-lg btn-warning navbar-btn">
+						<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span> <?php echo TEXT_SAVE; ?>
+					</button>
+
+				</form>
+
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,24 @@
+<form id="users-datepicker" name="users-datepicker" method="post" rel="rdks-form" action="<?php echo $urlDatepicker; ?>">
+	<div class="row">
+		<div class="col-md-2">
+			<div class="form-group has-feedback">
+				<label class="control-label" for="start_date"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span> <?php echo TEXT_START_DATE; ?></label>
+				<input type="hidden" id="start_date" name="start_date" data-text="<?php echo $start_date; ?>" class="form-control" data-required="true" data-type="datepicker" data-alert-warning="it's required" />
+			</div>	
+		</div>
+
+		<div class="col-md-2">
+			<div class="form-group has-feedback">
+				<label class="control-label" for="end_date"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span> <?php echo TEXT_END_DATE; ?></label>
+				<input type="hidden" id="end_date" name="end_date" data-text="<?php echo $end_date; ?>" class="form-control" data-required="true" data-type="datepicker" data-alert-warning="it's required" />
+			</div>
+		</div>
+		<div class="col-md-2">
+			<label class="control-label" for="end_date">&nbsp;</label><br>
+			<div>
+				<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+			</div>
+		</div>
+	</div> 
+</form>
+<br>

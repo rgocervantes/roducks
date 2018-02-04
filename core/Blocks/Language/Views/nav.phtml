@@ -1,0 +1,25 @@
+<?php
+
+use Roducks\Page\Template;
+use Roducks\Framework\UI;
+use Roducks\Framework\Language;
+
+if(Language::isMultilanguage()):
+?>
+<ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span> <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <?php $i = 0; foreach($langs as $lang): $i++; ?>
+            <li><a href="<?php echo $lang['link']; ?>" class="<?php echo Template::equals(Language::get(), $lang['iso'], 'active'); ?>">
+            <?php echo UI::getIcon($lang['img'], 14); ?> <?php echo $lang['title']; ?>
+            </a>
+            </li>
+        <?php if($i %2 == 1): ?>
+        	<li role="separator" class="divider"></li>
+        <?php endif; ?>	
+        <?php endforeach; ?>
+        </ul>
+    </li> 
+</ul>
+<?php endif; ?>

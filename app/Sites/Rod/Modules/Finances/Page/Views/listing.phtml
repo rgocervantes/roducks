@@ -1,0 +1,157 @@
+<?php 
+use Roducks\Page\Template;
+use Roducks\Libs\Utils\Date;
+use Roducks\Framework\Language;
+use Roducks\Libs\Data\Cart;
+use App\Sites\Rod\Modules\Finances\Helper\Finances as FinancesHelper;
+
+$total = 0;
+?>
+<div class="container-fluid">
+	<?php Template::view("btn-back"); ?>
+	<?php if(!empty($today)): ?>
+	<hr />
+	<h2><?php echo $today; ?></h2>
+	<?php endif; ?>
+	<hr />
+	<div class="left">
+		<h1><?php echo $title; ?> - <span class="rdks-ui-color-red">$ <span id="total"></span> MXN</span></h1>
+	</div>
+	<div class="right">
+		<a href="<?php echo FinancesHelper::getAddUrl(); ?>" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> New Shopping</a>
+		<a href="<?php echo FinancesHelper::getSimulationUrl(); ?>" class="btn btn-lg btn-info"><span class="glyphicon glyphicon-scale" aria-hidden="true"></span> Simulation</a>
+
+	</div>
+	<div class="clear"></div>
+
+	<div class="box-white">
+		<form name="foo" rel="rdks-form" data-send="false" data-callback-submit="cbFinancesFilters" action="/">
+			<div class="row">
+				<div class="col-xs-4<?php echo Template::equals($isSettlement, true, ' hide'); ?>">
+					<label><span class="glyphicon glyphicon-filter" aria-hidden="true"></span> <?php echo TEXT_MONTH; ?></label>
+					<select name="month" rel="rdks-form-select" class="rdks-form-select" data-required="true" data-callback="cbFinancesMonth">
+						<?php foreach(Date::getMonths(Language::get()) as $m => $month): $mm = ($m+1); ?>
+						<option<?php echo Template::selected(($selected['month'] == $mm));?> value="<?php echo $mm; ?>"><?php echo $month; ?></option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+				<div class="col-xs-4">
+					<label><span class="glyphicon glyphicon-filter" aria-hidden="true"></span> <?php echo TEXT_YEAR; ?></label>
+					<select name="year" rel="rdks-form-select" class="rdks-form-select" data-required="true">
+						<?php for($y=(Date::getCurrentYear()+1); $y>=2015; $y--): ?>
+						<option<?php echo Template::selected(($selected['year'] == $y));?> value="<?php echo $y; ?>"><?php echo $y; ?></option>
+						<?php endfor; ?>
+					</select>
+				</div>
+				<div class="col-xs-4">
+					<label>&nbsp;</label>
+					<div>
+
+					<button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span> <?php echo TEXT_TO_FILTER; ?></button>
+&nbsp;
+					<button type="button" class="btn btn-primary<?php echo Template::equals($isSettlement, true, ' hide'); ?>" onclick="$finances.filters.prev();"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> <?php echo TEXT_PREVIOUS; ?></button>
+					<button type="button" class="btn btn-primary<?php echo Template::equals($isSettlement, true, ' hide'); ?>" onclick="$finances.filters.next();"><?php echo TEXT_NEXT; ?> <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span></button>
+
+					</div>
+				</div>
+			</div>
+		</form>
+
+		<hr />
+
+		<table id="data-grid" width="100%" cellpadding="0" cellspacing="0" class="rdks-table rdks-table-hover" data-url-remove="<?php echo FinancesHelper::getRemoveUrl(); ?>">
+			<tr>
+				<th>ID</th>
+				<th>Fecha Operación</th>
+				<th>Concepto</th>
+				<th>Total</th>
+				<th>Plazo</th>
+				<th>Pago</th>
+				<th class="3%">&nbsp;</th>
+				<th class="3%">&nbsp;</th>
+			</tr>
+			<?php if($data->rows()): while($row = $data->fetch()): $total+= $row['amount']; ?>
+			<tr>
+				<td align="center"><?php echo $row['id_payment'];?></td>
+				<td align="center"><?php echo Date::getDateFormat($row['payment_date'], Language::get())?></td>
+				<td><h3><?php echo $row['title']; ?></h3>
+					<p><?php echo $row['description']; ?></p>
+					<hr />
+					<?php FinancesHelper::getSettlementDate($row['period'],$row['settlement_date'],$selected, $hasDataAlt, $isSettlement);?>
+				</td>
+				<td align="center" class="rdks-ui-color-red"><?php echo Cart::getPriceFormat($row['total'], "MXN"); ?></td>
+				<td align="center"><?php FinancesHelper::getPeriod($row['period']); ?></td>					
+				<td align="center" class="rdks-ui-color-red"><?php echo Cart::getPriceFormat($row['amount'], "MXN"); ?></td>
+				<td align="center"><a href="<?php echo FinancesHelper::getEditUrl($row['id_payment']); ?>" class="btn btn-success"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>
+				<td align="center">
+
+					<button type="button" class="btn btn-danger" 
+					rel="rdks-popOver"
+					data-title="<?php echo TEXT_SURE; ?>" 
+					data-callback="cbRemove" 
+					data-placement="left" 
+					data-buttons='["No","<?php echo TEXT_YES; ?>"]' 					
+					data-id="<?php echo $row['id_payment']; ?>" 
+					data-value="0" 
+					><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+
+				</td>
+			</tr>
+			<?php endwhile; else: ?>
+			<?php if(!$hasDataAlt): ?>
+			<tr>
+				<td colspan="8">
+					<div class="alert alert-warning" role="alert" style="margin:0;">
+						<span class="alert-text">
+							<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo TEXT_NO_RESULTS; ?>
+						</span>
+					</div>
+				</td>
+			</tr>
+			<?php endif; ?>	
+			<?php endif; ?>	
+
+			<?php if($hasDataAlt): if($dataAlt->rows()): while($row = $dataAlt->fetch()): $total+= $row['amount']; ?>
+			<tr>
+				<td align="center"><?php echo $row['id_payment'];?></td>
+				<td align="center"><?php echo Date::getDateFormat($row['payment_date'], Language::get())?></td>
+				<td><h3><?php echo $row['title']; ?></h3>
+					<p><?php echo $row['description']; ?></p>
+					<hr />
+					<?php FinancesHelper::getSettlementDate($row['period'],$row['settlement_date'],$selected, true, $isSettlement);?>
+				</td>
+				<td align="center" class="rdks-ui-color-red"><?php echo Cart::getPriceFormat($row['total'], "MXN"); ?></td>
+				<td align="center"><?php FinancesHelper::getPeriod($row['period']); ?></td>					
+				<td align="center" class="rdks-ui-color-red"><?php echo Cart::getPriceFormat($row['amount'], "MXN"); ?></td>
+				<td align="center"><a href="<?php echo FinancesHelper::getEditUrl($row['id_payment']); ?>" class="btn btn-success"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a></td>
+				<td align="center">
+					
+					<button type="button" class="btn btn-danger" 
+					rel="rdks-popOver"
+					data-title="<?php echo TEXT_SURE; ?>" 
+					data-callback="cbRemove" 
+					data-placement="left" 
+					data-buttons='["No","<?php echo TEXT_YES; ?>"]' 					
+					data-id="<?php echo $row['id_payment']; ?>" 
+					data-value="0" 
+					><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+
+				</td>
+			</tr>
+			<?php endwhile; else: ?>
+			<tr>
+				<td colspan="8">
+					<div class="alert alert-warning" role="alert" style="margin:0;">
+						<span class="alert-text">
+							<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> <?php echo TEXT_NO_RESULTS; ?>
+						</span>
+					</div>
+				</td>
+			</tr>
+			<?php endif; endif; ?>	
+
+		</table>
+
+		<input type="hidden" id="sum" name="sum" value="<?php echo $total; ?>" />
+	</div>
+</div>

@@ -1,0 +1,17 @@
+<?php use rdks\core\page\Template; ?>
+<div class="container-fluid">
+
+	<div class="well"><h1>Categories (<?php echo $categories->getTotalRows(); ?>)</h1></div>
+
+	<div class="box-white">
+
+		<form name="foo" rel="rdks-form" method="post" action="/">
+			<select rel="rdks-form-select" name="categories" data-callback="cbSelectCategory">
+			<?php if($categories->rows()): while($category = $categories->fetch()): ?>
+				<option<?php echo Template::selected(($categoryId == $category['id_category'])); ?> value="<?php echo $category['id_category']; ?>"><?php echo $category['title']; ?></option>
+			<?php endwhile; endif; ?>	
+			</select>
+		</form>
+	</div>
+
+</div>

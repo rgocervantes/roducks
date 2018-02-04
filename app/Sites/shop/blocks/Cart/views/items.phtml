@@ -1,0 +1,119 @@
+<?php 
+use rdks\app\sites\cart\blocks\Cart\Cart as CartBlock;
+use rdks\core\libs\Data\Cart as ShoppingCart; 
+use rdks\core\page\Block;
+use rdks\core\page\Template;
+use rdks\core\framework\UI;
+use rdks\core\framework\Language;
+?>
+<form name="cart" method="post" rel="rdks-form">
+<table id="rdks-cart-grid" width="100%" cellpadding="0" cellspacing="0" class="rdks-cart" data-url-remove="/_json/cart/remove">
+	<tr>
+		<th width="10%"><?php echo Language::translate("Product","Producto"); ?></th>
+		<th style="text-align:left;" width="15%"><?php echo Language::translate("Description","Descripción"); ?></th>
+		<th style="text-align:left;">SKU</th>
+		<th><?php echo Language::translate("Attributes","Atributos"); ?></th>		
+		<th style="text-align:left;"><?php echo Language::translate("Price","Precio"); ?></th>
+		<th width="8%"><?php echo Language::translate("Qty.","Cant."); ?></th>
+		<th>&nbsp;</th>
+		<th style="text-align:left;">Subtotal</th>
+	</tr>
+	<?php foreach($items as $item): ?>
+	<tr class="<?php echo Template::conditional((empty($item['grouped_products'])), 'separator', 'line'); ?>">
+		<td>
+			<?php echo UI::getUploadedImage("products/".$item['data']['image'], 120, [
+				'square' => true,
+				'center' => true, 
+				'bg' => UI::BG_TRANSPARENT, // UI::BG_WHITE | UI::BG_BLACK
+				'alt' => $item['data']['title'][$lang]
+			]); ?>
+		</td>
+		<td>
+			<h4><?php echo $item['data']['title'][$lang]; ?></h4>
+			<p><?php echo $item['data']['description'][$lang]; ?></p>
+		</td>
+		<td>
+			<?php echo $item['data']['sku']; ?>
+		</td>			
+		<td>
+			<table width="100%" class="rdks-table">
+			<?php foreach($item['attributes'] as $a): ?>
+				<tr>
+					<td width="33%"><u><?php echo $a['name'][$lang]; ?></u>:</td>
+					<td width="33%"><b><?php echo $a['value'][$lang]; ?></b></td>
+					<td width="33%" style="color: #0e5da0;"><?php echo ShoppingCart::getPriceFormat($a['price'][$lang], $currency); ?></td>
+				</tr>
+			<?php endforeach; ?>
+			</table>
+		</td>	
+		<td style="color: #0e5da0;"><span style="background: #f9f9f9; display: block; padding: 10px;"><?php echo ShoppingCart::getPriceFormat($item['price'],$currency); ?></span></td>
+		<td>
+			<div class="input-group">
+				<span class="input-group-btn"><button class="btn btn-default" onclick="$rdks.cart.qty.sub('<?php echo $item['index']; ?>');"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button></span>
+				<input id="<?php echo $item['index']; ?>_qty" type="text" class="form-control" data-type="int" data-ignore="true" data-cache="<?php echo $item['qty']; ?>" value="<?php echo $item['qty']; ?>" onblur="$rdks.cart.qty.update(this, '<?php echo $item['index']; ?>');" onclick="$rdks.cart.qty.focus(this);" style="background: #fcf8e3; width: 50px;" />
+				<span class="input-group-btn"><button class="btn btn-default" onclick="$rdks.cart.qty.add('<?php echo $item['index']; ?>', 1);"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></span>
+			</div>
+		</td>		
+		<td align="center">
+			<button id="btn_<?php echo $item['index']; ?>" type="button" class="btn btn-danger" rel="rdks-popOver" data-title="Are you sure?" data-callback="rdksCartRemoveItem" data-callback-remove="rdksCartOnRemoveItem" data-placement="left" data-buttons="[&quot;No&quot;,&quot;Yes&quot;]" data-id="<?php echo $item['index']; ?>" data-params="{&quot;index&quot;:&quot;<?php echo $item['index']; ?>&quot;,&quot;level&quot;:&quot;0&quot;}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+
+		</td>
+		<td id="<?php echo $item['index']; ?>_subtotal" style="color: #0e5da0;"><?php echo ShoppingCart::getPriceFormat($item['subtotal'],$currency); ?></td>						
+	</tr>	
+	<?php if(!empty($item['grouped_products'])): $t = count($item['grouped_products']); $i = 0; foreach($item['grouped_products'] as $groupedId => $grouped): $i++; ?>
+	<tr class="<?php echo Template::conditional( ($t == $i), 'separator '); ?><?php echo $item['index']; ?>" data-id="btn_<?php echo $groupedId; ?>">
+		<td width="10%" style="padding-left: 50px;">
+			<?php echo UI::getUploadedImage($grouped['data']['image'], 80, [
+				'square' => true,
+				'center' => true, 
+				'bg' => UI::BG_TRANSPARENT, // UI::BG_WHITE | UI::BG_BLACK
+				'alt' => $grouped['data']['title'][$lang]
+			]); ?>
+		</td>
+		<td>
+			<h4><?php echo $grouped['data']['title'][$lang]; ?></h4>
+			<p><?php echo $grouped['data']['description'][$lang]; ?></p>
+		</td>
+		<td>
+			<?php echo $grouped['data']['sku']; ?>
+		</td>		
+		<td>
+			<table width="100%" class="rdks-table">
+			<?php foreach($grouped['attributes'] as $a): ?>
+				<tr>
+					<td width="33%"><u><?php echo $a['name'][$lang]; ?></u>:</td>
+					<td width="33%"><b><?php echo $a['value'][$lang]; ?></b></td>
+					<td width="33%" style="color: #0e5da0;"><?php echo ShoppingCart::getPriceFormat($a['price'][$lang], $currency); ?></td>
+				</tr>
+			<?php endforeach; ?>
+			</table>
+		</td>	
+		<td style="color: #0e5da0;"><span style="background: #f9f9f9; display: block; padding: 10px;"><?php echo ShoppingCart::getPriceFormat($grouped['price'][$lang], $currency); ?></span></td>
+		<td>
+			<div class="input-group">
+				<span class="input-group-btn"><button disabled class="btn btn-default"><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button></span>
+				<input type="text" disabled class="form-control" value="<?php echo $grouped['qty']; ?>" />
+				<span class="input-group-btn"><button disabled class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button></span>
+			</div>
+		</td>
+		<td align="center">
+			<?php if(isset($grouped['remove']) && $grouped['remove']): ?>
+
+			<button id="btn_<?php echo $groupedId; ?>" type="button" class="btn btn-danger" rel="rdks-popOver" data-title="Are you sure?" data-callback="rdksCartRemoveItem" data-callback-remove="rdksCartOnRemoveItem" data-placement="left" data-buttons="[&quot;No&quot;,&quot;Yes&quot;]" data-id="<?php echo $item['index']; ?>" data-params="{&quot;key&quot;:&quot;<?php echo $groupedId; ?>&quot;,&quot;level&quot;:&quot;1&quot;}"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+
+			<?php else: ?>
+				<span id="btn_<?php echo $groupedId; ?>" 
+					data-id="<?php echo $item['index']; ?>" 
+					data-params="{&quot;key&quot;:&quot;<?php echo $grouped['id']; ?>&quot;,&quot;level&quot;:&quot;1&quot;}"
+				></span>
+			<?php endif; ?>
+		</td>
+		<td></td>
+	</tr>	
+	<?php endforeach; endif; ?>
+	<?php endforeach; ?>	
+	<?php Block::load("cart/totals"); ?>
+</table>
+
+<?php Block::load("cart/checkout"); ?>
+</form>

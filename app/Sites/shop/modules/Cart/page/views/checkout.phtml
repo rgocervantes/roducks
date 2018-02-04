@@ -1,0 +1,184 @@
+<?php
+use rdks\core\page\Block;
+use rdks\core\page\Template;
+use rdks\core\framework\Language;
+?>
+<div class="container-fluid">
+
+	<div class="left w70" style="border-right: solid 1px #ccc;">
+
+		<ul id="rdks-checkout-tab-steps" class="rdks-checkout-tab-steps">
+			<li><a href="#step-1">1 <span class="glyphicon glyphicon-gift" aria-hidden="true"></span> <?php echo Language::translate("Shipping","Envío");?></a></li>
+			<li><a href="#step-2">2 <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> <?php echo Language::translate("Address","Dirección");?></a></a></li>
+			<li><a href="#step-3">3 <span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> <?php echo Language::translate("Payment","Pago");?></a></a></li>
+		</ul>
+		<div class="clear"></div>
+
+		<div class="pd-20">
+
+		<form id="rdks-checkout" name="rdks-checkout" method="post" 
+		rel="rdks-form" 
+		data-notification="false" 
+		data-callback-success="cbFormSuccessCheckout" 
+		data-callback-loading="cbFormLoading" 
+		data-callback-error="cbFormError" 
+	    data-alert-warning="<?php echo TEXT_FORM_WARNING; ?>" 
+	    data-alert-error="<?php echo TEXT_FORM_ERROR; ?>" 
+	    data-alert-failed="<?php echo TEXT_FORM_FAILED; ?>" 
+		data-reset="false" 
+		data-ajax="true" 
+		data-json="true" 	
+		action="/cart/process"
+		>
+
+			<div id="step-1" class="rdks-checkout-step">
+
+				<div class="row">
+					
+					<div class="col-md-6">
+						<h1><?php echo Language::translate("Choose a shipping option","Elige una opción de envío"); ?></h1>
+						<ul class="list-group">
+						<?php foreach($shippingOptions as $shippingOption => $message): ?>
+	  						<li class="list-group-item">
+								<div class="radio">
+								  <label>
+								    <input type="radio" name="shipping_option" value="<?php echo $shippingOption; ?>" onclick="$rdks.checkout.shipping(this,'#shipping-info','#<?php echo $shippingOption; ?>',<?php echo Template::equals($message['details'],true,'true','false'); ?>);"<?php echo Template::conditional((isset($address['shipping_option']) && $address['shipping_option'] == $shippingOption), ' checked'); ?>>
+								    <?php echo $message['title'][$_LANG]; ?>
+								  </label>
+								</div>
+								<div id="<?php echo $shippingOption; ?>" style="display:none;">
+									<?php echo $message['description'][$_LANG]; ?>
+								</div>
+							</li>
+						<?php endforeach; ?>
+						</ul>
+					</div>
+
+					<div class="col-md-6">
+						<h1>&nbsp;</h1>
+						<div id="shipping-info" class="well" style="display:none;">
+						</div>
+					</div>
+
+				</div><!-- .row -->
+
+				<hr />
+
+				<div class="well">
+					<div class="right">
+						<button type="button" class="btn btn-lg btn-primary" onclick="$rdks.checkout.next('#step-2');"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> <?php echo Language::translate("Next","Siguiente"); ?></button>
+					</div>
+					<div class="clear"></div>
+				</div>
+
+			</div>
+			<div id="step-2" class="rdks-checkout-step">
+
+				<div class="row">
+					
+					<div class="col-md-6">
+					<?php Block::load("checkout/address", ['title' => Language::translate("Shipping Address","Dirección de Envío"), 'address' => $address, 'field' => "shipping", 'countries' => $shipping['countries'], 'states' => $shipping['states'], 'cities' => $shipping['cities']]); ?>
+					</div>
+
+					<div class="col-md-6">
+					<?php Block::load("checkout/address", ['title' => Language::translate("Billing Address","Dirección de Facturación"), 'address' => $address, 'field' => "billing", 'countries' => $billing['countries'], 'states' => $billing['states'], 'cities' => $billing['cities'], 'sameAddress' => true]); ?>
+					</div>		
+					
+				</div><!-- .row -->
+
+				<hr />
+
+				<div>
+					<div class="checkbox">
+					  <label>
+					    <input type="checkbox" name="privacy" value="1" data-required="true" data-alert-warning="<?php echo Language::translate("Please read and agree the privacy policy.","Por favor lea y acepte las políticas de privacidad."); ?>"<?php echo Template::checked((isset($address['privacy']))); ?>>
+					    <?php echo Language::translate("Privacy Policy","Aviso de Privacidad"); ?>
+					  </label>
+					</div>
+				</div>
+
+				<div class="well">
+					<div class="left">
+						<button type="button" class="btn btn-lg btn-primary" onclick="$rdks.checkout.back('#step-1');"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> <?php echo Language::translate("Back","Regresar"); ?></button>
+					</div>
+					<div class="right">
+						<button type="button" class="btn btn-lg btn-primary" onclick="$rdks.checkout.submit(this);"><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> <?php echo Language::translate("Next","Siguiente"); ?></button>
+					</div>
+					<div class="clear"></div>
+				</div>
+				
+			</div>
+			<div id="step-3" class="rdks-checkout-step">
+
+				<div class="row">
+					
+					<div class="col-md-6">
+						<h1><?php echo Language::translate("Choose a payment option","Elige una opción de pago"); ?></h1>
+						<ul class="list-group">
+						<?php $p = 0; foreach($paymentsOptions as $payment => $message): $p++; ?>
+							<li class="list-group-item">
+								<div class="radio">
+								  <label>
+								    <input type="radio" name="payment_option" value="<?php echo $payment; ?>" onclick="$rdks.checkout.payment(this,'#payment-info','#<?php echo $payment; ?>',<?php echo Template::equals($message['details'],true,'true','false'); ?>);"<?php echo Template::conditional((isset($address['payment_option']) && $address['payment_option'] == $payment), ' checked'); ?>>
+								    <?php echo $message['title'][$_LANG]; ?>
+								  </label>
+								</div>
+								<div id="<?php echo $payment; ?>" style="display:none;">
+									<?php echo $message['description'][$_LANG]; ?>
+								</div>
+							</li>	
+						<?php endforeach; ?>
+						</ul>
+
+						<div class="left"><h1><span id="coupon-icon" class="glyphicon glyphicon-<?php echo Template::conditional((isset($address['coupon']) && !empty($address['coupon'])),'ok','tag'); ?>" aria-hidden="true"></span> <?php echo Language::translate("Coupon","Cupón"); ?></h1></div>
+						<div class="left ml-20"><h1><button id="coupon-remove" type="button" class="btn btn-sm btn-danger" onclick="$rdks.checkout.coupon(this, false);" style="display:<?php echo Template::conditional((isset($address['coupon']) && !empty($address['coupon'])),'block','none'); ?>"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> <?php echo Language::translate("Remove","Eliminar"); ?></button></h1></div>
+						<div class="clear"></div>
+
+						<div class="rdks-checkout-coupon">
+							<span class="glyphicon glyphicon-scissors" aria-hidden="true"></span>
+							<div class="left w80"><input type="text" id="coupon" name="coupon" placeholder="<?php echo Language::translate("Type your coupon here","Escribe tu cupón aquí"); ?> ..." data-type="coupon" value="<?php echo (isset($address['coupon']) && !empty($address['coupon'])) ? $address['coupon'] : ''; ?>" /></div>
+							<div class="right w20"><button type="button" class="btn btn btn-default" onclick="$rdks.checkout.coupon(this, true);"><?php echo Language::translate("Validate","Canjear"); ?></button></div>
+							<div class="clear"></div>
+						</div>
+
+					</div>
+
+					<div class="col-md-6">
+						<h1>&nbsp;</h1>
+						<div id="payment-info" class="well" style="display:none;">
+						</div>
+					</div>					
+					
+				</div><!-- .row -->
+
+				<hr />
+
+				<div class="well">
+					<div class="left">
+						<button type="button" class="btn btn-lg btn-primary" onclick="$rdks.checkout.back('#step-2');"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> <?php echo Language::translate("Back","Regresar"); ?></button>
+					</div>					
+					<div class="right">
+						<button id="rdks-checkout-submit" type="submit" class="btn btn-lg btn-warning"><span class="glyphicon glyphicon-credit-card" aria-hidden="true"></span> <?php echo Language::translate("Checkout","Efectuar Pago"); ?></button>
+					</div>
+					<div class="clear"></div>
+				</div>
+
+			</div>
+
+		<div style="display: none;">
+			<input type="checkbox" id="checkout" name="checkout" value="1" />
+		</div>
+		</form>	
+		</div><!-- .pd-20 -->
+
+	</div><!-- .w70 -->
+	<div class="right w30" style="padding-left: 10px;">
+		<div id="rdks-cart-counter">
+		<?php Block::load("cart/counter"); ?>
+		</div>
+		<table id="rdks-cart-grid" class="rdks-table">
+			<?php Block::load("cart/totals"); ?>
+		</table>
+	</div><!-- .w30 -->
+	<div class="clear"></div>
+</div>

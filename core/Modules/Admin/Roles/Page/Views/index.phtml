@@ -1,0 +1,25 @@
+<?php 
+use Roducks\Framework\URL; 
+use Roducks\Framework\Login; 
+?>
+<div class="container-fluid">
+	<div class="box-white">
+
+		<?php foreach ($roles as $type => $role): ?>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="well">
+					<div class="left">
+						<h1 style="margin:0;"><span class="glyphicon glyphicon-<?php echo $role['icon']; ?>" aria-hidden="true"></span> <?php echo $role['title']; ?></h1>
+					</div>
+					<div class="right">
+						<a href="<?php echo URL::build($role['url'], ['type' => $type]); ?>" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> <?php echo TEXT_EDIT; ?></a>
+					</div>
+					<div class="clear"></div>
+				</div><!-- .well -->
+			</div><!-- .col-md-6 -->
+		</div><!-- .row -->
+		<?php endforeach; ?>
+	</div>
+</div>
+ 
