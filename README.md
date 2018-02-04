@@ -7,7 +7,7 @@
 * PHP Version >= 5.5.x
 * MySQL version >= 5.6.x
 * An Apache service running.
-* An MySQL service running.
+* A MySQL service running.
 
 # Installation steps:
 
@@ -17,10 +17,10 @@
 
 4. Add 2 virtual hosts of your “Domain Name”, One for Front-End and other for Back-End `Admin` in your hosts file `This varies depending of your OS`, for example:
 ```
-127.0.0.1	local.yoursite.dev
-127.0.0.1	admin.local.yoursite.dev
+127.0.0.1	local.yoursite.test
+127.0.0.1	admin.local.yoursite.test
 ```
-**Note** Don’t forget to replace “yoursite.dev” by your own “Domain Name”.
+**Note** Don’t forget to replace “yoursite.test” by your own “Domain Name”.
 
 5. Configure those virtual hosts in the vhosts file of your local server `This varies depending what local server you installed`.
 6. Restart Apache service.
