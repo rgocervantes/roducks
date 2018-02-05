@@ -67,7 +67,7 @@ spl_autoload_register(function($class){
         if(!$isEvent)
             include_once $realPath;
 
-		if(!class_exists($className)) {
+		if(!class_exists($className) && !preg_match('#Interfaces#', $className)) {
             if(php_sapi_name() != "cli"){
                 echo $className;
                 if(!$isEvent)
