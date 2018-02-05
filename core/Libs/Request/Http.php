@@ -127,6 +127,8 @@ class Http{
 	}
 
 	static function getRequestHeader($name){
+		$name = str_replace('-', '_', $name);
+
 		return @$_SERVER['HTTP_X_'.strtoupper($name)];
 	}
 

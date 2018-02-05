@@ -64,6 +64,11 @@ class Api extends Service
 		parent::output(false);
 	}
 
+	protected function getHeader($name)
+	{
+		return Http::getRequestHeader($name);
+	}
+
 	protected function generateToken($timeout = 3600, array $data = [], $leeway = 720000)
 	{
 
