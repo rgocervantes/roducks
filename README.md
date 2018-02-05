@@ -1,10 +1,10 @@
-# Roducks Instructions
+<img src="http://roducks.possible-development.com/wp-content/uploads/2017/10/roducks_logo_home.png" />
 
 # Requisites:
 
 * Git installed in your machine.
 * A Local Server installed in your machine like XAMPP, LAMP, WAMP or your favorite.
-* PHP Version >= 5.5.x
+* PHP Version >= 7.0.x
 * MySQL version >= 5.6.x
 * An Apache service running.
 * A MySQL service running.
