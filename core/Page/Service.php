@@ -39,12 +39,4 @@ class Service extends JSON {
 
 	}
 
-	protected function apiMethod($option){
-
-		if(Http::getRequestMethod() != $option){
-			Http::sendMethodNotAllowed();
-		}
-
-	}
-
 }
