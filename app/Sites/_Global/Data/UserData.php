@@ -20,7 +20,7 @@
 
 namespace App\Sites\_Global\Data;
 
-use Roducks\framework\EAV;
+use Roducks\Framework\EAV;
 use App\Models\Users\Users;
 
 class UserData extends EAV{

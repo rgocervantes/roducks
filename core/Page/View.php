@@ -333,7 +333,7 @@ final class View{
 				}
 
 				if($scripts){
-					echo "\n\n<script type=\"text/javascript\">\n";
+					echo "<script type=\"text/javascript\">\n";
 					Asset::includeInLine($this->assets->getScriptsInline(),$this->_data);
 					Asset::includeOnReady($this->assets->getScriptsOnReady(),$this->_data);
 					echo "</script>\n";

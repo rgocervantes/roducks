@@ -295,6 +295,45 @@ return [
 			]
 		]
 	],
+	/*
+	|---------------------------------
+	|				POSTS
+	|---------------------------------
+	*/
+	'/posts' => [
+		'path' => [
+			/**
+			 *	Post
+			 */
+			'/add/category/id/(?P<categoryId>\d+)' => [
+				'dispatch' => Dispatch::page("posts", "addPost")
+			],
+			'/edit/id/(?P<postId>\d+)' => [
+				'dispatch' => Dispatch::page("posts", "editPost")
+			],
+			/**
+			 *	Categories
+			 */
+			'/categories/listing' => [
+				'dispatch' => Dispatch::page("posts", "list-categories"),
+				'GET' => [
+					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
+				]
+			],
+			'/categories/id/(?P<categoryId>\d+)' => [
+				'dispatch' => Dispatch::page("posts", "by-category-id"),
+				'GET' => [
+					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
+				]
+			],
+			'/categories/add' => [
+				'dispatch' => Dispatch::page("posts", "addCategory")
+			],	
+			'/categories/edit/id/(?P<categoryId>\d+)' => [
+				'dispatch' => Dispatch::page("posts", "editCategory")
+			]
 
+		]
+	],
 ];
 
