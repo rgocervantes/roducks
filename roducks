@@ -61,7 +61,7 @@ if($mode) {
 $environment = [
 	'errors' => false,
 	'subdomain' => "www",
-	'site' => "front",
+	'site' => "Front",
 	'mode' => Environment::CLI,
 	'database' => $database
 ];

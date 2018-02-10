@@ -23,4 +23,6 @@ namespace Roducks\Interfaces;
 Interface JSONInterface
 {
 	public function __construct(array $settings);
+
+	public function getData();
 }

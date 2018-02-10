@@ -33,7 +33,7 @@ class Api extends Service
 
 	const API_VERSION = "1.0";
 
-	protected $_jwt = [];
+	private $_jwt = [];
 
 	public function version()
 	{
