@@ -391,8 +391,21 @@ class Query {
 		}			
 
 		if(isset($args['orderby'])){
-			$orderby = array_keys($args['orderby'])[0];
-			$ret .= " ORDER BY ".$orderby." ".strtoupper($args['orderby'][$orderby]);
+
+			if(isset($args['orderby']['fields']) && isset($args['orderby']['sort'])) {
+				$orderby = $args['orderby']['fields'];
+				$sortby = $args['orderby']['sort'];
+			} else {
+				$orderby = array_keys($args['orderby'])[0];
+				$sortby = $args['orderby'][$orderby];
+			}
+
+			$sortby = strtoupper($sortby);
+
+			if(in_array($sortby, ['ASC','DESC'])) {
+				$ret .= " ORDER BY ".self::_prepareFields($orderby)." ".$sortby;
+			}
+
 		}
 
 		return $ret;
@@ -694,6 +707,7 @@ class Query {
 
 	public function where(array $condition = []){
 		$this->_condition = $condition;
+		return $this;
 	}
 
 	public function having(array $args){
@@ -706,10 +720,40 @@ class Query {
 		return $this;		
 	}
 
-	public function orderBy($field){
+	public function orderBy($field, $sort = ""){
+
+		if(is_array($field) && count($field) > 1 && !empty($sort)) {
+			$field = ['fields' => $field, 'sort' => $sort];
+		}
+
 		$this->_filter['orderby'] = $field;
 		return $this;		
-	}	
+	}
+
+	public function limit($page = 1, $limit = 50){
+		$this->_filter['page'] = $page;
+		$this->_filter['limit'] = $limit;
+		return $this;
+	}
+
+	public function paginate($fields = "*"){
+
+		if(count($this->_condition) > 0) {
+			$this->_filter['condition'] = $this->_condition;
+		}
+
+		if(!isset($this->_filter['page'])) {
+			$this->_filter['page'] = 1;
+		}
+
+		if(!isset($this->_filter['limit'])) {
+			$this->_filter['limit'] = 50;
+		}
+
+		$this->filter($this->_filter, $fields);
+
+		return $this;
+	}
 
 	public function pagination(array $condition, array $orderby, $page, $limit, $fields = "*"){
 
