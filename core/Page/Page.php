@@ -95,7 +95,7 @@ class Page extends GenericPage {
 		$dir_languages = Core::getLanguagesPath($lang);
 		$set = true;
 
-		if(file_exists($dir_languages)){
+		if(\App::fileExists($dir_languages)){
 			
 			if(Language::isMultilanguage()){
 				$set = Language::set($lang);
