@@ -740,7 +740,7 @@ class Dispatch{
 						$method = 'row';
 						unset($params['request']);
 					} else {
-						$method = 'get-all';
+						$method = 'catalog';
 					}
 
 				}

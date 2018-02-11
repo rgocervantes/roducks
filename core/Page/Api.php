@@ -21,6 +21,7 @@
 namespace Roducks\Page;
 
 use Roducks\Libs\Request\Http;
+use Roducks\Framework\Router;
 use Firebase\JWT\JWT;
 
 class Api extends Service 
@@ -34,6 +35,11 @@ class Api extends Service
 	const API_VERSION = "1.0";
 
 	private $_jwt = [];
+
+	static function router($version, $callback)
+	{
+		return ['path' => $callback(new Router($version))];
+	}
 
 	public function version()
 	{
