@@ -30,7 +30,7 @@ Interface ApiInterface
 	/**
 	 * @type GET
 	 */
-	public function getAll(\stdClass $request);
+	public function catalog(\stdClass $request);
 
 	/**
 	 * @type POST
