@@ -18,10 +18,11 @@
  *
  */
 
-namespace Roducks\Page;
+namespace Roducks\Api;
 
 use Roducks\Libs\Request\Http;
 use Roducks\Framework\Router;
+use Roducks\Page\Service;
 use Firebase\JWT\JWT;
 
 class Api extends Service 
