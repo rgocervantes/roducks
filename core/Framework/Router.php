@@ -23,68 +23,129 @@ namespace Roducks\Framework;
 class Router
 {
 
-	private $_version,
-			$_dispatch = [];
+	static 
+		$_jwt = false,
+		$_version = "",
+		$_dispatch = [];
 
-	private function _method($type, $token, $endpoint, $dispatch, $params)
+	static function init($routes)
 	{
-		list($class, $method) = explode("::", $dispatch);
+		$routes();
+	}
+
+	static function dispatch()
+	{
+		return self::$_dispatch;
+	}
+
+	static function _add($endpoint, $data)
+	{
+
+		if(is_array($endpoint)){
+			if(isset($endpoint['uri']) && isset($endpoint['id'])) {
+				$key = array_keys($endpoint['uri'])[0];
+				$endpoint = array_values($endpoint['uri'])[0] . $endpoint['id'];
+			} else {
+				$key = array_keys($endpoint)[0];
+				$endpoint = array_values($endpoint)[0];
+			}
+
+		} else {
+			$key = $endpoint;
+		}
+
+		if(preg_match('/@/', $key)) {
+			list($aux, $path) = explode("@", $key);
+
+			if($endpoint == "/"){
+				self::$_dispatch[self::$_version.$path] = $data;
+			} else {
+				self::$_dispatch[$path]['path'][self::$_version.$endpoint] = $data;
+			}
+			 
+
+		} else {
+			self::$_dispatch[self::$_version.$endpoint] = $data;
+		}
+
+	}
+
+	static function _method($type, $token, $endpoint, $dispatch, $params = "")
+	{
 
 		$data = [
-			'dispatch' => Dispatch::api($class, $method),
-			$type => $params()
+			'dispatch' => $dispatch
 		];
+
+		if (is_callable($params)) {
+			if ($type == 'GET_POST') {
+				$p = $params();
+				$data['GET'] = $p['GET'];
+				$data['POST'] = $p['POST'];
+			} else {
+				$data[$type] = $params();
+			}
+		}
 
 		if ($token) {
 			$data['jwt'] = true;
 		}
 
-		$this->_dispatch["/{$this->_version}{$endpoint}"] = $data;
+		self::_add($endpoint, $data);		
 	}
 
-	public function __construct($version)
+	static function auth($endpoint, $dispatch, $params)
 	{
-		$this->_version = $version;
+		self::_method('POST', false, $endpoint, $dispatch, $params);
 	}
 
-	public function auth($endpoint, $dispatch, $params)
+	static function post($endpoint, $dispatch, $params = "")
 	{
-		$this->_method('POST', false, $endpoint, $dispatch, $params);
+		self::_method('POST', self::$_jwt, $endpoint, $dispatch, $params);
 	}
 
-	public function post($endpoint, $dispatch, $params)
+	static function get($endpoint, $dispatch, $params = "")
 	{
-		$this->_method('POST', true, $endpoint, $dispatch, $params);
+		self::_method('GET', self::$_jwt, $endpoint, $dispatch, $params);
 	}
 
-	public function get($endpoint, $dispatch, $params)
+	static function get_post($endpoint, $dispatch, $params = "")
 	{
-		$this->_method('GET', true, $endpoint, $dispatch, $params);
+		self::_method('GET_POST', self::$_jwt, $endpoint, $dispatch, $params);
 	}
 
-	public function put($endpoint, $dispatch, $params)
+	static function put($endpoint, $dispatch, $params)
 	{
-		$this->_method('PUT', true, $endpoint, $dispatch, $params);
+		self::_method('PUT', self::$_jwt, $endpoint, $dispatch, $params);
 	}
 
-	public function delete($endpoint, $dispatch, $params)
+	static function delete($endpoint, $dispatch, $params = "")
 	{
-		$this->_method('DELETE', true, $endpoint, $dispatch, $params);
+		self::_method('DELETE', self::$_jwt, $endpoint, $dispatch, $params);
 	}
 
-	public function api($endpoint, $dispatch, $params)
+	static function api($endpoint, $dispatch, $params)
 	{
 		$path1 = [
-			'dispatch' => Dispatch::api($dispatch),
+			'dispatch' => $dispatch,
 			'jwt' => true
 		];
 
 		$path2 = [
-			'dispatch' => Dispatch::api($dispatch),
+			'dispatch' => $dispatch,
 			'jwt' => true
 		];
 
-		foreach ($params() as $key => $value) {
+		$methods = $params();
+		$options = ['catalog', 'store', 'update', 'row', 'remove'];
+
+		foreach ($options as $option) {
+			if(!isset($methods[$option])){
+				$methods[$option] = [];
+			}
+		}
+
+		foreach ($methods as $key => $value) {
 			switch ($key) {
 				case 'catalog':
 					$path1['GET'] = $value;
@@ -104,14 +165,21 @@ class Router
 			}
 		}
 
-		$this->_dispatch["/{$this->_version}{$endpoint}"] = $path1;
-		$this->_dispatch["/{$this->_version}{$endpoint}/(?P<id>\d+)"] = $path2;
-
+		self::_add($endpoint, $path1);
+		self::_add(['uri' => $endpoint, 'id' => "/(?P<id>\d+)"], $path2);
 	}
 
-	public function dispatch()
+	static function path($uri, $callback, $version = "", $jwt = false)
 	{
-		return $this->_dispatch;
+		if (!empty($version)) {
+			self::$_version = "/{$version}";
+		} else {
+			self::$_version = "";
+		}
+
+		self::$_jwt = $jwt;
+
+		$callback("path@{$uri}");
 	}
 
 }

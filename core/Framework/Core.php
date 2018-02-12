@@ -288,7 +288,11 @@ class Core{
 		}
 
 		if($fileExists){
-			return include $realPath;
+			if ($name == "router") {
+				include $realPath;
+			} else {
+				return include $realPath;
+			}
 		} else {
 			if ($required) {
 				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $path);
@@ -341,7 +345,7 @@ class Core{
 	}
 
 	static function getRouterFile(){
-		return self::getSiteConfigFile("router");
+		self::getFileVar(self::getSiteConfigPath("router"), "router", true);
 	}
 
 	static function getModulesFile(){

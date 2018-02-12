@@ -18,6 +18,7 @@
  *
  */
 
+use Roducks\Framework\Router;
 use Roducks\Framework\Dispatch;
 use Roducks\Framework\Helper;
 use Roducks\Framework\Login;
@@ -27,74 +28,64 @@ use App\Sites\Admin\Modules\Subscribers\Helper\Subscribers;
 use App\Sites\Admin\Modules\Roles\Helper\Roles;
 use App\Sites\Admin\Modules\Clients\Helper\Clients;
 
-return [
+Router::init(function() {
+
 	/*
 	|---------------------------------
-	|			  DASHBOARD
+	|				DASHBOARD
 	|---------------------------------
 	*/
-	'/' => [
-		'dispatch' => Dispatch::page("dashboard", "index")
-	],	
+	Router::get('/', Dispatch::page("dashboard", "index"));
+
 	/*
 	|---------------------------------
 	|				AUTH
 	|---------------------------------
 	*/
-	'/auth' => [
-		'dispatch' => Dispatch::service("auth", "login-admin"),
-		'POST' => [
+	Router::post('/auth', Dispatch::service("auth", "login-admin"), function() {
+		return [
 			'email' => Dispatch::PARAM_EMAIL,
 			'password' => Dispatch::PARAM_PASSWORD
-		]
-	],	
-	'/login' => [
-		'dispatch' => Dispatch::page("login", "login")
-	],
-	'/logout' => [
-		'dispatch' => Dispatch::page("login", "logout")
-	],	
+		];
+	});
+
+	Router::get('/login', Dispatch::page("login", "login"));
+	Router::get('/logout', Dispatch::page("login", "logout"));
+
 	/*
 	|---------------------------------
 	|				ROLES
 	|---------------------------------
 	*/
-	Role::URL => [
-		'dispatch' => Dispatch::page("roles", "index"),
-		'path' => [
+	Router::path(Role::URL, function($path) {
 
-			'/list' => [
-				'dispatch' => Dispatch::page("roles", "listing"),
-				'GET' => [
-					'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
-					'type' => [Dispatch::PARAM_INTEGER => Dispatch::values(Roles::getIds())]
-				]
-			],	
-			'/add' => [
-				'dispatch' => Dispatch::page("roles", "add")
-			],
-			'/edit/id/(?P<roleId>\d+)' => [
-				'dispatch' => Dispatch::page("roles", "edit")
-			]
+		Router::get([$path => '/'], Dispatch::page("roles", "index"));
+		Router::get([$path => '/list'], Dispatch::page("roles", "listing"), function() {
+			return [
+				'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
+				'type' => [Dispatch::PARAM_INTEGER => Dispatch::values(Roles::getIds())]
+			];		
+		});
+		Router::get([$path => '/add'], Dispatch::page("roles", "add"));
+		Router::get([$path => '/edit/id/(?P<roleId>\d+)'], Dispatch::page("roles", "edit"));
+	});
 
-		]
-	],
 	/*
 	|---------------------------------
 	|				USERS
 	|---------------------------------
 	*/
-	Users::URL => [
-		'dispatch' => Dispatch::page("users", "index"),
-		'GET' => [
-			'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
-			'tree' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])],
-			'trash' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])]
-		],		
-		'path' => [
+	Router::path(Users::URL, function($path) {
 
-			'/search' => [
-				'dispatch' => Dispatch::page("users", "index"),
+		Router::get([$path => '/'], Dispatch::page("users", "index"), function() {
+			return [
+				'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
+				'tree' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])],
+				'trash' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])]
+			];
+		});
+		Router::get_post([$path => '/search'], Dispatch::page("users", "index"), function() {
+			return [
 				'GET' => [
 					'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'trash' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])]
@@ -106,42 +97,31 @@ return [
 					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					':empty' => Dispatch::page("users", "reset-filter")						
 				]
-			],
-			'/picture(/id/(?P<userId>\d+))?' => [
-				'dispatch' => Dispatch::page("users", "picture")
-			],
-			'/add' => [
-				'dispatch' => Dispatch::page("users", "add")
-			],
-			'/edit(/id/(?P<userId>\d+))?' => [
-				'dispatch' => Dispatch::page("users", "edit")
-			],
-			'/change-password' => [
-				'dispatch' => Dispatch::page("users", "change-password")
-			],
-			'/reset-password/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("users", "reset-password")
-			],
-			'/reset-filter' => [
-				'dispatch' => Dispatch::page("users", "reset-filter")
-			],	
-			'/reset-logs/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("users", "reset-logs")
-			],
-			'/logs' => [
-				'dispatch' => Dispatch::page("users", "logs"),
-				'GET' => [
-					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
-				]
-			],	
-			'/logs/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("users", "logs"),
-				'GET' => [
-					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
-				]
-			],			
-			'/logs/datepicker/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("users", "logs"),
+			];		
+		});
+
+		Router::get([$path => '/picture(/id/(?P<userId>\d+))?'], Dispatch::page("users", "picture"));
+		Router::get([$path => '/add'], Dispatch::page("users", "add"));
+		Router::get([$path => '/edit(/id/(?P<userId>\d+))?'], Dispatch::page("users", "edit"));
+		Router::get([$path => '/change-password'], Dispatch::page("users", "change-password"));
+		Router::get([$path => '/reset-password/id/(?P<userId>\d+)'], Dispatch::page("users", "reset-password"));
+		Router::get([$path => '/reset-filter'], Dispatch::page("users", "reset-filter"));
+		Router::get([$path => '/reset-logs/id/(?P<userId>\d+)'], Dispatch::page("users", "reset-logs"));
+
+		Router::get([$path => '/logs'], Dispatch::page("users", "logs"), function() {
+			return [
+				'page' => Dispatch::OPTIONAL_PARAM_INTEGER
+			];
+		});
+
+		Router::get([$path => '/logs/id/(?P<userId>\d+)'], Dispatch::page("users", "logs"), function() {
+			return [
+				'page' => Dispatch::OPTIONAL_PARAM_INTEGER
+			];
+		});
+
+		Router::get_post([$path => '/logs/datepicker/id/(?P<userId>\d+)'], Dispatch::page("users", "logs"), function() {
+			return [
 				'GET' => [
 					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
 				],				
@@ -150,25 +130,27 @@ return [
 					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					':empty' => Dispatch::page("users", "reset-filter")
 				]
-			]
-		]
-	],
+			];		
+		});
+
+	});
+
 	/*
 	|---------------------------------
 	|				SUBSCRIBERS
 	|---------------------------------
 	*/
-	Subscribers::URL => [
-		'dispatch' => Dispatch::page("subscribers", "index"),
-		'GET' => [
-			'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
-			'tree' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])],
-			'trash' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])]
-		],
-		'path' => [
+	Router::path(Subscribers::URL, function($path) {
 
-			'/search' => [
-				'dispatch' => Dispatch::page("subscribers", "index"),
+		Router::get([$path => '/'], Dispatch::page("subscribers", "index"), function() {
+			return [
+				'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
+				'tree' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])],
+				'trash' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])]
+			];
+		});
+		Router::get_post([$path => '/search'], Dispatch::page("subscribers", "index"), function() {
+			return [
 				'GET' => [
 					'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'trash' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])]
@@ -178,41 +160,33 @@ return [
 					'id_user' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'start_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					':empty' => Dispatch::page("subscribers", "reset-filter")
+					':empty' => Dispatch::page("subscribers", "reset-filter")						
 				]
-			],		
-			'/picture/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("subscribers", "picture")
-			],
-			'/add' => [
-				'dispatch' => Dispatch::page("subscribers", "add")
-			],
-			'/edit/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("subscribers", "edit")
-			],
-			'/change-password' => [
-				'dispatch' => Dispatch::page("subscribers", "change-password")
-			],
-			'/reset-password/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("subscribers", "reset-password")
-			],
-			'/reset-filter' => [
-				'dispatch' => Dispatch::page("subscribers", "reset-filter")
-			],	
-			'/reset-logs/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("subscribers", "reset-logs")
-			],			
-			'/logs' => [
-				'dispatch' => Dispatch::page("subscribers", "logs"),
-				'GET' => [
-					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
-				]
-			],	
-			'/logs/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("subscribers", "logs")
-			],
-			'/logs/datepicker/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("subscribers", "logs"),
+			];		
+		});
+
+		Router::get([$path => '/picture(/id/(?P<userId>\d+))?'], Dispatch::page("subscribers", "picture"));
+		Router::get([$path => '/add'], Dispatch::page("subscribers", "add"));
+		Router::get([$path => '/edit(/id/(?P<userId>\d+))?'], Dispatch::page("subscribers", "edit"));
+		Router::get([$path => '/change-password'], Dispatch::page("subscribers", "change-password"));
+		Router::get([$path => '/reset-password/id/(?P<userId>\d+)'], Dispatch::page("subscribers", "reset-password"));
+		Router::get([$path => '/reset-filter'], Dispatch::page("subscribers", "reset-filter"));
+		Router::get([$path => '/reset-logs/id/(?P<userId>\d+)'], Dispatch::page("subscribers", "reset-logs"));
+
+		Router::get([$path => '/logs'], Dispatch::page("subscribers", "logs"), function() {
+			return [
+				'page' => Dispatch::OPTIONAL_PARAM_INTEGER
+			];
+		});
+
+		Router::get([$path => '/logs/id/(?P<userId>\d+)'], Dispatch::page("subscribers", "logs"), function() {
+			return [
+				'page' => Dispatch::OPTIONAL_PARAM_INTEGER
+			];
+		});
+
+		Router::get_post([$path => '/logs/datepicker/id/(?P<userId>\d+)'], Dispatch::page("subscribers", "logs"), function() {
+			return [
 				'GET' => [
 					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
 				],				
@@ -221,25 +195,27 @@ return [
 					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					':empty' => Dispatch::page("subscribers", "reset-filter")
 				]
-			]
-		]
-	],
+			];		
+		});
+
+	});
+
 	/*
 	|---------------------------------
-	|				SUBSCRIBERS
+	|				CLIENTS
 	|---------------------------------
 	*/
-	Clients::URL => [
-		'dispatch' => Dispatch::page("clients", "index"),
-		'GET' => [
-			'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
-			'tree' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])],
-			'trash' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])]
-		],
-		'path' => [
+	Router::path(Clients::URL, function($path) {
 
-			'/search' => [
-				'dispatch' => Dispatch::page("clients", "index"),
+		Router::get([$path => '/'], Dispatch::page("clients", "index"), function() {
+			return [
+				'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
+				'tree' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])],
+				'trash' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])]
+			];
+		});
+		Router::get_post([$path => '/search'], Dispatch::page("clients", "index"), function() {
+			return [
 				'GET' => [
 					'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'trash' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])]
@@ -249,41 +225,33 @@ return [
 					'id_user' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'start_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					':empty' => Dispatch::page("clients", "reset-filter")		
+					':empty' => Dispatch::page("clients", "reset-filter")						
 				]
-			],		
-			'/picture/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("clients", "picture")
-			],
-			'/add' => [
-				'dispatch' => Dispatch::page("clients", "add")
-			],
-			'/edit/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("clients", "edit")
-			],
-			'/change-password' => [
-				'dispatch' => Dispatch::page("clients", "change-password")
-			],
-			'/reset-password/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("clients", "reset-password")
-			],
-			'/reset-filter' => [
-				'dispatch' => Dispatch::page("clients", "reset-filter")
-			],	
-			'/reset-logs/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("clients", "reset-logs")
-			],			
-			'/logs' => [
-				'dispatch' => Dispatch::page("clients", "logs"),
-				'GET' => [
-					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
-				]
-			],	
-			'/logs/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("clients", "logs")
-			],
-			'/logs/datepicker/id/(?P<userId>\d+)' => [
-				'dispatch' => Dispatch::page("clients", "logs"),
+			];		
+		});
+
+		Router::get([$path => '/picture(/id/(?P<userId>\d+))?'], Dispatch::page("clients", "picture"));
+		Router::get([$path => '/add'], Dispatch::page("clients", "add"));
+		Router::get([$path => '/edit(/id/(?P<userId>\d+))?'], Dispatch::page("clients", "edit"));
+		Router::get([$path => '/change-password'], Dispatch::page("clients", "change-password"));
+		Router::get([$path => '/reset-password/id/(?P<userId>\d+)'], Dispatch::page("clients", "reset-password"));
+		Router::get([$path => '/reset-filter'], Dispatch::page("clients", "reset-filter"));
+		Router::get([$path => '/reset-logs/id/(?P<userId>\d+)'], Dispatch::page("clients", "reset-logs"));
+
+		Router::get([$path => '/logs'], Dispatch::page("clients", "logs"), function() {
+			return [
+				'page' => Dispatch::OPTIONAL_PARAM_INTEGER
+			];
+		});
+
+		Router::get([$path => '/logs/id/(?P<userId>\d+)'], Dispatch::page("clients", "logs"), function() {
+			return [
+				'page' => Dispatch::OPTIONAL_PARAM_INTEGER
+			];
+		});
+
+		Router::get_post([$path => '/logs/datepicker/id/(?P<userId>\d+)'], Dispatch::page("clients", "logs"), function() {
+			return [
 				'GET' => [
 					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
 				],				
@@ -292,48 +260,10 @@ return [
 					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					':empty' => Dispatch::page("clients", "reset-filter")
 				]
-			]
-		]
-	],
-	/*
-	|---------------------------------
-	|				POSTS
-	|---------------------------------
-	*/
-	'/posts' => [
-		'path' => [
-			/**
-			 *	Post
-			 */
-			'/add/category/id/(?P<categoryId>\d+)' => [
-				'dispatch' => Dispatch::page("posts", "addPost")
-			],
-			'/edit/id/(?P<postId>\d+)' => [
-				'dispatch' => Dispatch::page("posts", "editPost")
-			],
-			/**
-			 *	Categories
-			 */
-			'/categories/listing' => [
-				'dispatch' => Dispatch::page("posts", "list-categories"),
-				'GET' => [
-					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
-				]
-			],
-			'/categories/id/(?P<categoryId>\d+)' => [
-				'dispatch' => Dispatch::page("posts", "by-category-id"),
-				'GET' => [
-					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
-				]
-			],
-			'/categories/add' => [
-				'dispatch' => Dispatch::page("posts", "addCategory")
-			],	
-			'/categories/edit/id/(?P<categoryId>\d+)' => [
-				'dispatch' => Dispatch::page("posts", "editCategory")
-			]
+			];		
+		});
 
-		]
-	],
-];
+	});
+
+});
 

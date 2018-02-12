@@ -32,19 +32,41 @@ class Api extends Service
 	const JWT_ISS = "http://example.org";
 	const JWT_AUD = "http://example.com";
 
-	const API_VERSION = "1.0";
-
 	private $_jwt = [];
 
-	static function router($version, $callback)
+	static function router($uri, $version, $callback)
 	{
-		return ['path' => $callback(new Router($version))];
+		Router::path($uri, $callback, $version, true);
 	}
 
-	public function version()
+	static function auth($endpoint, $dispatch, $params)
 	{
-		$this->data("version", static::API_VERSION);
-		$this->output();
+		Router::auth($endpoint, $dispatch, $params);
+	}
+
+	static function endpoint($endpoint, $dispatch, $params)
+	{
+		Router::api($endpoint, $dispatch, $params);
+	}
+
+	static function get($endpoint, $dispatch, $params)
+	{
+		Router::get($endpoint, $dispatch, $params);
+	}
+
+	static function post($endpoint, $dispatch, $params)
+	{
+		Router::post($endpoint, $dispatch, $params);
+	}
+
+	static function put($endpoint, $dispatch, $params)
+	{
+		Router::put($endpoint, $dispatch, $params);
+	}
+
+	static function delete($endpoint, $dispatch, $params)
+	{
+		Router::delete($endpoint, $dispatch, $params);
 	}
 
 	protected function setError($code, $msg)

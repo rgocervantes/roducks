@@ -258,7 +258,8 @@ class Dispatch{
 		/* ------------------------------------*/
 		/* 		ROUTER URLS
 		/* ------------------------------------*/
-		$routers = Core::getRouterFile();
+		Core::getRouterFile();
+		$routers = Router::dispatch();
 		$routers['/static/images/[a-zA-Z0-9_\-\.\/]+'] = ['dispatch' => Helper::PAGE_NOT_FOUND . '::_media'];
 		$router['/_email/(?P<TEMPLATE>[a-z\-]+)'] = ['dispatch' => Helper::PAGE_NOT_FOUND . '::_email'];
 		$router['/_lang/(?P<LANG>\w{2}).*'] = ['dispatch' => Helper::PAGE_NOT_FOUND . '::_lang'];

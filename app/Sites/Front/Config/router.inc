@@ -18,89 +18,61 @@
  *
  */
 
+use Roducks\Framework\Router;
 use Roducks\Framework\Dispatch;
 use App\Sites\Front\Modules\Account\Helper\Account;
 
-return [
+Router::init(function() {
+
 	/*
 	|---------------------------------
 	|				FRONT
 	|---------------------------------
 	*/
-	'/' => [
-		'dispatch' => Dispatch::page("home","index")
-	],
-	'/contact-us' => [
-		'dispatch' => Dispatch::page("home","contact-us"),
-		'path' => [
-			'/submit' => [
-				'dispatch' => Dispatch::json("home","contact-us-submit")
-			]
-		]
-	],	
+	Router::get('/', Dispatch::page("home","index"));
+
+	Router::path('/contact-us', function($path) {
+
+		Router::get([$path => '/'], Dispatch::page("home","contact-us"));
+		Router::post([$path => '/submit'], Dispatch::json("home","contact-us-submit"));
+		
+	});
 	/*
 	|---------------------------------
 	|				AUTH
 	|---------------------------------
 	*/
-	'/auth' => [
-		'dispatch' => Dispatch::service("auth", "login-subscriber"),
-		'POST' => [
+	Router::post('/auth', Dispatch::service("auth", "login-subscriber"), function() {
+		return [
 			'email' => Dispatch::PARAM_EMAIL,
 			'password' => Dispatch::PARAM_PASSWORD
-		]
-	],	
-	'/login' => [
-		'dispatch' => Dispatch::page("login", "login")
-	],
-	'/logout' => [
-		'dispatch' => Dispatch::page("login", "logout")
-	],	
+		];
+	});
+
+	Router::get('/login', Dispatch::page("login", "login"));
+	Router::get('/logout', Dispatch::page("login", "logout"));
+
 	/*
 	|---------------------------------
 	|				ACOUNT
 	|---------------------------------
 	*/
-	Account::URL => [
-		'dispatch' => Dispatch::page("account","index"),
-		'path' => [
+	Router::path(Account::URL, function($path) {
 
-			'/edit' => [
-				'dispatch' => Dispatch::page("account","edit")
-			],
-			'/picture' => [
-				'dispatch' => Dispatch::page("account","picture")
-			],		
-			'/change-password' => [
-				'dispatch' => Dispatch::page("account","change-password")
-			],
-			'/create' => [
-				'dispatch' => Dispatch::page("home","create-account")
-			],				
-			'/insert' => [
-				'dispatch' => Dispatch::json("home","create-account")
-			],	
-			'/email' => [
-				'dispatch' => Dispatch::service("account","email-exists")
-			],	
-			'/check' => [
-				'dispatch' => Dispatch::service("account","account-exists")
-			],		
-			'/reset-password/token/[a-z0-9]+' => [
-				'dispatch' => Dispatch::page("home","reset-password")
-			],			
-			'/forgotten-password' => [
-				'dispatch' => Dispatch::page("home","forgotten-password")
-			],	
-			'/restore-password' => [
-				'dispatch' => Dispatch::json("home","restore-password")
-			],	
-			'/recover-password' => [
-				'dispatch' => Dispatch::json("home","recover-password")
-			]
+		Router::get([$path => '/'], Dispatch::page("account","index"));
+		Router::get([$path => '/edit'], Dispatch::page("account","edit"));
+		Router::get([$path => '/picture'], Dispatch::page("account","picture"));
+		Router::get([$path => '/change-password'], Dispatch::page("account","change-password"));
+		Router::get([$path => '/create'], Dispatch::page("home","create-account"));
+		Router::post([$path => '/insert'], Dispatch::json("home","create-account"));
+		Router::post([$path => '/email'], Dispatch::service("account","email-exists"));
+		Router::post([$path => '/check'], Dispatch::service("account","account-exists"));
+		Router::get([$path => '/reset-password/token/[a-z0-9]+'], Dispatch::page("home","reset-password"));
+		Router::get([$path => '/forgotten-password'], Dispatch::page("home","forgotten-password"));
+		Router::post([$path => '/restore-password'], Dispatch::json("home","restore-password"));
+		Router::post([$path => '/recover-password'], Dispatch::json("home","recover-password"));
 
-		]
-	]
+	});
 
-];
+});
 
