@@ -365,8 +365,8 @@ class Model extends Query{
 		return parent::rows();
 	}
 
-	public function select($fields = "*"){
-		return parent::filter([], $fields);
+	public function all(){
+		return parent::filter([]);
 	}
 
 	public function update($id = "", array $data = [], array $condition = []){
@@ -469,7 +469,7 @@ class Model extends Query{
 		return $this->count($this->id);
 	}
 
-	public function getUniques($field){
+	public function filteredBy($field){
 
 		$results = parent::distinct($field);
 		$ret = [];

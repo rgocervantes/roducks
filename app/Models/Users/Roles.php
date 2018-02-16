@@ -73,7 +73,10 @@ class Roles extends Model {
 				'type' => $type
 		];
 
-		return $this->pagination($condition, ['id_role' => "desc"], $page, $limit);
+        return $this
+        ->where($condition)
+        ->orderBy(['id_role' => "desc"])
+        ->paginate($page, $limit);
 
 	}
 

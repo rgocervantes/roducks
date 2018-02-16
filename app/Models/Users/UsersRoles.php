@@ -42,7 +42,7 @@ class UsersRoles extends Model {
 
 		$cond = (count($condition) > 0) ? array_merge($condition, $filter) : $filter;
 
-		$this->filter($cond, [self::field("u.id_user")]);
+		$this->select([self::field("u.id_user")])->filter($cond);
 
 		return $this->getTotalRows();
 	}
@@ -71,10 +71,12 @@ class UsersRoles extends Model {
 			self::field("r.config"),
 		];
 		
-		return $this->filter([
+		return $this
+		->select($fields)
+		->filter([
 				'u.email' => $email, 
 				'r.type' => $type
-		], $fields);
+		]);
 
 	}
 
@@ -99,8 +101,13 @@ class UsersRoles extends Model {
 			self::field("r.config"),
 		];
 
-		return $this->pagination($condition, ['u.id_user' => $sort], $page, $limit, $fields);
-	}			
+        return $this
+        ->select($fields)
+        ->where($condition)
+        ->orderBy(['u.id_user' => $sort])
+        ->paginate($page, $limit);
+
+	}
 
 	/**
 	*	@param $id_user integer				
@@ -116,9 +123,11 @@ class UsersRoles extends Model {
 			self::field("r.config"),
 		];
 
-		return $this->filter([
+		return $this
+		->select($fields)
+		->filter([
 			'u.id_user' => $id_user
-		], $fields);
+		]);
 
 	}
 

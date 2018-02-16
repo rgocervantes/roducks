@@ -75,6 +75,7 @@ class Query {
 		$_connection = null, 
 		$_totalPages = 1,
 		$_filter = [],
+		$_fields = [],
 		$_queryString = "",
 		$_table = "";	
 
@@ -574,9 +575,9 @@ class Query {
 	}
 
 	/**
-	 *
+	 *	Build query raw
 	 */
-	public function statment($statment){
+	public function query($statment){
 		return $this->_query($statment);
 	}
 
@@ -652,12 +653,25 @@ class Query {
 	}
 
 	/**
+	 *	@param $fields array
+	 *	@param this
+	 */
+	public function select(array $fields){
+		$this->_fields = $fields;
+		return $this;
+	}
+
+	/**
 	 *	@param $table string
 	 *	@param $arguments array	
 	 *	@param $fields string		
 	 *	@return resource
 	 */
 	public function filter(array $arguments = [], $fields = "*"){
+
+		if(count($this->_fields) > 0){
+			$fields = $this->_fields;
+		}
 
 		if(count($this->_filter) > 0) {
 			if(!isset($arguments['condition'])) {
@@ -730,13 +744,12 @@ class Query {
 		return $this;		
 	}
 
-	public function limit($page = 1, $limit = 50){
+	public function paginate($page = 1, $limit = 50){
+
+		$fields = "*";
+
 		$this->_filter['page'] = $page;
 		$this->_filter['limit'] = $limit;
-		return $this;
-	}
-
-	public function paginate($fields = "*"){
 
 		if(count($this->_condition) > 0) {
 			$this->_filter['condition'] = $this->_condition;
@@ -750,17 +763,9 @@ class Query {
 			$this->_filter['limit'] = 50;
 		}
 
-		$this->filter($this->_filter, $fields);
-
-		return $this;
-	}
-
-	public function pagination(array $condition, array $orderby, $page, $limit, $fields = "*"){
-
-		$this->_filter['condition'] = $condition;
-		$this->_filter['orderby'] = $orderby;
-		$this->_filter['page'] = $page;
-		$this->_filter['limit'] = $limit;									
+		if(count($this->_fields) > 0) {
+			$fields = $this->_fields;
+		}
 
 		$this->filter($this->_filter, $fields);
 
@@ -948,7 +953,7 @@ class Query {
 	 */
 	public function distinct($id, array $condition = []){
 		$where = $this->_where($condition);
-		return $this->filter($where, ["DISTINCT($id)"]);
+		return $this->select(["DISTINCT($id)"])->filter($where);
 	}
 
 	/**
@@ -967,7 +972,7 @@ class Query {
 	 *	@param $params array
 	 *	@return resource|bool
 	 */
-	public function callSP($name, array $params = []){
+	public function storedProcedure($name, array $params = []){
 
 		$values = [];
 
