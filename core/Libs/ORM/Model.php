@@ -365,8 +365,8 @@ class Model extends Query{
 		return parent::rows();
 	}
 
-	public function all(){
-		return parent::filter([]);
+	public function all($fields = "*"){
+		return parent::filter([], $fields);
 	}
 
 	public function update($id = "", array $data = [], array $condition = []){
