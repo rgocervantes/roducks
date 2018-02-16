@@ -460,6 +460,19 @@ class Query {
 		return self::NOW;
 	}
 
+	static function getPageFromOffset($offset, $limit){
+
+        $perPage = intval($limit);
+        $offset = intval($offset);
+        $page = 1;
+        
+        if($offset > 0 && $offset >= $perPage) {
+            $page = ($offset / $perPage) + 1;
+        }
+
+        return $page;
+	}
+
 /*
 //----------------------
 //		PRIVATE
