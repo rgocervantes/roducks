@@ -673,6 +673,10 @@ class Query {
 			$fields = $this->_fields;
 		}
 
+		if(count($this->_condition) > 0) {
+			$this->_filter['condition'] = $this->_condition;
+		}
+
 		if(count($this->_filter) > 0) {
 			if(!isset($arguments['condition'])) {
 				$arguments['condition'] = $arguments;
