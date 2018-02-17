@@ -58,7 +58,7 @@ cp app/Config/database.local.inc.sample app/Config/database.local.inc
 
 18. Run the command below to create the **Super Admin User**.
 ```
-time php roducks cmd=user:create env=dev email=<REPLACE_BY_YOUR_EMAIL> password=<REPLACE_BY_YOUR_PASSWORD>
+php roducks user:create --dev <YOUR_EMAIL> <YOUR_PASSWORD>
 ```
 19. Type in a Web Browser `http://admin.local.<YOUR_DOMAIN_NAME>` and Log In with your credentials to enter to Admin.
 20. Type in a Web Browser `http://local.<YOUR_DOMAIN_NAME>` to see the Front-End.
@@ -87,7 +87,7 @@ cp core/Data/Config/* app/Data/storage/json/roles/
 9. Edit file `app/Config/database.inc` and set data of your Database’s User and Password.
 10. Run the command below to create the **Super Admin User**.
 ```
-time php roducks cmd=user:create env=pro email=<REPLACE_BY_YOUR_EMAIL> password=<REPLACE_BY_YOUR_PASSWORD>
+php roducks user:create --pro <YOUR_EMAIL> <YOUR_PASSWORD>
 ```
 11. Type in a Web Browser `http://admin.<YOUR_DOMAIN_NAME>` and Log In with your credentials to enter to the Back-End.
 12. Type in a Web Browser `http://www.<YOUR_DOMAIN_NAME>` to see the Front-End.

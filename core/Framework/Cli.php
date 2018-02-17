@@ -33,6 +33,8 @@ class Cli extends Frame{
 		$_errors = [],
 		$_result = [];
 
+	protected $_params = [];	
+
 	static function println($message){
 		echo self::LINE_DIVISOR;
 		echo "{$message}\n";
@@ -110,7 +112,30 @@ class Cli extends Frame{
 	}
 
 	public function __construct($args){
-		$this->_args = $args;
+
+		$p = 0;
+		$c = 1;
+
+		foreach ($args as $key => $value) {
+
+			if($c > 2) {
+
+				if ($value == 1) {
+					if (isset($this->_params[$p])) {
+						$k = $this->_params[$p];
+						$this->_args[$k] = $key;
+						$p++;
+					}
+
+				} else {
+					$this->_args[$key] = $value;
+				}
+
+			}
+
+			$c++;
+		}
+		
 	}
 
 } 

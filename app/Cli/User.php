@@ -19,9 +19,10 @@
  *	-----------------
  *	COMMAND LINE
  *	-----------------
- *	time php roducks cmd=user:create env=pro email=dummy@yoursite.com password=duke017
- *	time php roducks cmd=user:reset env=pro email=dummy@yoursite.com password=duke017
- *	time php roducks cmd=user:who env=pro id=1
+ *	php roducks user:create --pro dummy@yoursite.com duke017
+ *	php roducks user:create --pro dummy@yoursite.com duke017 gender=female
+ *	php roducks user:reset --pro dummy@yoursite.com duke017
+ *	php roducks user:who --pro id=1
  */
 
 namespace App\Cli;
@@ -32,6 +33,11 @@ use Roducks\Libs\Utils\Date;
 use App\Models\Users\Users as UsersTable;
 
 class User extends Cli {
+
+	protected $_params = [
+		'email',
+		'password'
+	];
 
 	public function create(){
 		
@@ -59,8 +65,8 @@ class User extends Cli {
 						'last_name' => "Admin Master",
 						'gender' => $gender,
 						'picture' => Helper::getUserIcon($gender),
-						'created_date' => Date::getCurrentDateTime(),
-						'updated_date' => Date::getCurrentDateTime()			
+						'created_date' => UsersTable::now(),
+						'updated_date' => UsersTable::now()		
 					];
 
 					$tx = $user->create($data);
