@@ -28,19 +28,8 @@ return [
 		'jquery-jcrop-0.9.12/js/jquery.jcrop.min.js?v=1.0'
 	],
 	'roducks' => [
-		'roducks-1.0/css/roducks.css?v=1.7',
+		'roducks-1.0/css/roducks.css?v=1.0',
 		'roducks-1.0/css/themes/default/roducks-modal.css?v=1.0',
-		'roducks-1.0/js/roducks.min.js?v=1.7'
-		//'roducks-1.0/js/roducks-1.0.js?v=1.5'		
+		'roducks-1.0/js/roducks.min.js?v=1.0'
 	],
-	'roducks-cart' => [
-		'css/roducks.cart.css?v=1.0',
-		'js/roducks.cart.js?v=1.0',
-		'js/roducks.steps.js?v=1.0'
-	],
-	'roducks-checkout' => [
-		'css/roducks.checkout.css?v=1.0',
-		'js/roducks.checkout.js?v=1.0'
-	]
 ];
-
