@@ -230,7 +230,10 @@ class Query {
 						break;
 					case 'datetime':
 						$ret .= "DATETIME(".$match[1].") = " . self::_field($value);
-						break;						
+						break;	
+					case 'datetime:between':
+						$ret .= "DATETIME(".$match[1].") BETWEEN ".self::_field($value[0])." AND ".self::_field($value[1]);
+						break;				
 					case 'time':
 						$ret .= "TIME(".$match[1].") = " . self::_field($value);
 						break;	
