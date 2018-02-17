@@ -37,7 +37,7 @@ class Api extends Service
 
 	static function router($uri, $version, $callback)
 	{
-		Router::path($uri, $callback, $version, true);
+		Router::prefix($uri, $callback, $version, true);
 	}
 
 	static function auth($endpoint, $dispatch, $params)
