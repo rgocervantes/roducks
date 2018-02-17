@@ -169,7 +169,7 @@ class Router
 		self::_add(['uri' => $endpoint, 'id' => "/(?P<id>\d+)"], $path2);
 	}
 
-	static function path($uri, $callback, $version = "", $jwt = false)
+	static function prefix($uri, $callback, $version = "", $jwt = false)
 	{
 		if (!empty($version)) {
 			self::$_version = "/{$version}";

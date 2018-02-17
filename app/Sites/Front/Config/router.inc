@@ -31,7 +31,7 @@ Router::init(function() {
 	*/
 	Router::get('/', Dispatch::page("home","index"));
 
-	Router::path('/contact-us', function($path) {
+	Router::prefix('/contact-us', function($path) {
 
 		Router::get([$path => '/'], Dispatch::page("home","contact-us"));
 		Router::post([$path => '/submit'], Dispatch::json("home","contact-us-submit"));
@@ -57,7 +57,7 @@ Router::init(function() {
 	|				ACOUNT
 	|---------------------------------
 	*/
-	Router::path(Account::URL, function($path) {
+	Router::prefix(Account::URL, function($path) {
 
 		Router::get([$path => '/'], Dispatch::page("account","index"));
 		Router::get([$path => '/edit'], Dispatch::page("account","edit"));

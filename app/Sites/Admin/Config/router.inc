@@ -57,7 +57,7 @@ Router::init(function() {
 	|				ROLES
 	|---------------------------------
 	*/
-	Router::path(Role::URL, function($path) {
+	Router::prefix(Role::URL, function($path) {
 
 		Router::get([$path => '/'], Dispatch::page("roles", "index"));
 		Router::get([$path => '/list'], Dispatch::page("roles", "listing"), function() {
@@ -75,7 +75,7 @@ Router::init(function() {
 	|				USERS
 	|---------------------------------
 	*/
-	Router::path(Users::URL, function($path) {
+	Router::prefix(Users::URL, function($path) {
 
 		Router::get([$path => '/'], Dispatch::page("users", "index"), function() {
 			return [
@@ -140,7 +140,7 @@ Router::init(function() {
 	|				SUBSCRIBERS
 	|---------------------------------
 	*/
-	Router::path(Subscribers::URL, function($path) {
+	Router::prefix(Subscribers::URL, function($path) {
 
 		Router::get([$path => '/'], Dispatch::page("subscribers", "index"), function() {
 			return [
@@ -205,7 +205,7 @@ Router::init(function() {
 	|				CLIENTS
 	|---------------------------------
 	*/
-	Router::path(Clients::URL, function($path) {
+	Router::prefix(Clients::URL, function($path) {
 
 		Router::get([$path => '/'], Dispatch::page("clients", "index"), function() {
 			return [
