@@ -48,7 +48,7 @@ cp app/Config/environments.local.inc.sample app/Config/environments.local.inc
 ```
 13. Create a local MySQL database called `roducks`.
 14. Create a User and Password for the database you just created and the previous step.
-15. Import sql script located in: `core/Data/Setup/roducks.sql` into your data base.
+15. Import sql script located in: `app/Schema/Sql/roducks.sql` into your data base.
 
 16. Run command below to create the local Database file.
 ```
@@ -82,7 +82,7 @@ cp core/Data/Config/* app/Data/storage/json/roles/
 ```
 5. Create a local MySQL database called `roducks`.
 6. Create a User and Password for the database you just created and the previous step.
-7. Import sql script located in: `core/Data/Setup/roducks.sql` into your data base.
+7. Import sql script located in: `app/Schema/Sql/roducks.sql` into your data base.
 8. Edit file `app/Config/config.inc` and change value of `domain_name` by your own “Domain Name” for Production environment.
 9. Edit file `app/Config/database.inc` and set data of your Database’s User and Password.
 10. Run the command below to create the **Super Admin User**.

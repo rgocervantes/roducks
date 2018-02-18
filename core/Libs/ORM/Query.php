@@ -76,10 +76,10 @@ class Query {
 		$_totalPages = 1,
 		$_filter = [],
 		$_fields = [],
-		$_queryString = "",
-		$_table = "";	
+		$_queryString = "";	
 
-	protected $_condition = [];	
+	protected $_condition = [],
+			$_table = "";	
 
 /*
 //----------------------
@@ -438,7 +438,7 @@ class Query {
 		return "{$field} AS {$alias}";
 	}
 
-	static function blob($field){
+	static function convert($field){
 		return self::alias("CONVERT({$field} using utf8)", $field);
 	}
 

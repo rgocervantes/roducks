@@ -20,12 +20,15 @@
 
 namespace Roducks\Libs\ORM;
 
-class DB{
+class DB
+{
 
-    static $mysqli = null;
+    static $_mysqli = null;
+    static $_error = 0;
 
     // Open a new connection
-    static function open($display_errors, array $conn = []){
+    static function open($display_errors, array $conn = [])
+    {
 
         $mysqli = new \mysqli($conn[0],$conn[1],$conn[2],$conn[3]);
         $mysqli->set_charset('utf8');
@@ -40,13 +43,57 @@ class DB{
     }
 
     // Get Singleton :)
-    static function get($display_errors, array $conn = []){
+    static function get($display_errors, array $conn = [])
+    {
 
-        if(is_null(self::$mysqli)){
-            self::$mysqli = self::open($display_errors, $conn);
+        if(is_null(self::$_mysqli)){
+            self::$_mysqli = self::open($display_errors, $conn);
         }
 
-        return self::$mysqli;
+        return self::$_mysqli;
+    }
+
+    static function transaction($tx)
+    {
+        if ($tx === FALSE) {
+            self::$_error++;
+        }
+    }
+
+    static function success()
+    {
+        return (self::$_error == 0);
+    }
+
+    static function createTable(\mysqli $db, $name, $callback)
+    {
+        $table = new Table($db, $name);
+        $callback($table);
+
+        $table->create();
+    }
+
+    static function dropTable(\mysqli $db, $name)
+    {
+        $table = new Table($db, $name);
+        $table->drop();
+    }
+
+    static function truncateTable(\mysqli $db, $table = "")
+    {   
+        $table = new Table($db);
+        $table->truncate([$table]);
+    }
+
+    static function truncateTables(\mysqli $db, array $tables = [])
+    {   
+        $table = new Table($db);
+        $table->truncate($tables);
+    }
+
+    static function alterTable(\mysqli $db, $name, $callback)
+    {   
+
     }
 
 }

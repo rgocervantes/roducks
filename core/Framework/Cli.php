@@ -29,6 +29,7 @@ class Cli extends Frame{
 
 	private 
 		$_args = [],
+		$_flags = [],
 		$_warnings = [],
 		$_errors = [],
 		$_result = [];
@@ -85,6 +86,10 @@ class Cli extends Frame{
 		return $value;
 	}
 
+	protected function getFlag($key){
+		return isset($this->_flags[$key]);
+	}
+
 	protected function setResult($message = ""){
 		array_push($this->_result, $message."\n");
 	}
@@ -104,17 +109,19 @@ class Cli extends Frame{
 		echo self::LINE_DIVISOR;
 		echo "Executed @: " . Date::getCurrentDateTime() . "\n";
 		echo self::LINE_DIVISOR;
-		echo "Output: {$output}";
+		echo "Message: {$output}";
 		echo self::LINE_DIVISOR;
 
 		$this->_getStatus();
 	
 	}
 
-	public function __construct($args){
+	public function __construct(array $args = []){
 
 		$p = 0;
 		$c = 1;
+
+		$this->_flags = $args;
 
 		foreach ($args as $key => $value) {
 

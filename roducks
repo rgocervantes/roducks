@@ -38,20 +38,16 @@ unset($argv[0]);
        			$values['pro'] = 1;
 
        		else:
-       			$x = ($arg == '--dev') ? 'dev' : $arg;
+       			$x = str_replace('--', '', $arg);
+       			
        			$params[] = $x;
        			$values[$x] = 1;
-       		endif;
 
-       		if(!in_array($arg, ['--dev','--pro'])):
-       			$params[] = $arg;
-       			$values[$arg] = 1;
        		endif;
 
        	endif;
     endforeach;
 endif;
-
 
 /*
 |--------------------------------|
@@ -74,14 +70,15 @@ Core::loadFile(DIR_APP_LANGUAGES, 'en' . FILE_INC);
 */
 
 $db_name = "database";
+$dev = isset($values['dev']);
 $db = (isset($values['db'])) ? $values['db'] : $db_name;
 
-if (isset($values['dev'])) {
+if ($dev) {
 	$db_name = $db.'.local';
 }
 
 $environment = [
-	'errors' => false,
+	'errors' => $dev,
 	'subdomain' => "www",
 	'site' => "Front",
 	'mode' => Environment::CLI,
@@ -108,6 +105,10 @@ if(isset($params[0])){
 	$name = Helper::getCamelName($name);
 	$script = "App\Cli\\" . $name;
 
+	if(!class_exists($script)) {
+		return;
+	}
+	
 	$class = new $script($values);
 	if(method_exists($class, $method)){
 		$class->$method();
