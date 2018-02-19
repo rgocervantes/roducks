@@ -26,11 +26,29 @@ use Roducks\Libs\ORM\Query;
 abstract class Setup extends Cli
 {
 
-	protected function _add($file, $type)
+	private $_query;
+
+	public function __construct(array $args = [])
 	{
+
+		parent::__construct($args);
+		
 		$db = $this->db();
-		$query = new Query($db, 'Setup');
-		$query->insert([
+		$this->_query = new Query($db, 'Setup');	
+	}
+
+	protected function isUnsaved($file, $type)
+	{
+
+		$this->_query->filter(['file' => $file, 'type' => $type]);
+
+		return (!$this->_query->rows()) ? true : false;
+	}
+
+	protected function saved($file, $type)
+	{
+
+		$this->_query->insert([
 			'file' => $file,
 			'type' => $type,
 			'executed_at' => Query::now()
@@ -45,7 +63,7 @@ abstract class Setup extends Cli
 
 		if (DB::success()) {
 			$success = "{$script} setup is finished!";
-			$this->_add($script, 'php');
+			$this->saved($script, 'php');
 		} else {
 			DB::reset();
 			$error = "{$script} setup failed! =(";

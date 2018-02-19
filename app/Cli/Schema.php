@@ -40,6 +40,14 @@ class Schema extends Setup
 
 	private $_count = 0;
 
+	static function _getFiles($folder)
+	{
+		$dir = Directory::open(\App::getRealFilePath("app/Schema/{$folder}/"));
+		$files = $dir['files'];
+
+		return $files;
+	}
+
 	private function _run($script)
 	{
 
@@ -70,12 +78,8 @@ class Schema extends Setup
 
 	private function _search($file)
 	{
-		$db = $this->db();
-		$query = new Query($db, 'Setup');
 
-		$query->filter(['file' => $file, 'type' => 'php']);
-
-		if (!$query->rows()) {
+		if ($this->isUnsaved($file, 'php')) {
 			$this->_run($file);
 		} else {
 			$this->_count++;
@@ -98,11 +102,10 @@ class Schema extends Setup
 
 		} else {
 
-			$dir = Directory::open(\App::getRealFilePath("app/Schema/Setup/"));
-			$files = $dir['files'];
+			$files = self::_getFiles("Setup");
 			$total = count($files);
 
-			foreach ($dir['files'] as $file) {
+			foreach ($files as $file) {
 				$file = str_replace(FILE_EXT, '', $file);
 				$this->_search($file);
 			}
@@ -120,27 +123,23 @@ class Schema extends Setup
 	public function sql()
 	{
 
-		$db = $this->db();
-		$query = new Query($db, 'Setup');
-		$dir = Directory::open(\App::getRealFilePath("app/Schema/Sql/"));
-		$files = $dir['files'];
+		$files = self::_getFiles("Sql");
 		$total = count($files);
 		$count = 0;
+		$label = ($this->getFlag('save')) ? "saved" : "imported";
 
 		foreach ($files as $file) {
 
-			$query->filter(['file' => $file, 'type' => 'sql']);
-
-			if (!$query->rows()) {
+			if ($this->isUnsaved($file, 'sql')) {
 
 				if ($this->getFlag('save')) {
 
-					$this->_add($file, 'sql');
-					$this->setResult("{$file} is saved!");
+					$this->saved($file, 'sql');
+					$this->setResult("{$file} is {$label}!");
 
 				} else {
 
-					$this->setResult("{$file} needs to be imported");
+					$this->setResult("{$file} needs to be {$label}");
 
 				}
 			} else {
@@ -150,7 +149,7 @@ class Schema extends Setup
 		}
 
 		if ($total == $count) {
-			$this->setResult("There are no scripts to be imported.");
+			$this->setResult("There are no scripts to be {$label}.");
 		}
 
 		parent::output();
