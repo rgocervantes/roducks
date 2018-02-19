@@ -113,6 +113,8 @@ class Cli extends Frame{
 		echo self::LINE_DIVISOR;
 
 		$this->_getStatus();
+
+		echo self::LINE_DIVISOR;
 	
 	}
 

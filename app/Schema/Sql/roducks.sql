@@ -2,6 +2,14 @@
 -- Roducks SQL --------------------------------------------
 -- --------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS `Setup` (
+  `id_setup` bigint(8) AUTO_INCREMENT NOT NULL,
+  `file` varchar(255) NOT NULL,
+  `type` enum('php','sql') DEFAULT 'php' NOT NULL,
+  `executed_at` datetime NOT NULL,
+  PRIMARY KEY (`id_setup`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `EAV` (
   `id_index` bigint(8) AUTO_INCREMENT NOT NULL,
   `id_rel` bigint(8) NOT NULL,

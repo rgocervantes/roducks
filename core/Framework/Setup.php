@@ -21,20 +21,41 @@
 namespace Roducks\Framework;
 
 use Roducks\Libs\ORM\DB;
+use Roducks\Libs\ORM\Query;
 
 abstract class Setup extends Cli
 {
 
+	protected function _add($file, $type)
+	{
+		$db = $this->db();
+		$query = new Query($db, 'Setup');
+		$query->insert([
+			'file' => $file,
+			'type' => $type,
+			'executed_at' => Query::now()
+		]);
+	}
+
 	public function finished($script)
 	{
+
+		$success = null;
+		$error = null;
+
 		if (DB::success()) {
-			$this->setResult("{$script} setup is finished!");
+			$success = "{$script} setup is finished!";
+			$this->_add($script, 'php');
 		} else {
-			$this->setResult("Something went wrong.");
-			$this->setError("{$script} setup failed! =(");
+			DB::reset();
+			$error = "{$script} setup failed! =(";
 		}
 		
-		parent::output();
+		return [
+			'success' => $success,
+			'error' => $error
+		];
+		
 	}
 
 }

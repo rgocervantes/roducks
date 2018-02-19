@@ -65,6 +65,11 @@ class DB
         return (self::$_error == 0);
     }
 
+    static function reset()
+    {
+        self::$_error = 0;
+    }
+
     static function createTable(\mysqli $db, $name, $callback)
     {
         $table = new Table($db, $name);
