@@ -84,16 +84,29 @@ class DB
         $table->drop();
     }
 
-    static function truncateTable(\mysqli $db, $table = "")
-    {   
-        $table = new Table($db);
-        $table->truncate([$table]);
-    }
-
     static function truncateTables(\mysqli $db, array $tables = [])
     {   
         $table = new Table($db);
         $table->truncate($tables);
+    }
+
+    static function truncateTable(\mysqli $db, $table = "")
+    {   
+        self::truncateTables($db, [$table]);
+    }
+
+    static function insertInto(\mysqli $db, $name, $callback)
+    {   
+        $table = new Table($db, $name);
+        $query = new Query($db, 'Sample');
+        
+        $callback($table);
+        $columns = $table->getColumns();
+
+        foreach ($columns as $column) {
+            $query->insert($column);
+        }
+
     }
 
     static function alterTable(\mysqli $db, $name, $callback)

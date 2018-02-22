@@ -23,8 +23,10 @@ namespace Roducks\Libs\ORM;
 class Table extends Query
 {
 
-	private $_columns = [],
+	private $_raw = [],
 			$_foreign = [],
+			$_column = [],
+			$_columns = [],
 			$pk = "";
 
 	static function _format($field, $dataType, $value = "NULL", $comment = "")
@@ -55,7 +57,7 @@ class Table extends Query
 	private function _setField($type, $field, $callback = "")
 	{
 		$attrs = self::_getAttrs($callback);
-		$this->_columns[] = self::_format($field, $type, $attrs->empty, $attrs->comment);
+		$this->_raw[] = self::_format($field, $type, $attrs->empty, $attrs->comment);
 	}
 
 	private function _execute($statment)
@@ -67,9 +69,9 @@ class Table extends Query
 	public function create()
 	{
 		$statment = "CREATE TABLE IF NOT EXISTS `{$this->_table}` (";
-		$this->_columns[] = "PRIMARY KEY (`{$this->_pk}`)";
-		$this->_columns = array_merge($this->_columns, $this->_foreign);
-		$statment .= implode(', ', $this->_columns);
+		$this->_raw[] = "PRIMARY KEY (`{$this->_pk}`)";
+		$this->_raw = array_merge($this->_raw, $this->_foreign);
+		$statment .= implode(', ', $this->_raw);
 		$statment .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8";
 
 		$this->_execute($statment);
@@ -95,6 +97,30 @@ class Table extends Query
 		$this->_execute($statment);
 	}
 
+	public function column($key, $value)
+	{
+		$this->_column[$key] = $value;
+	}
+
+	public function values(callable $callback)
+	{
+		$callback();
+
+		$this->_columns[] = $this->_column;
+		$this->_column = [];
+
+	}
+
+	public function getColumns()
+	{
+
+		if (count($this->_columns) == 0 && count($this->_column) > 0) {
+			$this->_columns[] = $this->_column;
+		}
+
+		return $this->_columns;
+	}
+	
 	public function datetime($field, $callback = "")
 	{
 		$this->_setField(__FUNCTION__, $field, $callback);
@@ -122,19 +148,19 @@ class Table extends Query
 			return "'{$v}'";
 		}, $attrs->value);
 
-		$this->_columns[] = self::_format($field, "enum(".implode(",", $value).")", $attrs->empty, $attrs->comment);
+		$this->_raw[] = self::_format($field, "enum(".implode(",", $value).")", $attrs->empty, $attrs->comment);
 	}
 
 	public function decimal($field, $callback = "")
 	{
 		$attrs = self::_getAttrs($callback, 255);
-		$this->_columns[] = self::_format($field, "decimal(".implode(",", $attrs->value).")", $attrs->empty, $attrs->comment);
+		$this->_raw[] = self::_format($field, "decimal(".implode(",", $attrs->value).")", $attrs->empty, $attrs->comment);
 	}
 
 	public function bigint8($field, $callback = "")
 	{
 		$attrs = self::_getAttrs($callback);
-		$this->_columns[] = self::_format($field, 'bigint(8)', $attrs->empty, $attrs->comment);
+		$this->_raw[] = self::_format($field, 'bigint(8)', $attrs->empty, $attrs->comment);
 	}
 
 	public function timestamps()
@@ -150,31 +176,31 @@ class Table extends Query
 	public function id($field = "id", $dataType = "bigint(8)")
 	{
 		$this->_pk = $field;
-		$this->_columns[] = self::_format($field, "{$dataType} AUTO_INCREMENT", 'NOT NULL');
+		$this->_raw[] = self::_format($field, "{$dataType} AUTO_INCREMENT", 'NOT NULL');
 	}
 
 	public function varchar($field, $callback = "")
 	{
 		$attrs = self::_getAttrs($callback, 255);
-		$this->_columns[] = self::_format($field, "varchar({$attrs->value})", $attrs->empty, $attrs->comment);
+		$this->_raw[] = self::_format($field, "varchar({$attrs->value})", $attrs->empty, $attrs->comment);
 	}
 
 	public function int($field, $callback = "")
 	{
 		$attrs = self::_getAttrs($callback, 11);
-		$this->_columns[] = self::_format($field, "int({$attrs->value})", $attrs->empty, $attrs->comment);
+		$this->_raw[] = self::_format($field, "int({$attrs->value})", $attrs->empty, $attrs->comment);
 	}
 
 	public function float($field, $callback = "")
 	{
 		$attrs = self::_getAttrs($callback, 2);
-		$this->_columns[] = self::_format($field, "float({$attrs->value})", $attrs->empty, $attrs->comment);
+		$this->_raw[] = self::_format($field, "float({$attrs->value})", $attrs->empty, $attrs->comment);
 	}
 
 	public function tinyint($field, $callback = "")
 	{
 		$attrs = self::_getAttrs($callback, 1, 0);
-		$this->_columns[] = self::_format($field, "tinyint({$attrs->value})", "DEFAULT '{$attrs->default}'", $attrs->comment);
+		$this->_raw[] = self::_format($field, "tinyint({$attrs->value})", "DEFAULT '{$attrs->default}'", $attrs->comment);
 	}
 
 	public function foreignKey($fk, $references, $key)
