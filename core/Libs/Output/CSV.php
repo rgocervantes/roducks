@@ -49,15 +49,15 @@ namespace Roducks\Libs\Output;
 
 class CSV{
 
-    protected $_delimiter = ',';
-    protected $handle;
-    protected $procced = false;
-    protected $_length = 1000;
-    protected $doc;
-    protected $path;
+    private $_delimiter = ',';
+    private $_handle;
+    private $_length = 1000;
+    private $_doc;
+    private $_path;
+    private $_file;
 
     private function escape($fields){
-        $fill = array();
+        $fill = [];
  
         foreach($fields as $f):
             $fill[] = '"' . utf8_encode($f) . '"';
@@ -66,10 +66,9 @@ class CSV{
         return implode($this->_delimiter, $fill);
     }
 
-    protected function ext($str){
+    static private function _ext($str){
         $ext = ".csv";
-        $name = substr($str, -4);
-        if($name != $ext) return $str . $ext;
+        if(!preg_match('/\.csv$/', $str)) return $str . $ext;
 
         return $str;
     }
@@ -81,27 +80,12 @@ class CSV{
         $this->_delimiter = $s;
     }    
 
-    public function file($path, $name){   
-
-        $this->doc = $this->ext($name);
-        $this->path = $path;
-
-        $csv = $this->path . $this->doc;
-
-        if(file_exists($csv)){ // read
-            if (($this->handle = fopen($csv, "r")) !== FALSE) {
-               return true;
-            }
-        }
-
-        return false;
-    }       
-
-    public function headers($obj){
-        return $this->row($obj);
+    public function file($path, $name){
+        $this->_doc = self::_ext($name);
+        $this->_file = $path . $this->_doc;
     }
 
-    public function row($rows = array()){
+    public function row(array $rows = []){
         $raw = '';
  
         if(is_array($rows) && count($rows) > 0):
@@ -111,17 +95,21 @@ class CSV{
         return $raw . "\n";
     }
 
+    public function headers($obj){
+        return $this->row($obj);
+    }
+
     /*------------ SAVE CSV --------------*/
     public function save($report){
-        $csv_file = fopen($this->path . $this->doc,"w");
+        $csv_file = fopen($this->_file,"w");
                     fwrite($csv_file,$report);
                     fclose($csv_file);
     }
  
     /*------------ EXPORT CSV ------------*/
     public function download($report){
-        header('Content-type: text/csv');
-        header('Content-disposition: attachment; filename="'.$this->doc.'"');
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="'.$this->_doc.'"');
         echo $report;
     }
 
@@ -129,14 +117,17 @@ class CSV{
         # READ CSV
 
         $csv = new CSV();
-        $csv->file(DIR_TMP . "profiles_");
+        $csv->file(\App::getRealFilePath("app/Schema/Data/"), "sample_table");
         
+        if ($csv->read()) {
+
             while (($data = $csv->fetch()) !== FALSE) {
-                $d = $csv->columns($data);
-                echo implode(" - ", $d) . "<br />";
+                Helper::pre($data);
             }
 
             $csv->stop();
+
+        }
 
     */
 
@@ -145,13 +136,17 @@ class CSV{
     */
     public function length($n){
         $this->_length = $n;
-    }    
+    }
 
-    /**
-    *   Close the file
-    */
-    public function stop(){
-        fclose($this->handle);
+    public function read(){
+
+        if(file_exists($this->_file)){ // read
+            if (($this->_handle = fopen($this->_file, "r")) !== FALSE) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -159,10 +154,14 @@ class CSV{
     *   @return object 
     */
     public function fetch(){
-        return fgetcsv($this->handle, $this->_length, $this->_delimiter);
-    }    
- 
+        return fgetcsv($this->_handle, $this->_length, $this->_delimiter);
+    } 
+
+    /**
+    *   Close the file
+    */
+    public function stop(){
+        fclose($this->_handle);
+    }
+
 }
-
-
-?>

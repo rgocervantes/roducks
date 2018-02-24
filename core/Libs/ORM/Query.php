@@ -590,6 +590,18 @@ class Query {
 		$this->_table = $table;
 	}
 
+	public function autocommit(){
+		$this->_db->autocommit(FALSE);
+	}
+
+	public function commit(){
+		$this->_db->commit();
+	}
+
+	public function rollback(){
+		$this->_db->rollback();
+	}
+
 	/**
 	 *	Build query raw
 	 */

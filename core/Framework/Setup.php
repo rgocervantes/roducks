@@ -22,11 +22,51 @@ namespace Roducks\Framework;
 
 use Roducks\Libs\ORM\DB;
 use Roducks\Libs\ORM\Query;
+use Roducks\Libs\Output\CSV;
 
 abstract class Setup extends Cli
 {
 
+	const COMMENTS = "";
 	private $_query;
+
+	static function fillTableFromCSV($db, $tbl, $file)
+	{
+
+        $csv = new CSV();
+        $csv->file(\App::getRealFilePath("app/Schema/Data/"), $file);
+        
+        if ($csv->read()) {
+
+			DB::insertInto($db, $tbl, function ($table) use ($csv) {
+
+	            $c = 0;
+	            $headers = [];
+
+	            while (($data = $csv->fetch()) !== FALSE) {
+
+	                if ($c == 0) {
+	                    $headers = $data;
+	                } else {
+
+						$table->values(function () use ($table, $headers, $data) {
+		                    for ($i=0; $i < count($headers); $i++) { 
+		                        $table->column($headers[$i], $data[$i]);
+		                    }
+						});
+
+	                }
+
+	                $c++;
+	            }
+
+	            $csv->stop();
+
+			});
+
+        }
+
+	}
 
 	public function __construct(array $args = [])
 	{
@@ -62,11 +102,11 @@ abstract class Setup extends Cli
 		$error = null;
 
 		if (DB::success()) {
-			$success = "{$script} setup is finished!";
+			$success = "{$script} - " . static::COMMENTS;
 			$this->saved($script, 'php');
 		} else {
 			DB::reset();
-			$error = "{$script} setup failed! =(";
+			$error = "{$script} failed! =(";
 		}
 		
 		return [

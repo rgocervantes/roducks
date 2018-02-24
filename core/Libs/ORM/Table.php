@@ -85,7 +85,8 @@ class Table extends Query
 
 	public function truncate(array $tables = [])
 	{
-		$statment = "SET FOREIGN_KEY_CHECKS=0";
+		$statment = "";
+		$this->_execute("SET FOREIGN_KEY_CHECKS = 0");
 
 		foreach ($tables as $table) {
 			if (!empty($table)) {
@@ -93,8 +94,8 @@ class Table extends Query
 			}
 		}
 
-		$statment .= "SET FOREIGN_KEY_CHECKS=1";
 		$this->_execute($statment);
+		$this->_execute("SET FOREIGN_KEY_CHECKS = 1");
 	}
 
 	public function column($key, $value)

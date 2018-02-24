@@ -32,6 +32,8 @@ class Setup_2017_09_02_Rod extends Setup implements SetupInterface
 	public function schema(\mysqli $db)
 	{
 
+		DB::dropTable($db, 'Sample');
+		
 		DB::createTable($db, 'Sample', function ($table) {
 
 			$table->id('id_sample');
@@ -76,26 +78,10 @@ class Setup_2017_09_02_Rod extends Setup implements SetupInterface
 	public function store(\mysqli $db)
 	{
 
-		DB::insertInto($db, 'Sample', function ($table) {
+		DB::truncateTable($db, 'Sample');
 
-			$table->values(function () use ($table) {
+		Setup::fillTableFromCSV($db, 'Sample', "Sample_Table");
 		
-				$table->column('id_rel', 1);
-				$table->column('age', 31);
-				$table->column('category', 'abc');
-
-			});
-
-			$table->values(function () use ($table) {
-		
-				$table->column('id_rel', 7);
-				$table->column('age', 25);
-				$table->column('category', 'xyz');
-
-			});
-		
-		});
-
 	}
 
 }

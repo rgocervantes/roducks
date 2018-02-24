@@ -52,13 +52,14 @@ class Schema extends Setup
 	{
 
 		$class = "App\Schema\Setup\\" . $script;
-		$method = "schema";
 
 		if (class_exists($class)) {
 			$obj = new $class();
-			if(method_exists($obj, $method)){
-				$obj->$method($this->db());
-				$obj->store($this->db());
+			if (method_exists($obj, 'schema')) {
+				$obj->schema($this->db());
+				if (method_exists($obj, 'store')) { 
+					$obj->store($this->db());
+				}
 				$finished = $obj->finished($script);
 
 				if (!is_null($finished['success'])) {
