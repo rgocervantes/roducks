@@ -1,0 +1,3 @@
+id_rel,entity,age,category,price,active,created_at,updated_at
+7,users,30,abc,100.23,1,NOW(),NOW()
+5,admin,27,xyz,566.23,0,NOW(),NOW()
