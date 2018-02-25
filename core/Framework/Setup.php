@@ -30,12 +30,19 @@ abstract class Setup extends Cli
 	const COMMENTS = "";
 	private $_query;
 
+	static private function _getCSV($file)
+	{
+		$csv = new CSV();
+        $csv->file(\App::getRealFilePath("app/Schema/Data/"), $file);
+
+        return $csv;
+	}
+
 	static function fillTableFromCSV($db, $tbl, $file)
 	{
 
-        $csv = new CSV();
-        $csv->file(\App::getRealFilePath("app/Schema/Data/"), $file);
-        
+        $csv = self::_getCSV($file);
+
         if ($csv->read()) {
 
 			DB::insertInto($db, $tbl, function ($table) use ($csv) {
@@ -63,6 +70,79 @@ abstract class Setup extends Cli
 	            $csv->stop();
 
 			});
+
+        }
+
+	}
+
+	static function updateTableFromCSV($db, $tbl, $file)
+	{
+
+		$query = new Query($db, $tbl);
+		$csv = self::_getCSV($file);
+		$headers = [];
+
+        if ($csv->read()) {
+
+        	$c = 0;
+
+            while (($data = $csv->fetch()) !== FALSE) {
+
+                if ($c == 0) {
+                    $headers = $data;
+                } else {
+
+	        		$row = [];
+	            	$key = $headers[0];
+	            	$value = $data[0];
+
+                    for ($i=0; $i < count($headers); $i++) { 
+                    	if ($i > 0) {
+                    		$row[$headers[$i]] = $data[$i];
+                    	}
+                    }
+
+	                $tx = $query->update([$key => $value], $row);
+	                DB::transaction($tx);
+	        	}
+
+	        	$c++;
+            }
+
+            $csv->stop();
+
+        }
+
+	}
+
+	static function deleteTableFromCSV($db, $tbl, $file)
+	{
+
+		$query = new Query($db, $tbl);
+		$csv = self::_getCSV($file);
+		$headers = [];
+
+        if ($csv->read()) {
+
+        	$c = 0;
+
+            while (($data = $csv->fetch()) !== FALSE) {
+
+                if ($c == 0) {
+                    $headers = $data;
+                } else {
+
+	            	$key = $headers[0];
+	            	$value = $data[0];
+	            	
+	                $tx = $query->delete([$key => $value]);
+	                DB::transaction($tx);
+				}
+
+				$c++;
+            }
+
+            $csv->stop();
 
         }
 

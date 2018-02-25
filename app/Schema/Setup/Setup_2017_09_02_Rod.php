@@ -79,9 +79,9 @@ class Setup_2017_09_02_Rod extends Setup implements SetupInterface
 	{
 
 		DB::truncateTable($db, 'Sample');
-
-		Setup::fillTableFromCSV($db, 'Sample', "Sample_Table");
 		
+		Setup::fillTableFromCSV($db, 'Sample', "Fill_SampleTable");
+
 	}
 
 }
