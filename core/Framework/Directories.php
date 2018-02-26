@@ -86,7 +86,7 @@ App::define('DIR_PUBLIC', "public/");
 	App::define('DIR_ASSETS_CSS', "/" . DIR_PUBLIC . "css/");
 	App::define('DIR_ASSETS_JS', "/" . DIR_PUBLIC . "js/");
 	App::define('DIR_ASSETS_PLUGINS', "/" . DIR_PUBLIC . "plugins/");
-	App::define('DIR_ASSETS_SCRIPTS', DIR_APP . "Scripts/");
+	App::define('DIR_ASSETS_SCRIPTS', DIR_APP . "Js/");
 
 	App::define('DIR_APP_IMAGES', DIR_PUBLIC . DIR_ASSETS . DIR_IMAGES );
 	App::define('DIR_APP_ICONS', DIR_PUBLIC . DIR_ASSETS . DIR_ICONS );
