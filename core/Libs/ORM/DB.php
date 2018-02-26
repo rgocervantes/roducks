@@ -111,7 +111,10 @@ class DB
 
     static function alterTable(\mysqli $db, $name, $callback)
     {   
-
+        $table = new Table($db, $name);
+        $callback($table);
+        
+        $table->alter();
     }
 
 }

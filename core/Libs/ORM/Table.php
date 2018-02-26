@@ -44,11 +44,13 @@ class Table extends Query
 		$attrs->default = $default;
 		$attrs->comment = "";
 		$attrs->nullable = true;
+		$attrs->after = "";
 		
 		if (is_callable($callback)) {
 			$callback($attrs);
 		}
 
+		$attrs->append = (!empty($attrs->after)) ? " AFTER `{$attrs->after}`" : "";
 		$attrs->empty = ($attrs->nullable) ? 'NULL' : 'NOT NULL';
 
 		return $attrs;
@@ -64,6 +66,31 @@ class Table extends Query
 	{
 		$tx = $this->query($statment);
 		DB::transaction($tx);
+	}
+
+	private function _alter($cmd, $field, $type, $callback)
+	{
+		$cmd = strtoupper($cmd);
+		$attrs = self::_getAttrs($callback);
+		$value = $attrs->value;
+
+		if (!is_null($value)) {
+
+			if (is_array($value)) {
+				$values = array_map(function($v){
+					return "'{$v}'";
+				}, $value);
+				$value = implode(",", $values);
+			}
+
+			$type = "{$type}({$value})";
+		}
+
+		if (!is_null($attrs->default)) {
+			$type = "{$type} DEFAULT '{$attrs->default}'";
+		}
+
+		$this->_columns[] = "ALTER TABLE `{$this->_table}` {$cmd} `{$field}` {$type} {$attrs->empty}{$attrs->append}";
 	}
 
 	public function create()
@@ -120,6 +147,25 @@ class Table extends Query
 		}
 
 		return $this->_columns;
+	}
+
+	public function alter()
+	{
+		foreach ($this->_columns as $statment) {
+			if (DB::success()) {
+				$this->_execute($statment);
+			}
+		}
+	}
+
+	public function modify($field, $type, $callback = "")
+	{
+		$this->_alter(__FUNCTION__, $field, $type, $callback);
+	}
+
+	public function add($field, $type, $callback = "")
+	{
+		$this->_alter(__FUNCTION__, $field, $type, $callback);
 	}
 	
 	public function datetime($field, $callback = "")
