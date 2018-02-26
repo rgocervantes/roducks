@@ -129,6 +129,13 @@ class Schema extends Setup
 		$count = 0;
 		$label = ($this->getFlag('save')) ? "saved" : "imported";
 
+		if ($total > 0) {
+			if ($files[0] == "roducks.sql") {
+				unset($files[0]);
+				$total--;
+			}
+		}
+
 		foreach ($files as $file) {
 
 			if ($this->isUnsaved($file, 'sql')) {
