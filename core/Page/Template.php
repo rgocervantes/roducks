@@ -28,12 +28,22 @@ class Template {
 	static $path = null;
 	static $data = [];
 	
-	static function view($file){
+	static function view($file, array $data = [], $merge = false){
 
 		if(!is_null(self::$path) && !empty($file)){
 			$dir_template = self::$path.$file.FILE_TPL;
 			if(file_exists($dir_template)){
-				extract(self::$data);
+				$content = self::$data;
+
+				if (count($data) > 0) {
+					if ($merge) {
+						$content = array_merge(self::$data, $data);
+					} else {
+						$content = $data;
+					}
+				};
+				
+				extract($content);
 				include $dir_template;
 			}else{
 				Error::warning(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $dir_template);
