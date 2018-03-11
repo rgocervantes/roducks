@@ -804,6 +804,12 @@ class Query {
 		return $this;
 	}
 
+	public function offset($offset, $limit){
+		$this->paginate(self::getPageFromOffset($offset, $limit), $limit);
+
+		return $this;
+	}
+
 	/**
 	 *	@param $table string
 	 *	@param $condition array
