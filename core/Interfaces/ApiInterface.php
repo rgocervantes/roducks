@@ -45,6 +45,6 @@ Interface ApiInterface
 	/**
 	 * @type DELETE
 	 */
-	public function remove(\stdClass $request, $id);
+	public function delete(\stdClass $request, $id);
 
 }
