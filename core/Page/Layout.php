@@ -61,7 +61,7 @@ class Layout {
 					self::view($data[1]);
 					break;
 				case 'TEMPLATE':
-					Template::view($data[1]);
+					Template::view($data[1],$data[2],$data[3]);
 					break;
 			}
 		}

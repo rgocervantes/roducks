@@ -188,14 +188,14 @@ final class View{
 		
 	}
 
-	public function setTemplate($name){
+	public function setTemplate($name, array $data = [], $merge = false){
 		$ret = [];
 		if(is_array($name)){
 			foreach ($name as $key => $value) {
-				$ret[] = ['TEMPLATE',$value];
+				$ret[] = ['TEMPLATE',$value, $data, $merge];
 			}
 		} else {
-			return ['TEMPLATE',$name];
+			return ['TEMPLATE',$name, $data, $merge];
 		}
 	}
 
