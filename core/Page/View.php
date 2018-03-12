@@ -73,7 +73,7 @@ final class View{
 		}
 	}
 
-	public function _htmlTag($name, array $arr){
+	private function _htmlTag($name, array $arr){
 		$attrs = Html::getAttributes($arr);
 		return "<{$name} {$attrs} />\n";
 	}
