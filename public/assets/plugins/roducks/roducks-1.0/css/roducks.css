@@ -45,6 +45,7 @@ div.rdks-loader-spinning div.bar11 {-webkit-transform:rotate(300deg) translate(0
 div.rdks-loader-spinning div.bar12 {-webkit-transform:rotate(330deg) translate(0, -100%); -webkit-animation-delay: -0.0833s;}
 
 .rdks-ui-pos-rel{ position: relative; }
+.rdks-ui-pos-abs,
 .rdks-ui-pos-absolute{ position: absolute; }
 .rdks-ui-btn-no{ background: #fff; border: solid 1px #999; color: #c00; }
 .rdks-ui-btn-no:hover{ border-color: #d21f1f; color: #c00; }
@@ -77,8 +78,6 @@ table.rdks-table th{ background: linear-gradient(#f5f5f5, #ddd); color: #333; te
 table.rdks-table tr.rdks-ui-row-disabled{ background: #f9f9f9; }
 table.rdks-table tr.rdks-grid-header{ position: fixed; top: 0; left: 0; z-index: 999; }
 table.rdks-table-hover tr:not(.rdks-ui-row-collapse):hover td{ background: #ffffeb; }
-table.rdks-table tr.highlight td{ background: #ffffeb; }
-table.rdks-table tr.selected td{ background: #ebfff3; }
 
 table.rdks-cart{ border-collapse: collapse; background: #fff; }
 table.rdks-cart td,
@@ -90,7 +89,6 @@ table.rdks-cart tr.separator td table.rdks-table td,
 table.rdks-cart tr.line td table.rdks-table td{ padding: 5px; }
 table.rdks-cart-grouped{ background: #f1fbed; }
 
-.rdks-form-select{ display: none; }
 .rdks-form-uploader{ opacity: 0;  }
 
 .rdks-form-password{ display: block; height: 3px; background: #eee; }
@@ -198,4 +196,55 @@ table.rdks-calendar-table td.weekend.event a{ color: #333; }
 */
 .rdks-datepicker{ position: relative; }
 .rdks-datepicker-box{ display: none; position: absolute; top: 0; left: 0; width: 100%; z-index: 9; background: #fff; border: solid 1px #999;  }
+
+/*
+*	rdks-autocomplete CSS
+*	version 1.0
+*/
+.rdks-select-autocomplete{ display: none; }
+.rdks-autocomplete-loading {
+	background: white url("img/loader_16x16.gif") right center no-repeat;
+	position: absolute;
+	top: -26px;
+	right: 8px;
+	z-index: 999;
+	display: none;
+	width: 16px;
+	height: 16px;
+}
+
+.rdks-autocomplete-clean {
+	position: absolute;
+	top: -26px;
+	right: 8px;
+	z-index: 999;
+	display: none;
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
+}
+
+.rdks-autocomplete-dropdown{ cursor: pointer; }
+.rdks-autocomplete-dropdown span{ 
+    height: 22px;
+    overflow: hidden;
+    display: block;
+    width: 95%;
+ }
+.rdks-autocomplete-filter .rdks-autocomplete-clean{ top: 15px; right: 15px; z-index: 9999; }
+.rdks-autocomplete-search{ padding: 8px; }
+.rdks-autocomplete-box{ display: none; background: #fff; top: 0; left: 0; width: 100%; border: solid 1px #888; z-index: 999; }
+.rdks-autocomplete-scroll{ display: block; overflow-y: scroll; }
+ul.rdks-autocomplete-list{ margin: 0; padding: 0; }
+ul.rdks-autocomplete-list li{ list-style: none; border-bottom: solid 1px #ccc; }
+ul.rdks-autocomplete-list li:last-child{ border:none; }
+ul.rdks-autocomplete-list li a{ display: block; background: #fff; padding: 5px; text-decoration: none; color: #444; }
+ul.rdks-autocomplete-list li a:hover,
+ul.rdks-autocomplete-list li.selected a{ background: #337ab7; color: #fff; }
+ul.rdks-autocomplete-list li a b{ background: #eee; }
+ul.rdks-autocomplete-list li a:hover b,
+ul.rdks-autocomplete-list li.selected a b,
+ul.rdks-autocomplete-list li a b:hover{ background: #1f5a8e; }
+ul.rdks-autocomplete-list li.not-found{ display: none; }
+ul.rdks-autocomplete-list li.not-found a{ background: #eee; color: #c00; }
 
