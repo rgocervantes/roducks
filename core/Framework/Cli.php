@@ -25,57 +25,55 @@ use Roducks\Page\Frame;
 
 class Cli extends Frame{
 
-	const LINE_DIVISOR = "-------------------------------------------------------------------------------------------------\n";
+	const SPACE = "                                                                                                       ";
+	const LN = "\n";
 
 	private 
 		$_args = [],
 		$_flags = [],
 		$_warnings = [],
 		$_errors = [],
-		$_result = [];
+		$_result = [],
+		$_success = [],
+		$_answer = "";
 
 	protected $_params = [];	
 
-	static function println($message){
-		echo self::LINE_DIVISOR;
-		echo "{$message}\n";
-		echo self::LINE_DIVISOR;
+	static function line($text, $px = 0){
+		
+		$space = self::SPACE;
+		$long1 = strlen($space);
+		$long2 = strlen($text);
+		$diff = $long1 - $long2 - $px;
+		$long = substr($space, 0, $diff);
+
+		return $text.$long.self::LN;
+
+	}
+
+	static function println($text){
+		echo self::line($text);
 	}
 
 	private function _getList(array $arr = []){
-		return (count($arr) > 0) ? "\n- " . implode("- ", $arr) : "\n";
-	}
-
-	private function _getAlerts($title, array $arr = []){
-		$alerts = $this->_getList($arr);
-
-		echo "{$title}: " . $alerts;
-		echo self::LINE_DIVISOR;
+		$bullet = "  - ";
+		return (count($arr) > 0) ? $bullet . implode($bullet, $arr) : self::LN;
 	}
 
 	private function _getWarnings(){
-		$this->_getAlerts("Warnings", $this->_warnings);
+		return $this->_getList($this->_warnings);
 	}
 
 	private function _getErrors(){
-		$this->_getAlerts("Errors", $this->_errors);
+		return $this->_getList($this->_errors);
 	}
 
-	private function _getStatus(){
+	private function _getResult(){
+		return $this->_getList($this->_result);
+	}
 
-		if(count($this->_warnings) > 0){
-			$this->_getWarnings();
-		}
-
-		if(count($this->_errors) > 0){
-			$this->_getErrors();
-		}	
-
-		if(count($this->_warnings) == 0 && count($this->_errors) == 0){
-			echo "Status: OK!\n";
-			echo self::LINE_DIVISOR;
-		}	
-
+	private function _getSuccess(){
+		return $this->_getList($this->_success);
 	}
 
 	protected function getParam($key, $value = ""){
@@ -91,31 +89,91 @@ class Cli extends Frame{
 	}
 
 	protected function setResult($message = ""){
-		array_push($this->_result, $message."\n");
+		array_push($this->_result, self::line($message, 4));
+	}
+
+	protected function setSuccess($message = ""){
+		array_push($this->_success, self::line($message, 4));
 	}
 
 	protected function setWarning($message = ""){
-		array_push($this->_warnings, $message."\n");
+		array_push($this->_warnings, self::line($message, 4));
 	}
 
 	protected function setError($message = ""){
-		array_push($this->_errors, $message."\n");
+		array_push($this->_errors, self::line($message, 4));
 	}	
 
+	private function _colorize($text, $status) {
+		$out = "";
+
+		switch($status) {
+			case "SUCCESS":
+			$out = "[42m"; //Green background
+			break;
+			case "FAILURE":
+			$out = "[41m"; //Red background
+			break;
+			case "WARNING":
+			$out = "[43m"; //Yellow background
+			break;
+			case "NOTE":
+			$out = "[44m"; //Blue background
+			break;
+		}
+
+		return chr(27) . "{$out}{$text}" . chr(27);
+	}
+
+	private function _dialog($title, $output, $color){
+
+		echo $this->_colorize(self::SPACE, $color) . self::LN;
+		echo $this->_colorize(self::line("  {$title}: "), $color);
+		echo $this->_colorize(self::SPACE, $color) . self::LN;
+		echo $this->_colorize($output, $color);
+		echo $this->_colorize(self::SPACE, $color) . self::LN;
+
+		echo "\033[0m".self::LN;		
+	}
+
+	protected function prompt($text){
+		$prompt = "{$text}: ";
+		echo $prompt;
+		$answer =  rtrim( fgets( STDIN ));
+		$this->_answer = $answer;
+		echo "\033[0;32m {$answer}\033[0m".self::LN;
+	}
+
 	protected function output(){
-		 
-		$output = $this->_getList($this->_result);
+		
+		echo self::LN;
+		$result = $this->_getResult();
+		$this->_dialog("Message", $result, "NOTE");
 
-		echo self::LINE_DIVISOR;
-		echo "Executed @: " . Date::getCurrentDateTime() . "\n";
-		echo self::LINE_DIVISOR;
-		echo "Message: {$output}";
-		echo self::LINE_DIVISOR;
+		if (count($this->_success) > 0) {
 
-		$this->_getStatus();
+			if(count($this->_result) == 0) echo self::LN; 
 
-		echo self::LINE_DIVISOR;
-	
+			$success = $this->_getSuccess();
+			$this->_dialog("Success", $success, "SUCCESS");
+		}
+
+		if (count($this->_warnings) > 0) {
+
+			if(count($this->_result) == 0 && count($this->_success) == 0) echo self::LN; 
+
+			$warnings = $this->_getWarnings();
+			$this->_dialog("Warnings", $warnings, "WARNING");
+		}
+
+		if (count($this->_errors) > 0) {
+
+			if(count($this->_result) == 0 && count($this->_success) == 0 && count($this->_warnings) == 0) echo self::LN; 
+
+			$errors = $this->_getErrors();
+			$this->_dialog("Errors", $errors, "FAILURE");
+		}
+
 	}
 
 	public function __construct(array $args = []){
