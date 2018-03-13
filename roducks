@@ -113,10 +113,10 @@ if(isset($params[0])){
 	if(method_exists($class, $method)){
 		$class->$method();
 	} else {
-		Cli::println("Unknown command: {$cls}::{$method}");
+		Cli::println("Unknown command: {$cls}::{$method}", Cli::FAILURE);
 	}
 	
 }else{
-	Cli::println("Please set a command");
+	Cli::println("Please set a command", Cli::FAILURE);
 }
 

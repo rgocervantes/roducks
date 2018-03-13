@@ -72,21 +72,21 @@ class User extends Cli {
 					$tx = $user->create($data);
 
 					if($tx === false){
-						$this->setError("User could not be created.");
+						$this->error("User could not be created.");
 					} else {
-						$this->setResult("User was created successfully!");
+						$this->success("User was created successfully!");
 					}
 
 				} else {
-					$this->setWarning("Super Admin was already created.");
+					$this->warning("Super Admin was already created.");
 				}
 
 			} else {
-				$this->setError("Password length must be at least 7 chars.");
+				$this->error("Password length must be at least 7 chars.");
 			}
 
 		} else {
-			$this->setWarning("Email and Password are required.");
+			$this->warning("Email and Password are required.");
 		}
 
 		parent::output();
@@ -108,13 +108,13 @@ class User extends Cli {
 				$row = $user->fetch();
 
 				$user->changePassword($row['id_user'], $password);
-				$this->setResult("User was reset successfully!");
+				$this->success("User was reset successfully!");
 			} else {
-				$this->setError("User does not exist.");
+				$this->error("User does not exist.");
 			}
 
 		} else {
-			$this->setWarning("Email and Password are required.");
+			$this->warning("Email and Password are required.");
 		}
 
 		parent::output();
@@ -122,15 +122,16 @@ class User extends Cli {
 	}
 
 	public function who(){
+
 		$id = $this->getParam('id', 1);
 		$db = $this->db();
 		$user = UsersTable::open($db)->load($id);
 
 		if($user->getId()){
-			$this->setResult( $user->getFirstName() . " " . $user->getLastName() );
-			$this->setResult( $user->getEmail() );
+			$this->result( $user->getFirstName() . " " . $user->getLastName() );
+			$this->result( $user->getEmail() );
 		} else {
-			$this->setError("Invalid user ID.");
+			$this->error("Invalid user ID.");
 		}
 
 		parent::output();
