@@ -18,6 +18,7 @@ Icon
 node_modules
 bower_components
 vendor
+*.lock
 
 # build the extensions
 extensions.js
