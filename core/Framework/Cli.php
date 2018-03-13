@@ -94,11 +94,11 @@ class Cli extends Frame{
 		echo "\033[0m".self::LN;		
 	}
 
-	static function println($text, $color = "NOTE"){
+	static function println($text, $color = "NOTE", $px = 0){
 		echo self::LN;
 
 		echo self::_colorize(self::SPACE, $color) . self::LN;
-		echo self::_colorize(self::line(" {$text}"), $color);
+		echo self::_colorize(self::line("  {$text}", $px), $color);
 		echo self::_colorize(self::SPACE, $color) . self::LN;
 		echo "\033[0m".self::LN;
 

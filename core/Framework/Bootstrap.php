@@ -73,7 +73,7 @@ spl_autoload_register(function($class){
                 if(!$isEvent)
                     Error::classNotFound(TEXT_CLASS_NOT_FOUND,__LINE__, __FILE__, $path, $className);
             } else {
-                Cli::println("Class '{$className}' was not found.", Cli::FAILURE);
+                Cli::println("Class '{$className}' was not found.", Cli::FAILURE, -1);
             }
 		}
     }else{
@@ -82,7 +82,7 @@ spl_autoload_register(function($class){
             if(!$isEvent)
                 Error::debug(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $path);
         } else {
-            Cli::println("Script file not found: {$path}", Cli::FAILURE);
+            Cli::println("Script file not found: {$path}", Cli::FAILURE, -1);
         }  
     }
 });
