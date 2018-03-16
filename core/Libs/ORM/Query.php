@@ -68,7 +68,6 @@ class Query {
 	const DATA_OBJECT = "object";
 	const DATA_ARRAY = "array";
 	const DATA_ASSOC = "assoc";
-	const NOW = "NOW()";
 
 	private $_db,	
 		$_statment, 
@@ -358,7 +357,7 @@ class Query {
 	}
 
 	static private function _value($v){
-		if($v == 'NOW()'){
+		if($v == 'NOW()' || $v == 'NULL'){
 			return $v;
 		}
 
@@ -460,7 +459,11 @@ class Query {
 	}
 
 	static function now(){
-		return self::NOW;
+		return "NOW()";
+	}
+
+	static function null(){
+		return "NULL";
 	}
 
 	static function getPageFromOffset($offset, $limit){

@@ -243,7 +243,7 @@ class Model extends Query{
 					break;
 				}
 
-				if(empty($value)){
+				if(empty($value) || $value == "NULL"){
 					continue;
 				}
 
