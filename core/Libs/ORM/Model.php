@@ -469,6 +469,17 @@ class Model extends Query{
 		return $this->count($this->id);
 	}
 
+	public function getData(){
+
+		$ret = [];
+
+		if($this->rows()): while($row = $this->fetch()):
+		        $ret[] = $row;
+		endwhile; endif;
+
+		return $ret;
+	}
+
 	public function filteredBy($field){
 
 		$results = parent::distinct($field);
