@@ -32,8 +32,9 @@ class Table extends Query
 	static function _format($field, $dataType, $value = "NULL", $comment = "")
 	{
 		$value = strtoupper($value);
+		$unsigned = ($this->unsigned) ? ' UNSIGNED' : '';
 		$notes = (!empty($comment)) ? " COMMENT '{$comment}'" : "";
-		return "`{$field}` {$dataType} {$value}{$notes}";
+		return "`{$field}` {$dataType}{$unsigned} {$value}{$notes}";
 	}
 
 	static private function _getAttrs($callback, $value = null, $default = null)
@@ -44,6 +45,7 @@ class Table extends Query
 		$attrs->default = $default;
 		$attrs->comment = "";
 		$attrs->nullable = true;
+		$attrs->unsigned = false;
 		$attrs->after = "";
 		
 		if (is_callable($callback)) {
@@ -223,7 +225,7 @@ class Table extends Query
 	public function id($field = "id", $dataType = "bigint(8)")
 	{
 		$this->_pk = $field;
-		$this->_raw[] = self::_format($field, "{$dataType} AUTO_INCREMENT", 'NOT NULL');
+		$this->_raw[] = self::_format($field, "{$dataType} unsigned AUTO_INCREMENT", 'NOT NULL');
 	}
 
 	public function varchar($field, $callback = "")
@@ -253,6 +255,12 @@ class Table extends Query
 	public function foreignKey($fk, $references, $key)
 	{
 		$this->_foreign[] = "CONSTRAINT `{$fk}` FOREIGN KEY (`{$fk}`) REFERENCES `{$references}` (`{$key}`) ON DELETE CASCADE ON UPDATE CASCADE";
+	}
+
+	public function uniqueKey($field, $constraint = "")
+	{
+		$name = (!empty($constraint)) ? $constraint : "{$field}_unique";
+		$this->_foreign[] = "UNIQUE KEY `{$name}` (`{$field}`)";
 	}
 
 	public function uniqueIndex($field)
