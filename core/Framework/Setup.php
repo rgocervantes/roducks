@@ -175,7 +175,7 @@ abstract class Setup extends Cli
 		]);
 	}
 
-	public function finished($script)
+	public function finished($script, $run)
 	{
 
 		$success = null;
@@ -183,10 +183,10 @@ abstract class Setup extends Cli
 
 		if (DB::success()) {
 			$success = "{$script} - " . static::COMMENTS;
-			$this->saved($script, 'php');
+			if ($run) $this->saved($script, 'php');
 		} else {
 			DB::reset();
-			$error = "{$script} failed! =(";
+			$error = "{$script} failed!";
 		}
 		
 		return [

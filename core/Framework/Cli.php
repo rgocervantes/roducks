@@ -176,6 +176,26 @@ class Cli extends Frame{
 		return $this->_answer;
 	}
 
+	protected function entered($option){
+		return ($this->getAnswer() == $option);
+	}
+
+	protected function yes(){
+		return $this->entered("y");
+	}
+
+	protected function no(){
+		return $this->entered("n");
+	}
+
+	protected function yesNo(){
+		$answer = $this->getAnswer();
+
+		if (!in_array($answer, ["y","n"])) {
+			$this->wrong("Unknown option: " . $answer);
+		}
+	}
+
 	protected function colorGreen($text){
 		return $this->_color($text, "0;32m");
 	}
@@ -242,6 +262,15 @@ class Cli extends Frame{
 			self::_dialog(null, $output, self::FAILURE);
 		}
 
+	}
+
+	protected function reset(){
+		$this->_warnings = [];
+		$this->_errors = [];
+		$this->_result = [];
+		$this->_success = [];
+		$this->_correct = [];
+		$this->_wrong = [];
 	}
 
 	public function __construct(array $args = []){

@@ -48,26 +48,27 @@ class Schema extends Setup
 		return $files;
 	}
 
-	private function _run($script)
+	private function _run($script, $run)
 	{
 
 		$class = "App\Schema\Setup\\" . $script;
+		$dialog = ($run) ? 'success' : 'result';
 
 		if (class_exists($class)) {
 			$obj = new $class();
 			if (method_exists($obj, 'schema')) {
-				$obj->schema($this->db());
+				if ($run) $obj->schema($this->db());
 				if (method_exists($obj, 'store')) { 
-					$obj->store($this->db());
+					if ($run) $obj->store($this->db());
 				}
-				$finished = $obj->finished($script);
+				$finished = $obj->finished($script, $run);
 
 				if (!is_null($finished['success'])) {
-					$this->setResult($finished['success']);
+					$this->$dialog($finished['success']);
 				}
 
 				if (!is_null($finished['error'])) {
-					$this->setError($finished['error']);
+					$this->error($finished['error']);
 				}
 
 			} else {
@@ -77,11 +78,11 @@ class Schema extends Setup
 
 	}
 
-	private function _search($file)
+	private function _search($file, $run = true)
 	{
 
 		if ($this->isUnsaved($file, 'php')) {
-			$this->_run($file);
+			$this->_run($file, $run);
 		} else {
 			$this->_count++;
 		}
@@ -92,13 +93,14 @@ class Schema extends Setup
 	{
 
 		$script = $this->getParam('script', null);
+		$prompt = true;
 
 		if (!is_null($script)) {
 			$this->_search($script);
 			$total = 1;
 
 			if ($total == $this->_count) {
-				$this->setResult("Script is already set up.");
+				$this->result("Script is already set up.");
 			}
 
 		} else {
@@ -108,16 +110,36 @@ class Schema extends Setup
 
 			foreach ($files as $file) {
 				$file = str_replace(FILE_EXT, '', $file);
-				$this->_search($file);
+				$this->_search($file, false);
 			}
 
 			if ($total == $this->_count) {
-				$this->setResult("There are no scripts to set up.");
+				$prompt = false;
+				$this->result("There are no scripts to set up.");
 			}
 
 		}
 
 		parent::output();
+
+		if ($prompt) {
+
+			$this->reset();
+			$this->prompt("Do you want to run these scripts [y/n]");
+
+			if ($this->yes()) {
+
+				foreach ($files as $file) {
+					$file = str_replace(FILE_EXT, '', $file);
+					$this->_search($file, true);
+				}
+
+			} else {
+				$this->yesNo();
+			}
+
+			parent::output();
+		}
 
 	}
 
@@ -143,11 +165,11 @@ class Schema extends Setup
 				if ($this->getFlag('save')) {
 
 					$this->saved($file, 'sql');
-					$this->setResult("{$file} is {$label}!");
+					$this->result("{$file} is {$label}!");
 
 				} else {
 
-					$this->setResult("{$file} needs to be {$label}");
+					$this->result("{$file} needs to be {$label}");
 
 				}
 			} else {
@@ -157,7 +179,7 @@ class Schema extends Setup
 		}
 
 		if ($total == $count) {
-			$this->setResult("There are no scripts to be {$label}.");
+			$this->result("There are no scripts to be {$label}.");
 		}
 
 		parent::output();
