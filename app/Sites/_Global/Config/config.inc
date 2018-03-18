@@ -21,13 +21,13 @@
 use Roducks\Framework\Path;
 
 return [
-	'USER' => [
-		'PREFIX' => "user_",
-		'CLIPPING' => "full",	
-		'DIR_UPLOAD' => Path::getUploadsUsers(),
-		'DIR_UPLOADED' => Path::getUploadedUsers(),
-		'SQUARED_CLIPPINGS' => [150,90,20],
-		'SIZE' => [400,"KB"],
-		'TYPES' => ['image/jpg','image/png','image/jpeg']
+	'user' => [
+		'prefix' => "user_",
+		'clipping' => "full",	
+		'dir_upload' => Path::getUploadsUsers(),
+		'dir_uploaded' => Path::getUploadedUsers(),
+		'squared_clippings' => [150,90,20],
+		'size' => [400,"KB"],
+		'types' => ['image/jpg','image/png','image/jpeg']
 	]
 ];

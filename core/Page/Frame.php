@@ -178,6 +178,58 @@ abstract class Frame{
 		return Core::getSiteModuleConfigFile($site, $module);
 	}
 
+	/*
+
+		$this->config('global',"user:prefix", 1);
+
+		$this->config('site', "user:prefix"], 1);
+		$this->config('site:test', "user:prefix"], 1);
+
+		$this->config('module', "user:prefix"], 1);
+		$this->config('module:blog', "user:prefix"], 1);
+
+		$this->config('admin:users', "user:prefix"], 1);
+
+	*/
+	protected function config($tag, $var, $value = ""){
+
+		$type = null;
+		$config = [];
+
+		if (Helper::regexp("#:#", $tag)) {
+			list($tag, $type) = explode(":", $tag);
+		}
+
+		switch ($tag) {
+			case 'global':
+				$config = $this->getGlobalConfig();
+				break;
+			
+			case 'site':
+				$config = (is_null($type)) ? $this->getSiteConfig() : $this->getSiteConfig($type);
+				break;
+
+			case 'module':
+				$config = (is_null($type)) ? $this->getModuleConfig() : $this->getModuleConfig($type);
+				break;
+
+			default:
+				$tag = Helper::getCamelName($tag);
+				$type = Helper::getCamelName($type);
+
+				$config = $this->getSiteModuleConfig($tag, $type);
+				break;
+
+		}
+
+		if (Helper::regexp("#:#", $var)) {
+			$var = explode(":", $var);
+		}
+
+		return Helper::getArrayValue($config, $var, $value);		
+		
+	}
+
 	protected function getViewData(){
 		if($this->view instanceof View){
 			return $this->view->getData();

@@ -408,6 +408,22 @@ class Helper{
 		return array_merge(array(), $arr);
 	}
 
+	static function getArrayValue($data, $index, $value){
+
+		if (is_array($index)) {
+
+			$ret = $data;
+			foreach ($index as $i) {
+				$ret = self::getArrayValue($ret, $i, $value);
+			}
+
+			return $ret;
+		} else {
+			return (isset($data[$index])) ? $data[$index] : $value;
+		}
+
+	}
+
 	static function getUrlParams(array $params = []){
 		
 		unset($params[0]);
