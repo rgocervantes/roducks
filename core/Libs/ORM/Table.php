@@ -32,9 +32,8 @@ class Table extends Query
 	static function _format($field, $dataType, $value = "NULL", $comment = "")
 	{
 		$value = strtoupper($value);
-		$unsigned = ($this->unsigned) ? ' UNSIGNED' : '';
 		$notes = (!empty($comment)) ? " COMMENT '{$comment}'" : "";
-		return "`{$field}` {$dataType}{$unsigned} {$value}{$notes}";
+		return "`{$field}` {$dataType} {$value}{$notes}";
 	}
 
 	static private function _getAttrs($callback, $value = null, $default = null)
@@ -61,7 +60,8 @@ class Table extends Query
 	private function _setField($type, $field, $callback = "")
 	{
 		$attrs = self::_getAttrs($callback);
-		$this->_raw[] = self::_format($field, $type, $attrs->empty, $attrs->comment);
+		$dataType = ($attrs->unsigned) ? $type . ' UNSIGNED' : $type;
+		$this->_raw[] = self::_format($field, $dataType, $attrs->empty, $attrs->comment);
 	}
 
 	private function _execute($statment)
@@ -225,7 +225,7 @@ class Table extends Query
 	public function id($field = "id", $dataType = "bigint(8)")
 	{
 		$this->_pk = $field;
-		$this->_raw[] = self::_format($field, "{$dataType} unsigned AUTO_INCREMENT", 'NOT NULL');
+		$this->_raw[] = self::_format($field, "{$dataType} UNSIGNED AUTO_INCREMENT", 'NOT NULL');
 	}
 
 	public function varchar($field, $callback = "")

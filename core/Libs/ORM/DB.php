@@ -98,7 +98,7 @@ class DB
     static function insertInto(\mysqli $db, $name, $callback)
     {   
         $table = new Table($db, $name);
-        $query = new Query($db, 'Sample');
+        $query = new Query($db, $name);
         
         $callback($table);
         $columns = $table->getColumns();
