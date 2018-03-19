@@ -14,13 +14,13 @@
 			$("#btn-upload-box").height()
 		], // size
 		url: '/_service/file-ajax/module/global/user/upload-file',
-		onUpload: function(){
+		onClick: function(){
 			$rdks.modal.loader(true);
 		},
 		onSelect: function(){
 			$rdks.modal.loader(false);
 		},
-		onSuccess: function(response){
+		onUpload: function(response){
 
 			if(response.success) {
 				$rdks.modal.loader(true);
