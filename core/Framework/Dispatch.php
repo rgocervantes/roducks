@@ -260,7 +260,7 @@ class Dispatch{
 		/* ------------------------------------*/
 		Core::getRouterFile();
 		$routers = Router::dispatch();
-		$routers['/static/images/[a-zA-Z0-9_\-\.\/]+'] = ['dispatch' => Helper::PAGE_NOT_FOUND . '::_media'];
+
 		$router['/_email/(?P<TEMPLATE>[a-z\-]+)'] = ['dispatch' => Helper::PAGE_NOT_FOUND . '::_email'];
 		$router['/_lang/(?P<LANG>\w{2}).*'] = ['dispatch' => Helper::PAGE_NOT_FOUND . '::_lang'];
 		$router['/_(page|json|xml|factory)/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_data_'];

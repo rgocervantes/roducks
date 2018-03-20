@@ -4,7 +4,7 @@ Options All -Indexes
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^static/images/(.+) index.php?uri=$1 [L,NC]
+RewriteRule ^static/images/(.+) static/uploads/images/$1
 RewriteRule ^public/(.+) assets/$1
 
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

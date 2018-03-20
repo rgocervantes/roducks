@@ -151,9 +151,4 @@ class Page extends GenericPage {
 
 	}
 
-	public function _media(){
-		\Roducks\Libs\Files\Download::attachment(DIR_DATA_UPLOADS_IMAGES . $_GET['uri']);
-	}
-
-
 }
