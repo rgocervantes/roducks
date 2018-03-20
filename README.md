@@ -60,8 +60,23 @@ cp app/Config/database.local.inc.sample app/Config/database.local.inc
 ```
 php roducks user:create --dev <YOUR_EMAIL> <YOUR_PASSWORD>
 ```
-19. Type in a Web Browser `http://admin.local.<YOUR_DOMAIN_NAME>` and Log In with your credentials to enter to Admin.
-20. Type in a Web Browser `http://local.<YOUR_DOMAIN_NAME>` to see the Front-End.
+
+19. Run commands below to create static folder
+```
+cd public/
+
+mkdir static
+
+cd ..
+
+pwd
+```
+20. Copy the route of your project and replace it by <PATH> in order to create a symbolic link
+```
+ln -s <PATH>/roducks/app/Data/uploads <PATH>/roducks/public/static
+```
+21. Type in a Web Browser `http://admin.local.<YOUR_DOMAIN_NAME>` and Log In with your credentials to enter to Admin.
+22. Type in a Web Browser `http://local.<YOUR_DOMAIN_NAME>` to see the Front-End.
 
 Congratulations! You just installed `Roducks` successfully.
 
@@ -89,8 +104,22 @@ cp core/Data/Config/* app/Data/storage/json/roles/
 ```
 php roducks user:create --pro <YOUR_EMAIL> <YOUR_PASSWORD>
 ```
-11. Type in a Web Browser `http://admin.<YOUR_DOMAIN_NAME>` and Log In with your credentials to enter to the Back-End.
-12. Type in a Web Browser `http://www.<YOUR_DOMAIN_NAME>` to see the Front-End.
+11. Run commands below to create static folder
+```
+cd public/
+
+mkdir static
+
+cd ..
+
+pwd
+```
+12. Copy the route of your project and replace it by <PATH> in order to create a symbolic link
+```
+ln -s <PATH>/roducks/app/Data/uploads <PATH>/roducks/public/static
+```
+13. Type in a Web Browser `http://admin.<YOUR_DOMAIN_NAME>` and Log In with your credentials to enter to the Back-End.
+14. Type in a Web Browser `http://www.<YOUR_DOMAIN_NAME>` to see the Front-End.
 
 Congratulations! You just deployed `Roducks` successfully.
 
