@@ -71,7 +71,7 @@ cd ..
 
 pwd
 ```
-20. Copy the route of your project and replace it by <PATH> in order to create a symbolic link
+20. Copy the route of your project and replace it by `<PATH>` in order to create a symbolic link
 ```
 ln -s <PATH>/roducks/app/Data/uploads <PATH>/roducks/public/static
 ```
@@ -114,7 +114,7 @@ cd ..
 
 pwd
 ```
-12. Copy the route of your project and replace it by <PATH> in order to create a symbolic link
+12. Copy the route of your project and replace it by `<PATH>` in order to create a symbolic link
 ```
 ln -s <PATH>/roducks/app/Data/uploads <PATH>/roducks/public/static
 ```
