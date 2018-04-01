@@ -1,1 +1,1 @@
-var pageControl = new $rdks.pager();
+var pageControl = new $rdks.pagination();
