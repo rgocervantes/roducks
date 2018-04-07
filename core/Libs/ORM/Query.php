@@ -31,7 +31,7 @@ namespace Roducks\Libs\ORM;
 	//-----------------
 
 	$query = new Query($db);
-	$query->statment("SELECT * FROM Users");
+	$query->query("SELECT * FROM Users");
 
 	if($query->rows()): while($row = $query->fetch()):
 		// $row
@@ -608,7 +608,7 @@ class Query {
 	/**
 	 *	Build query raw
 	 */
-	public function query($statment){
+	public function raw($statment){
 		return $this->_query($statment);
 	}
 
