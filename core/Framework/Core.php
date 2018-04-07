@@ -287,6 +287,15 @@ class Core{
 			$realPath = $path;
 		}
 
+		if($name == "config"){
+			$local = str_replace("config", "config.local", $path);
+			list($realPathx, $fileExistsx) = \App::getRealPath($local);
+			if ($fileExistsx){
+				$fileExists = true;
+				$realPath = $realPathx;
+			}
+		}
+
 		if($fileExists){
 			if ($name == "router") {
 				include $realPath;
