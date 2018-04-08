@@ -35,6 +35,17 @@ class Uploader extends Service
 
 	protected $_dispatchUrl = true;
 
+	private $_ajax = true,
+			$_response = [],
+			$_input = "uploader";
+
+	private function _serviceError($code, $msg)
+	{
+		if ($this->_ajax) {
+			$this->setError($code, $msg);
+		}
+	}
+
 	private function __makeCrops($fx, $dir, $f, array $cuts = [])
 	{
 
@@ -126,7 +137,7 @@ class Uploader extends Service
 		Directory::make($dir);
 
 		$filename = $prefix . Date::getFlatDate(Date::getCurrentDateTime());
-		$resp = $file->upload($dir, "uploader", $filename);
+		$resp = $file->upload($dir, $this->_input, $filename);
 
 		$data = [
 				'success' => $resp['success'],
@@ -137,20 +148,28 @@ class Uploader extends Service
 					'file' => $resp['file']
 				]	
 			];
-
-		$this->data($data);
-		
-		// We don't send Http headers because of this is a post request inside of an iframe and it's parsed properly as text plain. 
-		echo JSON::encode($this->getJsonData());	
+			
+		if ($this->_ajax) {
+			$this->data($data);
+			
+			// We don't send Http headers because of this is a post request inside of an iframe and it's parsed properly as text plain. 
+			echo JSON::encode($this->getJsonData());
+		} else {
+			$this->_response = $data;
+		}
 	
 	}
 	
 	private function _deleteFile($dir)
 	{
 		$file = File::init();
-		$file->delete($dir, $this->post->param("file"));		
+		$response = $file->delete($dir, $this->post->param("file"));		
 
-		parent::output();
+		if ($this->_ajax) { 
+			parent::output();
+		} else {
+			$this->_response = $response;
+		}
 	}
 
 	public function file($class = "", $index = "", $action = "")
@@ -178,43 +197,60 @@ class Uploader extends Service
 				if(isset($config['clipping']) && isset($config['dir_upload']) && isset($config['dir_uploaded']) && isset($config['squared_clippings'])){
 					$this->_crop($config['clipping'], \App::getRealFilePath($config['dir_upload']), $config['dir_uploaded'], $config['squared_clippings']);
 				} else {
-					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
+					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
 				break;
 			case 'cropLandscape':
 				if(isset($config['clipping']) && isset($config['dir_upload']) && isset($config['dir_uploaded']) && isset($config['landscape_clippings'])){
 					$this->_crop($config['clipping'], \App::getRealFilePath($config['dir_upload']), $config['dir_uploaded'], $config['landscape_clippings']);
 				} else {
-					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
+					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
 				break;
 			case 'uploadFile':
 				if(isset($config['prefix']) && isset($config['dir_upload']) && isset($config['dir_uploaded']) && isset($config['size']) && isset($config['types'])){
 					$this->_upload($config['prefix'], \App::getRealFilePath($config['dir_upload']), $config['dir_uploaded'], $config['size'], $config['types']);
 				} else {
-					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
+					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
 				break;
 			case 'deleteFile':
 				if(isset($config['dir_upload'])){
 					$this->_deleteFile($config['dir_upload']);
 				} else {
-					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
+					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
 				break;
 			case 'deleteCrops':
 				if(isset($config['dir_upload']) && isset($config['squared_clippings'])){
 					$this->_deleteCrops(\App::getRealFilePath($config['dir_upload']), $config['squared_clippings']);
 				} else {
-					$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
+					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
 				break;
 			default:
-				$this->setError(0, TEXT_SERVICE_UNAVAILABLE);
-				parent::output();
+				$this->setServiceError(0, TEXT_SERVICE_UNAVAILABLE);
+				if ($this->_ajax) parent::output();
 				break;												
 		}
 
 	}
 
-} 
+	public function uploadFile($input, $class, $index)
+	{
+		$this->_ajax = false;
+		$this->_input = $input;
+		$this->file($class, $index, 'upload-file');
+
+		return $this->_response;
+	}
+
+	public function deleteFile($class, $index)
+	{
+		$this->_ajax = false;
+		$this->file($class, $index, 'delete-file');
+
+		return $this->_response;
+	}
+
+}

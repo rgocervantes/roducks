@@ -219,7 +219,7 @@ final class File {
 	public function delete($path, $file){
 		$des = $path . $file;
 		if(file_exists($des) && $file != ''){
-			 @unlink($des);	
+			return @unlink($des);	
 		}
 	}
 
