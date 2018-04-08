@@ -178,15 +178,13 @@ class Home extends JSON{
 				$this->setError(2, TEXT_WAS_AN_ERROR);
 			} else {
 
-		  		$headers = [
-		 			'to' 		=> $email,
-		 			'from' 		=> EMAIL_FROM,
-		 			'company' 	=> PAGE_TITLE,
-		 			'subject' 	=> TEXT_RECOVER_PASSWORD
-		  		];
-
 		  		$this->data('token', $token);
-		  		$sender = $this->sendEmail($headers, 'recover-password');
+		  		$sender = $this->sendEmail('recover-password', function ($sender) use ($email) {
+		  			$sender->to = $email;
+		  			$sender->from = EMAIL_FROM;
+		  			$sender->company = PAGE_TITLE;
+		  			$sender->subject = TEXT_RECOVER_PASSWORD;
+		  		});
 
 		  		if(!$sender){
 		  			$this->setError(1, TEXT_ERROR_SENDING_EMAIL);
@@ -205,14 +203,12 @@ class Home extends JSON{
 
   		Form::setKey($this->post->hidden('form-key'));
 
-  		$headers = [
-   			'to' => EMAIL_TO,
-   			'from' => EMAIL_FROM,
-   			'company' => PAGE_TITLE,
-   			'subject' => TEXT_CONTACT_US
-  		];
-
-  		$sender = $this->sendEmail($headers, 'contact-us');
+  		$sender = $this->sendEmail('contact-us', function ($sender) {
+  			$sender->to = EMAIL_TO;
+  			$sender->from = EMAIL_FROM;
+  			$sender->company = PAGE_TITLE;
+  			$sender->subject = TEXT_CONTACT_US;
+		});
 
   		if(!$sender){
   			$this->setError(0, TEXT_ERROR_SENDING_EMAIL);
@@ -220,6 +216,6 @@ class Home extends JSON{
 
 		parent::output();
 
-	}	
+	}
 
 } 

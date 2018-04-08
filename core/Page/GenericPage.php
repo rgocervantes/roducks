@@ -37,25 +37,34 @@ class GenericPage extends Frame {
 		return $this->_jsonData;
 	}	
 
-	/**
-	*	EMAIL SERNDER
-	*/
-	/*
-	|--------------------------------------------|
-	 
-	  		$headers = [
-	 			'to' => "example@domain.com",
-	 			'from' => EMAIL_FROM,
-	 			'company' => PAGE_TITLE,
-	 			'subject' => "Contact Form"
-	 			];
-	|--------------------------------------------|	 			
-	*/
 	protected function invalidRequest(){
 		Http::setHeaderInvalidRequest();
 	}
-	
-	protected function sendEmail($headers, $template, $cookie = true){
+
+	/**
+	*	EMAIL SERNDER
+	*/
+	/*	
+		$this->sendEmail("contact-us", function ($sender) {
+			$sender->to = "example@domain.com";
+			$sender->from = EMAIL_FROM;
+			$sender->company = PAGE_TITLE;
+			$sender->subject = "Contact Form";
+		});
+
+	*/
+	protected function sendEmail($template, callable $callback){
+
+		$attrs = new \stdClass;
+		$attrs->cookie = true;
+		$callback($attrs);
+
+		$headers = [
+			'to' => $attrs->to,
+			'from' => $attrs->from,
+			'company' => $attrs->company,
+			'subject' => $attrs->subject
+		];
 
 		$store = [];
 		$data = $this->getViewData();
@@ -74,7 +83,7 @@ class GenericPage extends Frame {
 		// get html
 		$request = Request::init('GET', $url);
 
-		if($cookie){
+		if($attrs->cookie){
 			$request->persistSession();
 		}
 
