@@ -27,7 +27,7 @@ POST Example
 	$request
 	->params(['key' => "cmsdeu3719384c"])
 	->persistSession()
-	->ssl(0)
+	->ssl(false)
 	->execute();
 
 =====================
@@ -122,7 +122,8 @@ class Request{
 		return $this;		
 	}
 
-	public function ssl($value = 1){
+	public function ssl($option = true){
+		$value = ($option) ? 1 : 0;
 		curl_setopt($this->_ch, CURLOPT_SSL_VERIFYPEER, $value);
 		curl_setopt($this->_ch, CURLOPT_SSL_VERIFYHOST, $value);
 		return $this;
