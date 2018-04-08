@@ -807,10 +807,8 @@ class Query {
 		return $this;
 	}
 
-	public function offset($offset, $limit){
-		$this->paginate(self::getPageFromOffset($offset, $limit), $limit);
-
-		return $this;
+	public function offset($offset, $limit = 50){
+		return $this->paginate(self::getPageFromOffset($offset, $limit), $limit);
 	}
 
 	/**
