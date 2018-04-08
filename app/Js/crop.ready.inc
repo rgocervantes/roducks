@@ -13,7 +13,7 @@
 			Math.floor($("#btn-upload-box").width()),
 			$("#btn-upload-box").height()
 		], // size
-		url: '/_service/file-ajax/module/global/user/upload-file',
+		url: '/_service/uploader/file/global/user/upload-file',
 		onClick: function(){
 			$rdks.modal.loader(true);
 		},
@@ -24,9 +24,9 @@
 
 			if(response.success) {
 				$rdks.modal.loader(true);
-				$('#crop').html( $rdks.html.img( response.data.dir + response.data.img ) );
+				$('#crop').html( $rdks.html.img( response.data.dir + response.data.file ) );
 				$("#dir").val( response.data.dir );
-				$("#img").val( response.data.img );
+				$("#img").val( response.data.file );
 				$("#cropped").html('');
 
 				setTimeout(function(){

@@ -30,7 +30,7 @@ use Roducks\Libs\Files\File;
 use Roducks\Libs\Files\Directory;
 use Roducks\Libs\Utils\Date;
 
-class FileAjax extends Service
+class Uploader extends Service
 {
 
 	protected $_dispatchUrl = true;
@@ -134,7 +134,7 @@ class FileAjax extends Service
 				'code' => $resp['code'],
 				'data' => [
 					'dir' => $dir2,
-					'img' => $resp['file']
+					'file' => $resp['file']
 				]	
 			];
 
@@ -153,7 +153,7 @@ class FileAjax extends Service
 		parent::output();
 	}
 
-	public function module($class = "", $index = "", $action = "")
+	public function file($class = "", $index = "", $action = "")
 	{
 
 		$this->params([
