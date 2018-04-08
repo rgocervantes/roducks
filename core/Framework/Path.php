@@ -38,20 +38,92 @@ class Path{
 		endif;	
 
 		return $name . '_' . $s . '.' . $ext;
-	}	
+	}
 
-	static function getUploadedImage($file = ""){
+	static function getUploads($file = "")
+	{
+		return DIR_DATA_UPLOADS . $file;
+	}
+
+	static function getUploaded($file = "")
+	{
+		return DIR_DATA_UPLOADED . $file;
+	}
+
+	static function getUploadsImages($file = "")
+	{
+		return DIR_DATA_UPLOADS_IMAGES . $file;
+	}
+
+	static function getUploadedImages($file = "")
+	{
 		return DIR_DATA_UPLOADED_IMAGES . $file;
 	}
 
+	static function getUploadsCsv($file = "")
+	{
+		return DIR_DATA_UPLOADS_CSV . $file;
+	}
+
+	static function getUploadedCsv($file = "")
+	{
+		return DIR_DATA_UPLOADED_CSV . $file;
+	}
+
+	static function getUploadsPdf($file = "")
+	{
+		return DIR_DATA_UPLOADS_PDF . $file;
+	}
+
+	static function getUploadedPdf($file = "")
+	{
+		return DIR_DATA_UPLOADED_PDF . $file;
+	}
+
+	static function getUploadsZip($file = "")
+	{
+		return DIR_DATA_UPLOADS_ZIP . $file;
+	}
+
+	static function getUploadedZip($file = "")
+	{
+		return DIR_DATA_UPLOADED_ZIP . $file;
+	}
+
+	static function getUploadsJson($file = "")
+	{
+		return DIR_DATA_UPLOADS_JSON . $file;
+	}
+
+	static function getUploadedJson($file = "")
+	{
+		return DIR_DATA_UPLOADED_JSON . $file;
+	}
+
+	static function getUploadsXml($file = "")
+	{
+		return DIR_DATA_UPLOADS_XML . $file;
+	}
+
+	static function getUploadedXml($file = "")
+	{
+		return DIR_DATA_UPLOADED_XML . $file;
+	}
+
+	/**
+	*
+	*/
 	static function getUploadsUsers($file = ""){
 		return DIR_DATA_UPLOADS_USERS . $file;
 	}	
 
 	static function getUploadedUsers($file = ""){
 		return DIR_DATA_UPLOADED_USERS . $file;
-	}	
+	}
 
+	/**
+	*
+	*/
 	static function getAppUploadedImage($file){
 		return [DIR_DATA_UPLOADS_IMAGES, DIR_DATA_UPLOADED_IMAGES, $file];
 	}
@@ -83,6 +155,5 @@ class Path{
 	static function getPublicUploadedUsers($file){
 		return URL::getURL() . self::getUploadedUsers($file);
 	}
-
 
 }

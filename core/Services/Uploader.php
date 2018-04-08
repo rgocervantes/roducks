@@ -163,7 +163,8 @@ class Uploader extends Service
 	private function _deleteFile($dir)
 	{
 		$file = File::init();
-		$response = $file->delete($dir, $this->post->param("file"));		
+		$file = ($this->_ajax) ? $this->post->param("file") : $this->_input;
+		$response = $file->delete($dir, $file);		
 
 		if ($this->_ajax) { 
 			parent::output();
@@ -182,16 +183,12 @@ class Uploader extends Service
 		]);
 
 		$method = Helper::getCamelName($action, false);
-		$module = Helper::getCamelName($class);
-		$data = ($class == 'global') ? $this->getGlobalConfig() : $this->getModuleConfig($module);
-		$config = [];
+		$config = $this->config($class, $index, null);
 
-		if(isset($data[$index])){
-			$config = $data[$index];
-		} else {
+		if(is_null($config)){
 			$method = "invalid";
 		}
-		
+
 		switch ($method) {
 			case 'cropSquared':
 				if(isset($config['clipping']) && isset($config['dir_upload']) && isset($config['dir_uploaded']) && isset($config['squared_clippings'])){
@@ -234,23 +231,6 @@ class Uploader extends Service
 				break;												
 		}
 
-	}
-
-	public function uploadFile($input, $class, $index)
-	{
-		$this->_ajax = false;
-		$this->_input = $input;
-		$this->file($class, $index, 'upload-file');
-
-		return $this->_response;
-	}
-
-	public function deleteFile($class, $index)
-	{
-		$this->_ajax = false;
-		$this->file($class, $index, 'delete-file');
-
-		return $this->_response;
 	}
 
 }
