@@ -21,7 +21,7 @@
 
     # CREATE A CSV
     $csv = new CSV();
-    $csv->file("my_csv_example");
+    $csv->file(DIR_UPLOADS, "my_csv_example");
     
     $txt = ''; // important to use a variable to append data     
 
@@ -40,7 +40,7 @@
     endfor;
 
     # SAVE & EXPORT
-    $csv->save(DIR_UPLOADS, $txt); 
+    $csv->save($txt); 
     $csv->download($txt); 
 
 */
