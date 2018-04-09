@@ -37,6 +37,7 @@ class Storage extends Service
 
 	private $_ajax = true,
 			$_response = [],
+			$_fileName = null,
 			$_input = "uploader";
 
 	private function _serviceError($code, $msg)
@@ -136,7 +137,7 @@ class Storage extends Service
 		// If upload directory does not exist, let's create it!
 		Directory::make($dir);
 
-		$filename = $prefix . Date::getFlatDate(Date::getCurrentDateTime());
+		$filename = (!is_null($this->_fileName)) ? $this->_fileName : $prefix . Date::getFlatDate(Date::getCurrentDateTime());
 		$resp = $file->upload($dir, $this->_input, $filename);
 
 		$data = [
@@ -231,6 +232,12 @@ class Storage extends Service
 				break;												
 		}
 
+	}
+
+	public function uploadFileWithName($name, $input, $class, $index)
+	{
+		$this->_fileName = $name;
+		return $this->uploadFile($input, $class, $index);
 	}
 
 	public function uploadFile($input, $class, $index)
