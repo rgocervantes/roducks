@@ -88,18 +88,18 @@ final class File {
 
 		File::move([
 			[
-				'FROM' => DIR_DATA_STORAGE_XML, 
-				'TO' => DIR_DATA_STORAGE_XML."comments/", 
-				'FILE' => "blogx.xml"
+				'from' => DIR_DATA_STORAGE_XML, 
+				'to' => DIR_DATA_STORAGE_XML."comments/", 
+				'file' => "blogx.xml"
 			]
 		]);
 
 	*/
 	static function move($files){
 		foreach ($files as $file) {
-			$from = $file['FROM'].$file['FILE'];
-			if(file_exists($from) && file_exists($file['TO']) && $file['FROM'] != $file['TO']){
-				rename($file['FROM'].$file['FILE'], $file['TO'].$file['FILE']);
+			$from = $file['from'].$file['file'];
+			if(file_exists($from) && file_exists($file['to']) && $file['from'] != $file['to']){
+				rename($file['from'].$file['file'], $file['to'].$file['file']);
 			}
 		}
 	}
