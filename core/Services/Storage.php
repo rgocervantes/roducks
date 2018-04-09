@@ -146,7 +146,8 @@ class Storage extends Service
 				'code' => $resp['code'],
 				'data' => [
 					'dir' => $dir2,
-					'file' => $resp['file']
+					'file' => $resp['file'],
+					'path' => $dir2 . $resp['file']
 				]	
 			];
 			
