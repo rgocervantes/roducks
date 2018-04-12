@@ -137,7 +137,7 @@ class Router
 		];
 
 		$methods = $params();
-		$options = ['catalog', 'store', 'update', 'row', 'delete'];
+		$options = ['catalog', 'store', 'update', 'row', 'remove'];
 
 		foreach ($options as $option) {
 			if(!isset($methods[$option])){
@@ -159,7 +159,7 @@ class Router
 				case 'row':
 					$path2['GET'] = $value;
 					break;
-				case 'delete':
+				case 'remove':
 					$path2['DELETE'] = $value;
 					break;
 			}
