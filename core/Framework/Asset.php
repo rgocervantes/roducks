@@ -84,7 +84,6 @@ class Asset{
 		}
 
 		$load = true;
-		//$resource = Helper::ext($script,$type);
 		$resource = preg_replace('/^(.+)\?v=[0-9.]+$/', '$1', $script);
 
 		if(Helper::isHttp($script)){
@@ -92,7 +91,7 @@ class Asset{
 		}else{
 			$file = $dir . $resource;
 			$file_repo =  str_replace('/public/', 'public/assets/', $file);
-			//echo "{$file_repo}<br>";
+
 			if(!\App::fileExists($file_repo)) $load = false;
 		} 
 
@@ -107,6 +106,8 @@ class Asset{
 			
 			if($resource['load']){
 				$file = $resource['file'];
+				$p = (preg_match('/\?v=[0-9\.]+$/', $file)) ? "&t" : "?t";
+				if(Environment::inDEV()) $file = $file .  $p . "=" . time();
 				$attrs = (!empty($resource['attrs'])) ? " " . Html::getAttributes($resource['attrs']) : "";
 				$tag = "<link type=\"text/css\" rel=\"stylesheet\" href=\"{$file}\"{$attrs} />\n";
 			
@@ -126,6 +127,8 @@ class Asset{
 			
 			if($resource['load']){
 				$file = $resource['file'];
+				$p = (preg_match('/\?v=[0-9\.]+$/', $file)) ? "&t" : "?t";
+				if(Environment::inDEV()) $file = $file .  $p . "=" . time();
 				$attrs = (!empty($resource['attrs'])) ? " " . Html::getAttributes($resource['attrs']) : "";
 				$tag = "<script type=\"text/javascript\" src=\"{$file}\"{$attrs}></script>\n";
 
