@@ -2,7 +2,7 @@
 			'jpg'
 		];
 
-	var size = <?php echo \Roducks\Page\Block::getData("user")->getUploadSize(); ?>;	
+	var size = <?php echo \Roducks\Services\Storage::init()->getSize('global','user'); ?>;	
 
 	uploader.init({
 		id: '#btn-upload', // .btn-upload

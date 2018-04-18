@@ -259,4 +259,13 @@ class Storage extends Service
 		return $this->_response;
 	}
 
+	public function getSize($name, $index)
+	{
+		$config = $this->config($name, "{$index}:size", null);
+		$json = (!is_null($config)) ? $config : [100,"KB"];
+		
+		return JSON::encode($json);
+
+	}
+
 }

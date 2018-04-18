@@ -119,13 +119,6 @@ class User extends Block{
 
 	}
 
-	public function getUploadSize(){
-		$config = $this->config('global', 'user:size', null);
-		$json = (!is_null($config)) ? $config : [100,"KB"];
-		
-		return JSON::encode($json);
-	}
-
 	public function output($session, $resize = 150){
 
 		$this->params([
