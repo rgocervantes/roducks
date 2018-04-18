@@ -1,4 +1,4 @@
-<?php use Roducks\framework\Language; ?>
+<?php use Roducks\Framework\Language; ?>
 	$rdks.datepicker({
 		from: {
 			id: "#start_date",

@@ -1,5 +1,5 @@
 <?php
-use Roducks\framework\Language;
+use Roducks\Framework\Language;
 ?>
 function cbFormUsersSuccess(response){
 	if(response.success){
