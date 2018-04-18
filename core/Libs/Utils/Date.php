@@ -101,7 +101,7 @@ class Date{
 
     static function convertToDMY($date, $sep = "-"){
         if(preg_match(self::REGEXP_DATE_YYYY_MM_DD, $date, $d)){
-           return implode($sep,array($d[3],$d[2],$d[1]));
+           return implode($sep,[$d[3],$d[2],$d[1]]);
         }
 
         return $date;
@@ -109,7 +109,7 @@ class Date{
 
     static function convertToYMD($date, $sep = "-"){
         if(preg_match(self::REGEXP_DATE_DD_MM_YYYY, $date, $d)){
-           return implode($sep,array($d[3],$d[2],$d[1]));
+           return implode($sep,[$d[3],$d[2],$d[1]]);
         }
 
         return $date;
@@ -128,7 +128,7 @@ class Date{
     }
 
     static function getFlatDate($str){
-        return str_replace(array("-","/",":"," "), "", $str);
+        return str_replace(["-","/",":"," "], "", $str);
     }
 
     static function getCurrentDate($sep = "-", $ymd = true){
@@ -211,33 +211,61 @@ class Date{
 
     static function getWeekDays($lg = 'en')
     {
-        $days = array();
-        $days['es'] = array('Sun' => 'Domingo',
-                            'Mon' => 'Lunes',
-                            'Tue' => 'Martes',
-                            'Wed' => 'Miércoles',
-                            'Thu' => 'Jueves',
-                            'Fri' => 'Viernes',
-                            'Sat' => 'Sábado'
-                            );  
+        $days = [];
+        $days['es'] = [
+            'Sun' => 'Domingo',
+            'Mon' => 'Lunes',
+            'Tue' => 'Martes',
+            'Wed' => 'Miércoles',
+            'Thu' => 'Jueves',
+            'Fri' => 'Viernes',
+            'Sat' => 'Sábado'                
+        ];  
                             
-        $days['en'] = array('Sun' => 'Sunday',
-                            'Mon' => 'Monday',
-                            'Tue' => 'Tuesday',
-                            'Wed' => 'Wednesday',
-                            'Thu' => 'Thursday',
-                            'Fri' => 'Friday',
-                            'Sat' => 'Saturday'
-                            );
+        $days['en'] = [
+            'Sun' => 'Sunday',
+            'Mon' => 'Monday',
+            'Tue' => 'Tuesday',
+            'Wed' => 'Wednesday',
+            'Thu' => 'Thursday',
+            'Fri' => 'Friday',
+            'Sat' => 'Saturday'
+        ];
         
         return $days[$lg];
     }
 
     static public function getMonths($lg = "en")
     {
-        $months = array();
-        $months['es'] = array('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre');    
-        $months['en'] = array('January','February','March','April','May','June','July','August','September','October','November','December');
+        $months = [];
+        $months['es'] = [
+            1 => 'Enero',
+            2 => 'Febrero',
+            3 => 'Marzo',
+            4 => 'Abril',
+            5 => 'Mayo',
+            6 => 'Junio',
+            7 => 'Julio',
+            8 => 'Agosto',
+            9 => 'Septiembre',
+            10 => 'Octubre',
+            11 => 'Noviembre',
+            12 => 'Diciembre'
+        ];    
+        $months['en'] = [
+            1 => 'January',
+            2 => 'February',
+            3 => 'March',
+            4 => 'April',
+            5 => 'May',
+            6 => 'June',
+            7 => 'July',
+            8 => 'August',
+            9 => 'September',
+            10 => 'October',
+            11 => 'November',
+            12 =>'December'
+        ];
         
         return $months[$lg];
     }
@@ -245,28 +273,34 @@ class Date{
     static function getDay($date){
         return date('d', strtotime($date));
     }
-
+/*
     static function getMonthDay($date, $lg = "en"){
         $m = date('m', strtotime($date));
         $months = self::getMonths($lg);
 
-        return $months[$m-1];
+        return $months[$m];
 
     }
 
     static function getCurrentMonthDay($lg = "en"){
-        $m = self::getCurrentMonth();
+        $m = intval(self::getCurrentMonth());
         $months = self::getMonths($lg);
 
-        return $months[$m-1];
+        return $months[$m];
 
     }
-
+*/
     # Ex. March (3)
     static function getMonthLabel($m, $lg = "en"){
+        $m = intval($m);
         $months = self::getMonths($lg);
 
-        return $months[$m-1];       
+        return $months[$m];       
+    }
+
+    static function getCurrentMonthLabel($lg = "en"){
+        $m = intval(self::getCurrentMonth());
+        return self::getMonthLabel($m, $lg);
     }
 
     # Ex. Thursday
@@ -297,9 +331,9 @@ class Date{
  
         $args = explode("-",$date);
      
-        $months = array();
-        $months['es'] = array();
-        $months['en'] = array();
+        $months = [];
+        $months['es'] = [];
+        $months['en'] = [];
      
         $months['es']['01'] = "Enero";
         $months['es']['02'] = "Febrero";
@@ -375,10 +409,12 @@ class Date{
         if($mode):
             return  $w . ', ' . $f;
         else:
-            return array('week' => $w,
-                        'date' => $f);
+            return [
+                'week' => $w,
+                'date' => $f
+            ];
         endif;    
-    }       
+    }
 
     static function getCurrentDateFormat($lg = "en", $mode = true){
         return self::getDateFormat(self::getCurrentDate(), $lg, $mode);
@@ -393,7 +429,7 @@ class Date{
     }
 
     static function addHoursToCurrentDate($hrs){
-        return self::addHours(self::getCurrentDate(), $hrs);
+        return self::addHours(self::getCurrentDateTime(), $hrs);
     }
 
     static function subtractHours($date, $hrs){
@@ -401,8 +437,8 @@ class Date{
     }
 
     static function subtractHoursToCurrentDate($hrs){
-        return self::subtractHours(self::getCurrentDate(), $hrs);
-    }    
+        return self::subtractHours(self::getCurrentDateTime(), $hrs);
+    } 
 
     static function addDays($date, $ds){
         return date("Y-m-d", strtotime("$date +$ds day"));
@@ -686,4 +722,3 @@ class Date{
  
 }
 
-?>
