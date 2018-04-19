@@ -220,6 +220,9 @@ class Table extends Query
 		$this->datetime('updated_at', function ($attrs) {
 			$attrs->nullable = false;
 		});
+		$this->datetime('deleted_at', function ($attrs) {
+			$attrs->nullable = false;
+		});
 	}
 
 	public function id($field = "id", $dataType = "bigint(8)")

@@ -134,6 +134,12 @@ class Query {
 							$ret .= "CONCAT(".$match[1] . "," . implode(",", $values) . ")";
 						}
 						break;
+					case 'is-null':
+						$ret .= $match[1] . " IS NULL ";
+						break;
+					case 'is-not-null':
+						$ret .= $match[1] . " IS NOT NULL ";
+						break;
 					case '%like%':
 						$ret .= $match[1] . " LIKE '%".$value."%' ";
 						break;
