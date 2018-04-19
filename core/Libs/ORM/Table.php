@@ -66,7 +66,7 @@ class Table extends Query
 
 	private function _execute($statment)
 	{
-		$tx = $this->query($statment);
+		$tx = $this->raw($statment);
 		DB::transaction($tx);
 	}
 
