@@ -128,10 +128,19 @@ class Query {
 					case 'concat':
 						if(is_array($value)){
 							$values = [];
-							foreach ($value as $v) {
+							foreach ($value[1] as $v) {
 								$values[] = ($v == " ") ? self::_field($v) : $v;
 							}
-							$ret .= "CONCAT(".$match[1] . "," . implode(",", $values) . ")";
+							$ret .= "CONCAT(".implode(",", $values) . ") = " . self::_field($value[0]);
+						}
+						break;
+					case 'concat:like':
+						if(is_array($value)){
+							$values = [];
+							foreach ($value[1] as $v) {
+								$values[] = ($v == " ") ? self::_field($v) : $v;
+							}
+							$ret .= "CONCAT(".implode(",", $values) . ") LIKE '%".$value[0]."%' ";
 						}
 						break;
 					case 'is-null':
@@ -447,12 +456,29 @@ class Query {
 		return self::alias("CONVERT({$field} using utf8)", $field);
 	}
 
-	static function concat($field, array $fields = []){
+	static function concat(array $fields = [], $field = ""){
 		$values = [];
 		foreach ($fields as $value) {
 			$values[] = (preg_match('/^[\s\-_\.+,;:]+$/', $value)) ? self::_field($value) : $value;
 		}
-		return self::alias("CONCAT(". implode(",", $values) .")", $field);
+		return self::field("CONCAT(". implode(",", $values) .")", $field);
+	}
+
+	static function	match(array $fields, $value){
+		return [$value, $fields];
+	}
+
+	static function concatBy(array $values, $char = " "){
+		$ret = [];
+		foreach ($values as $key => $value) {
+			if($key % 2 == 1) {
+				array_push($ret, $char);
+			}
+
+			array_push($ret, $value);
+		}
+
+		return $ret;
 	}
 
 	static function field($field, $alias = ""){
