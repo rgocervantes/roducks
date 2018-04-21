@@ -985,7 +985,7 @@ class Query {
 	 *	@param $condition array	
 	 *	@return integer
 	 */
-	public function count($id, array $condition = []){
+	public function count($id = "*", array $condition = []){
 		$where = $this->_where($condition);
 		return $this->_operator("COUNT", $this->_table, $id, $where);
 	}			
