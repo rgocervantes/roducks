@@ -18,7 +18,7 @@
  *
  */
 
-namespace Roducks\libs\Utils;
+namespace Roducks\Libs\Utils;
  
 class Date{
 
@@ -60,13 +60,10 @@ class Date{
  
     } 
 
-    static private function checkDate($d){
-        return preg_match(self::REGEXP_DATE_YYYY_MM_DD, $d); 
+    static function getFlatDate($str){
+        return str_replace(["-","/",":"," "], "", $str);
     }
 
-    /*----------------------------*/
-    /*---------- PUBLIC ----------*/
-    /*----------------------------*/
     static function matchDateTime($str){
         if(preg_match(self::REGEXP_DATETIME, $str, $matches)){
             return $matches;
@@ -85,6 +82,13 @@ class Date{
         return $str;
     }
 
+    /*----------------------------*/
+    /*---------- PUBLIC ----------*/
+    /*----------------------------*/
+    static function validDate($d){
+        return preg_match(self::REGEXP_DATE_YYYY_MM_DD, $d); 
+    }
+
     static function extractDate($str){
         return self::extractDateTime($str, 1);
     }
@@ -92,12 +96,6 @@ class Date{
     static function extractTime($str){
         return self::extractDateTime($str, 2);
     }   
-
-    static function extractDatePart($str, $index){
-        $d = self::getMatches(self::VALID_DATE_YYYY_MM_DD, $str);
-
-        return $d[$index];
-    }
 
     static function convertToDMY($date, $sep = "-"){
         if(preg_match(self::REGEXP_DATE_YYYY_MM_DD, $date, $d)){
@@ -127,10 +125,6 @@ class Date{
         return implode($sep, ["dd","mm","yyyy"]);
     }
 
-    static function getFlatDate($str){
-        return str_replace(["-","/",":"," "], "", $str);
-    }
-
     static function getCurrentDate($sep = "-", $ymd = true){
         if($ymd){
             return date(implode($sep,['Y','m','d']));
@@ -156,6 +150,10 @@ class Date{
     static function getCurrentDateFlat(){
         return self::getCurrentDate("");
     }
+
+    static function getCurrentDateTimeFlat(){
+        return self::getFlatDate(self::getCurrentDateTime());
+    }
  
     static function getCurrentDateTime(){
         return date('Y-m-d H:i:s');
@@ -173,12 +171,24 @@ class Date{
         return date('Y');
     } 
 
-    static function getCurrentMonth(){
-        return date('m');
+    static function getCurrentMonth($int = false){
+        $m = date('m');
+
+        if($int){
+            return intval($m);
+        }
+
+        return $m;
     } 
 
-    static function getCurrentDay(){
-        return date('d');
+    static function getCurrentDay($int = false){
+        $m = date('d');
+
+        if($int){
+            return intval($m);
+        }
+
+        return $m;
     }    
 
     static function getCurrentWeek(){
@@ -273,29 +283,28 @@ class Date{
     static function getDay($date){
         return date('d', strtotime($date));
     }
-/*
-    static function getMonthDay($date, $lg = "en"){
+
+    static function getMonth($date, $int = false){
         $m = date('m', strtotime($date));
-        $months = self::getMonths($lg);
 
-        return $months[$m];
+        if($int){
+            return intval($m);
+        }
 
+        return $m;
     }
 
-    static function getCurrentMonthDay($lg = "en"){
-        $m = intval(self::getCurrentMonth());
-        $months = self::getMonths($lg);
-
-        return $months[$m];
-
-    }
-*/
     # Ex. March (3)
     static function getMonthLabel($m, $lg = "en"){
         $m = intval($m);
         $months = self::getMonths($lg);
 
         return $months[$m];       
+    }
+
+    # Ex. March (3)
+    static function getMonthLabelFromDate($date, $lg = "en"){
+        return self::getMonthLabel(self::getMonth($date), $lg);     
     }
 
     static function getCurrentMonthLabel($lg = "en"){
@@ -306,7 +315,7 @@ class Date{
     # Ex. Thursday
     static function getWeekDay($date, $lg = "en"){
 
-        if(!self::checkDate($date)) return self::DATE_NOT_VALID;
+        if(!self::validDate($date)) return self::DATE_NOT_VALID;
         
         $y = date('D', strtotime($date));
 
@@ -327,7 +336,7 @@ class Date{
     # Ex. June 19th of 2014
     static function getDateFormat($date, $lang = "en", $mode = true){
 
-        if(!self::checkDate($date)) return self::DATE_NOT_VALID;
+        if(!self::validDate($date)) return self::DATE_NOT_VALID;
  
         $args = explode("-",$date);
      
@@ -401,7 +410,7 @@ class Date{
     # Ex. Thursday June 19th of 2014
     static function getDateFormatLong($date, $lg = "en", $mode = true)
     {
-        if(!self::checkDate($date)) return self::DATE_NOT_VALID;
+        if(!self::validDate($date)) return self::DATE_NOT_VALID;
 
         $w = self::getWeekDay($date, $lg);
         $f = self::getDateFormat($date, $lg, $mode);
@@ -428,7 +437,7 @@ class Date{
         return date("H:i:s", strtotime("$date +$hrs hour"));
     }
 
-    static function addHoursToCurrentDate($hrs){
+    static function addHoursToCurrentTime($hrs){
         return self::addHours(self::getCurrentDateTime(), $hrs);
     }
 
@@ -436,7 +445,7 @@ class Date{
         return date("H:i:s", strtotime("$date -$hrs hour"));
     }
 
-    static function subtractHoursToCurrentDate($hrs){
+    static function subtractHoursToCurrentTime($hrs){
         return self::subtractHours(self::getCurrentDateTime(), $hrs);
     } 
 
@@ -470,6 +479,22 @@ class Date{
   
     static function subtractMonthsToCurrentDate($ds){
         return self::subtractMonths(self::getCurrentDate(), $ds);
+    }
+
+    static function addYears($date, $ds){
+        return date("Y-m-d", strtotime("$date +$ds year"));
+    }
+
+    static function addYearsToCurrentDate($ds){
+        return self::addYears(self::getCurrentDate(), $ds);
+    }
+
+    static function subtractYears($date, $ds){
+        return date("Y-m-d", strtotime("$date -$ds year"));
+    }        
+  
+    static function subtractYearsToCurrentDate($ds){
+        return self::subtractYears(self::getCurrentDate(), $ds);
     }
   
     static function getPreviousDay(){
@@ -711,13 +736,13 @@ class Date{
         return $date;
     }   
 
-    static function getLastDaysInMonth($year, $month){
+    static function getLastDayOfMonth($year, $month){
         $date = $year."-".$month."-1";
         return date("t", strtotime($date));
     }
 
-    static function getLastDaysOfCurrentMonth(){
-        return self::getLastDaysInMonth(self::getCurrentYear(),self::getCurrentMonth());
+    static function getLastDayOfCurrentMonth(){
+        return self::getLastDayOfMonth(self::getCurrentYear(),self::getCurrentMonth());
     }
  
 }
