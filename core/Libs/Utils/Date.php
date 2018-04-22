@@ -133,18 +133,21 @@ class Date{
         return date(implode($sep,['d','m','Y']));
     }
 
-    static function getDateArray($dateStr){
-        $d = explode("-", $dateStr);
+    static function getDateArray($dateStr, $int = false){
+        $t = explode("-", $dateStr);
+        $y = ($int) ? intval($t[0]) : $t[0];
+        $m = ($int) ? intval($t[1]) : $t[1];
+        $d = ($int) ? intval($t[2]) : $t[2];
 
         return [
-            'y' => intval($d[0]),
-            'm' => intval($d[1]),
-            'd' => intval($d[2])
+            'y' => $y,
+            'm' => $m,
+            'd' => $d
         ];
     }
 
-    static function getCurrentDateArray(){
-        return self::getDateArray(self::getCurrentDate());
+    static function getCurrentDateArray($int = false){
+        return self::getDateArray(self::getCurrentDate(), $int);
     }
 
     static function getCurrentDateFlat(){
