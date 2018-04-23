@@ -137,7 +137,7 @@ class Storage extends Service
 		// If upload directory does not exist, let's create it!
 		Directory::make($dir);
 
-		$filename = (!is_null($this->_fileName)) ? $this->_fileName : $prefix . Date::getFlatDate(Date::getCurrentDateTime());
+		$filename = (!is_null($this->_fileName)) ? $this->_fileName : $prefix . Date::getCurrentDateTimeFlat();
 		$resp = $file->upload($dir, $this->_input, $filename);
 
 		$data = [
