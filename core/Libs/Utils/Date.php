@@ -97,21 +97,25 @@ class Date{
         return self::extractDateTime($str, 2);
     }   
 
-    static function convertToDMY($date, $sep = "-"){
-        if(preg_match(self::REGEXP_DATE_YYYY_MM_DD, $date, $d)){
+    static function convertToYMD($date, $sep = "-"){
+        $date = str_replace("/", "-", $date);
+
+        if(preg_match(self::REGEXP_DATE_DD_MM_YYYY, $date, $d)){
            return implode($sep,[$d[3],$d[2],$d[1]]);
         }
 
         return $date;
     }
 
-    static function convertToYMD($date, $sep = "-"){
-        if(preg_match(self::REGEXP_DATE_DD_MM_YYYY, $date, $d)){
+    static function convertToDMY($date, $sep = "-"){
+        $date = self::convertToYMD($date);
+
+        if(preg_match(self::REGEXP_DATE_YYYY_MM_DD, $date, $d)){
            return implode($sep,[$d[3],$d[2],$d[1]]);
         }
 
         return $date;
-    } 
+    }
 
     static function getEmptyDate(){
         return "0000-00-00";
