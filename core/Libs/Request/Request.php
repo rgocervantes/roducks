@@ -25,7 +25,7 @@ POST Example
 =====================
 	$request = Request::init('POST',"http://www.google.com");
 	$request
-	->params(['key' => "cmsdeu3719384c"])
+	->body(['key' => "cmsdeu3719384c"])
 	->persistSession()
 	->ssl(false)
 	->execute();
@@ -35,7 +35,7 @@ GET Example
 =====================
 	$request = Request::init('GET',"http://www.google.com");
 	$request
-	->params(['key' => "cmsdeu3719384c"])
+	->body(['key' => "cmsdeu3719384c"])
 	->execute();
 
 =====================
@@ -106,7 +106,7 @@ class Request{
 
 	}
 
-	public function params($values){
+	public function body($values){
 
 		switch ($this->_type) {
 			case 'GET':
