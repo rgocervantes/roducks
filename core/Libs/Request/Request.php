@@ -80,6 +80,14 @@ class Request{
 		return new Request($type,$url);
 	}
 
+	static function get($url){
+		return self::init('GET', $url);
+	}
+
+	static function post($url){
+		return self::init('POST', $url);
+	}
+
 	/**
 	*	$name = "XGET"
 	*/
