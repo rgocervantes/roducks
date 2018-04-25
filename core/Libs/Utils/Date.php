@@ -32,15 +32,23 @@ class Date{
     /*----------------------------*/
 
     /**
-     *  Function to add or substract
+     *  Function to add or subtract
+     */
+    static private function _convert($date, $inc, $days, $p){
+        if(!self::validDate($date)){
+            return $date;
+        }
+
+        $ds = $inc . $days;
+        return date('Y-m-d', strtotime("$date $ds $p"));
+    }
+
+    /**
+     *  Function to add or subtract
      */
     static private function convert($inc, $days, $p){
- 
         $today = self::getCurrentDate();
-        $ds = $inc . $days;
- 
-        return date('Y-m-d', strtotime("$today $ds $p"));
- 
+        return self::_convert($today, $inc, $days, $p); 
     }
 
     /**
@@ -504,12 +512,22 @@ class Date{
         return self::subtractYears(self::getCurrentDate(), $ds);
     }
   
-    static function getPreviousDay(){
-        return self::convert('-',1,'day');
+    static function getPreviousDay($date = ""){
+
+        if(!empty($date)){
+            return self::_convert($date,'-',1,'day');
+        } else {
+            return self::convert('-',1,'day');
+        }
     }
  
-    static function getNextDay(){
-        return self::convert('+',1,'day');
+    static function getNextDay($date = ""){
+
+        if(!empty($date)){
+            return self::_convert($date,'+',1,'day');
+        } else {
+            return self::convert('+',1,'day');
+        }
     }
  
     static function parseDate($date){
