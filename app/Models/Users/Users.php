@@ -105,5 +105,12 @@ class Users extends Model {
 
 	}
 
+	public function getFullName(){
+
+		return self::concatValues([
+			$this->getFirstName(),
+			$this->getLastName()
+		]);
+	}
 
 } 
