@@ -225,7 +225,7 @@ class Model extends Query{
 		$this->_ORM = true;
 	 
 	    foreach($data as $key => $value){
-	        if(isset($this->fields[$key])){
+	        if(isset($this->fields[$key]) || count($this->_fields) > 0){
 	           	$this->_data[$key] = $value;
 	        }
 	    }
@@ -307,7 +307,7 @@ class Model extends Query{
 	 
 	        $name = self::getConventionName($property, "_");
 
-	        if(isset($this->fields[$name])){
+	        if(isset($this->fields[$name]) || count($this->_fields) > 0){
 	            if("get" == $fx[1]){
 	            	$value = (isset($this->_data[$name])) ? $this->_data[$name] : "";
 	                return $value;
@@ -340,15 +340,13 @@ class Model extends Query{
 		return parent::row($args, $condition, $fields);
 	}	
 
-	public function load($id, array $condition = [], $fields = '*'){
+	public function load($id){
 		$this->_id = $id;
 		$args = [$this->id => $id];
 
-		if($this->_unexcepted($condition)){
-			return false;
-		}
-
-		$row = parent::row($args, $condition, $fields);
+		$where = $this->_where([]);
+		$fields = (count($this->_fields) > 0) ? $this->_fields : '*';
+		$row = parent::row($args, $where, $fields);
 
 		$this->_autoload($row);
 

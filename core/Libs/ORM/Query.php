@@ -74,10 +74,10 @@ class Query {
 		$_connection = null, 
 		$_totalPages = 1,
 		$_filter = [],
-		$_fields = [],
 		$_queryString = "";	
 
 	protected $_condition = [],
+			$_fields = [],
 			$_table = "";	
 
 /*
@@ -456,29 +456,26 @@ class Query {
 		return self::alias("CONVERT({$field} using utf8)", $field);
 	}
 
-	static function concat(array $fields = [], $field = ""){
-		$values = [];
-		foreach ($fields as $value) {
-			$values[] = (preg_match('/^[\s\-_\.+,;:]+$/', $value)) ? self::_field($value) : $value;
-		}
-		return self::field("CONCAT(". implode(",", $values) .")", $field);
-	}
-
 	static function	match(array $fields, $value){
 		return [$value, $fields];
 	}
 
+	static function concat(array $values = [], $field = ""){
+		return self::field("CONCAT(". implode(",", $values) .")", $field);
+	}
 	static function concatBy(array $values, $char = " "){
 		$ret = [];
-		foreach ($values as $key => $value) {
-			if($key % 2 == 1) {
-				array_push($ret, $char);
-			}
 
+		foreach ($values as $key => $value) {
+			if($key > 0) array_push($ret, self::_field($char));
 			array_push($ret, $value);
 		}
 
 		return $ret;
+	}
+
+	static function concatValues(array $fields, $char = " "){
+		return implode("", self::concatBy($fields, $char));
 	}
 
 	static function field($field, $alias = ""){
@@ -736,16 +733,14 @@ class Query {
 			$fields = $this->_fields;
 		}
 
-		if(count($this->_condition) > 0) {
-			$this->_filter['condition'] = $this->_condition;
-		}
+		if(count($this->_filter) > 0 || count($this->_condition) > 0){
 
-		if(count($this->_filter) > 0) {
-			if(!isset($arguments['condition'])) {
-				$arguments['condition'] = $arguments;
-				$arguments = array_merge($arguments, $this->_filter);
+			if (count($arguments) > 0) {
+				$this->_filter['condition'] = $arguments;
+				$arguments = $this->_filter;
 			} else {
 				$arguments = $this->_filter;
+				$arguments['condition'] = $this->_condition;
 			}
 
 		}
@@ -813,28 +808,10 @@ class Query {
 
 	public function paginate($page = 1, $limit = 50){
 
-		$fields = "*";
-
 		$this->_filter['page'] = $page;
 		$this->_filter['limit'] = $limit;
 
-		if(count($this->_condition) > 0) {
-			$this->_filter['condition'] = $this->_condition;
-		}
-
-		if(!isset($this->_filter['page'])) {
-			$this->_filter['page'] = 1;
-		}
-
-		if(!isset($this->_filter['limit'])) {
-			$this->_filter['limit'] = 50;
-		}
-
-		if(count($this->_fields) > 0) {
-			$fields = $this->_fields;
-		}
-
-		$this->filter($this->_filter, $fields);
+		$this->filter();
 
 		return $this;
 	}
