@@ -120,7 +120,7 @@ class Users extends AdminPage{
 			$range = Session::get(self::DATE_RANGE_USERS);
 			$start_date = $range[0];
 			$end_date = $range[1];
-			$search['u.created_date:date:between'] = $range;
+			$search['u.created_at:date:between'] = $range;
 			$isFiltered = true;
 		}
 
@@ -139,7 +139,7 @@ class Users extends AdminPage{
 				$start_date = $post->param("start_date");
 				$end_date = $post->param("end_date");
 				$range = [$start_date, $end_date];
-				$search['u.created_date:date:between'] = $range;
+				$search['u.created_at:date:between'] = $range;
 				Session::set(self::DATE_RANGE_USERS, $range);
 			}
 

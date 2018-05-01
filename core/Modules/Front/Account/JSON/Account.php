@@ -46,7 +46,7 @@ class Account extends JSON{
 		$this->_fields = [
 			'first_name' => $this->post->text('first_name'),
 			'last_name' => $this->post->text('last_name'),
-			'updated_date' => Date::getCurrentDateTime()
+			'updated_at' => Date::getCurrentDateTime()
 		];
 
 		$db = $this->db();

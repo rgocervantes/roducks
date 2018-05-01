@@ -63,8 +63,8 @@ class Home extends JSON{
 			'gender' 		 => $gender,
 			'picture' 		 => Helper::getUserIcon($gender),
 			'password' 		 => $this->post->password('password'),
-			'created_date' 	 => Date::getCurrentDateTime(),
-			'updated_date'   => Date::getCurrentDateTime(),
+			'created_at' 	 => Date::getCurrentDateTime(),
+			'updated_at'   => Date::getCurrentDateTime(),
 			'active' 		 => 1
 		];
 

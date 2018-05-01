@@ -106,13 +106,13 @@ class Roles extends _JSON{
 					'active' => 1,
 					'created_by' => Login::getAdminId(),
 					'updated_by' => Login::getAdminId(),
-					'created_date' => Date::getCurrentDateTime()
+					'created_at' => Date::getCurrentDateTime()
 				]);
 
 			}
 			
 		}else if($method == "update" && !empty($id_role)){
-			$RolesTable->update($id_role, ['name' => $name, 'updated_by' => Login::getAdminId(), 'updated_date' => Date::getCurrentDateTime()]);
+			$RolesTable->update($id_role, ['name' => $name, 'updated_by' => Login::getAdminId(), 'updated_at' => Date::getCurrentDateTime()]);
 		}
 
 		if($valid){

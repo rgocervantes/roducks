@@ -33,8 +33,8 @@ class Roles extends Model {
 		'active'		 => Model::TYPE_BOOL,
 		'created_by'	 => Model::TYPE_INTEGER,
 		'updated_by'	 => Model::TYPE_INTEGER,
-		'created_date'	 => Model::TYPE_DATETIME,
-		'updated_date'	 => Model::TYPE_DATETIME
+		'created_at'	 => Model::TYPE_DATETIME,
+		'updated_at'	 => Model::TYPE_DATETIME
 	];
 
 	/**

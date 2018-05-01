@@ -45,8 +45,8 @@ class Users extends Model {
 		'location'			 => Model::TYPE_VARCHAR,
 		'expires'			 => Model::TYPE_BOOL,
 		'expiration_date'	 => Model::TYPE_DATE,
-		'created_date'		 => Model::TYPE_DATETIME,
-		'updated_date'		 => Model::TYPE_DATETIME
+		'created_at'		 => Model::TYPE_DATETIME,
+		'updated_at'		 => Model::TYPE_DATETIME
 	];
 
 	public function logInOut($id, $option){
@@ -89,7 +89,7 @@ class Users extends Model {
 		
 		return $this->update($id, $data);
 
-	}	
+	}
 
 	/**
 	*	@param $data array fields

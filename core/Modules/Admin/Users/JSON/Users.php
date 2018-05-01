@@ -50,7 +50,7 @@ class Users extends _JSON{
 			'first_name' 		=> $this->post->text('first_name'),
 			'last_name' 		=> $this->post->text('last_name'),
 			'id_role' 			=> $this->post->select('id_role',0),
-			'updated_date' 		=> Date::getCurrentDateTime(),
+			'updated_at' 		=> Date::getCurrentDateTime(),
 			'active' 			=> $this->post->checkbox('active',0),
 			'expires'			=> $this->post->checkbox('expires', 0),
 			'expiration_date'	=> $this->post->hidden('expiration_date', ''),
@@ -76,7 +76,7 @@ class Users extends _JSON{
 			'password' 		 => $this->post->password('password'),
 			'gender' 		 => $gender,
 			'picture' 		 => Helper::getUserIcon($gender),
-			'created_date' 	 => Date::getCurrentDateTime(),
+			'created_at' 	 => Date::getCurrentDateTime(),
 		];
 
 		$fields = array_merge($this->_fields, $fields);

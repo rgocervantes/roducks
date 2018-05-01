@@ -108,8 +108,8 @@ use Roducks\Libs\Utils\Date;
 				<label class="control-label" for="id_role"><?php echo TEXT_CREATED_ON; ?></label>
 				<div class="alert alert-info" role="alert" style="margin:0; padding:5px;">
 					<span class="alert-text">
-						<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> <?php echo Date::getDateFormat(Date::extractDate($row['created_date']), Language::get()); ?><br>
-						<span class="glyphicon glyphicon-time" aria-hidden="true"></span> <?php echo Date::extractTime($row['created_date']); ?>
+						<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> <?php echo Date::getDateFormat(Date::extractDate($row['created_at']), Language::get()); ?><br>
+						<span class="glyphicon glyphicon-time" aria-hidden="true"></span> <?php echo Date::extractTime($row['created_at']); ?>
 					</span>
 				</div>	
 				<?php endif; ?>

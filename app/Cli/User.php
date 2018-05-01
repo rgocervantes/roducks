@@ -65,8 +65,8 @@ class User extends Cli {
 						'last_name' => "Admin Master",
 						'gender' => $gender,
 						'picture' => Helper::getUserIcon($gender),
-						'created_date' => UsersTable::now(),
-						'updated_date' => UsersTable::now()		
+						'created_at' => UsersTable::now(),
+						'updated_at' => UsersTable::now()		
 					];
 
 					$tx = $user->create($data);

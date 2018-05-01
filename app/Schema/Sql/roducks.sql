@@ -17,8 +17,8 @@ CREATE TABLE IF NOT EXISTS `EAV` (
   `field` varchar(255) NOT NULL,
   `text` varchar(255) NOT NULL,  
   `active` tinyint(1) DEFAULT '1',
-  `created_date` datetime NOT NULL,
-  `updated_date` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id_index`),
   INDEX `idx_rel` (`id_rel`),
   INDEX `idx_text` (`text`)  
@@ -34,12 +34,12 @@ CREATE TABLE IF NOT EXISTS `Roles` (
   `active` tinyint(1) DEFAULT '1',
   `created_by` bigint(8) NOT NULL,
   `updated_by` bigint(8) NOT NULL,    
-  `created_date` datetime NOT NULL,
-  `updated_date` datetime NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id_role`)   
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
-INSERT INTO `Roles` (`id_role`, `type`, `name`, `config`, `active`, `created_by`,`updated_by`, `created_date`,`updated_date`) VALUES
+INSERT INTO `Roles` (`id_role`, `type`, `name`, `config`, `active`, `created_by`,`updated_by`, `created_at`,`updated_at`) VALUES
 (1, 1, 'Super Admin', 'super-admin.lock', 1, 1, 1, '2017-09-02 12:00:00', '2017-09-02 12:00:00'),
 (2, 1, 'Super Admin', 'super-admin.json', 1, 1, 1, '2017-09-02 12:00:00', '2017-09-02 12:00:00'),
 (3, 1, 'Admin Golden', 'admin-golden.json', 1, 1, 1, '2017-09-02 12:00:00', '2017-09-02 12:00:00'),
@@ -69,9 +69,10 @@ CREATE TABLE IF NOT EXISTS `Users` (
   `loggedin` tinyint(1) DEFAULT '0',
   `location` varchar(255) NOT NULL,
   `expires` tinyint(1) DEFAULT '0',
-  `expiration_date` date NOT NULL, 
-  `created_date` datetime NOT NULL,
-  `updated_date` datetime NOT NULL,   
+  `expiration_date` date NULL, 
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,  
+  `deleted_at` datetime NULL, 
   PRIMARY KEY (`id_user`),
   UNIQUE INDEX `idx_email` (`email`),
   CONSTRAINT `id_role` FOREIGN KEY (`id_role`) REFERENCES `Roles` (`id_role`) ON DELETE CASCADE ON UPDATE CASCADE  
@@ -81,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
 
 CREATE TABLE IF NOT EXISTS `Urls` (
   `id_url` bigint(8) AUTO_INCREMENT NOT NULL,
-  `created_date` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
   `active` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id_url`)  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -98,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `UrlsLang` (
   `layout` varchar(255) NOT NULL,
   `template` varchar(255) NOT NULL,
   `pview` varchar(255) NOT NULL,
-  `updated_date` datetime NOT NULL,    
+  `updated_at` datetime NOT NULL,    
   PRIMARY KEY (`id_url_lang`),
   CONSTRAINT `id_url` FOREIGN KEY (`id_url`) REFERENCES `Urls` (`id_url`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

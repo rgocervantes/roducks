@@ -221,7 +221,7 @@ class Table extends Query
 			$attrs->nullable = false;
 		});
 		$this->datetime('deleted_at', function ($attrs) {
-			$attrs->nullable = false;
+			$attrs->nullable = true;
 		});
 	}
 
