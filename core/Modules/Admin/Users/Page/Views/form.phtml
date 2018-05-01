@@ -57,26 +57,20 @@ use Roducks\Libs\Utils\Date;
 					
 					<div class="form-group has-feedback">
 						<label class="control-label" for="id_role"><?php echo TEXT_ROLE; ?></label>
-						<input type="hidden" name="id_role" 
-						data-text="<?php echo $row['role']; ?>" 
+						<select name="id_role" class="form-control" 
+						rel="rdks-select-autocomplete" 
+						value="<?php echo $row['id_role']; ?>" 
+						data-label="<?php echo $row['role']; ?>" 
 						data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
 						data-required="true" 
-						data-text-results="<?php echo TEXT_NOT_FOUND; ?>" 
+						data-text-notfound="<?php echo TEXT_NOT_FOUND; ?>" 
+						data-text-search="<?php echo TEXT_SEARCH; ?>" 
 						data-callback="cbChoiceRole" 
-						rel="rdks-form-dropdown" 
-						value="<?php echo $row['id_role']; ?>"
-						/>
-						
-				        <div id="id_role-data" style="display:none;">
-				            <ul>
-				            	<?php if($roles->rows()): while($role = $roles->fetch()): ?>
-				                <li class="active<?php echo Template::equals($row['id_role'],$role['id_role'],' selected')?>" style="display: list-item;">
-				                    <a href="javascript:;" data-text="<?php echo $role['name']; ?>" onclick="$rdks.form.filter.choice('id_role', '<?php echo $role['name']; ?>', <?php echo $role['id_role']; ?>, {title: '<?php echo $role['name']; ?>',config:'<?php echo Helper::removeFileExt($role['config']); ?>', 'type':'<?php echo $role['type']; ?>'});"><span class="speller"><?php echo $role['name']; ?></span></a>
-				                </li>
-	    						<?php endwhile; endif; ?>
-				            </ul>
-						</div><!-- .listing -->
-
+						>
+							<?php if($roles->rows()): while($role = $roles->fetch()): ?>
+				                <option<?php echo Template::selected($row['id_role'],$role['id_role'])?> value="<?php echo $role['id_role']; ?>" data-params='{"title": "<?php echo $role["name"]; ?>","config":"<?php echo Helper::removeFileExt($role["config"]); ?>", "type":"<?php echo $role["type"]; ?>"}'><?php echo $role['name']; ?></option>
+	    					<?php endwhile; endif; ?>
+	    				</select>
 					</div><!-- countries -->
 
 					<?php endif; ?>
@@ -94,7 +88,12 @@ use Roducks\Libs\Utils\Date;
 				<?php if(!$edit): ?>
 					<div class="form-group has-feedback">
 					  <label class="control-label" for="gender"><?php echo TEXT_GENDER; ?></label>
-					  <select name="gender" rel="rdks-form-select" data-required="true" data-alert-warning="<?php echo TEXT_REQUIRED; ?>" class="form-control">
+					  <select name="gender" 
+					  rel="rdks-select-autocomplete" class="form-control" 
+					  data-required="true" 
+					  data-alert-warning="<?php echo TEXT_REQUIRED; ?>" 
+					  data-text-notfound="<?php echo TEXT_NOT_FOUND; ?>" 
+					  >
 					  		<option value="male"><?php echo TEXT_MALE; ?></option>
 					  		<option value="female"><?php echo TEXT_FEMALE; ?></option>  		
 					  </select>
