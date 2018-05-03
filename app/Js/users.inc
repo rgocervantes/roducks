@@ -18,7 +18,7 @@ function cbLogout(btn, response){
 	}
 }
 
-function cbChoiceRole(text, value, data){
+function cbChoiceRole(data){
 	modalRoles(data.title, data.config, data.type);
 }
 
