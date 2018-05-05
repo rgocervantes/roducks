@@ -61,7 +61,8 @@ div.rdks-loader-spinning div.bar12 {-webkit-transform:rotate(330deg) translate(0
 .rdks-ui-bg-black-light{ background: url("img/bg-black-light.png"); }
 .rdks-ui-bg-white{ background: url("img/bg-white.png"); }
 .rdks-ui-bg-black{ background: url("img/bg-black.png"); }
-.rdks-image-scale{ display: none; }
+.rdks-image-scale,
+.rdks-template{ display: none; }
 
 .rdks-animation{ position: relative; }
 .rdks-animation-opacity{ opacity: 0; }
@@ -89,7 +90,7 @@ table.rdks-cart tr.separator td table.rdks-table td,
 table.rdks-cart tr.line td table.rdks-table td{ padding: 5px; }
 table.rdks-cart-grouped{ background: #f1fbed; }
 
-.rdks-form-uploader{ opacity: 0;  }
+.rdks-form-uploader{ opacity: 0; }
 
 .rdks-form-password{ display: block; height: 3px; background: #eee; }
 .rdks-form-password div{ display: block; height: 3px; }
@@ -238,7 +239,8 @@ table.rdks-calendar-table td.weekend.event a{ color: #333; }
 ul.rdks-autocomplete-list{ margin: 0; padding: 0; }
 ul.rdks-autocomplete-list li{ list-style: none; border-bottom: solid 1px #ccc; }
 ul.rdks-autocomplete-list li:last-child{ border:none; }
-ul.rdks-autocomplete-list li a{ display: block; background: #fff; padding: 5px; text-decoration: none; color: #444; }
+ul.rdks-autocomplete-list li a,
+ul.rdks-autocomplete-list li > b{ display: block; background: #fff; padding: 5px; text-decoration: none; color: #444; }
 ul.rdks-autocomplete-list li a:hover,
 ul.rdks-autocomplete-list li.selected a{ background: #337ab7; color: #fff; }
 ul.rdks-autocomplete-list li a b{ background: #eee; }
