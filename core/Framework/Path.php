@@ -22,6 +22,10 @@ namespace Roducks\Framework;
 
 class Path{
 
+	static function get($path){
+		return \App::getRealFilePath($path);
+	}
+
 	static function getCropName($src, $s){
 
 		$img = explode(".", $src);

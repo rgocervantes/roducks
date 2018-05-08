@@ -26,12 +26,33 @@ class Directory{
 	const CLEAN_FOLDERS = 2;
 	const CLEAN_FOLDERS_REMAIN = 3;
 
+	static private function _getDir($dir){
+
+		if(!preg_match('/\/$/', $dir)){
+			return "{$dir}/";
+		}
+
+		return $dir;
+	}
+
+	/*
+	Directory::folder("example");
+	*/
+	static private function _folder($folder, $chmod = 0755){
+		if (!empty($folder)) {
+			if (!file_exists($folder)) {
+				@mkdir($folder, $chmod);
+			}
+		}
+	}	
+
 	// Directory::open("files/books/children/");
-	static function open($dirname){
+	static function open($dir){
 
 		$folders = [];
 		$files = [];
 		$dir_handle = false;
+		$dirname = self::_getDir($dir);
 
 		if (is_dir($dirname))
 		       $dir_handle = opendir($dirname);
@@ -56,17 +77,6 @@ class Directory{
 
 	}
 	
-	/*
-	Directory::folder("example");
-	*/
-	static private function _folder($folder, $chmod = 0755){
-		if (!empty($folder)) {
-			if (!file_exists($folder)) {
-				@mkdir($folder, $chmod);
-			}
-		}
-	}	
-
 	/*
 	Directory::make("app/data/json/");
 	*/
@@ -116,7 +126,7 @@ class Directory{
 	}
 
 	/**
-	*	Directory::clean("app/tmp/cards/", [Directory::CLEAN_FOLDERS_REMAIN, Directory::CLEAN_FILES]);
+	*	Directory::clean("app/tmp/cards/", [Directory::REMAIN_FOLDERS, Directory::REMOVE_FILES]);
 	*/
 	static function clean($dirname, array $options = []){
 		$content = self::open($dirname);
@@ -124,24 +134,24 @@ class Directory{
 		if($content !== false && is_array($options) && count($options) > 0){
 			foreach ($options as $option) {
 				switch (strtolower($option)) {
-					case self::CLEAN_FILES:
+					case self::REMOVE_FILES:
 						
 						foreach ($content['files'] as $file) {
 							unlink($dirname.$file);
 						}
 
 						break;
-					case self::CLEAN_FOLDERS:
+					case self::REMOVE_FOLDERS:
 						
 						foreach ($content['folders'] as $folder) {
 							self::remove($dirname.$folder."/");
 						}
 
 						break;
-					case self::CLEAN_FOLDERS_REMAIN:
+					case self::REMAIN_FOLDERS:
 						
 						foreach ($content['folders'] as $folder) {
-							self::clean($dirname.$folder."/", [self::CLEAN_FOLDERS_REMAIN, self::CLEAN_FILES]);
+							self::clean($dirname.$folder."/", [self::REMAIN_FOLDERS, self::REMOVE_FILES]);
 						}
 
 						break;						
