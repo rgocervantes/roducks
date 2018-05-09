@@ -22,9 +22,9 @@ namespace Roducks\Libs\Files;
 
 class Directory{
 
-	const CLEAN_FILES = 1;
-	const CLEAN_FOLDERS = 2;
-	const CLEAN_FOLDERS_REMAIN = 3;
+	const REMOVE_FILES = 1;
+	const REMOVE_FOLDERS = 2;
+	const REMAIN_FOLDERS = 3;
 
 	static private function _getDir($dir){
 
