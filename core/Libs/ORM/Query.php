@@ -448,22 +448,11 @@ class Query {
 		return $fields;
 	}
 
-	static function alias($field, $alias){
-		return "{$field} AS {$alias}";
-	}
-
-	static function convert($field){
-		return self::alias("CONVERT({$field} using utf8)", $field);
-	}
-
-	static function	match(array $fields, $value){
-		return [$value, $fields];
-	}
-
-	static function concat(array $values = [], $field = ""){
+	static private function _concat(array $values = [], $field = ""){
 		return self::field("CONCAT(". implode(",", $values) .")", $field);
 	}
-	static function concatBy(array $values, $char = " "){
+
+	static private function _concatBy(array $values, $char = " "){
 		$ret = [];
 
 		foreach ($values as $key => $value) {
@@ -474,8 +463,24 @@ class Query {
 		return $ret;
 	}
 
+	static function alias($field, $alias){
+		return "{$field} AS {$alias}";
+	}
+
+	static function convert($field){
+		return self::alias("CONVERT({$field} using utf8)", $field);
+	}
+
+	static function concat($field, array $values = [], $char = " "){
+		return self::_concat(self::_concatBy($values,$char), $field);
+	}
+
+	static function	concatMatch(array $fields, $value, $char = " "){
+		return [$value, self::_concatBy($fields, $char)];
+	}
+
 	static function concatValues(array $fields, $char = " "){
-		return implode("", self::concatBy($fields, $char));
+		return implode("", self::_concatBy($fields, $char));
 	}
 
 	static function field($field, $alias = ""){
