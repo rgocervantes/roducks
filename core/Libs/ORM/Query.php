@@ -471,11 +471,11 @@ class Query {
 		return self::alias("CONVERT({$field} using utf8)", $field);
 	}
 
-	static function concat($field, array $values = [], $char = " "){
+	static function concat($field, array $values, $char = " "){
 		return self::_concat(self::_concatBy($values,$char), $field);
 	}
 
-	static function	concatMatch(array $fields, $value, $char = " "){
+	static function	concatMatch($value, array $fields, $char = " "){
 		return [$value, self::_concatBy($fields, $char)];
 	}
 
