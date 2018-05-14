@@ -42,7 +42,7 @@ namespace Roducks\Libs\ORM;
 	|	UPDATE
 	|-------------------------
 	
-		$user = UsersTable::open($db)->load(1); // id
+		$user = UsersTable::open($db)->getRow(1); // id
 		
 		if($user->rows()){
 			$user->setFirstName("Rod");
@@ -54,7 +54,7 @@ namespace Roducks\Libs\ORM;
 	|	FETCH OBJECT
 	|-------------------------
 
-		$user = UsersTable::open($db)->load(1); // id
+		$user = UsersTable::open($db)->getRow(1); // id
 		
 		if($user->rows()){
 			$name = $user->getFirstName();
@@ -340,7 +340,7 @@ class Model extends Query{
 		return parent::row($args, $condition, $fields);
 	}	
 
-	public function load($id){
+	public function getRow($id){
 		$this->_id = $id;
 		$args = [$this->id => $id];
 
@@ -359,7 +359,7 @@ class Model extends Query{
 		return $this;
 	}
 
-	public function getId(){
+	public function foundRow(){
 		return parent::rows();
 	}
 
