@@ -46,7 +46,7 @@ class EAV extends Frame{
 	private function _update($id, $value, $field){
 		$set = "set" . ucfirst($field);
 		$db = $this->db();
-		$data = EAVTable::open($db)->getRow(($id);
+		$data = EAVTable::open($db)->getRow($id);
 		$data->$set($value);
 		$data->setUpdatedDate(Date::getCurrentDateTime());
 		$data->where(['entity' => $this->_entity]);	
@@ -104,7 +104,7 @@ class EAV extends Frame{
 
 	public function remove($id){
 		$db = $this->db();
-		$data = EAVTable::open($db)->getRow(($id);
+		$data = EAVTable::open($db)->getRow($id);
 		$data->delete();
 	}	
 
