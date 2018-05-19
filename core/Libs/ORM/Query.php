@@ -627,8 +627,8 @@ class Query {
 		$this->_table = $table;
 	}
 
-	public function autocommit(){
-		$this->_db->autocommit(FALSE);
+	public function autocommit($option = false){
+		$this->_db->autocommit($option);
 	}
 
 	public function commit(){
