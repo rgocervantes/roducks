@@ -24,8 +24,12 @@
 
 			<div class="form-group has-feedback">
 			  <label class="control-label" for="gender"><?php echo TEXT_GENDER; ?></label>
-			  <select name="gender" class="form-control">
-			  		<option value="male"><?php echo TEXT_MALE; ?></option>
+			  <select name="gender" class="form-control" 
+			  rel="rdks-select-autocomplete" 
+			  data-text-search="<?php echo TEXT_TO_SEARCH; ?>" 
+			  data-height="62"
+			  >
+			  		<option value="male" selected="true"><?php echo TEXT_MALE; ?></option>
 			  		<option value="female"><?php echo TEXT_FEMALE; ?></option>  		
 			  </select>
 			</div>

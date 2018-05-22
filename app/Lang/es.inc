@@ -38,6 +38,7 @@ App::text('FILTER', "Filtro");
 App::text('TO_FILTER', "Filtrar");
 App::text('RESET', "Restablecer");
 App::text('SEARCH', "Búsqueda");
+App::text('TO_SEARCH', "Buscar");
 App::text('DESCENDANTS', "Descendencia");
 App::text('START_DATE', "Fecha inicio");
 App::text('END_DATE', "Fecha fin");
