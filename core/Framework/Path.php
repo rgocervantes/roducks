@@ -26,6 +26,10 @@ class Path{
 		return \App::getRealFilePath($path);
 	}
 
+	static function getData($path = ""){
+		return self::get(DIR_APP_DATA . $path);
+	}
+
 	static function getCropName($src, $s){
 
 		$img = explode(".", $src);
