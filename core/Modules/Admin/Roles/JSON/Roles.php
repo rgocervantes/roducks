@@ -23,6 +23,7 @@ namespace Roducks\Modules\Admin\Roles\JSON;
 use Roducks\Framework\Login;
 use Roducks\Framework\Role;
 use Roducks\Framework\Language;
+use Roducks\Framework\Path;
 use Roducks\Page\_JSON;
 use Roducks\Libs\Utils\Date;
 use Roducks\Libs\Files\Directory;
@@ -122,8 +123,8 @@ class Roles extends _JSON{
 				$data['config'] = $configName;
 			}
 
-			Directory::make(DIR_ROLES);
-			File::createJSON(DIR_ROLES, $config, $data);
+			Directory::make(Path::get(), DIR_ROLES);
+			File::createJSON(Path::get(DIR_ROLES), $config, $data);
 		}
 
 		parent::output();

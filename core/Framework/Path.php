@@ -22,7 +22,7 @@ namespace Roducks\Framework;
 
 class Path{
 
-	static function get($path){
+	static function get($path = ""){
 		return \App::getRealFilePath($path);
 	}
 

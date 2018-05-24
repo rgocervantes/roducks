@@ -78,21 +78,22 @@ class Directory{
 	}
 	
 	/*
-	Directory::make("app/data/json/");
+	Directory::make(Path::get(), "foo/bar");
 	*/
-	static function make($path, $chmod = 0755){
+	static function make($base, $dir = "", $chmod = 0755){
 
-		if(preg_match('#\/#', $path)){
+		$path = $base . $dir;
+
+		if(preg_match('#\/#', $dir)){
 
 			$guide = "";
-			$slashes = explode("/", $path);
+			$slashes = explode("/", $dir);
 
-			for($i=0; $i<count($slashes); $i++):
-				if(!empty($slashes[$i])):
-					$guide .= $slashes[$i]."/";
-					self::_folder($guide, $chmod);
-				endif;
-			endfor;		
+			foreach ($slashes as $key => $value) {
+				$guide = $guide . $value . "/";
+				$folder = $base . $guide;
+				self::_folder($folder, $chmod);
+			}
 
 		} else {
 			self::_folder($path, $chmod);

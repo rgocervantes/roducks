@@ -62,7 +62,7 @@ abstract class Data extends XML{
 			
 		$this->_dirStorage = DIR_DATA_STORAGE_XML;	
 		$dir = $this->_dirStorage . $this->_filePath;
-		if($this->_makeDir) Directory::make($dir);
+		if($this->_makeDir) Directory::make(Path::get(), $dir);
 		$this->_xmlFile = $dir . Helper::ext($this->_fileName, "xml");
 
 		parent::__construct();
