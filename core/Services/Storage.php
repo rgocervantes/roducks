@@ -40,7 +40,7 @@ class Storage extends Service
 			$_fileName = null,
 			$_input = "uploader";
 
-	static function createJSON($dir, $name, $data)
+	static function setJSON($dir, $name, $data)
 	{
 		Directory::make(Path::getData(), $dir);
 		File::createJSON(Path::getData($dir), $name, $data);
