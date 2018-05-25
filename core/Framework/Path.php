@@ -30,6 +30,18 @@ class Path{
 		return self::get(DIR_APP_DATA . $path);
 	}
 
+	static function getStorage($path = ""){
+		return self::getData("storage/{$path}");
+	}
+
+	static function getTmp($path = ""){
+		return self::getData("tmp/{$path}");
+	}
+
+	static function getRoles($path = ""){
+		return self::get(DIR_ROLES . $path);
+	}
+
 	static function getCropName($src, $s){
 
 		$img = explode(".", $src);

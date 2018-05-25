@@ -40,6 +40,19 @@ class Storage extends Service
 			$_fileName = null,
 			$_input = "uploader";
 
+	static function createJSON($path, $data)
+	{
+		File::createJSON($path, "", $data);
+	}
+
+	static function getJSON($path)
+	{
+        $content = \Roducks\Libs\Request\Request::getContent($path);
+        $json = \Roducks\Page\JSON::decode($content);
+
+        return $json;
+	}
+
 	private function _serviceError($code, $msg)
 	{
 		if ($this->_ajax) {
