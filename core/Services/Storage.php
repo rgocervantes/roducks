@@ -49,10 +49,22 @@ class Storage extends Service
 	static function getJSON($dir, $name)
 	{
 		$path = Path::getData($dir) . Helper::ext($name, 'json');
-        $content = \Roducks\Libs\Request\Request::getContent($path);
-        $json = \Roducks\Page\JSON::decode($content);
+
+        if(file_exists($path)){
+        	$content = \Roducks\Libs\Request\Request::getContent($path);
+        	$json = \Roducks\Page\JSON::decode($content);
+        } else {
+        	$json = [];
+        }
 
         return $json;
+	}
+
+	static function updateJSON($dir, $name, $content)
+	{
+		$stored = self::getJSON($dir, $name);
+		$data = array_merge($stored, $content);
+		self::setJSON($dir, $name, $data);
 	}
 
 	static function readJSON($dir, $name)
