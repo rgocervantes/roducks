@@ -40,6 +40,12 @@ class Storage extends Service
 			$_fileName = null,
 			$_input = "uploader";
 
+	static function issetJSON($dir, $name)
+	{
+		$path = Path::getData($dir) . Helper::ext($name, 'json');
+		return file_exists($path);
+	}
+
 	static function setJSON($dir, $name, $data)
 	{
 		Directory::make(Path::getData(), $dir);
