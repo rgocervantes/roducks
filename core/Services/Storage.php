@@ -46,19 +46,20 @@ class Storage extends Service
 		File::createJSON(Path::getData($dir), $name, $data);
 	}
 
-	static function getJSON($dir)
+	static function getJSON($dir, $name)
 	{
-		$path = Path::getData($dir);
+		$path = Path::getData($dir) . Helper::ext($name, 'json');
         $content = \Roducks\Libs\Request\Request::getContent($path);
         $json = \Roducks\Page\JSON::decode($content);
 
         return $json;
 	}
 
-	static function readJSON($dir)
+	static function readJSON($dir, $name)
 	{
+		$path = Path::getData($dir) . Helper::ext($name, 'json');
 		header("Content-Type: application/json; charset=utf8");
-		readfile(Path::getData($dir));
+		readfile($path);
 	}
 
 	private function _serviceError($code, $msg)
