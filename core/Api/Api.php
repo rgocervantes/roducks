@@ -55,6 +55,11 @@ class Api extends Service
 		Router::get($endpoint, $dispatch, $params);
 	}
 
+	static function me($endpoint, $dispatch, $params = "")
+	{
+		Router::get($endpoint, $dispatch, $params);
+	}
+
 	static function post($endpoint, $dispatch, $params)
 	{
 		Router::post($endpoint, $dispatch, $params);
