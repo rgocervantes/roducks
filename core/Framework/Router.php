@@ -85,6 +85,8 @@ class Router
 			} else {
 				$data[$type] = $params();
 			}
+		} else {
+			$data[$type] = [];
 		}
 
 		if ($token) {
@@ -137,7 +139,7 @@ class Router
 		];
 
 		$methods = $params();
-		$options = ['catalog', 'store', 'update', 'row', 'remove'];
+		$options = ['catalog', 'store', 'update', 'row', 'me', 'remove'];
 
 		foreach ($options as $option) {
 			if(!isset($methods[$option])){
@@ -148,6 +150,7 @@ class Router
 		foreach ($methods as $key => $value) {
 			switch ($key) {
 				case 'catalog':
+				case 'me':
 					$path1['GET'] = $value;
 					break;
 				case 'store':

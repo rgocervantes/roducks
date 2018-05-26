@@ -91,4 +91,11 @@ class Auth extends Api
 		$this->output();
 	}
 
+	public function me()
+	{
+		$token = $this->getToken();
+		$this->data('me', $token);
+		$this->output(false);
+	}
+
 }
