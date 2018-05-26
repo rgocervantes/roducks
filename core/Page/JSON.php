@@ -77,6 +77,23 @@ class JSON extends GenericPage {
 		self::stOutput($obj);
 	}
 
+	static function response($message, $code = 200){
+
+		switch ($code) {
+			case 404:
+				Http::sendHeaderNotFound(false);
+				break;
+			case 501:
+				Http::setHeaderInvalidRequest(false);
+				break;
+			default:
+				# code...
+				break;
+		}
+
+		self::stOutput(['format' => false, 'data' => ['message' => $message]]);
+	}
+
 	private function _jsonOutput($format = true){
 
 		$obj = [

@@ -35,20 +35,20 @@ class Http{
 		self::httpHeader(401, "Authentication failed", $die);	
 	}
 
-	static function sendHeaderForbidden(){
-		self::httpHeader(403, "Forbidden Request");	
+	static function sendHeaderForbidden($die = true){
+		self::httpHeader(403, "Forbidden Request", $die);	
 	}	
 
-	static function sendHeaderNotFound(){
-		self::httpHeader(404, "Not Found");	
+	static function sendHeaderNotFound($die = true){
+		self::httpHeader(404, "Not Found", $die);	
 	}	
 
-	static function sendMethodNotAllowed(){
-		self::httpHeader(405, "Method Not Allowed");	
+	static function sendMethodNotAllowed($die = true){
+		self::httpHeader(405, "Method Not Allowed", $die);	
 	}		
 
-	static function setHeaderInvalidRequest(){
-		self::httpHeader(501, "Invalid Request");	
+	static function setHeaderInvalidRequest($die = true){
+		self::httpHeader(501, "Invalid Request", $die);	
 	}
 
 	static function setHeaderJSON(){
