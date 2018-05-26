@@ -91,7 +91,7 @@ class Auth extends Api
 		$this->output();
 	}
 
-	public function me()
+	public function catalog(\stdClass $request)
 	{
 		$token = $this->getToken();
 		$this->data('me', $token);

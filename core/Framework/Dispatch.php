@@ -740,9 +740,10 @@ class Dispatch{
 					if($urlParams > 0) {
 						$method = 'row';
 						unset($params['request']);
-					} elseif(Helper::regexp('/\/me/',$URI)) {
-						$method = 'me';
 					} else {
+						if($params['request'] === false){
+							$params['request'] = new \stdClass;
+						}
 						$method = 'catalog';
 					}
 
