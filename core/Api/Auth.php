@@ -71,7 +71,7 @@ class Auth extends Api
 			$data = $auth['data'];
 
 			$token = [
-				'id_user' => $data['id_user'],
+				'id_user' => intval($data['id_user']),
 				'email' => $data['email'],
 				'first_name' => $data['first_name'],
 				'last_name' => $data['last_name'],

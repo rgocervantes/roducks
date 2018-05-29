@@ -127,7 +127,12 @@ class Api extends Service
 
 	protected function getToken($data = true)
 	{
-		$this->verifyToken();
+		$verifyToken = $this->verifyToken();
+
+		if(!$verifyToken){
+			return [];
+		}
+
 		$token = $this->_jwt['decoded']; 
 
 		return ($data) ? $token->data : $token;
