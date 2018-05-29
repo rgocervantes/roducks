@@ -831,7 +831,7 @@ class Dispatch{
 
 					switch ($method) {
 						case '_data_':
-							$pagePath = Core::getModulesPath() . $page . "/" . $type . "/";
+							$pagePath = Core::getModulesPath() . $page . "/" . ucfirst($type) . "/";
 							$action = ($type == 'page' || $type == 'factory') ? 'index' : 'getData';
 							break;
 						case '_block_':

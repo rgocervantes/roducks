@@ -195,7 +195,7 @@ class Helper{
 	}
 
 	static function pageByFactory($str){
-		return preg_replace(self::REGEXP_IS_FACTORY, 'page', $str);
+		return preg_replace(self::REGEXP_IS_FACTORY, 'Page', $str);
 	}
 
 	static function getInvertedSlash($str){
