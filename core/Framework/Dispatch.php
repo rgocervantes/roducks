@@ -325,6 +325,24 @@ class Dispatch{
 			// Let's find a URL
 			foreach($router as $key => $value) {
 
+		        $key = preg_replace_callback('#{([a-zA-Z_]+):(int|str)}#', function($match) {
+		           
+		            switch ($match[2]) {
+		                case 'int':
+		                    $type = '\d';
+		                    break;
+		                
+		                case 'str':
+		                    $type = '\w';
+		                    break;
+		            }
+		            
+		            $name = $match[1];
+
+		            return "(?P<{$name}>{$type}+)";
+
+		        }, $key);
+
 				// Let's look if a URL matches
 				if(preg_match('#^'. $mainPath . $key . URL::REGEXP_GET .'$#', $URI, $urlPattern)){
 					$dispatcher = $value;
