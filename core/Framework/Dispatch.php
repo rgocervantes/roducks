@@ -791,6 +791,18 @@ class Dispatch{
 			}
 
 			/* ----------------------------------------------*/
+			// Pass URL Params in Class method
+			/* ----------------------------------------------*/
+			if(isset($params[0]) && !Helper::isDispatch($params[0])){
+				$params = [];
+				foreach ($urlPattern as $k => $v) {
+					if(!Helper::isInteger($k)){
+						$params[$k] = $v;
+					}
+				}
+			}
+
+			/* ----------------------------------------------*/
 			// Dispatch page
 			/* ----------------------------------------------*/
 			if(Helper::isService($page) || Helper::isApi($page)) {
