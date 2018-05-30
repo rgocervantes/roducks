@@ -700,7 +700,7 @@ class Dispatch{
 					if(Helper::isApi($page)) {
 						JSON::response(TEXT_INVALID_REQUEST, 501);
 					} else {
-						Error::missingParams('Missing GET param',__LINE__, __FILE__, $routerPath, $missingGETParams);
+						Error::missingParams('Invalid GET param',__LINE__, __FILE__, $routerPath, $missingGETParams);
 					}
 					
 				}
@@ -831,7 +831,8 @@ class Dispatch{
 
 					switch ($method) {
 						case '_data_':
-							$pagePath = Core::getModulesPath() . $page . "/" . ucfirst($type) . "/";
+							$dType = ($type == 'json' || $type == 'xml') ? strtoupper($type) : ucfirst($type);
+							$pagePath = Core::getModulesPath() . $page . "/" . $dType . "/";
 							$action = ($type == 'page' || $type == 'factory') ? 'index' : 'getData';
 							break;
 						case '_block_':
