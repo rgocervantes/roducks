@@ -239,12 +239,12 @@ class Error{
 		$subdomain = RDKS_SUBDOMAIN;
 		$site = RDKS_SITE;
 
-		$error = "<span style=\"color:#3bde9a; font-weight:bold;\">use</span> Roducks\\framework\Environment;<br><br>";
+		$error = "<span style=\"color:#3bde9a; font-weight:bold;\">use</span> Roducks\Framework\Environment;<br><br>";
 
-		$error .= "<span style=\"color:#03bddd;\">\$config</span> <span style=\"color:#9cc2c7;\">=</span> [<br>";
+		$error .= "<span style=\"color:#03bddd;\">return</span> <span style=\"color:#9cc2c7;\">=</span> [<br>";
 		$error .= "...<br>";		
-		$error .= "&nbsp;&nbsp;<span style=\"color:#3F51B5; \">'{$subdomain}'</span> <span style=\"color:#9cc2c7;\">=></span> [<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#3F51B5; \">'site'</span> <span style=\"color:#9cc2c7;\">=></span> <span style=\"color:#bc99e0;\">\"{$site}\"</span>,<br>";
+		$error .= "&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$subdomain}'</span> <span style=\"color:#9cc2c7;\">=></span> [<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'site'</span> <span style=\"color:#9cc2c7;\">=></span> <span style=\"color:#bc99e0;\">\"{$site}\"</span>,<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
 		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this folder exists in: <span style=\"color:#bcd92e; \">{$dir}</span></span><br><br>";
 		$error .= "&nbsp;&nbsp;],<br>";
@@ -256,9 +256,9 @@ class Error{
 
 	static function moduleDisabled($title, $line, $path, $file, $module){
 
-		$error = "<span style=\"color:#03bddd;\">\$modules</span> <span style=\"color:#9cc2c7;\">=</span> [<br>";
+		$error = "<span style=\"color:#03bddd;\">return</span> <span style=\"color:#9cc2c7;\">=</span> [<br>";
 		$error .= "...<br>";		
-		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3F51B5; \">'{$module}'</span> <span style=\"color:#9cc2c7;\">=></span> <span style=\"color:#bcd92e;\">true</span><br>";
+		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$module}'</span> <span style=\"color:#9cc2c7;\">=></span> <span style=\"color:#bcd92e;\">true</span><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
 		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure it is defined.</span><br><br>";
 		$error .= "...<br>";
@@ -269,25 +269,23 @@ class Error{
 
 	static function defaultPageIsMissing($title, $line, $path, $file){
 
-		$error = "<span style=\"color:#03bddd;\">\$router</span> <span style=\"color:#9cc2c7;\">=</span> [<br>";
+		$error = "<span style=\"color:#3bde9a; font-weight:bold;\">Router</span><b style=\"color:#9cc2c7;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">init</span><span style=\"color:#9cc2c7;\">(</span><span style=\"color:#03bddd;\">function</span> <span style=\"color:#9cc2c7;\">()</span> {<br>";
 		$error .= "...<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3F51B5; \">'/'</span> <span style=\"color:#9cc2c7;\">=></span> [<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#9cc2c7;\">^</span><br>";
+		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3bde9a; font-weight:bold;\">Router</span><b style=\"color:#9cc2c7;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">get</span>(<span style=\"color:#e2b75b; \">\"/\"</span><span style=\"color:#9cc2c7;\">,</span> <span style=\"color:#3bde9a; font-weight:bold;\">Dispatch</span><b style=\"color:#9cc2c7;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">page</span>(<span style=\"color:#e2b75b; \">\"home\"</span>,<span style=\"color:#e2b75b; \">\"index\"</span>));<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#9cc2c7;\">^</span><br>";
 		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure to add a 'slash' as default page.</span><br><br>";
-		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#3F51B5; \">'dispatch'</span> <span style=\"color:#9cc2c7;\">=></span> <span style=\"color:#3bde9a; font-weight:bold;\">Dispatch</span><b style=\"color:#9cc2c7;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">page</span>(<span style=\"color:#3F51B5; \">\"home\"</span>,<span style=\"color:#3F51B5; \">\"index\"</span>)<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;],<br>";
 		$error .= "...<br>";
-		$error .= "];<br>";
+		$error .= "});<br>";
 
 		self::debug($title, $line, $path, $file, $error);	
 	}
 
 	static function missionDispatchIndex($url, $title, $line, $path, $file){
 
-		$error = "<span style=\"color:#03bddd;\">\$router</span> <span style=\"color:#9cc2c7;\">=</span> [<br>";
+		$error = "<span style=\"color:#03bddd;\">return</span> <span style=\"color:#9cc2c7;\">=</span> [<br>";
 		$error .= "...<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3F51B5; \">'{$url}'</span> <span style=\"color:#9cc2c7;\">=></span> [<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#3F51B5; \">'dispatch'</span> <span style=\"color:#9cc2c7;\">=></span> <span style=\"color:#3bde9a; font-weight:bold;\">Dispatch</span><b style=\"color:#9cc2c7;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">page</span>(<span style=\"color:#3F51B5; \">\"home\"</span>,<span style=\"color:#3F51B5; \">\"index\"</span>)<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$url}'</span> <span style=\"color:#9cc2c7;\">=></span> [<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'dispatch'</span> <span style=\"color:#9cc2c7;\">=></span> <span style=\"color:#3bde9a; font-weight:bold;\">Dispatch</span><b style=\"color:#9cc2c7;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">page</span>(<span style=\"color:#e2b75b; \">\"home\"</span>,<span style=\"color:#e2b75b; \">\"index\"</span>)<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#9cc2c7;\">^</span><br>";
 		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this index is defined.</span><br><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;],<br>";
@@ -299,9 +297,9 @@ class Error{
 
 	static function missingDbConfig($title, $line, $path, $file, $key, $value){
 		
-		$error = "<span style=\"color:#03bddd;\">\$database</span> <span style=\"color:#9cc2c7;\">=</span> [<br>";
+		$error = "<span style=\"color:#03bddd;\">return</span> <span style=\"color:#9cc2c7;\">=</span> [<br>";
 		$error .= "...<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3F51B5; \">'{$key}'</span> <span style=\"color:#9cc2c7;\">=></span> <span style=\"color:#3F51B5; \">'{$value}'</span><br>";
+		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$key}'</span> <span style=\"color:#9cc2c7;\">=></span> <span style=\"color:#e2b75b; \">'{$value}'</span><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
 		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure it is defined.</span><br><br>";
 		$error .= "...<br>";		
