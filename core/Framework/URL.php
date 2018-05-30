@@ -30,7 +30,7 @@ class URL{
 	const CSRF_ATTACK_GET_PARAMS = '\/\'\\(\){}<>\[\]!@$%'; // No dots nor slashes are allowed
 	const CSRF_ATTACK_RULE_1 = '\.{2,}'; // More than 1 dot
 	const CSRF_ATTACK_RULE_2 = '\.(exe|ini|inc|doc|php|phtml|sql)$'; // extensions
-	const CSRF_ATTACK_END_URL = '[\?&=\.\-,;:\$\(\)%*@]$';
+	const CSRF_ATTACK_END_URL = '[\?&=\.\-_,;:\$\(\)%*@]$';
 
 	const REGEXP_GET = '(\?[a-zA-Z0-9_\-=&+]+)?';
 

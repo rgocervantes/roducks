@@ -697,12 +697,11 @@ class Dispatch{
 
 				// Send Error
 				if(count($missingGETParams) > 0){
-					if(Helper::isApi($page)) {
+					if(Helper::isApi($page) && !Environment::inDEV()) {
 						JSON::response(TEXT_INVALID_REQUEST, 501);
 					} else {
 						Error::missingParams('Invalid GET param',__LINE__, __FILE__, $routerPath, $missingGETParams);
 					}
-					
 				}
 
 			}

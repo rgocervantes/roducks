@@ -407,7 +407,7 @@ abstract class Frame{
 				
 				if(isset($value[3]) && !empty($value[0])){
 					$regexp = $value[3];
-					$error = "Param <b>{$key}</b> does not match with this regular expression: {$regexp}";
+					$error = "Value <b>{$key}</b> does not match with this regular expression: {$regexp}";
 	
 					if(Helper::isConditional($value[3])){
 						$error = "{$err}, It <b style=\"color: #c00;\">ONLY</b> allows the next values: " . Helper::getOptions($value[3]);
