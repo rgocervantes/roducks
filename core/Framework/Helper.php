@@ -448,7 +448,7 @@ class Helper{
 				$value = (isset($params[$i+1])) ? $params[$i+1] : "";
 				$value = self::replaceJsonAcents($value, true, false);
 				$value = str_replace("+", " ", $value);
-				$ret[$param] = $value;
+				$ret[$param] = self::dataType($value);
 			}
 
 			$i++;

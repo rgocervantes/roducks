@@ -37,20 +37,6 @@ class Block extends Frame {
 
 	}
 
-	protected function getArray($values){
-
-		if(empty($values)){
-			return [];
-		}
-
-		if(!is_array($values)){
-			$values = explode("_", $values);
-			$values = Helper::getPairParams($values);
-		}
-
-		return $values;
-	}
-
 	static private function _getBlockPath($path){
 
 		$params = [];

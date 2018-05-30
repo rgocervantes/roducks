@@ -436,6 +436,20 @@ abstract class Frame{
 
 	}
 
+	protected function getArray($values){
+
+		if(empty($values)){
+			return [];
+		}
+
+		if(!is_array($values)){
+			$values = explode("_", $values);
+			$values = Helper::getPairParams($values);
+		}
+
+		return $values;
+	}
+
 /*
 //---------------------------------
 //	PUBLIC METHODS
@@ -493,5 +507,6 @@ abstract class Frame{
 	public function getParentClassName(){
 		return '\\'.$this->_getParentClassName();
 	}	
+
 
 } 
