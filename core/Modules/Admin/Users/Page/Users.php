@@ -157,7 +157,7 @@ class Users extends AdminPage{
 
 		if($isTrash){
 			$totals = $inTrash;
-			$paramTrash = URL::build("", ['trash' => $this->trash]);
+			$paramTrash = URL::setParams(['trash' => $this->trash]);
 		}
 
 		$this->view->assets->scriptsInline(["pager","grid","popover","users","roles.modal"]);
@@ -168,7 +168,7 @@ class Users extends AdminPage{
 		$this->view->data("data", $users);
 		$this->view->data("totals", $totals);
 		$this->view->tpl("totalPages", $users->getTotalPages());
-		$this->view->tpl("pageRedirect", URL::build("", ['page' => ""]));
+		$this->view->tpl("pageRedirect", URL::setParams(['page' => ""]));
 		$this->view->data("access", $access);
 		$this->view->data("type", $this->_type);
 		$this->view->data("icon", RolesHelper::getIcon($this->_type));
@@ -207,7 +207,7 @@ class Users extends AdminPage{
 		$paramTrash = "";
 
 		if($this->trash == 1){
-			$paramTrash = URL::build("", ['trash' => $this->trash]);
+			$paramTrash = URL::setParams(['trash' => $this->trash]);
 		}
 
 		$this->redirect("{$this->_url}{$paramTrash}");
@@ -272,7 +272,7 @@ class Users extends AdminPage{
 		$this->view->data("urlReset", "{$this->_url}/reset-logs/id/{$id_user}");
 		$this->view->data("id_user", $id_user);
 		$this->view->tpl("totalPages", $data['pages']);
-		$this->view->tpl("pageRedirect", URL::build("", ['page' => ""]));		
+		$this->view->tpl("pageRedirect", URL::setParams(['page' => ""]));		
 
 		$this->view->layout("sidebar-content",[
 			'CONTENT' => [

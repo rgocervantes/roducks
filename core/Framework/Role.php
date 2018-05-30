@@ -89,7 +89,7 @@ class Role {
 
 		foreach ($list as $type => $role) {
 			$menu[] = [
-				'link' => URL::build(self::$types[$type]['url'], ['type' => $type], false), 
+				'link' => URL::setURL(self::$types[$type]['url'], ['type' => $type], false), 
 				'text' => self::$types[$type]['title'],
 				'access' => self::$types[$type]['access'],
 			];

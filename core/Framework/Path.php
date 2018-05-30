@@ -169,11 +169,11 @@ class Path{
 	}
 
 	static function getImageAbsolute($file){
-		return URL::getURL() . self::getImage($file);
+		return URL::getURL(self::getImage($file));
 	}
 
 	static function getPublicUploadedUsers($file){
-		return URL::getURL() . self::getUploadedUsers($file);
+		return URL::getURL(self::getUploadedUsers($file));
 	}
 
 }

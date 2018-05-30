@@ -13,7 +13,7 @@ use Roducks\Framework\Login;
 						<h1 style="margin:0;"><span class="glyphicon glyphicon-<?php echo $role['icon']; ?>" aria-hidden="true"></span> <?php echo $role['title']; ?></h1>
 					</div>
 					<div class="right">
-						<a href="<?php echo URL::build($role['url'], ['type' => $type]); ?>" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> <?php echo TEXT_EDIT; ?></a>
+						<a href="<?php echo URL::setURL($role['url'], ['type' => $type]); ?>" class="btn btn-lg btn-success"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> <?php echo TEXT_EDIT; ?></a>
 					</div>
 					<div class="clear"></div>
 				</div><!-- .well -->

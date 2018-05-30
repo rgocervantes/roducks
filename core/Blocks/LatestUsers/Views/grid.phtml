@@ -9,7 +9,7 @@ use Roducks\Libs\Utils\Date;
 
 ?>
 <?php if(isset($access['tree'])): ?>
-				<a href="<?php echo URL::build($url, ['tree' => 1]); ?>" class="btn btn-default"><span class="glyphicon glyphicon-<?php echo $icon; ?>" aria-hidden="true"></span> <?php echo TEXT_DESCENDANTS; ?></a><br><br>
+				<a href="<?php echo URL::setURL($url, ['tree' => 1]); ?>" class="btn btn-default"><span class="glyphicon glyphicon-<?php echo $icon; ?>" aria-hidden="true"></span> <?php echo TEXT_DESCENDANTS; ?></a><br><br>
 <?php endif; ?>
 	<table id="data-grid<?php echo Template::notEmpty($alt,'-'.$alt); ?>" width="100%" cellpadding="0" cellspacing="0" class="rdks-table rdks-table-hover" data-url-remove="/_json<?php echo $url; ?>/trash" data-url-visibility="/_json<?php echo $url; ?>/visibility">
 		<tr>

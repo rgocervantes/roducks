@@ -56,6 +56,10 @@ class URL{
 		}
 
 	}
+
+	static function getDomainName(){
+		return Http::getServerName();
+	}
 	
 	static function getURLArguments(){
 
@@ -141,17 +145,22 @@ class URL{
 		return $ret;
 	}
 
-	static function getRelativeURL(){
+	static function getRelativeURL($withParams = true){
+
+		if(!$withParams){
+			return self::getBaseURL();
+		}
+
 		return Http::getURI();
 	}
 
-	static function getAbsoluteURL(){
-		$relativeURL = (self::getRelativeURL() != self::ROOT) ? self::getRelativeURL() : '';
-		return Http::getServerName() . $relativeURL;
+	static function getAbsoluteURL($withParams = true){
+		$relativeURL = (self::getRelativeURL($withParams) != self::ROOT) ? self::getRelativeURL($withParams) : '';
+		return self::getDomainName() . $relativeURL;
 	}
 
-	static function getURL(){
-		return Http::getServerName();
+	static function getURL($path = ""){
+		return self::getDomainName() . $path;
 	}
 
 	static function goToURL($inDEV, $inPro){
@@ -159,30 +168,19 @@ class URL{
 		return Http::getProtocol() . $subdomain . "." . DOMAIN_NAME;
 	}
 
-	static function goToFront(){
-		return self::goToURL("local", Core::DEFAULT_SUBDOMAIN);
+	static function goToFront($path = ""){
+		return self::goToURL("local", Core::DEFAULT_SUBDOMAIN) . $path;
 	}
 
-	static function goToAdmin(){
-		return self::goToURL("admin.local", Core::ADMIN_SUBDOMAIN);
+	static function goToAdmin($path = ""){
+		return self::goToURL("admin.local", Core::ADMIN_SUBDOMAIN) . $path;
 	}
 
 	static function getPublicURL($path = ""){
-		return self::goToFront() . $path;
+		return self::goToFront($path);
 	}
 
-	static function lang($iso, $rel = true){
-		$relativeURL = self::getRelativeURL();
-		$url = "/_lang/{$iso}";
-
-		if($relativeURL != self::ROOT && $rel){
-			$url .= $relativeURL;
-		}
-
-		return $url;
-	}
-
-	static function build($url = "/", array $params = [], $complete = true){
+	static function setURL($url = "/", array $params = [], $complete = true){
 
 		if(count($params) == 0){
 			return $url;
@@ -199,6 +197,25 @@ class URL{
 
 		return $url . "?" . implode("&", $ret);
 
+	}
+
+	static function getURLWithParams(array $params = [], $complete = true){
+		return self::setURL(self::getBaseURL(), $params, $complete);
+	}
+
+	static function setParams(array $params = [], $complete = true){
+		return self::setURL("", $params, $complete);
+	}
+
+	static function lang($iso, $rel = true){
+		$relativeURL = self::getRelativeURL();
+		$url = "/_lang/{$iso}";
+
+		if($relativeURL != self::ROOT && $rel){
+			$url .= $relativeURL;
+		}
+
+		return $url;
 	}
 
 }
