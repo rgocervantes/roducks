@@ -53,7 +53,7 @@ abstract class Frame{
 		$class = $this->pageObj->className;
 
 		// Avoid autoload for "Page Not Found"
-		if($class == Helper::PAGE_NOT_FOUND){
+		if($class == Helper::PAGE_NOT_FOUND || $this->getParentClassName() == '\Roducks\Page\HelperPage'){
 			return;
 		}
 
@@ -78,20 +78,7 @@ abstract class Frame{
 				}
 
 			}else{
-				/*
-				$url = URL::getParams();
-				$tag = (isset($url[0])) ? $url[0] : "";
-
-				if(
-					($this->_pageType == 'PAGE' && $tag == '_page') || 
-					($this->_pageType == 'PAGE' && $tag == '_factory') || 
-					($this->_pageType == 'BLOCK' && $tag == '_block') || 
-					($this->_pageType == 'PAGE' && $tag != '_page') || 
-					($this->_pageType == 'FRAME')
-				) {
-					*/
-					Error::undefinedVariable("Undefined variable", $this->pageObj->className, __LINE__, __FILE__, $this->pageObj->fileName, $key, $this->getParentClassName());
-				//}
+				Error::undefinedVariable("Undefined variable", $this->pageObj->className, __LINE__, __FILE__, $this->pageObj->fileName, $key, $this->getParentClassName());
 			}	
 		}
 	}
