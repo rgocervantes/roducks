@@ -337,7 +337,7 @@ class Dispatch{
 		                    break;
 
 		                case 'slug':
-		                    $type = '[a-z\-]';
+		                    $type = '[a-z0-9\-]';
 		                    break;
 
 		            }
