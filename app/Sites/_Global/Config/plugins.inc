@@ -28,8 +28,8 @@ return [
 		'jquery-jcrop-0.9.12/js/jquery.jcrop.min.js?v=1.0'
 	],
 	'roducks' => [
-		'roducks-1.0/css/roducks.css?v=1.0',
+		'roducks-1.0/css/roducks.css?v=1.1',
 		'roducks-1.0/css/themes/default/roducks-modal.css?v=1.0',
-		'roducks-1.0/js/roducks.min.js?v=1.0'
+		'roducks-1.0/js/roducks.min.js?v=1.6'
 	],
 ];

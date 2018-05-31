@@ -78,7 +78,7 @@ class GenericPage extends Frame {
 		// store in a session to retrieve data by requesting email template
 		Session::set(self::SESSION_EMAIL, $store);
 
-		$url = URL::getURL("/_email/" . $template);
+		$url = URL::setAbsoluteURL("/_email/" . $template);
 
 		// get html
 		$request = Request::init('GET', $url);

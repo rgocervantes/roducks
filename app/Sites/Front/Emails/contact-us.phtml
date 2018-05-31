@@ -3,7 +3,7 @@ use Roducks\Framework\UI;
 use Roducks\Framework\URL;
 ?>
 <?php echo UI::getLogo(300, [
-	'http' => URL::getPublicURL(),
+	'http' => URL::getFrontURL(),
 	'flex-h' => true, // width: 300px, height: auto
 	'center' => true, 
 	'bg' => UI::BG_TRANSPARENT, // UI::BG_WHITE | UI::BG_BLACK
