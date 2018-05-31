@@ -168,16 +168,16 @@ class URL{
 		return Http::getProtocol() . $subdomain . "." . DOMAIN_NAME;
 	}
 
-	static function goToFront($path = ""){
+	static function getFrontURL($path = ""){
 		return self::goToURL("local", Core::DEFAULT_SUBDOMAIN) . $path;
 	}
 
-	static function goToAdmin($path = ""){
+	static function getAdminURL($path = ""){
 		return self::goToURL("admin.local", Core::ADMIN_SUBDOMAIN) . $path;
 	}
 
 	static function getPublicURL($path = ""){
-		return self::goToFront($path);
+		return self::getFrontURL($path);
 	}
 
 	static function setURL($url = "/", array $params = [], $complete = true){

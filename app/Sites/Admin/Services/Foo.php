@@ -29,7 +29,7 @@ class Foo extends Service{
 
 	public function cross(){
 
-		$this->crossDomain(["POST"], URL::goToFront());
+		$this->crossDomain(["POST"], URL::getFrontURL());
 		$this->data("id", $this->post->param("id"));
 
 		parent::output();
