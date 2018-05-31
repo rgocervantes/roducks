@@ -325,7 +325,7 @@ class Dispatch{
 			// Let's find a URL
 			foreach($router as $key => $value) {
 
-		        $key = preg_replace_callback('#{([a-zA-Z_]+):(int|str)}#', function($match) {
+		        $key = preg_replace_callback('#{([a-zA-Z_]+):(int|str|slug)}#', function($match) {
 		           
 		            switch ($match[2]) {
 		                case 'int':
@@ -335,6 +335,11 @@ class Dispatch{
 		                case 'str':
 		                    $type = '\w';
 		                    break;
+
+		                case 'slug':
+		                    $type = '[a-z\-]';
+		                    break;
+
 		            }
 		            
 		            $name = $match[1];
