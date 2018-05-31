@@ -885,8 +885,22 @@ class Dispatch{
 		// Avoid dispatching a page if factory exists
 		Error::cantDispatchFactory($pagePath, $page);
 
+		/*
+		|--------------------------------|
+		|		  SET LANGUAGE  		 |
+		|--------------------------------|
+		*/
+		if(isset($rowUrl['id_lang']) && $method != "_lang"){
+			$iso = Language::getIso($rowUrl['id_lang']);
+
+			if($iso != Language::get()) {
+				Http::redirect(URL::lang($iso));
+			}
+		}
+
 		// Load page
 		Core::loadPage($pagePath, $page, $method, $urlPattern, $params, false, $rowUrl);
+
 
 	} // end init method
 

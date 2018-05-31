@@ -55,6 +55,20 @@ class Language{
 
 	}
 
+	static function getIso($id){
+		$langs = self::getList();
+		$iso = "en";
+
+		foreach ($langs as $key => $value) {
+			if($value['id'] == $id){
+				$iso = $key;
+				break;
+			}
+		}
+
+		return $iso;
+	}
+
 	static function isMultilanguage(){
 		return MULTILANGUAGE;
 	}

@@ -113,7 +113,7 @@ abstract class Frame{
 //	PROTECTED METHODS
 //---------------------------------
 */
-	protected function lang(){
+	protected function getLang(){
 		return $this->_lang;
 	}
 

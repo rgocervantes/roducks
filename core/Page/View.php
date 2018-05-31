@@ -67,7 +67,8 @@ final class View{
 		if(count($this->_url) > 0){
 			$this->title($this->_url['title']);
 			$this->load($this->_url['pview']);
-			$this->template($this->_url['template']);
+			if(!empty($this->_url['template']))
+				$this->template($this->_url['template']);
 			if(!empty($this->_layout))
 				$this->_layout = $this->_url['layout'];
 		}
@@ -117,7 +118,7 @@ final class View{
 		return $this->_data;
 	}
 
-	public function getUrl(){
+	public function getUrlData(){
 		return $this->_url;
 	}
 
