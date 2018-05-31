@@ -131,7 +131,7 @@ class Error{
 
 		$factory = preg_replace('#/Page/#', '/Factory/', $pagePath).$page.FILE_EXT;
 
-		$params = URL::getRealParams();
+		$params = URL::getSplittedURL();
 		$correctUrl = preg_replace('/^(\/_)Page(.*)/', '$1Factory$2', URL::getRelativeURL());
 
 		$error = "This <b>module</b> has <span style=\"color: #9cc2c7;\">factory</span> defined, so it can't be dispatched like <span style=\"color: #bc99e0;\">/_page/</span><br><br>";

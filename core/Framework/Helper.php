@@ -89,14 +89,14 @@ class Helper{
 	}
 
 	static function isUrlDispatch(){
-		$url = URL::getRealParams();
+		$url = URL::getSplittedURL();
 		$dispatch = (isset($url[0])) ? $url[0] : "root";
 
 		return self::isDispatch($dispatch);
 	}
 
 	static function isBlockDispatched(){
-		$url = URL::getRealParams();
+		$url = URL::getSplittedURL();
 		$dispatch = (isset($url[0])) ? $url[0] : "root";		
 		return self::regexp(self::REGEXP_IS_BLOCK_DISPATCHED, $dispatch);
 	}

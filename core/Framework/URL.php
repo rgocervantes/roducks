@@ -123,7 +123,7 @@ class URL{
 
 	}
 
-	static function getRealParams(){
+	static function getSplittedURL(){
 		$params = self::getParams();
 		$ret = [];
 
@@ -139,7 +139,7 @@ class URL{
 
 	static function getPairParams(){
 
-		$params = self::getRealParams();
+		$params = self::getSplittedURL();
 		$ret = Helper::getPairParams($params);
 
 		return $ret;

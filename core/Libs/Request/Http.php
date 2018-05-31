@@ -75,7 +75,7 @@ class Http{
 		return self::getProtocol() . $_SERVER['SERVER_NAME'];
 	}
 
-	static function getSplitURL($siteDomain){
+	static function getSplittedURL($siteDomain){
 		$domain = explode(".", $siteDomain);
 		$serverName = self::getServerName();
 		preg_match('/^(?P<PROTOCOL>https?):\/\/(?P<SUBDOMAIN>[a-z\.]+\.)?(?P<SERVER_NAME>'.$domain[0].')\.(?P<DOMAIN>[a-z\.]+)?$/', $serverName, $matches);
@@ -85,7 +85,7 @@ class Http{
 
 	static function getSubdomain($siteDomain, $defaultSubdomain){
 
-		$url = self::getSplitURL($siteDomain);
+		$url = self::getSplittedURL($siteDomain);
 		$subdomain = isset($url['SUBDOMAIN']) ? $url['SUBDOMAIN'] : "";
 
 		if(!empty($subdomain)){
@@ -96,7 +96,7 @@ class Http{
 	}
 
 	static function getDomain(){
-		$url = self::getSplitURL();
+		$url = self::getSplittedURL();
 
 		return "." . $url['DOMAIN'];
 	}

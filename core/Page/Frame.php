@@ -304,7 +304,7 @@ abstract class Frame{
 			$alert = "warning";
 		} else {	
 
-			$params = URL::getRealParams();
+			$params = URL::getSplittedURL();
 			
 			if(!isset($params[0])){
 				return;
