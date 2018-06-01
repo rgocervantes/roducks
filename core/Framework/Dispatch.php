@@ -361,14 +361,26 @@ class Dispatch{
 		if(!$found && FIND_URL_IN_DB){
 
 			$db = Core::db(RDKS_ERRORS);
+			$baseURL = URL::getBaseURL();
 
 			$queryUrl = UrlsUrlsLang::open($db);
-			$queryUrl->filter(['ul.url' => URL::getBaseURL(), 'u.active' => 1]);
+			$queryUrl->filter([
+				'[BEGIN_COND]' => "(",
+					'[NON_1]ul.url' => $baseURL, 
+					'[OR]ul.redirect' => $baseURL, 
+				'[END_COND]' => ")",
+				'u.active' => 1
+			]);
 
 			// It was found it
 			if($queryUrl->rows()){
+
 				$rowUrl = $queryUrl->fetch();
 				$dispatcher = ['dispatch' => $rowUrl['dispatch']];
+
+				if($rowUrl['url'] == $baseURL && !empty($rowUrl['redirect'])){
+					Http::redirect($rowUrl['redirect']);
+				}
 			}
 
 		}

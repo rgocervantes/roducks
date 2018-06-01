@@ -51,7 +51,8 @@ class Language extends Block{
 					if(isset($urls[ $id ])){
 						$u = $urls[ $id ];
 						$u = array_merge($u, $lang);
-						$u['link'] = URL::lang($lang['iso'], false) . $u['url'];
+						$uri = (!empty($u['redirect'])) ? $u['redirect'] : $u['url'];
+						$u['link'] = URL::lang($lang['iso'], false) . $uri;
 						$ret[] = $u;	
 					}	
 				}
