@@ -31,6 +31,10 @@ class Http{
 		if($die) die("<h1>{$message}</h1>");
 	}
 
+	static function sendHeaderMovedPermanently($die = true){
+		self::httpHeader(301, "Moved Permanently", $die);	
+	}
+
 	static function sendHeaderAuthenticationFailed($die = true){
 		self::httpHeader(401, "Authentication failed", $die);	
 	}

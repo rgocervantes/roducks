@@ -379,6 +379,11 @@ class Dispatch{
 				$dispatcher = ['dispatch' => $rowUrl['dispatch']];
 
 				if($rowUrl['url'] == $baseURL && !empty($rowUrl['redirect'])){
+					
+					if(!Environment::inDEV()){
+						Http::sendHeaderMovedPermanently(false);
+					}
+
 					Http::redirect($rowUrl['redirect']);
 				}
 			}
