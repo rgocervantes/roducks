@@ -50,8 +50,7 @@ class Error{
 	}
 
 	static function pageNotFound(){
-		$data = array();
-		Core::loadPage(DIR_CORE_PAGE, "Roducks\Page\Page", "pageNotFound", $data, $data);
+		Core::loadPage(DIR_CORE_PAGE, "Roducks\Page\Page", "pageNotFound");
 		exit;
 	}
 
