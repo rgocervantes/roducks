@@ -27,7 +27,7 @@
 
 7. Run command below to make `data` folder.
 ```
-mkdir -p app/Data/storage/json/roles
+mkdir -p app/Data/roles
 ```
 8. Give some write permissions.
 ```
@@ -35,7 +35,7 @@ chmod -R 777 app/Data
 ```
 9. Run the next command.
 ```
-cp core/Data/Config/* app/Data/storage/json/roles/
+cp core/Data/Config/* app/Data/roles/
 ```
 10. Run command below to create the local config file.
 ```
@@ -85,7 +85,7 @@ Congratulations! You just installed `Roducks` successfully.
 1. Upload files to your Server in QA `or` Production environment.
 2. Run command below to make `data` folder.
 ```
-mkdir -p app/Data/storage/json/roles
+mkdir -p app/Data/roles
 ```
 3. Give some write permissions.
 ```
@@ -93,7 +93,7 @@ chmod -R 777 app/Data
 ```
 4. Run the next command.
 ```
-cp core/Data/Config/* app/Data/storage/json/roles/
+cp core/Data/Config/* app/Data/roles/
 ```
 5. Create a local MySQL database called `roducks`.
 6. Create a User and Password for the database you just created and the previous step.
