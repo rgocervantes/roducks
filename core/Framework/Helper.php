@@ -332,6 +332,10 @@ class Helper{
 
 	}
 
+	static function getHelperClass($str){
+		return str_replace(['Page','JSON','XML'], 'Helper', $str);
+	}
+
 	static function getCamelName($url, $ret = true, $sep = "-"){
 		$pts = explode($sep, $url);
 

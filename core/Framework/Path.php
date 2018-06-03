@@ -26,6 +26,10 @@ class Path{
 		return \App::getRealFilePath($path);
 	}
 
+	static function exists($file){
+		return file_exists(self::get($file));
+	}
+
 	static function getData($path = ""){
 		return self::get(DIR_APP_DATA . $path);
 	}

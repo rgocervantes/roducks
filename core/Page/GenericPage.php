@@ -23,6 +23,7 @@ namespace Roducks\Page;
 use Roducks\Framework\Helper;
 use Roducks\Framework\URL;
 use Roducks\Framework\Post;
+use Roducks\Framework\Path;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Request\Request;
 use Roducks\Libs\Data\Session;
@@ -31,14 +32,33 @@ class GenericPage extends Frame {
 
 	const SESSION_EMAIL = "RDKS_EMAIL";
 
+	private $_helper;
+
+	private function _callHelper(){
+		if(Path::exists(Helper::getHelperClass($this->pageObj->fileName))){
+			$helper = Helper::getHelperClass($this->pageObj->className);
+		}
+
+		$this->_helper = $helper::init();
+	}
+
+	public function __construct(array $settings = []){
+		parent::__construct($settings);
+		$this->_callHelper();
+	}
+
 	protected $_jsonData = [];
 
 	protected function getJsonData(){
 		return $this->_jsonData;
-	}	
+	}
 
 	protected function invalidRequest(){
 		Http::setHeaderInvalidRequest();
+	}
+
+	protected function helper(){
+		return $this->_helper;
 	}
 
 	/**
