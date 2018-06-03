@@ -29,7 +29,7 @@ class FrontPage extends Page {
 	public function __construct(array $settings, View $view){
 		parent::__construct($settings, $view);
 
-		$this->login = new Login(Login::SESSION_FRONT, $this->loginUrl);
+		$this->login = new Login(Login::SESSION_FRONT, static::LOGIN_URL);
 	}
 
 }

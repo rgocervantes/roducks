@@ -32,7 +32,7 @@ class Login extends Page{
 
 	public function login(){
 
-		$login = new LoginAuth($this->_session, $this->loginUrl);
+		$login = new LoginAuth($this->_session, static::LOGIN_URL);
 		$login->redirect(); // obligatory
 
 	}
@@ -48,7 +48,7 @@ class Login extends Page{
 		UsersTable::open($db)->logInOut($id_user, 0);
 		$db->close();
 		
-		$this->redirect($this->loginUrl);
+		$this->redirect(static::LOGIN_URL);
 	}
 
 } 

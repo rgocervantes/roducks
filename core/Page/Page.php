@@ -32,9 +32,10 @@ use Roducks\Libs\Data\Session;
 
 class Page extends GenericPage {
 	
-	protected $loginUrl = "/login";
+	const LOGIN_URL = "/login";
+
 	protected $_pageType = 'PAGE';
-	protected $viewport = true;
+	protected $_viewport = true;
 
 /*
 //---------------------------------
@@ -78,7 +79,7 @@ class Page extends GenericPage {
 
 		$this->view = $view;
 		$this->view->parentPage($this->_getParentClassName());
-		if($this->viewport) $this->view->meta('name','viewport',"width=device-width,initial-scale=1,shrink-to-fit=no");
+		if($this->_viewport) $this->view->meta('name','viewport',"width=device-width,initial-scale=1,shrink-to-fit=no");
 	}
 
 	public function pageNotFound(){
