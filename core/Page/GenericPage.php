@@ -35,11 +35,11 @@ class GenericPage extends Frame {
 	private $_helper;
 
 	private function _callHelper(){
+		
 		if(Path::exists(Helper::getHelperClass($this->pageObj->fileName))){
 			$helper = Helper::getHelperClass($this->pageObj->className);
+			$this->_helper = $helper::init();
 		}
-
-		$this->_helper = $helper::init();
 	}
 
 	public function __construct(array $settings = []){
@@ -98,7 +98,7 @@ class GenericPage extends Frame {
 		// store in a session to retrieve data by requesting email template
 		Session::set(self::SESSION_EMAIL, $store);
 
-		$url = URL::setAbsoluteURL("/_email/" . $template);
+		$url = URL::setAbsoluteURL("/_email/{$template}");
 
 		// get html
 		$request = Request::init('GET', $url);
