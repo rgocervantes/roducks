@@ -332,8 +332,20 @@ class Helper{
 
 	}
 
-	static function getHelperClass($str){
+	static function getHelperPath($str){
 		return str_replace(['Page','JSON','XML'], 'Helper', $str);
+	}
+
+	static function getHelperFileName($file){
+		return preg_replace('#^app/Sites/([a-zA-Z]+)/Modules/(.+)$#', 'core/Modules/$1/$2', $file);
+	}
+
+	static function getCoreHelperclassName($className){
+		$classPath = str_replace("\\","/", $className);
+		$coreClassName = preg_replace('/^App\/Sites\/([a-zA-Z]+)\/Modules\/(.+)$/', 'Roducks\\Modules\\\$1\\\$2', $classPath);
+		$coreClassName = str_replace("/", "\\", $coreClassName);
+
+		return $coreClassName;		
 	}
 
 	static function getCamelName($url, $ret = true, $sep = "-"){
