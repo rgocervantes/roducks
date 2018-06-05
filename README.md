@@ -25,11 +25,12 @@
 5. Configure those virtual hosts in the vhosts file of your local server `This varies depending what local server you installed`.
 6. Restart Apache service.
 
-7. Run command below to make `data` folder.
+7. Run commands below to make some folders.
 ```
 mkdir -p app/Data/roles
+mkdir -p app/Data/uploads
 ```
-8. Give some write permissions.
+8. Give write permissions.
 ```
 chmod -R 777 app/Data
 ```
@@ -83,11 +84,12 @@ Congratulations! You just installed `Roducks` successfully.
 # Deployment steps:
 
 1. Upload files to your Server in QA `or` Production environment.
-2. Run command below to make `data` folder.
+2. Run commands below to make some folders.
 ```
 mkdir -p app/Data/roles
+mkdir -p app/Data/uploads
 ```
-3. Give some write permissions.
+3. Give write permissions.
 ```
 chmod -R 777 app/Data
 ```
