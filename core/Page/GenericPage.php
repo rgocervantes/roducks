@@ -37,17 +37,14 @@ class GenericPage extends Frame {
 	private function _callHelper(){
 
 		$found = false;
-		$file = $this->pageObj->fileName;
 		$className = $this->pageObj->className;
-
+		$file = $this->pageObj->fileName;
 		$coreFile = Helper::getHelperFileName($file);
-		$coreClassName = Helper::getCoreHelperclassName($className);
 
 		if(Path::exists(Helper::getHelperPath($file))){
-			$helperName = $className;
 			$found = true;
 		} else if(Path::exists(Helper::getHelperPath($coreFile))){
-			$helperName = $coreClassName;
+			$className = Helper::getCoreHelperclassName($className);
 			$found = true;
 		}
 
