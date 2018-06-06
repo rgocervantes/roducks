@@ -41,18 +41,20 @@ class GenericPage extends Frame {
 		$file = $this->pageObj->fileName;
 		$coreFile = Helper::getHelperFileName($file);
 
-		if(Path::exists(Helper::getHelperPath($file))){
-			$found = true;
-		} else if(Path::exists(Helper::getHelperPath($coreFile))){
-			$className = Helper::getCoreHelperclassName($className);
-			$found = true;
-		}
+		if(Helper::isPage($className) || Helper::isJson($className) || Helper::isXml($className)){
 
-		if($found){
-			$helper = Helper::getHelperPath($className);
-			$this->_helper = $helper::init();
-		}
+			if(Path::exists(Helper::getHelperPath($file))){
+				$found = true;
+			} else if(Path::exists(Helper::getHelperPath($coreFile))){
+				$className = Helper::getCoreHelperclassName($className);
+				$found = true;
+			}
 
+			if($found){
+				$helper = Helper::getHelperPath($className);
+				$this->_helper = $helper::init();
+			}
+		}
 	}
 
 	public function __construct(array $settings = []){
