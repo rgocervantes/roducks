@@ -50,7 +50,7 @@ class Error{
 	}
 
 	static function pageNotFound(){
-		Core::loadPage(DIR_CORE_PAGE, "Roducks\Page\Page", "pageNotFound");
+		Core::loadPage(DIR_CORE_PAGE, Helper::PAGE_NOT_FOUND, "pageNotFound");
 		exit;
 	}
 
@@ -71,7 +71,7 @@ class Error{
 		$markup .= '</div>';
 		
 		return $markup;
-	}	
+	}
 
 	static function _throw($title, $line, $path, $file, $error = ""){
 		$markup = '<html><head><title>Roducks Debugger</title></head><body style="background: #031415; color: #fff;">';
@@ -131,13 +131,13 @@ class Error{
 		$factory = preg_replace('#/Page/#', '/Factory/', $pagePath).$page.FILE_EXT;
 
 		$params = URL::getSplittedURL();
-		$correctUrl = preg_replace('/^(\/_)Page(.*)/', '$1Factory$2', URL::getRelativeURL());
+		$correctUrl = preg_replace('/^(\/_)page(.*)/', '$1factory$2', URL::getRelativeURL());
 
-		$error = "This <b>module</b> has <span style=\"color: #9cc2c7;\">factory</span> defined, so it can't be dispatched like <span style=\"color: #bc99e0;\">/_page/</span><br><br>";
+		$error = "This <b>module</b> has <span style=\"color: #00BCD4;\">factory</span> defined, so it can't be dispatched like <span style=\"color: #bc99e0;\">/_page/</span><br><br>";
 		$error .= "Correct:<br><br>";
 		$error .= "<a href=\"{$correctUrl}\" style=\"color: #bcd92e; text-decoration:none;\">{$correctUrl}</a><br>";
 		$error .= "^<br>";
-		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Click on this link</span><br><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Click on this link</span><br><br>";
 
 		if(isset($params[0]) && $params[0] == '_page' && file_exists($factory)){
 			self::debug("Can't dispatch URL",__LINE__, __FILE__, $pagePath.$page.FILE_EXT, $error); 
@@ -151,10 +151,10 @@ class Error{
 		$ns = Helper::getInvertedSlash($ns);
 
 		$error = "<span style=\"color:#3bde9a; font-weight:bold;\">namespace</span> {$ns};<br><br>";
-		$error .= "<i style=\"color:#bcd92e; font-weight:bold;\">class</i> <b style=\"color:#9cc2c7;\">{$class}</b> <i style=\"color:#bc99e0; font-weight:bold;\">extends</i> <b style=\"color:#9cc2c7;\">{$extend}</b> {<br><br>";
+		$error .= "<i style=\"color:#bcd92e; font-weight:bold;\">class</i> <b style=\"color:#00BCD4;\">{$class}</b> <i style=\"color:#bc99e0; font-weight:bold;\">extends</i> <b style=\"color:#00BCD4;\">{$extend}</b> {<br><br>";
 		$error .= "&nbsp;&nbsp;<span style=\"color:#3bde9a; font-weight:bold;\">protected</span> <span style=\"color:#03bddd;\">\$_dispatchUrl</span> = <span style=\"color:#bcd92e;\">true</span>;<br>";
 		$error .= "&nbsp;&nbsp;^<br>";
-		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this property is defined.</span><br>...";			
+		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this property is defined.</span><br>...";			
 
 		self::debug($title, $line, $path, $file, $error);
 	}
@@ -170,10 +170,10 @@ class Error{
 			list($class, $method) = explode("::", $method);
 
 			$error = "<span style=\"color:#3bde9a; font-weight:bold;\">namespace</span> {$ns};<br><br>";
-			$error .= "<i style=\"color:#bcd92e; font-weight:bold;\">class</i> <b style=\"color:#9cc2c7;\">{$class}</b> <i style=\"color:#bc99e0; font-weight:bold;\">extends</i> <i style=\"color:#9cc2c7; font-weight:bold;\">{$extend}</i> {<br><br>";
-			$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3bde9a; font-weight:bold;\">{$visibility}</span> <span style=\"color:#bcd92e; font-weight:bold;\">function</span> <b style=\"color:#9cc2c7;\">$method()</b>{<br>";
+			$error .= "<i style=\"color:#bcd92e; font-weight:bold;\">class</i> <b style=\"color:#00BCD4;\">{$class}</b> <i style=\"color:#bc99e0; font-weight:bold;\">extends</i> <i style=\"color:#00BCD4; font-weight:bold;\">{$extend}</i> {<br><br>";
+			$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3bde9a; font-weight:bold;\">{$visibility}</span> <span style=\"color:#bcd92e; font-weight:bold;\">function</span> <b style=\"color:#00BCD4;\">$method()</b>{<br>";
 			$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>";		
-			$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">{$alert}</span><br>";		
+			$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">{$alert}</span><br>";		
 			$error .= "&nbsp;&nbsp;&nbsp;&nbsp;...<br>";
 			$error .= "&nbsp;&nbsp;&nbsp;}<br>";
 			$error .= "}<br>";
@@ -191,10 +191,10 @@ class Error{
 		$ns = Helper::getInvertedSlash($ns);	
 
 		$error = "<span style=\"color:#3bde9a; font-weight:bold;\">namespace</span> {$ns};<br><br>";
-		$error .= "<i style=\"color:#bcd92e; font-weight:bold;\">class</i> <b style=\"color:#9cc2c7;\">{$class}</b> <i style=\"color:#bc99e0; font-weight:bold;\">extends</i> <b style=\"color:#9cc2c7;\">{$extend}</b> {<br><br>";
+		$error .= "<i style=\"color:#bcd92e; font-weight:bold;\">class</i> <b style=\"color:#00BCD4;\">{$class}</b> <i style=\"color:#bc99e0; font-weight:bold;\">extends</i> <b style=\"color:#00BCD4;\">{$extend}</b> {<br><br>";
 		$error .= "&nbsp;&nbsp;<span style=\"color:#3bde9a; font-weight:bold;\">var</span> <span style=\"color:#03bddd;\">\${$param};</span><br>";
 		$error .= "&nbsp;&nbsp;^<br>";
-		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this property is defined.</span><br>...";			
+		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this property is defined.</span><br>...";			
 		
 		self::debug($title, $line, $path, $file, $error);
 	}
@@ -206,9 +206,9 @@ class Error{
 		$ns = Helper::getInvertedSlash($ns);		
 
 		$error = "<span style=\"color:#3bde9a; font-weight:bold;\">namespace</span> {$ns};<br><br>";
-		$error .= "<i style=\"color:#bcd92e; font-weight:bold;\">class</i> <b style=\"color:#9cc2c7;\">{$class}</b> <i style=\"color:#bc99e0; font-weight:bold;\">extends</i> <i style=\"color:#bcd92e; font-weight:bold;\">...</i> {<br>";
+		$error .= "<i style=\"color:#bcd92e; font-weight:bold;\">class</i> <b style=\"color:#00BCD4;\">{$class}</b> <i style=\"color:#bc99e0; font-weight:bold;\">extends</i> <i style=\"color:#bcd92e; font-weight:bold;\">...</i> {<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>";		
-		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this class is defined.</span><br>";					
+		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this class is defined.</span><br>";					
 		$error .= " ... <br>";
 		$error .= "}<br>";
 
@@ -222,10 +222,10 @@ class Error{
 		$ns = Helper::getInvertedSlash($ns);		
 
 		$error = "<span style=\"color:#3bde9a; font-weight:bold;\">namespace</span> {$ns};<br><br>";
-		$error .= "<i style=\"color:#bcd92e; font-weight:bold;\">class</i> <b style=\"color:#9cc2c7;\">{$class}</b> <i style=\"color:#bc99e0; font-weight:bold;\">extends</i> <i style=\"color:#9cc2c7; font-weight:bold;\">{$extend}</i> {<br><br>";
-		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3bde9a; font-weight:bold;\">public</span> <span style=\"color:#bcd92e; font-weight:bold;\">function</span> <b style=\"color:#9cc2c7;\">$method()</b>{<br>";
+		$error .= "<i style=\"color:#bcd92e; font-weight:bold;\">class</i> <b style=\"color:#00BCD4;\">{$class}</b> <i style=\"color:#bc99e0; font-weight:bold;\">extends</i> <i style=\"color:#00BCD4; font-weight:bold;\">{$extend}</i> {<br><br>";
+		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3bde9a; font-weight:bold;\">public</span> <span style=\"color:#bcd92e; font-weight:bold;\">function</span> <b style=\"color:#00BCD4;\">$method()</b>{<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>";		
-		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">{$alert}</span><br>";		
+		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">{$alert}</span><br>";		
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;...<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;}<br>";
 		$error .= "}<br>";
@@ -240,12 +240,12 @@ class Error{
 
 		$error = "<span style=\"color:#3bde9a; font-weight:bold;\">use</span> Roducks\Framework\Environment;<br><br>";
 
-		$error .= "<span style=\"color:#03bddd;\">return</span> <span style=\"color:#9cc2c7;\">=</span> [<br>";
+		$error .= "<span style=\"color:#03bddd;\">return</span> <span style=\"color:#00BCD4;\">=</span> [<br>";
 		$error .= "...<br>";		
-		$error .= "&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$subdomain}'</span> <span style=\"color:#9cc2c7;\">=></span> [<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'site'</span> <span style=\"color:#9cc2c7;\">=></span> <span style=\"color:#bc99e0;\">\"{$site}\"</span>,<br>";
+		$error .= "&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$subdomain}'</span> <span style=\"color:#00BCD4;\">=></span> [<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'site'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#bc99e0;\">\"{$site}\"</span>,<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
-		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this folder exists in: <span style=\"color:#bcd92e; \">{$dir}</span></span><br><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this folder exists in: <span style=\"color:#bcd92e; \">{$dir}</span></span><br><br>";
 		$error .= "&nbsp;&nbsp;],<br>";
 		$error .= "...<br>";
 		$error .= "];";
@@ -255,11 +255,11 @@ class Error{
 
 	static function moduleDisabled($title, $line, $path, $file, $module){
 
-		$error = "<span style=\"color:#03bddd;\">return</span> <span style=\"color:#9cc2c7;\">=</span> [<br>";
+		$error = "<span style=\"color:#03bddd;\">return</span> <span style=\"color:#00BCD4;\">=</span> [<br>";
 		$error .= "...<br>";		
-		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$module}'</span> <span style=\"color:#9cc2c7;\">=></span> <span style=\"color:#bcd92e;\">true</span><br>";
+		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$module}'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#bcd92e;\">true</span><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
-		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure it is defined.</span><br><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure it is defined.</span><br><br>";
 		$error .= "...<br>";
 		$error .= "];<br>";
 
@@ -268,11 +268,11 @@ class Error{
 
 	static function defaultPageIsMissing($title, $line, $path, $file){
 
-		$error = "<span style=\"color:#3bde9a; font-weight:bold;\">Router</span><b style=\"color:#9cc2c7;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">init</span><span style=\"color:#9cc2c7;\">(</span><span style=\"color:#03bddd;\">function</span> <span style=\"color:#9cc2c7;\">()</span> {<br>";
+		$error = "<span style=\"color:#3bde9a; font-weight:bold;\">Router</span><b style=\"color:#00BCD4;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">init</span><span style=\"color:#00BCD4;\">(</span><span style=\"color:#03bddd;\">function</span> <span style=\"color:#00BCD4;\">()</span> {<br>";
 		$error .= "...<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3bde9a; font-weight:bold;\">Router</span><b style=\"color:#9cc2c7;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">get</span>(<span style=\"color:#e2b75b; \">\"/\"</span><span style=\"color:#9cc2c7;\">,</span> <span style=\"color:#3bde9a; font-weight:bold;\">Dispatch</span><b style=\"color:#9cc2c7;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">page</span>(<span style=\"color:#e2b75b; \">\"home\"</span>,<span style=\"color:#e2b75b; \">\"index\"</span>));<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#9cc2c7;\">^</span><br>";
-		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure to add a 'slash' as default page.</span><br><br>";
+		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3bde9a; font-weight:bold;\">Router</span><b style=\"color:#00BCD4;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">get</span>(<span style=\"color:#e2b75b; \">\"/\"</span><span style=\"color:#00BCD4;\">,</span> <span style=\"color:#3bde9a; font-weight:bold;\">Dispatch</span><b style=\"color:#00BCD4;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">page</span>(<span style=\"color:#e2b75b; \">\"home\"</span>,<span style=\"color:#e2b75b; \">\"index\"</span>));<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#00BCD4;\">^</span><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure to add a 'slash' as default page.</span><br><br>";
 		$error .= "...<br>";
 		$error .= "});<br>";
 
@@ -281,12 +281,12 @@ class Error{
 
 	static function missionDispatchIndex($url, $title, $line, $path, $file){
 
-		$error = "<span style=\"color:#03bddd;\">return</span> <span style=\"color:#9cc2c7;\">=</span> [<br>";
+		$error = "<span style=\"color:#03bddd;\">return</span> <span style=\"color:#00BCD4;\">=</span> [<br>";
 		$error .= "...<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$url}'</span> <span style=\"color:#9cc2c7;\">=></span> [<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'dispatch'</span> <span style=\"color:#9cc2c7;\">=></span> <span style=\"color:#3bde9a; font-weight:bold;\">Dispatch</span><b style=\"color:#9cc2c7;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">page</span>(<span style=\"color:#e2b75b; \">\"home\"</span>,<span style=\"color:#e2b75b; \">\"index\"</span>)<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#9cc2c7;\">^</span><br>";
-		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this index is defined.</span><br><br>";
+		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$url}'</span> <span style=\"color:#00BCD4;\">=></span> [<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'dispatch'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#3bde9a; font-weight:bold;\">Dispatch</span><b style=\"color:#00BCD4;\">::</b><span style=\"color:#bc99e0; font-weight:bold;\">page</span>(<span style=\"color:#e2b75b; \">\"home\"</span>,<span style=\"color:#e2b75b; \">\"index\"</span>)<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#00BCD4;\">^</span><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this index is defined.</span><br><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;],<br>";
 		$error .= "...<br>";
 		$error .= "];<br>";
@@ -296,11 +296,11 @@ class Error{
 
 	static function missingDbConfig($title, $line, $path, $file, $key, $value){
 		
-		$error = "<span style=\"color:#03bddd;\">return</span> <span style=\"color:#9cc2c7;\">=</span> [<br>";
+		$error = "<span style=\"color:#03bddd;\">return</span> <span style=\"color:#00BCD4;\">=</span> [<br>";
 		$error .= "...<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$key}'</span> <span style=\"color:#9cc2c7;\">=></span> <span style=\"color:#e2b75b; \">'{$value}'</span><br>";
+		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$key}'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#e2b75b; \">'{$value}'</span><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
-		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure it is defined.</span><br><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure it is defined.</span><br><br>";
 		$error .= "...<br>";		
 		$error .= "];<br>";
 

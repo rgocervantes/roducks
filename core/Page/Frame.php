@@ -64,7 +64,7 @@ abstract class Frame{
 		foreach($params as $key => $value){
 
 			if(!Helper::regexp(Helper::VALID_PARAM, $key)){
-				Error::debug("Invalid param", __LINE__, __FILE__, $this->pageObj->fileName, "Param <b style=\"color: #c00;\">{$key}</b> contains invalid chars. [\-0-9]");
+				Error::debug("Invalid param", __LINE__, __FILE__, $this->pageObj->fileName, "Param <b style=\"color: #e69d97;\">{$key}</b> contains invalid chars. [\-0-9]");
 			}
 
 			if(property_exists($class, $key)){
@@ -345,7 +345,7 @@ abstract class Frame{
 							continue;
 						}
 
-						$error = "Param <b>{$p}</b> must not be an <b style=\"color:#c00;\">EMPTY</b> <b>Array</b>";
+						$error = "Param <b>{$p}</b> must not be an <b style=\"color:#e69d97;\">EMPTY</b> <b>Array</b>";
 						Error::$alert("Missing value",__LINE__, __FILE__, $this->pageObj->fileName, $error);
 						$this->view->setError();
 						$value[0] = Dispatch::PARAM_ARRAY;
@@ -410,7 +410,7 @@ abstract class Frame{
 					$error = "Value <b>{$key}</b> does not match with this regular expression: {$regexp}";
 	
 					if(Helper::isConditional($value[3])){
-						$error = "{$err}, It <b style=\"color: #c00;\">ONLY</b> allows the next values: " . Helper::getOptions($value[3]);
+						$error = "{$err}, It <b style=\"color: #e69d97;\">ONLY</b> allows the next values: " . Helper::getOptions($value[3]);
 						$regexp = '/^'.$value[3].'$/';
 					}
 
