@@ -34,7 +34,7 @@ class Service extends JSON {
 
 	public function _disableServiceUrl($method){
 		$error = "Methods that starts with \"<b style=\"color:#e69d97\">get</b>\" aren't allowed to be dispatched because they're supposed to \"<b style=\"color:#e69d97\">return</b>\" data.";
-		Error::methodNotFound("Can't dispatch URL", __LINE__, $this->pageObj->filePath, $this->pageObj->fileName, $this->pageObj->className, $method, $this->getParentClassName(),$error);
+		Error::methodNotFound("Can't dispatch URL", __LINE__, __FILE__, $this->pageObj->fileName, $this->pageObj->className, $method, $this->getParentClassName(),$error);
 	}
 
 }
