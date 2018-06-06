@@ -31,8 +31,6 @@ class Asset{
 	private $_css_alt = "";
 	private $_js_alt = "";
 
-	private $_key = "";
-
 	static function load($scripts, $data){
 
 		if(is_array($scripts)){
@@ -51,12 +49,6 @@ class Asset{
 
 	static function includeInLine($scripts = array(), $data){
 		if(count($scripts) > 0) self::load($scripts, $data);
-	}
-
-	static function includeOnLoad($scripts, $data){
-		echo "\n$(window).load(function(){\n\n";
-		self::load($scripts, $data);	
-		echo "\n});\n\n";
 	}
 
 	static function includeOnReady($scripts, $data){
@@ -163,16 +155,24 @@ class Asset{
 	/**
 	*	Set values
 	*/
-	public function setKey($hash){
-		$this->_key = $hash;
-	}
+	public function scriptsInline($scripts, $overwrite = false){
 
-	public function scriptsInline($scripts){
-		$this->_scriptsInline = array_merge($this->_scriptsInline, $scripts);
+		if($overwrite){
+			$this->_scriptsInline = $scripts; 
+		} else {
+			$this->_scriptsInline = array_merge($this->_scriptsInline, $scripts);
+		}
+
 	}	
 
-	public function scriptsOnReady($scripts){
-		$this->_scriptsOnReady = array_merge($this->_scriptsOnReady, $scripts);
+	public function scriptsOnReady($scripts, $overwrite = false){
+
+		if($overwrite){
+			$this->_scriptsOnReady = $scripts; 
+		} else {
+			$this->_scriptsOnReady = array_merge($this->_scriptsOnReady, $scripts);
+		}
+
 	}
 
 	public function css($arr, $overwrite = false){
