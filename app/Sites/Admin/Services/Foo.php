@@ -29,7 +29,8 @@ class Foo extends Service{
 
 	public function cross(){
 
-		$this->crossDomain(["POST"], URL::getFrontURL());
+		$this->crossDomain(["POST"]);
+
 		$this->data("id", $this->post->param("id"));
 
 		parent::output();
