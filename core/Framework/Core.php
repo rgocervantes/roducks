@@ -537,7 +537,9 @@ class Core{
 
 		    if(Helper::isService($page)){
 				if(Helper::regexp('/^get/', $method)){
-		 			$obj->_disableServiceUrl($method);
+					if(method_exists($class, $method)){
+						$obj->_disableServiceUrl($method);
+					}
 		   		}
 		    }
 
