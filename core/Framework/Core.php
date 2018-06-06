@@ -535,7 +535,13 @@ class Core{
 				$obj->verifyToken();
 			}
 
-		}	
+		    if(Helper::isService($page)){
+				if(Helper::regexp('/^get/', $method)){
+		 			$obj->_disableServiceUrl($method);
+		   		}
+		    }
+
+		}
 
 		if(!Helper::isFactory($class)) {
 			if(!$return){
@@ -546,6 +552,17 @@ class Core{
 			}
 		}
 
+	}
+
+	static function loadService($page){
+
+		$page = Helper::getClassName($page);
+		$page = DIR_SERVICES . Helper::getCamelName($page);
+				
+		$servicePath = self::getServicesPath($page);
+		$pagePath = $servicePath['path'];
+
+		return self::loadPage($pagePath, $page, "", array(),array(), true);
 	}
 
 }

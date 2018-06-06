@@ -215,7 +215,7 @@ class Error{
 		self::debug($title, $line, $path, $file, $error);
 	}	
 
-	static function methodNotFound($title, $line, $path, $file, $page, $method, $extend){
+	static function methodNotFound($title, $line, $path, $file, $page, $method, $extend, $alert = "Make sure this method is defined."){
 
 		$class = Helper::getClassName($page);
 		$ns = Helper::getClassName($page,'$1');
@@ -225,7 +225,7 @@ class Error{
 		$error .= "<i style=\"color:#bcd92e; font-weight:bold;\">class</i> <b style=\"color:#9cc2c7;\">{$class}</b> <i style=\"color:#bc99e0; font-weight:bold;\">extends</i> <i style=\"color:#9cc2c7; font-weight:bold;\">{$extend}</i> {<br><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3bde9a; font-weight:bold;\">public</span> <span style=\"color:#bcd92e; font-weight:bold;\">function</span> <b style=\"color:#9cc2c7;\">$method()</b>{<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>";		
-		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this method is defined.</span><br>";		
+		$error .= "<span style=\"color:#9cc2c7; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">{$alert}</span><br>";		
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;...<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;}<br>";
 		$error .= "}<br>";

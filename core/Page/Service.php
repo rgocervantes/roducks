@@ -22,21 +22,19 @@ namespace Roducks\Page;
 
 use Roducks\Framework\Helper;
 use Roducks\Framework\Core;
-use Roducks\Libs\Request\Http;
+use Roducks\Framework\Error;
 
 class Service extends JSON {
 
 	static function init(){
 		
 		$page = get_called_class();
-		$page = Helper::getClassName($page);
-		$page = DIR_SERVICES . Helper::getCamelName($page);
-				
-		$servicePath = Core::getServicesPath($page);
-		$pagePath = $servicePath['path'];
+		return Core::loadService($page);
+	}
 
-		return Core::loadPage($pagePath, $page, "", array(),array(), true);
-
+	public function _disableServiceUrl($method){
+		$error = "Methods that starts with \"<b>get</b>\" aren't allowed to be dispatched because they're supposed to \"<b>return</b>\" data.";
+		Error::methodNotFound("Can't dispatch URL", __LINE__, $this->pageObj->filePath, $this->pageObj->fileName, $this->pageObj->className, $method, $this->getParentClassName(),$error);
 	}
 
 }
