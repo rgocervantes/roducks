@@ -99,6 +99,7 @@ class Error{
 				
 				if(isset($params['rdks']) && $params['rdks'] == 1){
 					echo self::block($title, $line, $path, $file, $error);
+					exit;
 				} else {
 					self::_throw($title, $line, $path, $file, $error);
 				}

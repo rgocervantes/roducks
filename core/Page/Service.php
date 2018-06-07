@@ -26,6 +26,8 @@ use Roducks\Framework\Error;
 
 class Service extends JSON {
 
+	var $rdks = 1;
+
 	static function init(){
 		
 		$page = get_called_class();
