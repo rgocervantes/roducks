@@ -30,6 +30,8 @@ class URL{
 	const CSRF_ATTACK_GET_PARAMS = '\/\'\\(\){}<>\[\]!@$%'; // No dots nor slashes are allowed
 	const CSRF_ATTACK_RULE_1 = '\.{2,}'; // More than 1 dot
 	const CSRF_ATTACK_RULE_2 = '\.(exe|ini|inc|doc|php|phtml|sql)$'; // extensions
+	const CSRF_ATTACK_RULE_3 = '-[\-]+'; // more than 1 dashes
+	const CSRF_ATTACK_RULE_4 = '\/-'; // slash + dash
 	const CSRF_ATTACK_END_URL = '[\?&=\.\-_,;:\$\(\)%*@]$';
 
 	const REGEXP_GET = '(\?[a-zA-Z0-9_\-=&+]+)?';
@@ -43,6 +45,8 @@ class URL{
 		if(preg_match('/['.self::CSRF_ATTACK_BASE_URL.']+/', $baseURL) 
 		||	preg_match('/'.self::CSRF_ATTACK_RULE_1.'/', $baseURL)
 		||	preg_match('/'.self::CSRF_ATTACK_RULE_2.'/', $baseURL)
+		||	preg_match('/'.self::CSRF_ATTACK_RULE_3.'/', $baseURL)
+		||	preg_match('/'.self::CSRF_ATTACK_RULE_4.'/', $baseURL)
 		||	preg_match('/'.self::CSRF_ATTACK_END_URL.'/', $relativeURL)
 		){
 			Http::sendHeaderForbidden();
