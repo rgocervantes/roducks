@@ -241,7 +241,7 @@ class Error{
 
 		$error = "<span style=\"color:#3bde9a; \">use</span> Roducks\Framework\Environment;<br><br>";
 
-		$error .= "<span style=\"color:#FF9800;\">return</span> <span style=\"color:#00BCD4;\">=</span> [<br>";
+		$error .= "<span style=\"color:#FF9800;\">return</span> [<br>";
 		$error .= "...<br>";		
 		$error .= "&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$subdomain}'</span> <span style=\"color:#00BCD4;\">=></span> [<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'site'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#bc99e0;\">\"{$site}\"</span>,<br>";
@@ -256,7 +256,7 @@ class Error{
 
 	static function moduleDisabled($title, $line, $path, $file, $module){
 
-		$error = "<span style=\"color:#FF9800;\">return</span> <span style=\"color:#00BCD4;\">=</span> [<br>";
+		$error = "<span style=\"color:#FF9800;\">return</span> [<br>";
 		$error .= "...<br>";		
 		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$module}'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#bcd92e;\">true</span><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
@@ -282,7 +282,7 @@ class Error{
 
 	static function missionDispatchIndex($url, $title, $line, $path, $file){
 
-		$error = "<span style=\"color:#FF9800;\">return</span> <span style=\"color:#00BCD4;\">=</span> [<br>";
+		$error = "<span style=\"color:#FF9800;\">return</span> [<br>";
 		$error .= "...<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$url}'</span> <span style=\"color:#00BCD4;\">=></span> [<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'dispatch'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#3bde9a; \">Dispatch</span><span style=\"color:#00BCD4;\">::</span><span style=\"color:#bc99e0; \">page</span>(<span style=\"color:#e2b75b; \">\"home\"</span>,<span style=\"color:#e2b75b; \">\"index\"</span>)<br>";
@@ -297,7 +297,7 @@ class Error{
 
 	static function missingDbConfig($title, $line, $path, $file, $key, $value){
 		
-		$error = "<span style=\"color:#FF9800;\">return</span> <span style=\"color:#00BCD4;\">=</span> [<br>";
+		$error = "<span style=\"color:#FF9800;\">return</span> [<br>";
 		$error .= "...<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$key}'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#e2b75b; \">'{$value}'</span><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
