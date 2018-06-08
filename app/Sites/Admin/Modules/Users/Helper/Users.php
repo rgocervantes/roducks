@@ -20,7 +20,9 @@
 
 namespace App\Sites\Admin\Modules\Users\Helper;
 
-class Users {
+use Roducks\Page\HelperPage;
+
+class Users extends HelperPage {
 
 	const URL = "/users";	
 

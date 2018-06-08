@@ -21,8 +21,9 @@
 namespace App\Sites\Admin\Modules\Roles\Helper;
 
 use Roducks\Framework\Role;
+use Roducks\Page\HelperPage;
 
-class Roles {
+class Roles extends HelperPage {
 
 	static $icon = "tags";
 	static $list = [
