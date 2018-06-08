@@ -4,15 +4,15 @@
     "keywords": ["framework", "php","roducks"],
     "license": "GPL",
     "type": "project",
-    "autoload": {
-        "psr-0": {
-            "": "src/"
-        }
-    },
     "require": {
         "php": ">=7.0.0",
         "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
     }
 }
