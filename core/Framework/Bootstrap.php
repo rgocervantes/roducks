@@ -58,13 +58,13 @@ spl_autoload_register(function($class){
         $class = str_replace("App\\","app\\",$class);
         $path = str_replace("\\","/", $class) . FILE_EXT;
         $isEvent = preg_match('#/Events/#', $path);
-
+/*
     } else if(preg_match('/^core\\\/', $className)){
 
         $className = str_replace("core\\","Roducks\\", $className);
         $path = str_replace("\\","/", $class) . FILE_EXT;
         $isEvent = preg_match('#/Events/#', $path);
-
+*/
     } else {
         
         $path = str_replace("\\","/", $class) . FILE_EXT;
