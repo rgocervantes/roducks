@@ -177,7 +177,6 @@ class Core{
 
 		$view = DIR_VIEWS . $tpl;
 		$found = false;
-		$alert = "debug";
 
 		$coreModules = "Roducks/" . DIR_MODULES;
 		$coreBlocks = DIR_CORE . DIR_BLOCKS;
@@ -210,7 +209,6 @@ class Core{
 			$file = Helper::removeUnderscore($file);
 
 			if(Helper::isBlock($path)) {
-				$alert = "warning";
 
 				if(\App::fileExists($siteBlocks.$file.$view) && !empty($tpl)){
 					$path = $siteBlocks.$file;
@@ -226,7 +224,7 @@ class Core{
 		}
 
 		if(!$found){
-			Error::$alert(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $path.$view);
+			Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $path.$view);
 		}
 
 		return \App::getRealFilePath($path.$view);
@@ -335,6 +333,13 @@ class Core{
 	*/
 	static function getAppConfigFile($name = "config", $required = true){
 		return self::getLocalConfigFile($name);
+	}
+
+	/**
+	*	Providers config
+	*/
+	static function getAliasesConfigFile(){
+		return self::getLocalConfigFile("aliases");		
 	}
 
 	/**

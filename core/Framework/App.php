@@ -20,6 +20,8 @@
 
 class App {
 
+	static $aliases = [];
+
 	static function define($name, $value){
 		if(!defined($name)){
 			define($name, $value);

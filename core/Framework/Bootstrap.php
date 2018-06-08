@@ -27,13 +27,23 @@ App::define('FILE_TPL', ".phtml");
 
 # Paths
 include_once "Directories" . FILE_EXT;
+include_once "Core" . FILE_EXT;
 
 use Roducks\Framework\Core;
 use Roducks\Framework\Error;
 use Roducks\Framework\Cli;
 
+App::$aliases = Core::getAliasesConfigFile();
+
 // Autoload
 spl_autoload_register(function($class){
+
+    $alias = App::$aliases;
+
+    if(isset($alias[$class])){
+        class_alias($alias[$class], $class);
+        $class = $alias[$class];
+    }
 
 	$className = $class;
 
@@ -50,9 +60,11 @@ spl_autoload_register(function($class){
         $isEvent = preg_match('#/Events/#', $path);
 
     } else if(preg_match('/^core\\\/', $className)){
+
         $className = str_replace("core\\","Roducks\\", $className);
         $path = str_replace("\\","/", $class) . FILE_EXT;
         $isEvent = preg_match('#/Events/#', $path);
+
     } else {
         
         $path = str_replace("\\","/", $class) . FILE_EXT;
