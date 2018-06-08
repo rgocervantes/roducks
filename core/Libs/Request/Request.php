@@ -60,7 +60,9 @@ Result
 
 namespace Roducks\Libs\Request;
 
-class Request{
+use \stdClass;
+
+class Request extends stdClass {
 
 	private $_ch;
 	private $_url;
@@ -86,6 +88,11 @@ class Request{
 
 	static function post($url){
 		return self::init('POST', $url);
+	}
+
+	static function obj()
+	{
+		return self::get('/stdClass');
 	}
 
 	/**

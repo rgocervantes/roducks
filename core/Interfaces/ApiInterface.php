@@ -20,6 +20,8 @@
 
 namespace Roducks\Interfaces;
 
+use Roducks\Libs\Request\Request;
+
 Interface ApiInterface
 {
 	/**
@@ -30,21 +32,21 @@ Interface ApiInterface
 	/**
 	 * @type GET
 	 */
-	public function catalog(\stdClass $request);
+	public function catalog(Request $request);
 
 	/**
 	 * @type POST
 	 */
-	public function store(\stdClass $request);
+	public function store(Request $request);
 
 	/**
 	 * @type PUT
 	 */
-	public function update(\stdClass $request, $id);
+	public function update(Request $request, $id);
 
 	/**
 	 * @type DELETE
 	 */
-	public function remove(\stdClass $request, $id);
+	public function remove(Request $request, $id);
 
 }

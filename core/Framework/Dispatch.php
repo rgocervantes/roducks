@@ -23,6 +23,7 @@ namespace Roducks\Framework;
 use Roducks\Page\JSON;
 use Roducks\Libs\Data\Session;
 use Roducks\Libs\Utils\Date;
+use Roducks\Libs\Request\Request;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Request\CORS;
 use App\Models\Data\UrlsUrlsLang;
@@ -153,8 +154,9 @@ class Dispatch{
 
 	static function getRequestBody(array $values = []){
 
+		$obj = Request::obj();
+
 		if(count($values) > 0){
-			$obj = new \stdClass;
 			foreach ($values as $key => $value) {
 				$value = (Helper::isInteger($value)) ? intval($value) : $value;
 				$obj->$key = $value;
@@ -163,7 +165,7 @@ class Dispatch{
 			return $obj;
 		}
 
-		return false;
+		return $obj;
 
 	}
 
@@ -779,9 +781,6 @@ class Dispatch{
 						$method = 'row';
 						unset($params['request']);
 					} else {
-						if($params['request'] === false){
-							$params['request'] = new \stdClass;
-						}
 						$method = 'catalog';
 					}
 
