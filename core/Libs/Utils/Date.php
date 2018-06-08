@@ -531,7 +531,7 @@ class Date{
     }
  
     static function parseDate($date){
-        if($date == self::getEmptyDate()){
+        if($date == self::getEmptyDate() || is_null($date) || empty($date)){
             return self::getCurrentDate();
         }
 
