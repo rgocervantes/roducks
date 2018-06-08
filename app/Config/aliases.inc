@@ -29,6 +29,7 @@ return [
 	'Language' 			=> 'Roducks\\Framework\\Language',
 	'Form' 				=> 'Roducks\\Framework\\Form',
 	'Post' 				=> 'Roducks\\Framework\\Post',
+	'Path' 				=> 'Roducks\\Framework\\Path',
 	'Login' 			=> 'Roducks\\Framework\\Login',
 	/*
 	|----------------------------------------------------------------------
