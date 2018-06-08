@@ -114,11 +114,6 @@ class Dispatch{
 		return "Api/{$class}::{$method}";
 	}		
 
-	static function _api($class, $method = ""){
-		$class = Helper::getCamelName($class);
-		return "/_api/{$class}/{$method}";
-	}	
-
 	static function values($arr){
 		return "(".implode("|", $arr).")";
 	}
@@ -266,7 +261,6 @@ class Dispatch{
 		$router['/_(page|json|xml|factory)/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_data_'];
 		$router['/_block/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_block_'];
 		$router['/_service/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_service_'];
-		$router['/_api/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_api_'];
 
 		/* ------------------------------------*/
 		/* 		DISPATCHER
@@ -871,7 +865,7 @@ class Dispatch{
 					}
 				}
 
-			} else if(($method == "_service_" || $method == "_api_")) {
+			} else if(($method == "_service_")) {
 
 				$invalidParam = self::getLastParams($params);
 				
