@@ -33,59 +33,73 @@ use Roducks\Framework\Core;
 use Roducks\Framework\Error;
 use Roducks\Framework\Cli;
 
+/*
+|--------------------------------|
+|            COMPOSER            |
+|--------------------------------|
+*/
+App::$composer = App::getComposerMap();
+
+/*
+|--------------------------------|
+|           CLASS ALIAS          |
+|--------------------------------|
+*/
 App::$aliases = Core::getAliasesConfigFile();
 
-// Autoload
+/*
+|--------------------------------|
+|             AUTOLOAD           |
+|--------------------------------|
+*/
 spl_autoload_register(function($class){
 
-    $alias = App::$aliases;
+    $composer = false;
+    $isEvent = false;
 
-    if(isset($alias[$class])){
-        class_alias($alias[$class], $class);
-        $class = $alias[$class];
+    if(isset(App::$aliases[$class])){
+        class_alias(App::$aliases[$class], $class);
+        $class = App::$aliases[$class];
     }
 
-	$className = $class;
-
-    if(preg_match('/^Roducks\\\/', $className)){
+    if(preg_match('/^Roducks\\\/', $class)){
 
         $path = str_replace("\\","/", $class) . FILE_EXT;
         $path = str_replace("Roducks/","core/", $path);
         $isEvent = preg_match('#/Events/#', $path);
 
-    } else if(preg_match('/^App\\\/', $className)){
+    } else if(preg_match('/^App\\\/', $class)){
 
-        $class = str_replace("App\\","app\\",$class);
-        $path = str_replace("\\","/", $class) . FILE_EXT;
+        $path = str_replace("App\\","app\\",$class);
+        $path = str_replace("\\","/", $path) . FILE_EXT;
         $isEvent = preg_match('#/Events/#', $path);
-/*
-    } else if(preg_match('/^core\\\/', $className)){
 
-        $className = str_replace("core\\","Roducks\\", $className);
-        $path = str_replace("\\","/", $class) . FILE_EXT;
-        $isEvent = preg_match('#/Events/#', $path);
-*/
     } else {
         
-        $path = str_replace("\\","/", $class) . FILE_EXT;
-        $isEvent = preg_match('#/Events/#', $path);
-        $path = "app/Libs/{$path}";
+        if(isset(App::$composer[$class])){
+            $path = App::$composer[$class];
+            $composer = true;
+        } else {
+            $path = str_replace("\\","/", $class) . FILE_EXT;
+            $isEvent = preg_match('#/Events/#', $path);
+            $path = "app/Libs/{$path}";
+        }
+
     }
 
-    list($realPath, $fileExists) = App::getRealPath($path);
+    list($realPath, $fileExists) = ($composer) ? App::getComposerPath($path) : App::getRealPath($path);
 
     if($fileExists || $isEvent){
 
         if(!$isEvent)
             include_once $realPath;
 
-		if(!class_exists($className) && !preg_match('#Interfaces#', $className)) {
+		if(!class_exists($class) && !preg_match('#Interfaces#', $class)) {
             if(php_sapi_name() != "cli"){
-                echo $className;
                 if(!$isEvent)
-                    Error::classNotFound(TEXT_CLASS_NOT_FOUND,__LINE__, __FILE__, $path, $className);
+                    Error::classNotFound(TEXT_CLASS_NOT_FOUND,__LINE__, __FILE__, $path, $class);
             } else {
-                Cli::println("Class '{$className}' was not found.", Cli::FAILURE, -1);
+                Cli::println("Class '{$class}' was not found.", Cli::FAILURE, -1);
             }
 		}
     }else{

@@ -20,7 +20,10 @@
 
 class App {
 
-	static $aliases = [];
+	const COMPOSER_CLASS_MAP = 'vendor/composer/autoload_classmap.php';
+
+	static $aliases = [],
+		$composer = [];
 
 	static function define($name, $value){
 		if(!defined($name)){
@@ -54,6 +57,24 @@ class App {
 	static function fileExists($path){
 		list($realPath, $fileExists) = self::getRealPath($path);
 		return $fileExists;
+	}
+
+	static function getComposerPath($path){
+
+		$fileExists = file_exists($path);
+
+	    return [$path, $fileExists];		
+	}
+
+	static function getComposerMap(){
+
+		list($realPath, $fileExists) = self::getRealPath(self::COMPOSER_CLASS_MAP);
+
+		if($fileExists){
+			return include $realPath;
+		}
+
+		return [];
 	}
 
 }
