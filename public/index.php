@@ -26,15 +26,14 @@
 
 namespace Roducks;
 
-if(isset($_GET['uri']) && $_GET['uri'] == 'security'){
-	header("HTTP/1.1 403 Forbidden Request");
-	die("<h1>Forbidden Request.</h1>");
-}
-
-# Run App
+/*
+|--------------------------------|
+|            RUN APP             |
+|--------------------------------|
+*/
 $app = __DIR__ . "/../core/Framework/Web.php";
 
-if(file_exists($app)){
+if (file_exists($app)) {
 	require_once $app;
 } else {
 	header("HTTP/1.1 404 Not Found");
