@@ -38,7 +38,7 @@ class Helper{
 	const REGEXP_IS_URL_DISPATCH = '/^_/';
 	const REGEXP_IS_BLOCK_DISPATCHED = '/^_block/';
 	const REGEXP_IS_SERVICE = '/^Services\/[a-zA-Z_]+$/';
-	const REGEXP_IS_API = '/^Api\/[a-zA-Z_]+$/';
+	const REGEXP_IS_API = '/^API\/[a-zA-Z_]+$/';
 	const REGEXP_IS_JSON = '#JSON#';	
 	const REGEXP_IS_PAGE = '#Page#';
 	const REGEXP_IS_BLOCK = '#Blocks#';	
