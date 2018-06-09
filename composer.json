@@ -1,7 +1,7 @@
 {
     "name": "roducks/framework",
     "description": "A PHP Framework.",
-    "keywords": ["framework", "php","roducks"],
+    "keywords": ["framework", "php", "roducks"],
     "license": "GPL",
     "type": "project",
     "require": {
