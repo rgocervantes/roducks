@@ -160,9 +160,8 @@ class Dispatch{
 			foreach ($values as $key => $value) {
 				$value = (Helper::isInteger($value)) ? intval($value) : $value;
 				$obj->$key = $value;
+				$obj->setBody($key, $value);
 			}
-
-			return $obj;
 		}
 
 		return $obj;

@@ -72,6 +72,7 @@ class Request extends stdClass {
 	private $_httpCode = 404;
 	private $_redirect = false; 
 	private $_effectiveURL = '';
+	private $_params;
 
 	static function getContent($url = ""){
 		if(empty($url)) return "";
@@ -100,9 +101,18 @@ class Request extends stdClass {
 	*/
 	private function _customRequest(){
 		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, $this->_type);
-	}	
+	}
+
+	public function setBody($k, $v){
+		$this->_params->$k = $v;
+	}
+
+	public function getBody(){
+		return $this->_params;
+	}
 
 	public function __construct($type,$url){
+		$this->_params = new stdClass;
 		$this->_ch = curl_init();
 		$this->_url = $url;
 		$this->_type = strtoupper($type);
