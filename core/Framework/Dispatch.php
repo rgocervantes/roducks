@@ -112,7 +112,7 @@ class Dispatch{
 
 	static function api($class, $method = ""){
 		$class = Helper::getCamelName($class);
-		return "Api/{$class}::{$method}";
+		return "API/{$class}::{$method}";
 	}		
 
 	static function values($arr){
