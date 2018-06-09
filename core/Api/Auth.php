@@ -22,6 +22,7 @@ namespace Roducks\Api;
 
 use Roducks\Framework\Login;
 use Roducks\Framework\Role;
+use Roducks\Libs\Request\Request;
 use App\Models\Users\UsersRoles;
 
 class Auth extends Api
@@ -91,7 +92,7 @@ class Auth extends Api
 		$this->output();
 	}
 
-	public function catalog(\stdClass $request)
+	public function catalog(Request $request)
 	{
 		$token = $this->getToken();
 		$this->data('me', $token);
