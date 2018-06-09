@@ -29,7 +29,8 @@ use Roducks\Framework\Error;
 use Roducks\Framework\Helper;
 use Roducks\Libs\Request\Http;
 
-abstract class Frame{
+abstract class Frame
+{
 
 	/**
 	*	Protected
@@ -48,32 +49,33 @@ abstract class Frame{
 //	PRIVATE METHODS
 //---------------------------------
 */
-	private function _autoLoad($params){
+	private function _autoLoad($params)
+	{
 
 		$class = $this->pageObj->className;
 
 		// Avoid autoload for "Page Not Found"
-		if($class == Helper::PAGE_NOT_FOUND || $this->getParentClassName() == '\Roducks\Page\HelperPage'){
+		if ($class == Helper::PAGE_NOT_FOUND || $this->getParentClassName() == '\Roducks\Page\HelperPage') {
 			return;
 		}
 
-		if(Helper::isFactory($class)){
+		if (Helper::isFactory($class)) {
 			$class = Helper::pageByFactory($class);
 		}
 
-		foreach($params as $key => $value){
+		foreach ($params as $key => $value) {
 
-			if(!Helper::regexp(Helper::VALID_PARAM, $key)){
+			if (!Helper::regexp(Helper::VALID_PARAM, $key)) {
 				Error::debug("Invalid param", __LINE__, __FILE__, $this->pageObj->fileName, "Param <b style=\"color: #e69d97;\">{$key}</b> contains invalid chars. [\-0-9]");
 			}
 
-			if(property_exists($class, $key)){
+			if (property_exists($class, $key)) {
 
-				if(!is_array($value)){
+				if (!is_array($value)) {
 					$value = (Helper::isInteger($value)) ? intval($value) : $value;	
 				}
 
-				if(!empty($value) || $value == 0) {
+				if (!empty($value) || $value == 0) {
 					$this->$key = $value;
 				}
 
@@ -83,24 +85,25 @@ abstract class Frame{
 		}
 	}
 
-	private function _urlDispatcher(){
+	private function _urlDispatcher()
+	{
 
 		$class = $this->pageObj->className;
 
-		if($this->_dispatchUrl || $class == Helper::PAGE_NOT_FOUND){
+		if ($this->_dispatchUrl || $class == Helper::PAGE_NOT_FOUND) {
 			return;
 		}
 
 		$url = URL::getParams();
 		$total = count($url) - 1;
-		if(isset($url[0]) && isset($url[1]) && !empty($url[$total])){
-			if(preg_match('/^_(page|api|block|json|xml|service|factory)$/', $url[0])){
-				if(
+		if (isset($url[0]) && isset($url[1]) && !empty($url[$total])) {
+			if (preg_match('/^_(page|api|block|json|xml|service|factory)$/', $url[0])) {
+				if (
 					(!$this->_dispatchUrl && $this->_pageType == 'FRAME' && preg_match('/^_(json|service|xml)$/', $url[0])) || 
 					(!$this->_dispatchUrl && $this->_pageType == 'PAGE' && $url[0] == '_page') || 
 					(!$this->_dispatchUrl && $this->_pageType == 'FACTORY' && $url[0] == '_factory') || 				
 					(!$this->_dispatchUrl && $this->_pageType == 'BLOCK' && $url[0] == '_block')
-				){
+				) {
 					Error::cantDispatchURL("Can't dispatch URL", $this->pageObj->className, __LINE__, __FILE__, $this->pageObj->fileName, $this->getParentClassName());
 				}
 			}
@@ -113,24 +116,29 @@ abstract class Frame{
 //	PROTECTED METHODS
 //---------------------------------
 */
-	protected function getLang(){
+	protected function getLang()
+	{
 		return $this->_lang;
 	}
 
-	protected function disableUrlDispatcher(){
+	protected function disableUrlDispatcher()
+	{
 		$this->_dispatchUrl = false;
 		$this->_urlDispatcher();
 	}
 
-	protected function _getParentClassName(){
+	protected function _getParentClassName()
+	{
 		return get_parent_class($this);
 	}	
 
-	protected function db(){
+	protected function db()
+	{
 		return Core::db(RDKS_ERRORS);
 	}	
 
-	protected function openDb(array $conn = []){
+	protected function openDb(array $conn = [])
+	{
 		return Core::openDb(RDKS_ERRORS, $conn);
 	}
 
@@ -139,21 +147,24 @@ abstract class Frame{
 	//	Get configs
 	//---------------------------------
 	*/
-	protected function getGlobalConfig(){
+	protected function getGlobalConfig()
+	{
 		return Core::getGlobalConfigFile();
 	}
 
-	protected function getSiteConfig($name = ""){
+	protected function getSiteConfig($name = "")
+	{
 
-		if(!empty($name)){
+		if (!empty($name)) {
 			return Core::getSiteByNameConfigFile($name, false);
 		}
 
 		return Core::getSiteConfigFile("config", false);
 	}
 
-	protected function getModuleConfig($name = ""){
-		if(empty($name)){
+	protected function getModuleConfig($name = "")
+	{
+		if (empty($name)) {
 			$class = $this->pageObj->className;
 			$name = Helper::getClassName($class);
 		}
@@ -161,7 +172,8 @@ abstract class Frame{
 		return Core::getModuleConfigFile($name, false);
 	}
 
-	protected function getSiteModuleConfig($site, $module){
+	protected function getSiteModuleConfig($site, $module)
+	{
 		return Core::getSiteModuleConfigFile($site, $module);
 	}
 
@@ -178,7 +190,8 @@ abstract class Frame{
 		$this->config('admin:users', "user:prefix"], 1);
 
 	*/
-	protected function config($tag, $var, $value = ""){
+	protected function config($tag, $var, $value = "")
+	{
 
 		$type = null;
 		$config = [];
@@ -217,15 +230,17 @@ abstract class Frame{
 		
 	}
 
-	protected function getViewData(){
-		if($this->view instanceof View){
+	protected function getViewData()
+	{
+		if ($this->view instanceof View) {
 			return $this->view->getData();
 		}
 
 		return [];
 	}
 
-	protected function getAccess($name = ""){
+	protected function getAccess($name = "")
+	{
 
 		$class = (!empty($name)) ? $name : $this->pageObj->className;
 		$class = Helper::getClassName($class);
@@ -235,30 +250,35 @@ abstract class Frame{
 		return (isset($access[$class])) ? $access[$class] : [];
 	}
 
-	protected function getUrlParam($index, $value = ""){
+	protected function getUrlParam($index, $value = "")
+	{
 		return (isset($this->pageObj->urlParam[$index])) ? $this->pageObj->urlParam[$index] : $value;
 	}
 
-	protected function getPairParam($index){
+	protected function getPairParam($index)
+	{
 		$params = URL::getPairParams();
 		return (isset($params[$index])) ? $params[$index] : "";
 	}	
 
-	protected function accessAdmin(){
-		if(!Login::isAdminLoggedIn()){
+	protected function accessAdmin()
+	{
+		if (!Login::isAdminLoggedIn()) {
 			Http::setHeaderInvalidRequest();
 		}
 	}
 
-	protected function accessSubscriber(){
-		if(!Login::isSubscriberLoggedIn()){
+	protected function accessSubscriber()
+	{
+		if (!Login::isSubscriberLoggedIn()) {
 			Http::setHeaderInvalidRequest();
 		}
 	}	
 
-	protected function role($type, $class = ""){
+	protected function role($type, $class = "")
+	{
 
-		if(empty($class)){
+		if (empty($class)) {
 			$class = $this->pageObj->className;
 			$class = Helper::getClassName($class);
 			$class = Helper::getConventionName($class,"_");
@@ -271,15 +291,16 @@ abstract class Frame{
 		$this->grantAccess = new GrantAccess($class, $session);
 	}	
 
-	protected function initCache(){
+	protected function initCache()
+	{
 
 		/* ------------------------------------*/
 		/* 		MEMCACHED
 		/* ------------------------------------*/
 		$memcache = Core::getCacheConfig();
-		if(count($memcache) > 0){
+		if (count($memcache) > 0) {
 			$cache = Cache::init($memcache['servers'],$memcache['port']);
-			if($cache !== false){
+			if ($cache !== false) {
 				return $cache;
 			}	
 		}
@@ -288,7 +309,8 @@ abstract class Frame{
 
 	}
 
-	protected function params(array $values = []){
+	protected function params(array $values = [])
+	{
 
 		$count = 0;
 		$total = 0;
@@ -300,22 +322,22 @@ abstract class Frame{
 		$alert = "debug";
 		$title = "Unexpected value";
 
-		if($this->_pageType == 'BLOCK'){
+		if ($this->_pageType == 'BLOCK') {
 			$alert = "warning";
 		} else {	
 
 			$params = URL::getSplittedURL();
 			
-			if(!isset($params[0])){
+			if (!isset($params[0])) {
 				return;
 			}
 
-			if(Helper::regexp('/^_/',$params[0])){
+			if (Helper::regexp('/^_/',$params[0])) {
 				$params = Helper::getUrlParams($params);
 				$total = count($params);
 			} else {
 				$total = count($params) - 1;
-				if($total == 0){
+				if ($total == 0) {
 					$skip = true;
 				}
 			}
@@ -323,12 +345,12 @@ abstract class Frame{
 
 		foreach ($values as $p => $value) {
 
-			if(isset($value[0]) && isset($value[1]) && isset($value[2])){
+			if (isset($value[0]) && isset($value[1]) && isset($value[2])) {
 				
-				if($value[1] == 'PARAM'){
+				if ($value[1] == 'PARAM') {
 
-					if($value[2] == Dispatch::PARAM_ARRAY){
-						if(is_array($value[0])){
+					if ($value[2] == Dispatch::PARAM_ARRAY) {
+						if (is_array($value[0])) {
 							continue;
 						} else {
 							$error = "Param <b>{$p}</b> must be <b>{$value[2]}</b>";
@@ -339,9 +361,9 @@ abstract class Frame{
 						}
 					}
 
-					if($value[2] == Dispatch::PARAM_NOT_EMPTY_ARRAY){
+					if ($value[2] == Dispatch::PARAM_NOT_EMPTY_ARRAY) {
 						
-						if(is_array($value[0]) && !empty($value[0])){
+						if (is_array($value[0]) && !empty($value[0])) {
 							continue;
 						}
 
@@ -353,14 +375,14 @@ abstract class Frame{
 
 					}
 
-					if($skip){
+					if ($skip) {
 						continue;
 					}
 
 					$i = $count;
 					$count++;
 
-					if($this->_pageType == 'BLOCK'){
+					if ($this->_pageType == 'BLOCK') {
 						$total++;
 					}
 				}
@@ -381,10 +403,10 @@ abstract class Frame{
 
 				}
 
-				if($value[1] == 'PARAM'){
+				if ($value[1] == 'PARAM') {
 					$key = (isset($params[$i])) ? $params[$i] : $value[0];
 
-					if(empty($key)){
+					if (empty($key)) {
 						$ruleRegExp = (isset($value[3])) ? " that must match this regular expression {$value[3]}" : "";
 						$error = "Param <b>{$p}</b> must be <b>{$value[2]}</b>{$ruleRegExp}";
 						$err = $error;
@@ -397,7 +419,7 @@ abstract class Frame{
 				} else {
 					$key = $p;
 					$error = "Param <b>{$key}</b> must be <b>{$value[2]}</b>";
-					if(isset($getGETParams[$key])){
+					if (isset($getGETParams[$key])) {
 						$err = "Invalid value for GET param: <b>{$key}</b>";
 					} else {
 						$err = "Missing GET param: <b>{$key}</b>";
@@ -405,18 +427,18 @@ abstract class Frame{
 					
 				}
 				
-				if(isset($value[3]) && !empty($value[0])){
+				if (isset($value[3]) && !empty($value[0])) {
 					$regexp = $value[3];
 					$error = "Value <b>{$key}</b> does not match with this regular expression: {$regexp}";
 	
-					if(Helper::isConditional($value[3])){
+					if (Helper::isConditional($value[3])) {
 						$error = "{$err}, It <b style=\"color: #e69d97;\">ONLY</b> allows the next values: " . Helper::getOptions($value[3]);
 						$regexp = '/^'.$value[3].'$/';
 					}
 
 				}
 
-				if(!Helper::regexp($regexp, $value[0])){
+				if (!Helper::regexp($regexp, $value[0])) {
 					Error::$alert($title,__LINE__, __FILE__, $this->pageObj->fileName, $error);
 					$this->view->setError();
 				}
@@ -424,7 +446,7 @@ abstract class Frame{
 
 		}
 
-		if($count != $total && $this->_pageType != 'BLOCK'){
+		if ($count != $total && $this->_pageType != 'BLOCK') {
 			$error = "";
 			for ($x=$count; $x < $total; $x++) { 
 				$error .= "Unreconignized param <b>" . $params[$x]."</b><br>";
@@ -436,13 +458,14 @@ abstract class Frame{
 
 	}
 
-	protected function getArray($values){
+	protected function getArray($values)
+	{
 
-		if(empty($values)){
+		if (empty($values)) {
 			return [];
 		}
 
-		if(!is_array($values)){
+		if (!is_array($values)) {
 			$values = explode("_", $values);
 			$values = Helper::getPairParams($values);
 		}
@@ -455,10 +478,11 @@ abstract class Frame{
 //	PUBLIC METHODS
 //---------------------------------
 */
-	public function __construct(array $settings = []){
+	public function __construct(array $settings = [])
+	{
 
 		// Avoid warnings 
-		if(count($settings) == 0){
+		if (count($settings) == 0) {
 			$settings = [
 				'className' 	=> "",
 				'filePath'		=> "",
@@ -487,26 +511,28 @@ abstract class Frame{
 		$url = URL::getParams();
 		$tag = (isset($url[0])) ? $url[0] : "";
 
-		if($this->_pageType == 'PAGE' || Helper::isDispatch($tag))
+		if ($this->_pageType == 'PAGE' || Helper::isDispatch($tag))
 			$this->_autoLoad(URL::getGETParams());
 
 	}
 
-	public function setVars(array $params = []){
-		if(empty($params)){
+	public function setVars(array $params = [])
+	{
+		if (empty($params)) {
 			return;
 		}
 
 		$this->_autoLoad($params);
 	}
 
-	public function setLang($iso){
+	public function setLang($iso)
+	{
 		$this->_lang = $iso;
 	}
 
-	public function getParentClassName(){
+	public function getParentClassName()
+	{
 		return '\\'.$this->_getParentClassName();
 	}	
-
 
 } 

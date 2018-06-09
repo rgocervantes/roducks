@@ -23,16 +23,18 @@ namespace Roducks\Page;
 use Roducks\Framework\Core;
 use Roducks\Framework\Error;
 
-class Template {
+class Template
+{
 	
 	static $path = null;
 	static $data = [];
 	
-	static function view($file, array $data = [], $merge = false){
+	static function view($file, array $data = [], $merge = false)
+	{
 
-		if(!is_null(self::$path) && !empty($file)){
+		if (!is_null(self::$path) && !empty($file)) {
 			$dir_template = self::$path.$file.FILE_TPL;
-			if(file_exists($dir_template)){
+			if (file_exists($dir_template)) {
 				$content = self::$data;
 
 				if (count($data) > 0) {
@@ -41,49 +43,56 @@ class Template {
 					} else {
 						$content = $data;
 					}
-				};
+				}
 				
 				extract($content);
 				include $dir_template;
-			}else{
+			} else {
 				Error::warning(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $dir_template);
 			}
-		}else{
+		} else {
 			Error::warning("Invalid template name",__LINE__, __FILE__, $dir_template);
 		}
 	}
 
-	static function menu($name){
+	static function menu($name)
+	{
 		return Core::getMenuFile($name);
 	}
 
-	static function displayBlock($bool){
+	static function displayBlock($bool)
+	{
 		return ($bool) ? 'display="block"; ' : ''; 
 	}	
 
-	static function displayNone($bool){
+	static function displayNone($bool)
+	{
 		return ($bool) ? 'display="none"; ' : ''; 
 	}		
 
-	static function checked($bool){
+	static function checked($bool)
+	{
 		return ($bool) ? ' checked="checked"' : ''; 
 	}
 
-	static function selected($bool){
+	static function selected($bool)
+	{
 		return ($bool) ? ' selected="selected"' : ''; 
 	}
 
-	static function conditional($bool, $onTrue = "", $onFalse = ""){
+	static function conditional($bool, $onTrue = "", $onFalse = "")
+	{
 		return ($bool) ? $onTrue : $onFalse;
 	}
 
-	static function equals($a1, $a2, $onTrue = "", $onFalse = ""){
+	static function equals($a1, $a2, $onTrue = "", $onFalse = "")
+	{
 		return self::conditional(($a1 == $a2), $onTrue, $onFalse);
 	}	
 
-	static function notEmpty($value, $onTrue = "", $onFalse = ""){
-
-		if(!empty($value)){
+	static function notEmpty($value, $onTrue = "", $onFalse = "")
+	{
+		if (!empty($value)) {
 			return $onTrue;
 		}
 

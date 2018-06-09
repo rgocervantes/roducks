@@ -30,28 +30,30 @@ use Roducks\Libs\Utils\Date;
 use App\Sites\_Global\Data\LogData;
 use App\Models\Users\UsersRoles;
 
-class User extends Block{
+class User extends Block
+{
 
 	var $id,
 		$date;
 
 
-	private function _picture($img, $resize){
+	private function _picture($img, $resize)
+	{
 		
 		$squared = Path::getIcon("users/{$img}");
 		$original = $squared;
 
-		if(!empty($img)){
+		if (!empty($img)) {
 
 			$cropped = Path::getCropName($img, $resize);
 			
-			if(\App::fileExists( Path::getUploadsUsers($cropped) )){
+			if (\App::fileExists( Path::getUploadsUsers($cropped) )) {
 				$squared = Path::getUploadedUsers($cropped);
 			} else {
 				$cropped = Path::getCropName($img, 'full');
 			}
 
-			if(\App::fileExists( Path::getUploadsUsers($img) )){
+			if (\App::fileExists( Path::getUploadsUsers($img) )) {
 				$original = Path::getUploadedUsers($img);
 			} 
 
@@ -62,9 +64,10 @@ class User extends Block{
 		$this->view->data('resize', $resize);		
 	}
 
-	public function card($id = ""){
+	public function card($id = "")
+	{
 
-		if(empty($id)){
+		if (empty($id)) {
 			return $this->view->error('public', __METHOD__, "\$id param cannot be zero.");
 		}
 
@@ -72,7 +75,7 @@ class User extends Block{
 		$join = UsersRoles::open($db);
 		$user = $join->getUser($id)->fetch();
 
-		if($join->rows()){
+		if ($join->rows()) {
 	
 			$this->_picture($user['picture'], 150);
 			$this->view->data("first_name", $user['first_name']." ".$user['last_name']);
@@ -90,7 +93,8 @@ class User extends Block{
 
 	}	
 
-	public function logs(){
+	public function logs()
+	{
 
 		$id = $this->id;
 		$date = $this->date;
@@ -110,7 +114,8 @@ class User extends Block{
 
 	}
 
-	public function picture($img, $resize, $tpl = "cropped"){
+	public function picture($img, $resize, $tpl = "cropped")
+	{
 
 		$this->_picture($img, $resize);		
 		$this->view->load($tpl);
@@ -119,7 +124,8 @@ class User extends Block{
 
 	}
 
-	public function output($session, $resize = 150){
+	public function output($session, $resize = 150)
+	{
 
 		$this->params([
 			'resize' => [$resize, 'PARAM', Dispatch::PARAM_INTEGER]

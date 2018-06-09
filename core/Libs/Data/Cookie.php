@@ -20,14 +20,16 @@
 
 namespace Roducks\Libs\Data;
 
-class Cookie{
+class Cookie
+{
 
 	// this cookie will be visible in any subdomain
-	static function set($name, $value, $serverName = ""){
+	static function set($name, $value, $serverName = "")
+	{
 
 		$host = $serverName;
 
-		if((empty($serverName))){
+		if ((empty($serverName))) {
 			// www.domain.com
 			$serverName = explode(".",$_SERVER['SERVER_NAME']);
 			unset($serverName[0]); // remove www or subdomain
@@ -40,22 +42,26 @@ class Cookie{
 
 	}
 
-	static function create($name, $value, $serverName = ""){
-		if(!self::exists($name)){
+	static function create($name, $value, $serverName = "")
+	{
+		if (!self::exists($name)) {
 			self::set($name, $value, $serverName);
 		}
 	}
 
-	static function delete($name){
+	static function delete($name)
+	{
 		self::set($name, NULL);
 	}
 
-	static function get($name){
+	static function get($name)
+	{
 		return $_COOKIE[$name];
 	}
 
-	static function exists($name){
-		if(isset($_COOKIE[$name]) && self::get($name) != NULL){
+	static function exists($name)
+	{
+		if (isset($_COOKIE[$name]) && self::get($name) != NULL) {
 			return true;
 		}
 

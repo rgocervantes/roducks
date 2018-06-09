@@ -20,9 +20,11 @@
 
 namespace Roducks\Page;
 
-class _JSON extends JSON {
+class _JSON extends JSON
+{
 
-	public function __construct(array $settings){
+	public function __construct(array $settings)
+	{
 		parent::__construct($settings);
 
 		$this->accessAdmin(); // * Important *

@@ -35,14 +35,15 @@
 */
 namespace Roducks\Libs\Data;
 
-
-class Cache{
+class Cache
+{
 
 	static public $memcacheObj = NULL;
 	static $servers = [];
 	static $port = 0;
 	
-	static function init(array $servers = [],$port) {
+	static function init(array $servers = [],$port)
+	{
 		if (self::$memcacheObj == NULL) {
 			if (class_exists('Memcached')) {
 				self::$memcacheObj = new Memcached;
@@ -58,7 +59,8 @@ class Cache{
 		return self::$memcacheObj;
 	}
 
-	static function getItems(){
+	static function getItems()
+	{
 
 		foreach (self::$servers as $server) {
 
@@ -78,7 +80,8 @@ class Cache{
 
 	}
 
-	static function removeItems(){
+	static function removeItems()
+	{
 		$items = self::getItems();
 
 		foreach ($items as $item) {
@@ -86,7 +89,8 @@ class Cache{
 		}
 	}
 
-	static function cacheSlab($arr){
+	static function cacheSlab($arr)
+	{
 
 		$data = [];
 
@@ -100,7 +104,8 @@ class Cache{
 
 	}
 
-	static function cacheItems($arr){
+	static function cacheItems($arr)
+	{
 
 		$data = [];
 
@@ -114,7 +119,8 @@ class Cache{
 
 	}
 
-	static function sendCommand($server,$port,$command){
+	static function sendCommand($server,$port,$command)
+	{
 
 		$s = @fsockopen($server,$port);
 		if (!$s){
@@ -143,7 +149,8 @@ class Cache{
 	    return $lines;
 	}
 
-	static function expirationInMinutes($minutes = 1){
+	static function expirationInMinutes($minutes = 1)
+	{
 		return time() + (60*$minutes);
 	}
 
@@ -151,7 +158,8 @@ class Cache{
 		return self::expirationInMinutes(60*$hours);
 	}	
 
-	static function getCacheName($parent,$key, array $args = []){
+	static function getCacheName($parent,$key, array $args = [])
+	{
 
 		$params = [];
 		$end = "";
@@ -163,11 +171,8 @@ class Cache{
 
 			$end = "_" . implode("_", $params);
 		}
-		
 
 		return $parent.$key.$end;
 	}
 
 }
-
-?>

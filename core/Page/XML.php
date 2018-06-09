@@ -22,11 +22,13 @@ namespace Roducks\Page;
 
 use Roducks\Libs\Output\XML as XMLDoc;
 
-class XML extends Frame{
+class XML extends Frame
+{
 
 	protected $doc;
 
-	public function __construct(array $settings = []){
+	public function __construct(array $settings = [])
+	{
 		parent::__construct($settings);
 		$this->doc = new XMLDoc;
 	}

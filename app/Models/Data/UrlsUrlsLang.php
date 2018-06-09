@@ -22,9 +22,11 @@ namespace App\Models\Data;
 
 use Roducks\Libs\ORM\Model;
 
-class UrlsUrlsLang extends Model {
+class UrlsUrlsLang extends Model
+{
 
-	public function __construct(\mysqli $mysqli){
+	public function __construct(\mysqli $mysqli)
+	{
 
 		$this
 		->join('u', Urls::CLASS)

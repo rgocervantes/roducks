@@ -24,9 +24,11 @@ use Roducks\Framework\Login;
 use Roducks\Page\FrontPage;
 use App\Models\Users\Users as UsersTable;
 
-class Home extends FrontPage {
+class Home extends FrontPage
+{
 
-	public function index(){
+	public function index()
+	{
 
 		$this->view->title(TEXT_WELCOME);
 		$this->view->load("index");
@@ -35,7 +37,8 @@ class Home extends FrontPage {
 
 	}
 
-	public function createAccount(){
+	public function createAccount()
+	{
 
 		$this->accountSubscriber();
 
@@ -47,7 +50,8 @@ class Home extends FrontPage {
 
 	}
 
-	public function forgottenPassword(){
+	public function forgottenPassword()
+	{
 
 		$this->accountSubscriber();		
 
@@ -58,14 +62,15 @@ class Home extends FrontPage {
 		return $this->view->output();
 	}
 
-	public function resetPassword(){
+	public function resetPassword()
+	{
 
 		$token = $this->getPairParam('token');
 
 		$db = $this->db();
 		$rows = UsersTable::open($db)->results(['token' => $token]);
 		
-		if(!$rows){
+		if (!$rows) {
 			$this->forbiddenRequest();
 		}
 
@@ -77,7 +82,8 @@ class Home extends FrontPage {
 		return $this->view->output();
 	}	
 
-	public function contactUs(){
+	public function contactUs()
+	{
 
 		$this->view->assets->scriptsInline(["form"]);
 		$this->view->load("contact-us");

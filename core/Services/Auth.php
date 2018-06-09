@@ -30,14 +30,16 @@ use Roducks\Libs\Utils\Date;
 use App\Models\Users\Users as UsersTable;
 use App\Models\Users\UsersRoles;
 
-class Auth extends Service{
+class Auth extends Service
+{
 
 	protected $_dispatchUrl = true;
 
 	/**
 	*
 	*/
-	private function _authenticate($session, $type, $email, $password){
+	private function _authenticate($session, $type, $email, $password)
+	{
 
 		$db = $this->db();
 
@@ -49,15 +51,15 @@ class Auth extends Service{
 		$users->auth($email, $type);
 
 		// Is authentication Ok?
-		if($users->rows()){
+		if ($users->rows()) {
 
 			$auth = $users->fetch();
 
 			// Is user active and nor in trash?
-			if($auth['active'] == 1 && $auth['trash'] == 0) {
+			if ($auth['active'] == 1 && $auth['trash'] == 0) {
 
 				// User account expires?
-				if($auth['expires'] == 1 && Date::getCurrentDate() >= Date::parseDate($auth['expiration_date'])){
+				if ($auth['expires'] == 1 && Date::getCurrentDate() >= Date::parseDate($auth['expiration_date'])) {
 					
 					$user = UsersTable::open($db);
 					$user->update($auth['id_user'],['loggedin' => 0, 'active' => 0]);
@@ -69,7 +71,7 @@ class Auth extends Service{
 				} else {
 
 					// Password matches and role is active
-					if(Login::paywall($auth['password'], $auth['salt'], $password) && $auth['ractive'] == 1){
+					if (Login::paywall($auth['password'], $auth['salt'], $password) && $auth['ractive'] == 1) {
 
 						$success = true;
 						$message = TEXT_AUTH_OK;
@@ -83,7 +85,7 @@ class Auth extends Service{
 						$logInOut = 1;
 
 						// Log out all current users
-						if(!empty($auth['location']) && $auth['location'] != $ip && $auth['loggedin'] == 1){
+						if (!empty($auth['location']) && $auth['location'] != $ip && $auth['loggedin'] == 1) {
 							$logInOut = 0;
 							Session::set(Login::SESSION_SECURITY, 1);
 						}
@@ -124,7 +126,8 @@ class Auth extends Service{
 	/**
 	*	@return json
 	*/	
-	private function _login($session, $type, $return = false){
+	private function _login($session, $type, $return = false)
+	{
 		
 		$this->post->required();
 		$email = $this->post->text('email');
@@ -132,7 +135,7 @@ class Auth extends Service{
 
 		$auth = $this->_authenticate($session, $type, $email, $password);
 
-		if(!is_bool($return)){
+		if (!is_bool($return)) {
 			$this->setStatus($auth);
 			parent::output();
 		} else {
@@ -141,21 +144,23 @@ class Auth extends Service{
 
 	}		
 
-	private function _paywall($id){
+	private function _paywall($id)
+	{
 
 		$this->post->required();
 		$password = $this->post->param('password');
 		$db = $this->db();
 		$users = UsersTable::open($db);
 		
-		if(!$users->paywall($id, $password)){
+		if (!$users->paywall($id, $password)) {
 			$this->setError(401, TEXT_INCORRECT_PASSWORD);
 		}
 
 		parent::output(); 		
 	}	
 
-	private function _emailExists(){
+	private function _emailExists()
+	{
 		$email = $this->post->text('email');
 
 		$db = $this->db();
@@ -167,30 +172,34 @@ class Auth extends Service{
 	/**
 	*	@return json
 	*/	
-	public function loginAdmin($return){
+	public function loginAdmin($return)
+	{
 		$this->_login(Login::SESSION_ADMIN, Role::TYPE_USERS, $return);
 	}	
 
-	public function paywallAdmin(){
+	public function paywallAdmin() {
 		$id = Login::getAdminId();
 		$this->_paywall($id);		
 	}
 
-	public function loginSubscriber($return){
+	public function loginSubscriber($return)
+	{
 		$this->_login(Login::SESSION_FRONT, Role::TYPE_SUBSCRIBERS, $return);
 	}
 
-	public function paywallSubscriber(){
+	public function paywallSubscriber()
+	{
 		$id = Login::getSubscriberId();
 		$this->_paywall($id);		
 	}		
 
-	public function logout(){
+	public function logout()
+	{
 		$id = $this->post->param("id");
 		$db = $this->db();
 		$tx = UsersTable::open($db)->logInOut($id, 0);
 
-		if($tx === false){
+		if ($tx === false) {
 			$this->setError(0, "Something went wrong!");
 		} 
 

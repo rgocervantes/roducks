@@ -22,9 +22,11 @@ namespace App\Sites\_Global\Blocks\Uploader;
 
 use Roducks\Page\Block;
 
-class Uploader extends Block{
+class Uploader extends Block
+{
 
-	public function output($module = "", $config = "", $picture = ""){
+	public function output($module = "", $config = "", $picture = "")
+	{
 
 		$this->view->data("module", $module);
 		$this->view->data("config", $config);

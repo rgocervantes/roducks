@@ -29,17 +29,19 @@
 
 namespace Roducks\Libs\Files;
 
-class Image {
+class Image
+{
   
 	var $image;
 	var $image_type;
 
-    private function ext($str){
+    private function ext($str)
+    {
 
         $ext = substr($str, -4);
         $type = 'JPEG';
 
-        switch($ext){
+        switch($ext) {
         	case '.png':
         		$type = 'PNG';
         	break;
@@ -52,7 +54,8 @@ class Image {
         return $type;
     }
 
-    private function ImageCreateFrom($img){
+    private function ImageCreateFrom($img)
+    {
     	$ext = $this->ext($img);
     	$method = "ImageCreateFrom" . $ext;
 
@@ -60,7 +63,8 @@ class Image {
 
     }
 
-    private function ImageSave($img, $b, $c){
+    private function ImageSave($img, $b, $c)
+    {
     	$ext = $this->ext($img);
     	$method = "Image" . $ext;
 
@@ -68,7 +72,8 @@ class Image {
 
     }    
 
-    private function ImageSave2($src, $img, $b, $c){
+    private function ImageSave2($src, $img, $b, $c)
+    {
     	$ext = $this->ext($src);
     	$method = "Image" . $ext;
 
@@ -76,72 +81,81 @@ class Image {
 
     }      
 
-	public function load($filename) {
+	public function load($filename)
+	{
 		
 		$image_info = getimagesize($filename);
 		$this->image_type = $image_info[2];
 		
-		if( $this->image_type == IMAGETYPE_JPEG ) {
+		if ( $this->image_type == IMAGETYPE_JPEG ) {
 			$this->image = imagecreatefromjpeg($filename);
-		} elseif( $this->image_type == IMAGETYPE_GIF ) {
-			$this->image = imagecreatefromgif($filename);
-		} elseif( $this->image_type == IMAGETYPE_PNG ) {
+		} elseif ( $this->image_type == IMAGETYPE_GIF ) {
+			$this->image = imagecreatefromgif ($filename);
+		} elseif ( $this->image_type == IMAGETYPE_PNG ) {
 			$this->image = imagecreatefrompng($filename);
 		}
 	}
 
-	public function save($filename, $compression=100, $image_type=IMAGETYPE_JPEG, $permissions=null) {
+	public function save($filename, $compression=100, $image_type=IMAGETYPE_JPEG, $permissions=null)
+	{
 		
-		if( $image_type == IMAGETYPE_JPEG ) {
+		if ( $image_type == IMAGETYPE_JPEG ) {
 			imagejpeg($this->image,$filename,$compression);
-		} elseif( $image_type == IMAGETYPE_GIF ) {
-			imagegif($this->image,$filename);         
-		} elseif( $image_type == IMAGETYPE_PNG ) {
+		} elseif ( $image_type == IMAGETYPE_GIF ) {
+			imagegif ($this->image,$filename);         
+		} elseif ( $image_type == IMAGETYPE_PNG ) {
 			imagepng($this->image,$filename);
 		}   
 
-		if( $permissions != null) {
+		if ( $permissions != null) {
 			chmod($filename,$permissions);
 		}
 	}
 
-	public function output($image_type=IMAGETYPE_JPEG) {
-		if( $image_type == IMAGETYPE_JPEG ) {
+	public function output($image_type=IMAGETYPE_JPEG)
+	{
+		if ( $image_type == IMAGETYPE_JPEG ) {
 			imagejpeg($this->image);
-		} elseif( $image_type == IMAGETYPE_GIF ) {
-			imagegif($this->image);         
-		} elseif( $image_type == IMAGETYPE_PNG ) {
+		} elseif ( $image_type == IMAGETYPE_GIF ) {
+			imagegif ($this->image);         
+		} elseif ( $image_type == IMAGETYPE_PNG ) {
 			imagepng($this->image);
 		}   
 	}
 
-	public function getWidth() {
+	public function getWidth()
+	{
 		return imagesx($this->image);
 	}
 
-	public function getHeight() {
+	public function getHeight()
+	{
 		return imagesy($this->image);
 	}
 
-	public function resizeToHeight($height) {
+	public function resizeToHeight($height)
+	{
 		$ratio = $height / $this->getHeight();
 		$width = $this->getWidth() * $ratio;
 		$this->resize($width,$height);
 	}
 
-	public function resizeToWidth($width) {
+	public function resizeToWidth($width)
+	{
 		$ratio = $width / $this->getWidth();
 		$height = $this->getheight() * $ratio;
 		$this->resize($width,$height);
 	}
 
-	public function scale($scale) {
+	public function scale($scale)
+	{
 		$width = $this->getWidth() * $scale/100;
 		$height = $this->getheight() * $scale/100; 
 		$this->resize($width,$height);
 	}
 
-	public function resize($width,$height) {
+	public function resize($width,$height)
+	{
 		$new_image = imagecreatetruecolor($width, $height);
 		imagecopyresampled($new_image, $this->image, 0, 0, 0, 0, $width, $height, $this->getWidth(), $this->getHeight());
 		$this->image = $new_image;   
@@ -153,7 +167,8 @@ class Image {
 	*	blend('img/flowers.jpg', 'img/paper.png', 'tmp_example.jpg', ? , ?);
 	*
 	*/
-	public function blend($img_original, $img_watermark, $img_new, $top = 0, $left = 0, $quality = 100) {
+	public function blend($img_original, $img_watermark, $img_new, $top = 0, $left = 0, $quality = 100)
+	{
 	
 		// Get Original image size
 		$info_original = getimagesize($img_original);
@@ -166,7 +181,7 @@ class Image {
 		$h_watermark = $info_watermark[1];
 		
 		// Calculate watermark's position 
-		if($top > 0 && $left > 0):
+		if ($top > 0 && $left > 0):
 			$x = $top;
 			$y = $left;
 		else:
@@ -208,7 +223,8 @@ class Image {
 	*
 	*/
 
-	public function text($img_original,$img_final,$text, $font , $font_size, $color="black", $shadow = true, $bg = "white", $set_bg = false, $padding_top = 0, $padding_left = 0, $angle = 0, $quality = 100){
+	public function text($img_original,$img_final,$text, $font , $font_size, $color="black", $shadow = true, $bg = "white", $set_bg = false, $padding_top = 0, $padding_left = 0, $angle = 0, $quality = 100)
+	{
 		
 		// Get Original Image size
 		$image_size = getimagesize($img_original);
@@ -216,7 +232,7 @@ class Image {
 		$w = $image_size[0]; // width
 		$h = $image_size[1]; // height
 		
-		if($padding_top < $font_size):
+		if ($padding_top < $font_size):
 			$padding_top = $font_size;
 		else:
 			$padding_top = $font_size + $padding_top;
@@ -233,7 +249,7 @@ class Image {
 		$rgb_color['black'] = ImageColorAllocate($img_empty, 0, 0, 0);
 		$rgb_color['white'] = ImageColorAllocate($img_empty, 255, 255, 255);
 
-		if(is_array($color)):
+		if (is_array($color)):
 			
 			$text_color = ImageColorAllocate($img_empty, $color['color'][0], $color['color'][1], $color['color'][2]);
 			$text_shadow = ImageColorAllocate($img_empty, $color['shadow'][0], $color['shadow'][1], $color['shadow'][2]);
@@ -257,7 +273,7 @@ class Image {
 		endif;
 		
 		// Choose a Background
-		if(is_array($bg)):
+		if (is_array($bg)):
 			$background = ImageColorAllocate($img_empty, $bg[0], $bg[1], $bg[2]);
 		else:
 			$background = $rgb_color[$bg];
@@ -267,10 +283,10 @@ class Image {
 		ImageCopy($img_empty, $original, 0, 0, 0, 0, $w, $h);	
 		
 		// Fill solid color to text in the background
-		if($set_bg) imagefilledrectangle($img_empty, 0, $padding_top, $w, $font_size, $background);
+		if ($set_bg) imagefilledrectangle($img_empty, 0, $padding_top, $w, $font_size, $background);
 		
 		// Add some shadow to the text
-		if($shadow) imagettftext($img_empty, $font_size, $angle, $padding_left+1, $padding_top+1, $text_shadow, $font, $text);
+		if ($shadow) imagettftext($img_empty, $font_size, $angle, $padding_left+1, $padding_top+1, $text_shadow, $font, $text);
 		
 		// Add text
 		imagettftext($img_empty, $font_size, $angle , $padding_left, $padding_top, $text_color, $font, $text);
@@ -290,9 +306,10 @@ class Image {
 	*	crop('img/penguins.jpg','tmp_penguins.jpg',$_POST['w'],$_POST['h'],$_POST['x'],$_POST['y']);
 	*
 	*/
-	public function crop($src, $new, $w, $h, $x, $y, $quality = 100){
+	public function crop($src, $new, $w, $h, $x, $y, $quality = 100)
+	{
 		
-		if($this->ext($src) == 'JPEG'):
+		if ($this->ext($src) == 'JPEG'):
 
 			// Create a tempory image from original
 			$original = ImageCreateFromJPEG($src);
@@ -344,7 +361,8 @@ class Image {
 	*
 	*/
 
-	public function extend($img_original, $img_watermark, $img_new, $quality = 100) {
+	public function extend($img_original, $img_watermark, $img_new, $quality = 100)
+	{
 	
 		// Get Watermark Image size
 		$image_size = getimagesize($img_watermark);
@@ -379,12 +397,13 @@ class Image {
 	
 	}  
 
-	static function getSize($img){
+	static function getSize($img)
+	{
 
 		$img = preg_replace('/^\/(.+)/', '$1', $img);
 		list($realPath, $fileExists) = \App::getRealPath($img);
 
-		if(!empty($img) && $fileExists){
+		if (!empty($img) && $fileExists) {
 
 			// get image size
 			list($w, $h) = getimagesize($realPath);
@@ -397,32 +416,33 @@ class Image {
 
 	}
 	
-	static function getResize($img, $rz = 0){
+	static function getResize($img, $rz = 0)
+	{
 
 			$output = ["auto","auto"];
 
-			if($rz == 0){
+			if ($rz == 0) {
 				return $output;
 			}
 
 			$img = preg_replace('/^\/(.+)/', '$1', $img);
 			list($realPath, $fileExists) = \App::getRealPath($img);
 
-			if(!empty($img) && $fileExists){
+			if (!empty($img) && $fileExists) {
 
 				// get image size
 				list($w, $h) = getimagesize($realPath);
 
 				// square	
-				if($w == $h && $rz < $w && $rz < $h){
+				if ($w == $h && $rz < $w && $rz < $h) {
 					$output = [$rz, $rz];
 				// horizontal	
-				} else if($w > $h && $rz < $w){
+				} else if ($w > $h && $rz < $w) {
 					$ratio = $rz * $h;
 					$hr = ceil($ratio / $w);  
 					$output = [$rz, $hr];
 				// vertical
-				} else if($h > $w && $rz < $h){
+				} else if ($h > $w && $rz < $h) {
 					$ratio = $rz * $w;
 					$wr = ceil($ratio / $h);  
 					$output = [$wr, $rz];
@@ -436,6 +456,3 @@ class Image {
 	}
 
 }	
-
-
-?>

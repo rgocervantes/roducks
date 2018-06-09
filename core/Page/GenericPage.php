@@ -28,51 +28,57 @@ use Roducks\Libs\Request\Http;
 use Roducks\Libs\Request\Request;
 use Roducks\Libs\Data\Session;
 
-class GenericPage extends Frame {
+class GenericPage extends Frame
+{
 
 	const SESSION_EMAIL = "RDKS_EMAIL";
 
 	private $_helper;
 
-	private function _callHelper(){
+	private function _callHelper()
+	{
 
 		$found = false;
 		$className = $this->pageObj->className;
 		$file = $this->pageObj->fileName;
 		$coreFile = Helper::getHelperFileName($file);
 
-		if(Helper::isPage($className) || Helper::isJson($className) || Helper::isXml($className)){
+		if (Helper::isPage($className) || Helper::isJson($className) || Helper::isXml($className)) {
 
-			if(Path::exists(Helper::getHelperPath($file))){
+			if (Path::exists(Helper::getHelperPath($file))) {
 				$found = true;
-			} else if(Path::exists(Helper::getHelperPath($coreFile))){
+			} else if (Path::exists(Helper::getHelperPath($coreFile))) {
 				$className = Helper::getCoreHelperclassName($className);
 				$found = true;
 			}
 
-			if($found){
+			if ($found) {
 				$helper = Helper::getHelperPath($className);
 				$this->_helper = $helper::init();
 			}
 		}
 	}
 
-	public function __construct(array $settings = []){
+	public function __construct(array $settings = [])
+	{
 		parent::__construct($settings);
 		$this->_callHelper();
 	}
 
 	protected $_jsonData = [];
 
-	protected function getJsonData(){
+	protected function getJsonData()
+	{
 		return $this->_jsonData;
 	}
 
-	protected function invalidRequest(){
+	protected function invalidRequest()
+	{
 		Http::setHeaderInvalidRequest();
 	}
 
-	protected function helper(){
+	protected function helper()
+	{
 		return $this->_helper;
 	}
 
@@ -88,7 +94,8 @@ class GenericPage extends Frame {
 		});
 
 	*/
-	protected function sendEmail($template, callable $callback){
+	protected function sendEmail($template, callable $callback)
+	{
 
 		$attrs = new \stdClass;
 		$attrs->cookie = true;
@@ -118,13 +125,13 @@ class GenericPage extends Frame {
 		// get html
 		$request = Request::init('GET', $url);
 
-		if($attrs->cookie){
+		if ($attrs->cookie) {
 			$request->persistSession();
 		}
 
 		$request->execute();
 
-		if($request->getContentType() != Http::getHeaderJSON()):
+		if ($request->getContentType() != Http::getHeaderJSON()) :
 			$message = $request->getOutput();
 			// this function sends an email with html format.
 			return Helper::mailHTML($headers, $message);
@@ -133,4 +140,4 @@ class GenericPage extends Frame {
 		return false;
 
 	}
-} 
+}

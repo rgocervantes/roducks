@@ -22,7 +22,8 @@ namespace App\Models\Data;
 
 use Roducks\Libs\ORM\Model;
 
-class UrlsLang extends Model {
+class UrlsLang extends Model
+{
 
 	var $id = "id_url_lang";
 	var $fields = [	

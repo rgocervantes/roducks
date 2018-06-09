@@ -27,7 +27,8 @@ use Roducks\Framework\Role;
 use Roducks\Libs\Utils\Date;
 use App\Models\Users\Users as UsersTable;
 
-class Account extends JSON{
+class Account extends JSON
+{
 
 	private $_fields;
 
@@ -35,7 +36,8 @@ class Account extends JSON{
 	protected $_user;
 	protected $_id;
 
-	public function __construct(array $settings){
+	public function __construct(array $settings)
+	{
 		parent::__construct($settings);
 
 		$this->post->required();
@@ -58,7 +60,8 @@ class Account extends JSON{
 	/**
 	*	@type POST
 	*/
-	public function update(){
+	public function update()
+	{
 
 		$this->grantAccess->edit();
 
@@ -70,21 +73,23 @@ class Account extends JSON{
 		parent::output();
 	}
 
-	public function changePassword(){
+	public function changePassword()
+	{
 
 		$this->grantAccess->password();
 
 		// Make sure user didn't skip his current password.
-		if(!$this->_user->paywall($this->_id, $this->post->password('password'))){
+		if (!$this->_user->paywall($this->_id, $this->post->password('password'))) {
 			$this->setError(401,TEXT_AUTH_FAIL);
-		}else{
+		} else {
 			$this->_user->changePassword($this->_id, $this->post->password('new_password'));
 		}	
 
 		parent::output();
 	}
 
-	public function picture(){
+	public function picture()
+	{
 
 		$this->grantAccess->picture();
 

@@ -22,7 +22,8 @@ namespace App\Models\Data;
 
 use Roducks\Libs\ORM\Model;
 
-class EAV extends Model {
+class EAV extends Model
+{
 
 	var $id = "id_index";
 	var $fields = [

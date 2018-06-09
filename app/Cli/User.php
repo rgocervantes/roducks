@@ -32,28 +32,30 @@ use Roducks\Framework\Helper;
 use Roducks\Libs\Utils\Date;
 use App\Models\Users\Users as UsersTable;
 
-class User extends Cli {
+class User extends Cli
+{
 
 	protected $_params = [
 		'email',
 		'password'
 	];
 
-	public function create(){
+	public function create()
+	{
 		
 		$email = $this->getParam('email', "");
 		$password = $this->getParam('password', "");
 		$gender = $this->getParam('gender', "male");
 
-		if(!empty($email) && !empty($password)){
+		if (!empty($email) && !empty($password)) {
 
-			if(strlen($password) >= 7){
+			if (strlen($password) >= 7) {
 
 				$db = $this->db();
 				$user = UsersTable::open($db);
 				$total = $user->getTableTotalRows();
 
-				if($total == 0){
+				if ($total == 0) {
 
 					$data = [
 						'id_user_tree' => '0',
@@ -71,7 +73,7 @@ class User extends Cli {
 
 					$tx = $user->create($data);
 
-					if($tx === false){
+					if ($tx === false) {
 						$this->error("User could not be created.");
 					} else {
 						$this->success("User was created successfully!");
@@ -93,18 +95,19 @@ class User extends Cli {
 
 	}
 
-	public function reset(){
+	public function reset()
+	{
 
 		$email = $this->getParam('email', "");
 		$password = $this->getParam('password', "");
 
-		if(!empty($email) && !empty($password)){
+		if (!empty($email) && !empty($password)) {
 
 			$db = $this->db();
 			$user = UsersTable::open($db);
 			$user->filter(['email' => $email]);
 
-			if($user->rows()){
+			if ($user->rows()) {
 				$row = $user->fetch();
 
 				$user->changePassword($row['id_user'], $password);
@@ -121,13 +124,14 @@ class User extends Cli {
 
 	}
 
-	public function who(){
+	public function who()
+	{
 
 		$id = $this->getParam('id', 1);
 		$db = $this->db();
 		$user = UsersTable::open($db)->load($id);
 
-		if($user->getId()){
+		if ($user->getId()) {
 			$this->result( $user->getFirstName() . " " . $user->getLastName() );
 			$this->result( $user->getEmail() );
 		} else {

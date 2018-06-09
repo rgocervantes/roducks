@@ -20,39 +20,48 @@
 
 namespace Roducks\Libs\Data;
 
-class Session{
+class Session
+{
 
-	public static function start(){
+	public static function start()
+	{
 		session_start();
 	}
 
-	public static function destroy(){
+	public static function destroy()
+	{
 		session_destroy();
 	}
 
-	public static function timeout($lifetime = 3600){
+	public static function timeout($lifetime = 3600)
+	{
 		session_set_cookie_params($lifetime); // 1 hr.
 	}
 	
-	public static function set($name,$value){
+	public static function set($name,$value)
+	{
 		$_SESSION[$name] = $value; 
 	}
 
-	public static function delete($n){
+	public static function delete($n)
+	{
 		self::set($n,null);
 	}	
 
-	public static function exists($n){
+	public static function exists($n)
+	{
 		return isset($_SESSION[$n]);
 	}
 	
-	public static function get($n){
-		return  (self::exists($n)) ? $_SESSION[$n] : [];
+	public static function get($n)
+	{
+		return (self::exists($n)) ? $_SESSION[$n] : [];
 	}
 
-	public static function update($name, array $data = []){
+	public static function update($name, array $data = [])
+	{
 
-		if(self::exists($name)){
+		if (self::exists($name)) {
 			$stored = self::get($name);
 			foreach ($data as $key => $value) {
 				$stored[$key] = $value;
@@ -62,12 +71,13 @@ class Session{
 		}
 	}
 
-	public static function remove($name, array $data = []){
+	public static function remove($name, array $data = [])
+	{
 
-		if(self::exists($name)){
+		if (self::exists($name)) {
 			$stored = self::get($name);
 			foreach ($data as $key) {
-				if(isset($stored[$key])){
+				if (isset($stored[$key])) {
 					unset($stored[$key]);
 				}
 			}
@@ -76,12 +86,11 @@ class Session{
 		}
 	}	
 
-	public static function reset($name){
-		if(self::exists($name)){
+	public static function reset($name)
+	{
+		if (self::exists($name)) {
 			unset($_SESSION[$name]);		
 		}
 	}
 		
 }
-
-?>

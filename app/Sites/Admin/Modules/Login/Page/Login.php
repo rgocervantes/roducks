@@ -23,7 +23,8 @@ namespace App\Sites\Admin\Modules\Login\Page;
 use Roducks\Framework\Login as LoginAuth;
 use Roducks\Modules\_Global\Login\Page\Login as LoginPage;
 
-class Login extends LoginPage{
+class Login extends LoginPage
+{
 
 	protected $_session = LoginAuth::SESSION_ADMIN;
 

@@ -22,11 +22,13 @@ namespace Roducks\Page;
 
 use Roducks\Framework\Login;
 
-class FrontPage extends Page {
+class FrontPage extends Page
+{
 
 	protected $login;
 
-	public function __construct(array $settings, View $view){
+	public function __construct(array $settings, View $view)
+	{
 		parent::__construct($settings, $view);
 
 		$this->login = new Login(Login::SESSION_FRONT, static::LOGIN_URL);

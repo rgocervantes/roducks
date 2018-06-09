@@ -22,6 +22,7 @@ namespace App\Sites\Admin\Modules\Dashboard\Page;
 
 use Roducks\Modules\Admin\Dashboard\Page\Dashboard as DashboardPage;
 
-class Dashboard extends DashboardPage{
+class Dashboard extends DashboardPage
+{
 
 }

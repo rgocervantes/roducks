@@ -22,7 +22,8 @@ namespace App\Sites\Front\Modules\Account\Helper;
 
 use Roducks\Page\HelperPage;
 
-class Account extends HelperPage {
+class Account extends HelperPage
+{
 
 	const URL = "/account";	
 

@@ -42,40 +42,42 @@
 
 namespace Roducks\Libs\Files;
 
-class Zip{
+class Zip
+{
 
 	/**
 	*	Zip folder of files
 	*/
-	public static function create($files = array(),$destination = '') {
+	public static function create($files = array(),$destination = '')
+	{
 		//if the zip file already exists and overwrite is false, return false
-		//if(file_exists($destination) && !$overwrite) { return false; }
+		//if (file_exists($destination) && !$overwrite) { return false; }
 
 		$overwrite = (file_exists($destination)) ? true : false;
 		
 		//vars
 		$valid_files = array();
 		//if files were passed in...
-		if(is_array($files)) {
+		if (is_array($files)) {
 			//cycle through each file
-			foreach($files as $file) {
+			foreach ($files as $file) {
 				//make sure the file exists
-				if(file_exists($file['path'] . $file['name'])) {
+				if (file_exists($file['path'] . $file['name'])) {
 					$valid_files[] = $file;
 				}
 			}
 		}
 
 		//if we have good files...
-		if(count($valid_files)) {
+		if (count($valid_files)) {
 			//create the archive
 			$zip = new \ZipArchive();
-			if($zip->open($destination,$overwrite ? \ZIPARCHIVE::OVERWRITE : \ZIPARCHIVE::CREATE) !== true) {
+			if ($zip->open($destination,$overwrite ? \ZIPARCHIVE::OVERWRITE : \ZIPARCHIVE::CREATE) !== true) {
 				return false;
 
 			}
 			//add the files
-			foreach($valid_files as $file) {
+			foreach ($valid_files as $file) {
 				$zip->addFile($file['path'] . $file['name'],(isset($file['folder'])) ? $file['folder'] . $file['name'] : $file['name']);
 			}
 			//debug
@@ -86,9 +88,7 @@ class Zip{
 			
 			//check to make sure the file exists
 			return file_exists($destination);
-		}
-		else
-		{
+		} else {
 			return false;
 		}
 	}
@@ -103,14 +103,12 @@ class Zip{
 		$zip = new \ZipArchive;
 		$res = $zip->open($zipName);
 			
-		if($res === TRUE){
+		if ($res === TRUE){
 			$zip->extractTo($new_dir[0]);
 			$zip->close();
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
 }
-
-?>

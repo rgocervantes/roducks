@@ -30,7 +30,8 @@ use Roducks\Libs\Data\Session;
 use App\Models\Users\Roles as RolesTable;
 use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 
-class Roles extends AdminPage{
+class Roles extends AdminPage
+{
 
 	var	$page = 1,
 		$type = 1;
@@ -38,17 +39,20 @@ class Roles extends AdminPage{
 	protected $_allowedRoles = [],
 			  $_rowsPerPage = 15;
 
-	public function __construct(array $settings, View $view){
+	public function __construct(array $settings, View $view)
+	{
 		parent::__construct($settings, $view);
 
 		$this->role(Role::TYPE_USERS); // Only Admins can modify Roles
 	}
 
-	private function _getRoleType(){
+	private function _getRoleType()
+	{
 		return Session::get('ROLE_TYPE');
 	}	
 
-	private function _form(){
+	private function _form()
+	{
 
 		$this->view->title("Roles", true, "title-roles");
 		$this->view->assets->scriptsInline(["form","tooltip"]);
@@ -58,7 +62,8 @@ class Roles extends AdminPage{
 
 	}
 
-	public function index(){
+	public function index()
+	{
 
 		$this->grantAccess->view();
 
@@ -85,7 +90,8 @@ class Roles extends AdminPage{
 		return $this->view->output();
 	}
 
-	public function listing(){
+	public function listing()
+	{
 
 		$this->grantAccess->view();
 
@@ -93,7 +99,7 @@ class Roles extends AdminPage{
 
 		$db = $this->db();
 		$data = RolesTable::open($db)->getAll($this->type, $this->page, $this->_rowsPerPage);
-		$access = $this->getAccess();	
+		$access = $this->getAccess();
 		
 		$this->view->assets->scriptsInline(["pager","grid","popover","roles","roles.modal"]);
 		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","grid.ready"]);
@@ -132,9 +138,10 @@ class Roles extends AdminPage{
 		]);
 
 		return $this->view->output();
-	}	
+	}
 
-	public function add(){
+	public function add()
+	{
 
 		$this->grantAccess->create();
 
@@ -161,7 +168,8 @@ class Roles extends AdminPage{
 		return $this->view->output();
 	}
 
-	public function edit(){
+	public function edit()
+	{
 
 		$this->grantAccess->edit();
 
@@ -208,6 +216,5 @@ class Roles extends AdminPage{
 		return $this->view->output();
 
 	}
-
 
 } 

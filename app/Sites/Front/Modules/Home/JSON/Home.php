@@ -23,6 +23,7 @@ namespace App\Sites\Front\Modules\Home\JSON;
 use Roducks\Modules\Front\Home\JSON\Home as HomeJSON;
 use Roducks\Framework\Form;
 
-class Home extends HomeJSON{
+class Home extends HomeJSON
+{
 
 }

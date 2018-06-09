@@ -23,11 +23,13 @@ namespace Roducks\Services;
 use Roducks\Page\Service;
 use App\Models\Users\Users as UsersTable;
 
-class Account extends Service{
+class Account extends Service
+{
 
 	protected $_dispatchUrl = true;
 
-	private function _emailExists(){
+	private function _emailExists()
+	{
 		$email = $this->post->text('email');
 
 		$db = $this->db();
@@ -36,11 +38,12 @@ class Account extends Service{
 		return $users->results(['email' => $email]);		
 	}
 
-	public function emailExists(){
+	public function emailExists()
+	{
 
 		$rows = $this->_emailExists();
 
-		if($rows){
+		if ($rows) {
 			$this->setError(0,"Email already exists.");
 		}
 
@@ -48,10 +51,11 @@ class Account extends Service{
 
 	}
 
-	public function accountExists(){
+	public function accountExists()
+	{
 		$rows = $this->_emailExists();
 
-		if(!$rows){
+		if (!$rows) {
 			$this->setError(0,"Invalid email.");
 		}
 

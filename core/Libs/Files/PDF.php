@@ -20,39 +20,44 @@
 
 namespace Roducks\Libs\Files;
  
-class PDF{
+class PDF
+{
  
     private $pdf,
             $log = array();
  
-    public function __construct($path, $name){
+    public function __construct($path, $name)
+    {
         $this->pdf = $path . self::cleaner($name,'pdf') . ".pdf";
     }
  
-    static function cleaner($name, $ext){
+    static function cleaner($name, $ext)
+    {
         return preg_replace('/^(.+)\.'.$ext.'$/', '$1', $name);
     }
  
-    public function getTotalPages(){
+    public function getTotalPages()
+    {
  
-        if(!file_exists($this->pdf)) return 0;
+        if (!file_exists($this->pdf)) return 0;
  
         $pages = exec('/usr/bin/pdfinfo '.$this->pdf.' | grep Pages | awk \' {print ($NF--)}\'');
         return $pages;
     }
  
-    public function makeImage($n = 0, $savePath = null, $saveName = "", $params = null, $isSecuencial = true){
+    public function makeImage($n = 0, $savePath = null, $saveName = "", $params = null, $isSecuencial = true)
+    {
  
-        if(is_null($savePath) || !file_exists($savePath)) return false;
+        if (is_null($savePath) || !file_exists($savePath)) return false;
  
         $size = "";
         $quality = 85;
         $density = 72; //dpi
  
-        if(is_array($params)){
-            if(isset($params['resize'])) $size = "-resize ".$params['resize']." ";
-            if(isset($params['quality'])) $quality = $params['quality'];
-            if(isset($params['density'])) $density = $params['density'];
+        if (is_array($params)) {
+            if (isset($params['resize'])) $size = "-resize ".$params['resize']." ";
+            if (isset($params['quality'])) $quality = $params['quality'];
+            if (isset($params['density'])) $density = $params['density'];
         }
  
         $secuencial = ($isSecuencial) ? $n : "";
@@ -61,19 +66,20 @@ class PDF{
         $this->log[] = $output;
     }   
  
-    public function makeAllImages($savePath = null, $saveName = "", $resize = null){
+    public function makeAllImages($savePath = null, $saveName = "", $resize = null)
+    {
  
-        if(is_null($savePath) || !file_exists($savePath)) return false;
+        if (is_null($savePath) || !file_exists($savePath)) return false;
  
-        for($i = 0; $i<$this->getTotalPages(); $i++){
+        for($i = 0; $i<$this->getTotalPages(); $i++) {
             $this->makeImage($i, $savePath, $saveName, $resize);
         }
  
     }
  
-    public function getLog(){
+    public function getLog()
+    {
         return $this->log;
     }
 
- 
 }

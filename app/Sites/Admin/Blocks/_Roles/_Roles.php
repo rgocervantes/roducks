@@ -23,11 +23,13 @@ namespace App\Sites\Admin\Blocks\_Roles;
 use Roducks\Page\View;
 use Roducks\Blocks\Roles\Roles;
 
-class _Roles extends Roles{
+class _Roles extends Roles
+{
 
 	protected $_dispatchUrl = true;
 
-	public function __construct(array $settings, View $view){
+	public function __construct(array $settings, View $view)
+	{
 		parent::__construct($settings, $view);
 
 		$this->accessAdmin(); // Only can be dispatched when admin is logged in.

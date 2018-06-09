@@ -24,7 +24,8 @@ use Roducks\Page\AdminPage;
 use Roducks\Framework\Role;
 use App\Sites\Admin\Modules\Users\Helper\Users as UsersHelper;
 
-class Dashboard extends AdminPage{
+class Dashboard extends AdminPage
+{
 
 	const ROWS_PER_PAGE = 5;
 

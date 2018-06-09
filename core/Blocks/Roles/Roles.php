@@ -22,26 +22,29 @@ namespace Roducks\Blocks\Roles;
 
 use Roducks\Page\Block;
 
-class Roles extends Block{
+class Roles extends Block
+{
 
 	var $config;
 	var $type;
 
-	public function modal(){
+	public function modal()
+	{
 
 		$this->role($this->type);
 
 		$name = $this->config . ".json";
 		$config = $this->grantAccess->getFileConfig($name);
 
-		if(isset($config['data']) && count($config['data']) == 0){
+		if (isset($config['data']) && count($config['data']) == 0) {
 			return $this->view->error('public', __METHOD__, "Invalid role config: " . DIR_ROLES . $name);
 		}
 
 		return $this->output($config['data'], $this->type, ["all" => 1]);
 	}
 
-	public function output($config, $type, $access){
+	public function output($config, $type, $access)
+	{
 
 		$this->view->data('data', $config);
 		$this->view->data('access', $access);
@@ -49,4 +52,4 @@ class Roles extends Block{
 		return $this->view->output();
 	}
 
-} 
+}

@@ -23,7 +23,8 @@ namespace App\Models\Users;
 use Roducks\Libs\ORM\Model;
 use Roducks\Framework\Login;
 
-class Roles extends Model {
+class Roles extends Model
+{
 
 	var $id = "id_role";
 	var $fields = [
@@ -42,11 +43,13 @@ class Roles extends Model {
 	*	@param $value string
 	*	@return bool
 	*/
-	public function nameTaken($value, $type){
+	public function nameTaken($value, $type)
+	{
 		return $this->results(["name:upper" => $value, 'type' => $type, 'id_role:>' => 1]);
 	}
 
-	public function search($value, $type){
+	public function search($value, $type)
+	{
 		$ret = [];
 		$id_role = Login::getAdminData('id_role');
 		$this->filter(["name:%like%" => $value, 'type' => $type, 'id_role:>' => $id_role]);
@@ -63,7 +66,8 @@ class Roles extends Model {
 		return $ret;
 	}
 
-	public function getAll($type, $page, $limit){
+	public function getAll($type, $page, $limit)
+	{
 
 		// Get current admin session
 		$id_role = Login::getAdminData('id_role');
@@ -80,7 +84,8 @@ class Roles extends Model {
 
 	}
 
-	public function getList($type){
+	public function getList($type)
+	{
 
 		// Get current admin session
 		$id_role = Login::getAdminData('id_role');

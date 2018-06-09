@@ -30,13 +30,14 @@ use Roducks\Page\View;
 use Roducks\Page\JSON;
 use Roducks\Libs\Data\Session;
 use Roducks\Libs\Utils\Date;
-use App\models\Users\Users as UsersTable;
-use App\models\Users\Roles as RolesTable;
-use App\models\Users\UsersRoles;
+use App\Models\Users\Users as UsersTable;
+use App\Models\Users\Roles as RolesTable;
+use App\Models\Users\UsersRoles;
 use App\Sites\_Global\Data\UserData;
 use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 
-class Users extends AdminPage{
+class Users extends AdminPage
+{
 
 	const DATE_RANGE_USERS = 'RDKS_DATE_RANGE_USERS';
 	const DATE_RANGE_LOGS = 'RDKS_DATE_RANGE_LOGS';
@@ -51,18 +52,20 @@ class Users extends AdminPage{
 	var $trash = 0;
 	var $tree = 0;
 
-	public function __construct(array $settings, View $view){
+	public function __construct(array $settings, View $view)
+	{
 		parent::__construct($settings, $view);
 
 		$this->role(Role::TYPE_USERS, $this->_url);
 	}	
 
-	protected function _form($db){
+	protected function _form($db)
+	{
 
 		$query = RolesTable::open($db);
 		$roles = $query->getList($this->_type);
 
-		if($query->getTotalRows() == 0){
+		if ($query->getTotalRows() == 0) {
 			return $this->view->error('protected',__METHOD__, "There's no roles for: ".Role::getList($this->_type)['title']);
 		}
 
@@ -71,7 +74,8 @@ class Users extends AdminPage{
 		$this->view->data("roles", $roles);
 	}
 
-	public function index(){
+	public function index()
+	{
 
 		$this->grantAccess->view();
 
@@ -84,19 +88,19 @@ class Users extends AdminPage{
 		$end_date = Date::getFormatDMY("/");	
 		$filter = ['u.trash' => $this->trash];
 
-		if(!Login::isSuperAdmin()){
+		if (!Login::isSuperAdmin()) {
 			
-			if($this->grantAccess->hasAccess("descendants")){
+			if ($this->grantAccess->hasAccess("descendants")) {
 				$filter['u.id_user_parent'] = Login::getAdminId();
 			}
 
-			if($this->grantAccess->hasAccess("tree") && Login::roleSuperAdmin()){
+			if ($this->grantAccess->hasAccess("tree") && Login::roleSuperAdmin()) {
 				$filter['[BEGIN_COND]'] = "(";
 					$filter['[NON]u.id_user_parent:>'] = Login::getAdminData('id_user_parent');
 					$filter['[OR]u.id_role:>'] = Login::getAdminData('id_role');
 				$filter['[END_COND]'] = ")";
 
-				if($this->tree == 1){
+				if ($this->tree == 1) {
 					unset($access['tree']);
 
 					unset($filter['[BEGIN_COND]']);
@@ -110,13 +114,13 @@ class Users extends AdminPage{
 		} else {
 			$access['tree'] = 1;
 			
-			if($this->tree == 1){
+			if ($this->tree == 1) {
 				unset($access['tree']);
 				$filter['u.id_user_parent'] = Login::getAdminId();
 			}
 		}
 
-		if(Session::exists(self::DATE_RANGE_USERS)){
+		if (Session::exists(self::DATE_RANGE_USERS)) {
 			$range = Session::get(self::DATE_RANGE_USERS);
 			$start_date = $range[0];
 			$end_date = $range[1];
@@ -124,18 +128,18 @@ class Users extends AdminPage{
 			$isFiltered = true;
 		}
 
-		if(Post::stSentData()){
+		if (Post::stSentData()) {
 			$post = Post::init();
 
-			if($post->sent("email")){
+			if ($post->sent("email")) {
 				$search['u.email'] = $post->text("email");
 			}
 
-			if($post->sent("id_user")){
+			if ($post->sent("id_user")) {
 				$search['u.id_user'] = $post->text("id_user");
 			}	
 
-			if($post->sent("start_date") && $post->sent("end_date")){
+			if ($post->sent("start_date") && $post->sent("end_date")) {
 				$start_date = $post->param("start_date");
 				$end_date = $post->param("end_date");
 				$range = [$start_date, $end_date];
@@ -155,7 +159,7 @@ class Users extends AdminPage{
 		$isTrash = ($this->trash == 1) ? true : false;
 		$paramTrash = "";
 
-		if($isTrash){
+		if ($isTrash) {
 			$totals = $inTrash;
 			$paramTrash = URL::setParams(['trash' => $this->trash]);
 		}
@@ -202,25 +206,28 @@ class Users extends AdminPage{
 		return $this->view->output();
 	}
 
-	public function resetFilter(){
+	public function resetFilter()
+	{
 		Session::reset(self::DATE_RANGE_USERS);
 		$paramTrash = "";
 
-		if($this->trash == 1){
+		if ($this->trash == 1) {
 			$paramTrash = URL::setParams(['trash' => $this->trash]);
 		}
 
 		$this->redirect("{$this->_url}{$paramTrash}");
 	}
 
-	public function resetLogs(){
+	public function resetLogs()
+	{
 		$id_user = $this->getUrlParam('userId');
 		Session::reset(self::DATE_RANGE_LOGS);
 
 		$this->redirect("{$this->_url}/logs/id/{$id_user}");
 	}
 
-	public function logs(){
+	public function logs()
+	{
 
 		$id_user = $this->getUrlParam('userId', Login::getAdminId());
 
@@ -236,7 +243,7 @@ class Users extends AdminPage{
 		$start_date = Date::getFormatDMY("/");
 		$end_date = Date::getFormatDMY("/");
 
-		if(Session::exists(self::DATE_RANGE_LOGS)){
+		if (Session::exists(self::DATE_RANGE_LOGS)) {
 			$range = Session::get(self::DATE_RANGE_LOGS);
 			$start_date = $range[0];
 			$end_date = $range[1];
@@ -244,10 +251,10 @@ class Users extends AdminPage{
 			$isFiltered = true;
 		}
 
-		if(Post::stSentData()){
+		if (Post::stSentData()) {
 			$post = Post::init();
 
-			if($post->sent("start_date") && $post->sent("end_date")){
+			if ($post->sent("start_date") && $post->sent("end_date")) {
 				$start_date = $post->param("start_date");
 				$end_date = $post->param("end_date");
 				$range = [$start_date, $end_date];
@@ -297,7 +304,8 @@ class Users extends AdminPage{
 	/**
 	*	@type GET
 	*/
-	public function edit(){
+	public function edit()
+	{
 
 		$id_user = $this->getUrlParam('userId', Login::getAdminId());
 		$db = $this->db();
@@ -338,7 +346,8 @@ class Users extends AdminPage{
 	/**
 	*	@type GET
 	*/
-	public function add(){
+	public function add()
+	{
 
 		$this->grantAccess->create();
 		$db = $this->db();
@@ -381,12 +390,13 @@ class Users extends AdminPage{
 	/**
 	*	@type GET
 	*/
-	public function resetPassword(){
+	public function resetPassword()
+	{
 
 		$id_user = $this->getUrlParam('userId');
 
 		// Can't reset yourself!
-		if(Login::getAdminId() == $id_user){
+		if (Login::getAdminId() == $id_user) {
 			$this->forbiddenRequest();
 		}
 
@@ -413,7 +423,8 @@ class Users extends AdminPage{
 	/**
 	*	@type GET
 	*/
-	public function changePassword(){
+	public function changePassword()
+	{
 
 		$this->grantAccess->password();
 
@@ -430,7 +441,8 @@ class Users extends AdminPage{
 
 	}
 
-	public function picture(){
+	public function picture()
+	{
 
 		$id_user = $this->getUrlParam('userId', Login::getAdminId());
 
@@ -459,6 +471,5 @@ class Users extends AdminPage{
 
 		return $this->view->output();
 	}
-
 
 } 

@@ -23,11 +23,13 @@ namespace App\Sites\Admin\Services;
 use Roducks\Page\Service;
 use Roducks\Framework\URL;
 
-class Foo extends Service{
+class Foo extends Service
+{
 
 	protected $_dispatchUrl = true;
 
-	public function cross(){
+	public function cross()
+	{
 
 		$this->crossDomain(["POST"]);
 

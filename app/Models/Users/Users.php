@@ -24,7 +24,8 @@ use Roducks\Framework\Login;
 use Roducks\Libs\Utils\Date;
 use Roducks\Libs\ORM\Model;
 
-class Users extends Model {
+class Users extends Model
+{
 
 	var $id = "id_user";
 	var $fields = [
@@ -49,14 +50,16 @@ class Users extends Model {
 		'updated_at'		 => Model::TYPE_DATETIME
 	];
 
-	public function logInOut($id, $option){
+	public function logInOut($id, $option)
+	{
 		return $this->update($id, ['loggedin' => $option]);
 	}
 
 	/*
 	*	if User has descendents 
 	*/
-	public function isDescendent($id, $id_user_parent){
+	public function isDescendent($id, $id_user_parent)
+	{
 		return $this->results([$this->id => $id, 'id_user_parent' => $id_user_parent]);
 	}
 
@@ -64,10 +67,11 @@ class Users extends Model {
 	*	@param $id integer USER ID
 	*	@return bool
 	*/
-	public function paywall($id, $password){
+	public function paywall($id, $password)
+	{
 		$row = $this->row($id);
 
-		if(!$this->rows()){
+		if (!$this->rows()) {
 			return false;
 		}
 
@@ -78,7 +82,8 @@ class Users extends Model {
 	*	@param $id integer USER ID
 	*	@param $data array fields
 	*/
-	public function changePassword($id, $password){
+	public function changePassword($id, $password)
+	{
 
 		$secret = Login::generatePassword($password);
 
@@ -94,7 +99,8 @@ class Users extends Model {
 	/**
 	*	@param $data array fields
 	*/	
-	public function create($data){
+	public function create($data)
+	{
 
 		$secret = Login::generatePassword($data['password']);
 
@@ -105,7 +111,8 @@ class Users extends Model {
 
 	}
 
-	public function getFullName(){
+	public function getFullName()
+	{
 
 		return self::concatValues([
 			$this->getFirstName(),

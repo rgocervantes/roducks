@@ -25,30 +25,32 @@ use Roducks\Framework\Language as LanguageCore;
 use Roducks\Page\Block;
 use App\Models\Data\UrlsLang;
 
-class Language extends Block{
+class Language extends Block
+{
 
-	public function output($id_url, $tpl){
+	public function output($id_url, $tpl)
+	{
 
 		$langs = LanguageCore::getList();
 		$ret = [];
 		$urls = [];
 	
-		if($id_url > 0){
+		if ($id_url > 0) {
 
 			$db = $this->db();
 			$query = UrlsLang::open($db);
 			$query->filter(['id_url' => $id_url]);
 
-			if($query->rows()){
+			if ($query->rows()) {
 
-				while($url = $query->fetch()){
+				while ($url = $query->fetch()) {
 					$id_lang = $url['id_lang'];
 					$urls[ $id_lang ] = $url;
 				}
 
-				foreach($langs as $lang){
+				foreach ($langs as $lang) {
 					$id = $lang['id'];
-					if(isset($urls[ $id ])){
+					if (isset($urls[ $id ])) {
 						$u = $urls[ $id ];
 						$u = array_merge($u, $lang);
 						$uri = (!empty($u['redirect'])) ? $u['redirect'] : $u['url'];
@@ -58,9 +60,9 @@ class Language extends Block{
 				}
 			}
 
-		}else{
+		} else {
 				
-			foreach($langs as $lang){		
+			foreach ($langs as $lang) {		
 				$lang['link'] = URL::lang($lang['iso']);
 				$ret[] = $lang;	
 			}

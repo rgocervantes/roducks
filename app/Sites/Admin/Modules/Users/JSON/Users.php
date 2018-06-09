@@ -25,11 +25,13 @@ use Roducks\Framework\Role;
 use Roducks\Modules\Admin\Users\JSON\Users as UsersJSON;
 use App\Sites\Admin\Modules\Users\Helper\Users as UsersHelper;
 
-class Users extends UsersJSON{
+class Users extends UsersJSON
+{
 
 	protected $_dispatchUrl = true;
 
-	public function __construct(array $settings){
+	public function __construct(array $settings)
+	{
 		
 		$this->_type = Role::TYPE_USERS;
 		$this->_url = UsersHelper::URL;

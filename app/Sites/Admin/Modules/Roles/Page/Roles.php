@@ -22,6 +22,7 @@ namespace App\Sites\Admin\Modules\Roles\Page;
 
 use Roducks\Modules\Admin\Roles\Page\Roles as RolesPage;
 
-class Roles extends RolesPage{
+class Roles extends RolesPage
+{
 
 }

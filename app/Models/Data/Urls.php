@@ -22,7 +22,8 @@ namespace App\Models\Data;
 
 use Roducks\Libs\ORM\Model;
 
-class Urls extends Model {
+class Urls extends Model
+{
 
 	var $id = "id_url";
 	var $fields = [		

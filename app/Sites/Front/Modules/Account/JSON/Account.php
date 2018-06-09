@@ -22,6 +22,7 @@ namespace App\Sites\Front\Modules\Account\JSON;
 
 use Roducks\Modules\Front\Account\JSON\Account as AccountJSON;
 
-class Account extends AccountJSON{
+class Account extends AccountJSON
+{
 
 }

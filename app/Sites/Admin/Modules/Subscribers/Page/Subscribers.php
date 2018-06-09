@@ -25,9 +25,11 @@ use Roducks\Framework\Role;
 use Roducks\Modules\Admin\Users\Page\Users as UsersPage;
 use App\Sites\Admin\Modules\Subscribers\Helper\Subscribers as SubscribersHelper;
 
-class Subscribers extends UsersPage{
+class Subscribers extends UsersPage
+{
 
-	public function __construct(array $settings, View $view){
+	public function __construct(array $settings, View $view)
+	{
 
 		$this->_type = Role::TYPE_SUBSCRIBERS;
 		$this->_url = SubscribersHelper::URL;
@@ -37,4 +39,4 @@ class Subscribers extends UsersPage{
 
 	}
 
-} 
+}

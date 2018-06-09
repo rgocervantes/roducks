@@ -30,7 +30,8 @@ use Roducks\Framework\Path;
 use Roducks\Libs\Data\Session;
 use Roducks\Libs\Output\Html;
 
-final class View{
+final class View
+{
 
 	const DEFAULT_TEMPLATE = 'default';
 	
@@ -63,18 +64,20 @@ final class View{
 	/* ------------------------------------*/	
 	public $assets;
 
-	private function _urlData(){
-		if(count($this->_url) > 0){
+	private function _urlData()
+	{
+		if (count($this->_url) > 0) {
 			$this->title($this->_url['title']);
 			$this->load($this->_url['tpl']);
-			if(!empty($this->_url['template']))
+			if (!empty($this->_url['template']))
 				$this->template($this->_url['template']);
-			if(!empty($this->_layout))
+			if (!empty($this->_layout))
 				$this->_layout = $this->_url['layout'];
 		}
 	}
 
-	private function _htmlTag($name, array $arr){
+	private function _htmlTag($name, array $arr)
+	{
 		$attrs = Html::getAttributes($arr);
 		return "<{$name} {$attrs} />\n";
 	}
@@ -82,7 +85,8 @@ final class View{
 	/* ------------------------------------*/
 	/* 		PUBLIC METHODS
 	/* ------------------------------------*/	
-	public function __construct(Asset $assets, $filePath, $url){
+	public function __construct(Asset $assets, $filePath, $url)
+	{
 		
 		$this->_filePath = $filePath;
 
@@ -91,7 +95,7 @@ final class View{
 		$this->_url = $url;
 		$idUrl = (isset($this->_url['id_url'])) ? $this->_url['id_url'] : 0;
 
-		if(!Helper::isBlock($filePath)){
+		if (!Helper::isBlock($filePath)) {
 			$this->data('_TITLE', PAGE_TITLE);
 			$this->data('_PAGE_TITLE', PAGE_TITLE);
 			$this->data('_VIEW_TITLE', "title");
@@ -101,45 +105,54 @@ final class View{
 		$this->data('_LANG', Language::get());
 	}
 
-	public function data($key, $value = ""){
-		if(is_array($key)){
+	public function data($key, $value = "")
+	{
+		if (is_array($key)) {
 			$this->_data = array_merge($this->_data, $key);
-		}else{
+		} else {
 			$this->_data[$key] = $value;
 		}	
 		
 	}
 
-	public function tpl($key, $value = ""){
+	public function tpl($key, $value = "")
+	{
 		$this->_tpl[$key] = $value;
 	}
 
-	public function getData(){
+	public function getData()
+	{
 		return $this->_data;
 	}
 
-	public function getUrlData(){
+	public function getUrlData()
+	{
 		return $this->_url;
 	}
 
-	public function page($n){
+	public function page($n)
+	{
 		$this->data('_PAGED', $n);
 	}
 
-	public function parentPage($page){
+	public function parentPage($page)
+	{
 		$this->_parentPage = $page;
 	}
 
-	public function meta($attr, $name, $content){
+	public function meta($attr, $name, $content)
+	{
 		$this->_meta .= $this->_htmlTag("meta", [$attr => $name, 'content' => $content]);
 	}
 
-	public function htmlTag($name, array $arr){
+	public function htmlTag($name, array $arr)
+	{
 		$this->_meta .= $this->_htmlTag($name, $arr);
 	}
 
-	public function template($template = null, $top = true, $bottom = true){
-		if(!is_null($template)){
+	public function template($template = null, $top = true, $bottom = true)
+	{
+		if (!is_null($template)) {
 			$this->_template = $template;
 		}
 
@@ -147,39 +160,44 @@ final class View{
 		$this->_blocks['bottom'] = $bottom;
 	}
 
-	public function layout($layout = null, array $mapping = []){
-		if(!is_null($layout)){
+	public function layout($layout = null, array $mapping = [])
+	{
+		if (!is_null($layout)) {
 			$this->_layout = $layout;
 			Layout::$data = $mapping;
 		}
 	}	
 
-	public function title($str, $overwrite = false, $tpl = null){
+	public function title($str, $overwrite = false, $tpl = null)
+	{
 		$title = $str;
 		
-		if(!$overwrite){
+		if (!$overwrite) {
 			$title = $str . " - " . PAGE_TITLE;
 		}
 
 		$this->data('_PAGE_TITLE', $str);
 		$this->data('_TITLE', $title);
 
-		if(!is_null($tpl)){
+		if (!is_null($tpl)) {
 			$this->data('_VIEW_TITLE', $tpl);
 		}
 	}
 
-	public function load($name){
+	public function load($name)
+	{
 		$this->_view = Helper::ext($name,'phtml');
 	}
 
-	public function body(){
+	public function body()
+	{
 		$this->_body = "body";
 	}
 
-	public function setView($name){
+	public function setView($name)
+	{
 		$ret = [];
-		if(is_array($name)){
+		if (is_array($name)) {
 			foreach ($name as $key => $value) {
 				$ret[] = ['VIEW',$value];
 			}
@@ -189,9 +207,10 @@ final class View{
 		
 	}
 
-	public function setTemplate($name, array $data = [], $merge = false){
+	public function setTemplate($name, array $data = [], $merge = false)
+	{
 		$ret = [];
-		if(is_array($name)){
+		if (is_array($name)) {
 			foreach ($name as $key => $value) {
 				$ret[] = ['TEMPLATE',$value, $data, $merge];
 			}
@@ -200,13 +219,15 @@ final class View{
 		}
 	}
 
-	public function setError(){
+	public function setError()
+	{
 		$this->_error = true;
 	}
 
-	public function error($visibility = "", $method = "", $alert = "An error ocurred in this method"){
+	public function error($visibility = "", $method = "", $alert = "An error ocurred in this method")
+	{
 
-		if(Helper::regexp('#app#', $this->_filePath)){
+		if (Helper::regexp('#app#', $this->_filePath)) {
 
 			$page = preg_replace('/^.+\/modules\/([a-zA-Z]+)\/page\/$/', '$1', $this->_filePath);
 			$file = str_replace("/", "", Helper::getClassName($this->_filePath, '$2'));
@@ -214,7 +235,7 @@ final class View{
 			$filePath = $this->_filePath . $class . FILE_EXT;
 			$extend = "\\" . $this->_parentPage;	
 
-			if(Helper::regexp('#::#', $method)){
+			if (Helper::regexp('#::#', $method)) {
 				list($cls, $mt) = explode("::", $method);
 				$method = "rdks/{$this->_filePath}{$class}::{$mt}";
 			}
@@ -232,9 +253,10 @@ final class View{
 		return false;
 	}
 
-	public function output($header_footer = true, $scripts = true){
+	public function output($header_footer = true, $scripts = true)
+	{
 
-		if($this->_error){
+		if ($this->_error) {
 			return false;
 		}
 
@@ -245,19 +267,19 @@ final class View{
 		$dir_view = Core::getViewsPath($this->_parentPage, $this->_filePath, $this->_view);
 
 		// If it's a block header & footer are not required
-		if(Helper::isBlock($this->_filePath)) {
+		if (Helper::isBlock($this->_filePath)) {
 			$header_footer = false;
 		} else {
 			Layout::$path = $dir_view;
 		}
 
 		// Make sure 404 template exists if else throw a fatal error because we don't have any other template to show.
-		if($this->_template == "404" && !file_exists($dir_templates)){
+		if ($this->_template == "404" && !file_exists($dir_templates)) {
 			Error::fatal("404 Folder Not Found", __LINE__, __FILE__, $dir_templates);
 		}
 
 		// Make sure layouts exists in case it is required to be shown.
-		if(!file_exists($dir_layouts) && !empty($this->_layout)){
+		if (!file_exists($dir_layouts) && !empty($this->_layout)) {
 			Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $dir_layouts);
 		}
 
@@ -277,34 +299,36 @@ final class View{
 		extract($this->_data);
 		
 		// Include Header
-		if($header_footer){
+		if ($header_footer) {
 			$header = $dir_templates . "header" . FILE_TPL;
-			if(file_exists($header)){
+			if (file_exists($header)) {
 				include $header;
 				$top = $dir_templates . "top" . FILE_TPL;
 				
-				if(file_exists($top) && $this->_blocks['top']){
+				if (file_exists($top) && $this->_blocks['top']) {
 					include $top;
 				}
-				if(Session::exists(Login::SESSION_SECURITY)){
+				if (Session::exists(Login::SESSION_SECURITY)) {
 					Error::security();
 					Login::security(false);
 				} 
-			}else{
+			} else {
 				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $header);
 			}
 		}
 		// Set template data
-		if(!Helper::isBlock($this->_filePath)) {
+		if (!Helper::isBlock($this->_filePath)) {
 			Template::$data = array_merge(Template::$data,$this->_data);
 		}
+
 		Template::$path = $dir_templates;
+
 		// Load layout if exists
-		if(file_exists($dir_layouts)){
+		if (file_exists($dir_layouts)) {
 			include $dir_layouts;
-		} else if(file_exists($dir_view) && !empty($this->_view)) {
+		} else if (file_exists($dir_view) && !empty($this->_view)) {
 			
-			if(Helper::isPage($dir_view)){
+			if (Helper::isPage($dir_view)) {
 				Layout::view(null);
 			} else {
 				include $dir_view;
@@ -312,37 +336,37 @@ final class View{
 		}
 
 		// Load body *ONLY* for 404 templates
-		if(!empty($this->_body)){
+		if (!empty($this->_body)) {
 			//Core::loadFile($dir_templates,$this->_body.FILE_TPL);
 			$body = $dir_templates.$this->_body.FILE_TPL;
 
-			if(file_exists($body)){
+			if (file_exists($body)) {
 				include $body;
-			}else{
+			} else {
 				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $body);
 			}
 		}
 
 		// Include Bottom & Footer
-		if($header_footer){
+		if ($header_footer) {
 
 				$bottom = $dir_templates . "bottom" . FILE_TPL;
 				$footer = $dir_templates . "footer" . FILE_TPL;
 				
-				if(file_exists($bottom) && $this->_blocks['bottom']){
+				if (file_exists($bottom) && $this->_blocks['bottom']) {
 					include $bottom;
 				}
 
-				if($scripts){
+				if ($scripts) {
 					echo "<script type=\"text/javascript\">\n";
 					Asset::includeInLine($this->assets->getScriptsInline(),$this->_data);
 					Asset::includeOnReady($this->assets->getScriptsOnReady(),$this->_data);
 					echo "</script>\n";
 				}
 
-				if(file_exists($footer)){
+				if (file_exists($footer)) {
 					include $footer;
-				}else{
+				} else {
 					Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $footer);
 				}
 

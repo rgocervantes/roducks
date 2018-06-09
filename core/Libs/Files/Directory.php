@@ -20,15 +20,17 @@
 
 namespace Roducks\Libs\Files;
 
-class Directory{
+class Directory
+{
 
 	const REMOVE_FILES = 1;
 	const REMOVE_FOLDERS = 2;
 	const REMAIN_FOLDERS = 3;
 
-	static private function _getDir($dir){
+	static private function _getDir($dir)
+	{
 
-		if(!preg_match('/\/$/', $dir)){
+		if (!preg_match('/\/$/', $dir)) {
 			return "{$dir}/";
 		}
 
@@ -38,7 +40,8 @@ class Directory{
 	/*
 	Directory::folder("example");
 	*/
-	static private function _folder($folder, $chmod = 0755){
+	static private function _folder($folder, $chmod = 0755)
+	{
 		if (!empty($folder)) {
 			if (!file_exists($folder)) {
 				@mkdir($folder, $chmod);
@@ -47,7 +50,8 @@ class Directory{
 	}	
 
 	// Directory::open("files/books/children/");
-	static function open($dir){
+	static function open($dir)
+	{
 
 		$folders = [];
 		$files = [];
@@ -60,7 +64,7 @@ class Directory{
 		if ($dir_handle) {
 	   		while($x = readdir($dir_handle)) {
 	       		if ($x != "." && $x != "..") {
-	          		if (is_dir($dirname . $x)){
+	          		if (is_dir($dirname . $x)) {
 	          			$folders[] = $x;
 	          		}else{
 	          			$files[] = $x;
@@ -80,11 +84,12 @@ class Directory{
 	/*
 	Directory::make(Path::get(), "foo/bar");
 	*/
-	static function make($base, $dir = "", $chmod = 0755){
+	static function make($base, $dir = "", $chmod = 0755)
+	{
 
 		$path = $base . $dir;
 
-		if(preg_match('#\/#', $dir)){
+		if (preg_match('#\/#', $dir)) {
 
 			$guide = "";
 			$slashes = explode("/", $dir);
@@ -104,7 +109,8 @@ class Directory{
 	/*
 	*	Delete files and folders inside of another.
 	*/
-	static function remove($dirname){
+	static function remove($dirname)
+	{
 
 		$dir_handle = false;
 
@@ -129,10 +135,11 @@ class Directory{
 	/**
 	*	Directory::clean("app/tmp/cards/", [Directory::REMAIN_FOLDERS, Directory::REMOVE_FILES]);
 	*/
-	static function clean($dirname, array $options = []){
+	static function clean($dirname, array $options = [])
+	{
 		$content = self::open($dirname);
 
-		if($content !== false && is_array($options) && count($options) > 0){
+		if ($content !== false && is_array($options) && count($options) > 0) {
 			foreach ($options as $option) {
 				switch (strtolower($option)) {
 					case self::REMOVE_FILES:
@@ -165,10 +172,9 @@ class Directory{
 	*	Example: Directory::move(DIR_DATA_TMP . "new_package/other/", DIR_DATA_TMP . "new_package/example/other/");
 	*
 	*/
-	static function move($origin, $destination){
+	static function move($origin, $destination)
+	{
 		rename($origin, $destination);
 	}
 
 }
- 
-?>

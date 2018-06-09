@@ -44,7 +44,7 @@ namespace Roducks\Libs\ORM;
 	
 		$user = UsersTable::open($db)->getRow(1); // id
 		
-		if($user->rows()){
+		if ($user->rows()) {
 			$user->setFirstName("Rod");
 			$user->setEmail("rod@roducks.com");
 			$user->update();
@@ -56,7 +56,7 @@ namespace Roducks\Libs\ORM;
 
 		$user = UsersTable::open($db)->getRow(1); // id
 		
-		if($user->rows()){
+		if ($user->rows()) {
 			$name = $user->getFirstName();
 			$email = $user->getEmail();
 		} else {
@@ -70,7 +70,7 @@ namespace Roducks\Libs\ORM;
 		$user = UsersTable::open($db);
 		$row = $user->row(1); // id
 		
-		if($user->rows()){
+		if ($user->rows()) {
 			$name = $row['first_name'];
 			$email = $row['email'];
 		} else {
@@ -98,7 +98,7 @@ namespace Roducks\Libs\ORM;
 		->having(["u.id_user:>" => 1])
 		->filter($condition, $fields); // For pagination use: ->pagination()		
 
-		if($UsersRoles->rows()): while($row = $UsersRoles->fetch()):
+		if ($UsersRoles->rows()) : while ($row = $UsersRoles->fetch()) :
 			print_r($row);
 		endwhile; else:
 			echo "No rows were found.";
@@ -120,7 +120,8 @@ namespace Roducks\Libs\ORM;
 
 */
 
-class Model extends Query{
+class Model extends Query
+{
 
 	const TYPE_INTEGER = 1;
 	const TYPE_DECIMAL = 2;
@@ -148,11 +149,13 @@ class Model extends Query{
 //----------------------	
 */
 	
-	static private function _getTable($class){
+	static private function _getTable($class)
+	{
 		return preg_replace('/^.+\\\([a-zA-Z_]+)$/', '$1', $class);
 	}
 
-	static function open(\mysqli $mysqli){
+	static function open(\mysqli $mysqli)
+	{
 
 		$class = get_called_class();
 		$table = self::_getTable($class);
@@ -161,7 +164,8 @@ class Model extends Query{
 		return $inst;
 	}
 
-	static function getConventionName($str, $sep = "-"){
+	static function getConventionName($str, $sep = "-")
+	{
 
 		$abc = [
 			"A" => 1,
@@ -210,40 +214,43 @@ class Model extends Query{
 //----------------------	
 */
  
-	private function _invokeJoin($key, $table, $type, array $join = []){
+	private function _invokeJoin($key, $table, $type, array $join = [])
+	{
 		$table = self::_getTable($table);
 		$this->_joins[$key] = ['table' => $table];	
-		if(count($join) > 0){
+		if (count($join) > 0) {
 			$this->_joins[$key][$type] = $join;
 		}
 
 		return $this;
 	}
 
-	private function _autoload($data){
+	private function _autoload($data)
+	{
 
 		$this->_ORM = true;
 	 
-	    foreach($data as $key => $value){
-	        if(isset($this->fields[$key]) || count($this->_fields) > 0){
+	    foreach($data as $key => $value) {
+	        if (isset($this->fields[$key]) || count($this->_fields) > 0) {
 	           	$this->_data[$key] = $value;
 	        }
 	    }
 	}
 
-	private function _unexcepted(array $condition = []){
+	private function _unexcepted(array $condition = [])
+	{
 
 		$error = 0;
 
-		if(count($condition) > 0){
+		if (count($condition) > 0) {
 			foreach ($condition as $key => $value) {
-				$key = preg_replace('/^([a-z]+\.)?([a-zA-Z_]+):?.*$/', '$2', $key);
-				if(!isset($this->fields[$key])){
+				$key = preg_replace('/^([a-z]+\.)?([a-zA-Z_]+) :?.*$/', '$2', $key);
+				if (!isset($this->fields[$key])) {
 					$error++;
 					break;
 				}
 
-				if(empty($value) || $value == "NULL"){
+				if (empty($value) || $value == "NULL") {
 					continue;
 				}
 
@@ -263,7 +270,7 @@ class Model extends Query{
 						$regexp = '/^.+$/';
 						break;
 					case self::TYPE_DATETIME:
-						if($value == 'NOW()'){
+						if ($value == 'NOW()') {
 							$regexp = '/^(NOW)\(\)$/';
 						} else {
 							$regexp = '/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/';
@@ -278,13 +285,13 @@ class Model extends Query{
 						break;					
 				}
 
-				if(!preg_match($regexp, $value)){
+				if (!preg_match($regexp, $value)) {
 					$error++;
 					break;
 				}
 			}
 
-			if($error > 0){
+			if ($error > 0) {
 				return true;
 			}
 
@@ -298,22 +305,23 @@ class Model extends Query{
 //		PUBLIC
 //----------------------	
 */
-	public function __call($method, $args){
+	public function __call($method, $args)
+	{
 	     
-	    if(preg_match('/^(get|set)(\w+)$/', $method, $fx)){
+	    if (preg_match('/^(get|set)(\w+)$/', $method, $fx)) {
 	 
 	        $first = strtolower(substr($fx[2],0,1));
 	        $property = $first . substr($fx[2],1);
 	 
 	        $name = self::getConventionName($property, "_");
 
-	        if(isset($this->fields[$name]) || count($this->_fields) > 0){
-	            if("get" == $fx[1]){
+	        if (isset($this->fields[$name]) || count($this->_fields) > 0) {
+	            if ("get" == $fx[1]) {
 	            	$value = (isset($this->_data[$name])) ? $this->_data[$name] : "";
 	                return $value;
 	            }
 	 
-	            if("set" == $fx[1]){
+	            if ("set" == $fx[1]) {
 	                $this->_data[$name] = $args[0];
 	            }                
 	        }
@@ -323,24 +331,27 @@ class Model extends Query{
 	    return "";
 	}
 
-	public function __construct(\mysqli $mysqli, $tbl = ""){
+	public function __construct(\mysqli $mysqli, $tbl = "")
+	{
 
 		$tbl = (!is_null($this->table)) ? $this->table : $tbl;
 		$table = (count($this->_joins) > 0) ? $this->_joins : $tbl;
 		parent::__construct($mysqli, $table);
 	}
 
-	public function row($id, array $condition = [], $fields = '*'){
+	public function row($id, array $condition = [], $fields = '*')
+	{
 		$args = [$this->id => $id];
 
-		if($this->_unexcepted($condition)){
+		if ($this->_unexcepted($condition)) {
 			return false;
 		}
 
 		return parent::row($args, $condition, $fields);
 	}	
 
-	public function getRow($id){
+	public function getRow($id)
+	{
 		$this->_id = $id;
 		$args = [$this->id => $id];
 
@@ -353,28 +364,32 @@ class Model extends Query{
 		return $this;
 	}
 
-	public function prepare(){
+	public function prepare()
+	{
 		$this->_ORM = true;
 
 		return $this;
 	}
 
-	public function foundRow(){
+	public function foundRow()
+	{
 		return parent::rows();
 	}
 
-	public function all($fields = "*"){
+	public function all($fields = "*")
+	{
 		return parent::filter([], $fields);
 	}
 
-	public function update($id = "", array $data = [], array $condition = []){
+	public function update($id = "", array $data = [], array $condition = [])
+	{
 		
-		if($this->_ORM){
+		if ($this->_ORM) {
 			$id = $this->_id;
 			$data = $this->_data;
 		}
 
-		if($this->_unexcepted($data) || $this->_unexcepted($condition)){
+		if ($this->_unexcepted($data) || $this->_unexcepted($condition)) {
 			return false;
 		}
 
@@ -385,25 +400,27 @@ class Model extends Query{
 		return parent::update($args, $data, $where);
 	}	
 
-	public function updateByCondition(array $data, array $condition){
+	public function updateByCondition(array $data, array $condition)
+	{
 		return parent::update($condition, $data);
 	}	
 
-	public function delete($id = "", array $condition = []){
+	public function delete($id = "", array $condition = [])
+	{
 		
-		if($this->_ORM){
+		if ($this->_ORM) {
 
-			if(!parent::rows()){
+			if (!parent::rows()) {
 				return false;
 			}
 
-			if(is_array($id)){
+			if (is_array($id)) {
 				$condition = $id;
 			}
 			$id = $this->_id;
 		}
 
-		if($this->_unexcepted($condition) || !self::isInteger($id)){
+		if ($this->_unexcepted($condition) || !self::isInteger($id)) {
 			return false;
 		}
 
@@ -413,31 +430,34 @@ class Model extends Query{
 		return parent::delete($args, $where);
 	}
 
-	public function deleteByCondition(array $condition){
+	public function deleteByCondition(array $condition)
+	{
 		return parent::delete($condition);
 	}		
 
-	public function insert(array $data = []){
+	public function insert(array $data = [])
+	{
 
-		if($this->_ORM){
+		if ($this->_ORM) {
 			$data = $this->_data;
 		}	
 
-		if($this->_unexcepted($data)){
+		if ($this->_unexcepted($data)) {
 			return false;
 		}
 
 		return parent::insert($data);
 	}
 
-	public function insertOnce(array $data = [], array $condition = []){
+	public function insertOnce(array $data = [], array $condition = [])
+	{
 
-		if($this->_ORM){
+		if ($this->_ORM) {
 			$condition = $data;
 			$data = $this->_data;
 		}
 
-		if($this->_unexcepted($data) || $this->_unexcepted($condition)){
+		if ($this->_unexcepted($data) || $this->_unexcepted($condition)) {
 			return false;
 		}
 
@@ -446,15 +466,16 @@ class Model extends Query{
 		return parent::insertOnce($data, $where);
 	}	
 
-	public function lastId($data = "", array $condition = []){
+	public function lastId($data = "", array $condition = [])
+	{
 
-		if($this->_ORM){
-			if(is_array($data)){
+		if ($this->_ORM) {
+			if (is_array($data)) {
 				$condition = $data;
 			}
 		}
 
-		if($this->_unexcepted($condition)){
+		if ($this->_unexcepted($condition)) {
 			return false;
 		}
 
@@ -463,26 +484,29 @@ class Model extends Query{
 		return parent::lastId($this->id, $where);
 	}
 
-	public function getTableTotalRows(){
+	public function getTableTotalRows()
+	{
 		return $this->count($this->id);
 	}
 
-	public function getData(){
+	public function getData()
+	{
 
 		$ret = [];
 
-		if($this->rows()): while($row = $this->fetch()):
+		if ($this->rows()) : while ($row = $this->fetch()) :
 		        $ret[] = $row;
 		endwhile; endif;
 
 		return $ret;
 	}
 
-	public function filteredBy($field){
+	public function filteredBy($field)
+	{
 
 		$results = parent::distinct($field);
 		$ret = [];
-		if($results->rows()): while($row = $results->fetch()):
+		if ($results->rows()) : while ($row = $results->fetch()) :
 		        $ret[] = $row[$field];
 		endwhile; endif;
 
@@ -490,15 +514,18 @@ class Model extends Query{
 
 	}
 
-	protected function join($key, $table, array $join = []){
+	protected function join($key, $table, array $join = [])
+	{
 		return $this->_invokeJoin($key, $table, 'join', $join);
 	}
 
-	protected function leftJoin($key, $table, array $join = []){
+	protected function leftJoin($key, $table, array $join = [])
+	{
 		return $this->_invokeJoin($key, $table, 'left_join', $join);
 	}	
 
-	protected function rightJoin($key, $table, array $join = []){
+	protected function rightJoin($key, $table, array $join = [])
+	{
 		return $this->_invokeJoin($key, $table, 'right_join', $join);
 	}	
 

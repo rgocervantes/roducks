@@ -22,9 +22,11 @@ namespace App\Models\Users;
 
 use Roducks\Libs\ORM\Model;
 
-class UsersRoles extends Model {
+class UsersRoles extends Model
+{
 	
-	public function __construct(\mysqli $mysqli){
+	public function __construct(\mysqli $mysqli)
+	{
 
 		$this
 		->join('u', Users::CLASS)
@@ -34,7 +36,8 @@ class UsersRoles extends Model {
 
 	}
 
-	public function totals($type, array $condition = []){
+	public function totals($type, array $condition = [])
+	{
 
 		$filter = [
 			'r.type' => $type,
@@ -51,7 +54,8 @@ class UsersRoles extends Model {
 	*	@param $type integer					
 	*	@return integer	
 	*/
-	public function inTrash($type, array $condition = []){
+	public function inTrash($type, array $condition = [])
+	{
 		$condition['u.trash'] = 1;
 		return $this->totals($type, $condition);
 	}
@@ -61,7 +65,8 @@ class UsersRoles extends Model {
 	*	@param $type integer				
 	*	@return resource	
 	*/
-	public function auth($email, $type){
+	public function auth($email, $type)
+	{
 
 		$fields = [
 			self::field("u.*"),
@@ -88,7 +93,8 @@ class UsersRoles extends Model {
 	*	@param $condition array					
 	*	@return resource	
 	*/
-	public function getAll($type, $page = 1, $limit = 20, $sort = "asc", array $condition = []){
+	public function getAll($type, $page = 1, $limit = 20, $sort = "asc", array $condition = [])
+	{
 
 		$filter = ['r.type' => $type];
 		$condition = (count($condition) > 0) ? array_merge($condition, $filter) : $filter;
@@ -113,7 +119,8 @@ class UsersRoles extends Model {
 	*	@param $id_user integer				
 	*	@return resource	
 	*/
-	public function getUser($id_user){
+	public function getUser($id_user)
+	{
 
 		$fields = [
 			self::field("u.*"),

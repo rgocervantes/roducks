@@ -25,11 +25,11 @@ use Roducks\Framework\Role;
 use Roducks\Modules\admin\Users\Page\Users as UsersPage;
 use App\Sites\Admin\Modules\Users\Helper\Users as UsersHelper;
 
-class Users extends UsersPage{
+class Users extends UsersPage
+{
 
-	//var $_rowsPerPage = 2;
-
-	public function __construct(array $settings, View $view){
+	public function __construct(array $settings, View $view)
+	{
 
 		$this->_type = Role::TYPE_USERS;
 		$this->_url = UsersHelper::URL;
@@ -39,4 +39,4 @@ class Users extends UsersPage{
 
 	}	
 
-} 
+}

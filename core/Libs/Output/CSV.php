@@ -32,7 +32,7 @@
                             ));
 
     # ROWS
-    for($i = 1; $i<=10; $i++):
+    for($i = 1; $i<=10; $i++) :
         $txt .= $csv->row(array($i,
                                 "Lorem Ipsum",
                                 "This is an example"
@@ -47,7 +47,8 @@
 
 namespace Roducks\Libs\Output;   
 
-class CSV{
+class CSV
+{
 
     private $_delimiter = ',';
     private $_handle;
@@ -56,19 +57,21 @@ class CSV{
     private $_path;
     private $_file;
 
-    private function escape($fields){
+    private function escape($fields)
+    {
         $fill = [];
  
-        foreach($fields as $f):
+        foreach ($fields as $f) :
             $fill[] = '"' . utf8_encode($f) . '"';
         endforeach;
  
         return implode($this->_delimiter, $fill);
     }
 
-    static private function _ext($str){
+    static private function _ext($str)
+    {
         $ext = ".csv";
-        if(!preg_match('/\.csv$/', $str)) return $str . $ext;
+        if (!preg_match('/\.csv$/', $str)) return $str . $ext;
 
         return $str;
     }
@@ -76,38 +79,44 @@ class CSV{
     /**
     *   Set your own delimiter, by default is separated by commas
     */
-    public function delimiter($s){
+    public function delimiter($s)
+    {
         $this->_delimiter = $s;
     }    
 
-    public function file($path, $name){
+    public function file($path, $name)
+    {
         $this->_doc = self::_ext($name);
         $this->_file = $path . $this->_doc;
     }
 
-    public function row(array $rows = []){
+    public function row(array $rows = [])
+    {
         $raw = '';
  
-        if(is_array($rows) && count($rows) > 0):
+        if (is_array($rows) && count($rows) > 0) :
             $raw .= $this->escape($rows);
         endif;
  
         return $raw . "\n";
     }
 
-    public function headers($obj){
+    public function headers($obj)
+    {
         return $this->row($obj);
     }
 
     /*------------ SAVE CSV --------------*/
-    public function save($report){
+    public function save($report)
+    {
         $csv_file = fopen($this->_file,"w");
                     fwrite($csv_file,$report);
                     fclose($csv_file);
     }
  
     /*------------ EXPORT CSV ------------*/
-    public function download($report){
+    public function download($report)
+    {
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="'.$this->_doc.'"');
         echo $report;
@@ -134,13 +143,15 @@ class CSV{
     /**
     *   Set length
     */
-    public function length($n){
+    public function length($n)
+    {
         $this->_length = $n;
     }
 
-    public function read(){
+    public function read()
+    {
 
-        if(file_exists($this->_file)){ // read
+        if (file_exists($this->_file)) { // read
             if (($this->_handle = fopen($this->_file, "r")) !== FALSE) {
                 return true;
             }
@@ -153,14 +164,16 @@ class CSV{
     *   Get row
     *   @return object 
     */
-    public function fetch(){
+    public function fetch()
+    {
         return fgetcsv($this->_handle, $this->_length, $this->_delimiter);
     } 
 
     /**
     *   Close the file
     */
-    public function stop(){
+    public function stop()
+    {
         fclose($this->_handle);
     }
 

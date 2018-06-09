@@ -30,7 +30,8 @@ use Roducks\Page\View;
 use Roducks\Libs\Utils\Date;
 use App\Models\Users\Users as UsersTable;
 
-class Users extends _JSON{
+class Users extends _JSON
+{
 
 	private $_fields;
 
@@ -39,7 +40,8 @@ class Users extends _JSON{
 	protected $_url;	
 	protected $_user;
 	
-	public function __construct(array $settings){
+	public function __construct(array $settings)
+	{
 		parent::__construct($settings);
 
 		$this->post->required();
@@ -64,7 +66,8 @@ class Users extends _JSON{
 	/**
 	*	@type POST
 	*/
-	public function insert(){
+	public function insert()
+	{
 
 		$this->grantAccess->create();
 		$gender = $this->post->select('gender');
@@ -83,7 +86,7 @@ class Users extends _JSON{
 
 		$tx = $this->_user->create($fields);
 
-		if($tx !== false) {
+		if ($tx !== false) {
 			$insertId = $this->_user->insertId();
 			$tree = (Login::isSuperAdmin()) ? '0' : Login::getAdminId();
 			$id_user_tree = ($admin_id_user_tree == '0') ? $tree : implode("_", [$admin_id_user_tree,$tree]);
@@ -102,12 +105,13 @@ class Users extends _JSON{
 	/**
 	*	@type POST
 	*/
-	public function update($id_user){
+	public function update($id_user)
+	{
 
 		$row = $this->_user->row($id_user);
 		$this->grantAccess->editDescendent($id_user, $row, $this->_user->isDescendent($id_user, Login::getAdminId()), "edit");
 		
-		if(Login::getAdminId() == $id_user){
+		if (Login::getAdminId() == $id_user) {
 			unset($this->_fields['id_role']);
 			unset($this->_fields['active']);
 			unset($this->_fields['expires']);
@@ -123,22 +127,24 @@ class Users extends _JSON{
 		parent::output();
 	}
 
-	public function changePassword(){
+	public function changePassword()
+	{
 
 		$id_user = Login::getAdminId();
 		$this->grantAccess->reset();
 
 		// Make sure user didn't skip his current password.
-		if(!$this->_user->paywall($id_user, $this->post->password('password'))){
+		if (!$this->_user->paywall($id_user, $this->post->password('password'))) {
 			$this->setError(401,TEXT_AUTH_FAIL);
-		}else{
+		} else {
 			$this->_user->changePassword($id_user, $this->post->password('new_password'));
 		}	
 
 		parent::output();
 	}
 
-	public function resetPassword($tag, $id_user){
+	public function resetPassword($tag, $id_user)
+	{
 
 		$row = $this->_user->row($id_user);
 		$this->grantAccess->editDescendent($id_user, $row, $this->_user->isDescendent($id_user, Login::getAdminId()), "reset");
@@ -147,7 +153,8 @@ class Users extends _JSON{
 		parent::output();	
 	}
 
-	public function picture($tag, $id_user){
+	public function picture($tag, $id_user)
+	{
 
 		$row = $this->_user->row($id_user);
 		$this->grantAccess->editDescendent($id_user, $row, $this->_user->isDescendent($id_user, Login::getAdminId()), "picture");
@@ -160,7 +167,8 @@ class Users extends _JSON{
 		parent::output();
 	}
 
-	public function trash(){
+	public function trash()
+	{
 
 		$id = $this->post->param('id'); 
 		$value = $this->post->param('value');
@@ -173,16 +181,16 @@ class Users extends _JSON{
 			Form::filter(Form::FILTER_INTEGER, $value)			
 		]);
 
-		if(Form::isValid($form)){
+		if (Form::isValid($form)) {
 
-			if($id != Login::getAdminId() || Login::isSuperAdmin()){
+			if ($id != Login::getAdminId() || Login::isSuperAdmin()) {
 				$user = $this->_user->row($id);
-				if($this->_user->rows()){
+				if ($this->_user->rows()) {
 					$this->_user->update($id, ['loggedin' => 0, 'trash' => $value]);
 				} else {
 					$this->setError(2, TEXT_USER_NOT_EXIST);
 				}
-			} else{
+			} else {
 				$this->setError(1, TEXT_INVALID_REQUEST);
 			}
 		} else {
@@ -196,7 +204,8 @@ class Users extends _JSON{
 	*	@type GET
 	*	@return json
 	*/
-	public function visibility(){
+	public function visibility()
+	{
 
 		$id = $this->post->param('id'); 
 		$active = $this->post->param('value');
@@ -209,12 +218,12 @@ class Users extends _JSON{
 			Form::filter(Form::FILTER_INTEGER, $active)
 		]);
 
-		if(Form::isValid($form)){
+		if (Form::isValid($form)) {
 
 			// Make sure user ID is not the same as current adminId because you cannot disable yourself!
-			if($id != Login::getAdminId() || Login::isSuperAdmin()){	
+			if ($id != Login::getAdminId() || Login::isSuperAdmin()) {	
 				$user = $this->_user->row($id);
-				if($this->_user->rows()){
+				if ($this->_user->rows()) {
 					$this->_user->update($id, ['loggedin' => 0,'active' => $active]);
 				} else {
 					$this->setError(2, TEXT_USER_NOT_EXIST);
@@ -230,9 +239,10 @@ class Users extends _JSON{
 
 		parent::output();
 
-	}		
+	}
 
-	public function expiration(){
+	public function expiration()
+	{
 
 		$id = $this->post->param('id'); 
 		$date = $this->post->param('date');
@@ -245,16 +255,16 @@ class Users extends _JSON{
 			Form::filter(Form::FILTER_DATE_YYYY_MM_DD, $date)			
 		]);
 
-		if(Form::isValid($form)){
+		if (Form::isValid($form)) {
 
-			if($id != Login::getAdminId() || Login::isSuperAdmin()){
+			if ($id != Login::getAdminId() || Login::isSuperAdmin()) {
 				$user = $this->_user->row($id);
-				if($this->_user->rows()){
+				if ($this->_user->rows()) {
 					$this->_user->update($id, ['expires' => 1,'expiration_date' => $date]);
 				} else {
 					$this->setError(2, TEXT_USER_NOT_EXIST);
 				}
-			} else{
+			} else {
 				$this->setError(1, TEXT_INVALID_REQUEST);
 			}
 		} else {

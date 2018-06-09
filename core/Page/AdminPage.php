@@ -23,9 +23,11 @@ namespace Roducks\Page;
 use Roducks\Framework\Login;
 use Roducks\Framework\Path;
 
-class AdminPage extends Page {
+class AdminPage extends Page
+{
 
-	public function __construct(array $settings, View $view){
+	public function __construct(array $settings, View $view)
+	{
 		parent::__construct($settings, $view);	
 
 		$login = new Login(Login::SESSION_ADMIN, static::LOGIN_URL);

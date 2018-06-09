@@ -23,7 +23,8 @@ namespace App\Sites\Admin\Modules\Roles\Helper;
 use Roducks\Framework\Role;
 use Roducks\Page\HelperPage;
 
-class Roles extends HelperPage {
+class Roles extends HelperPage
+{
 
 	static $icon = "tags";
 	static $list = [
@@ -32,13 +33,15 @@ class Roles extends HelperPage {
 		Role::TYPE_CLIENTS 		=> []		
 	];
 
-	static function getIds(){
+	static function getIds()
+	{
 		return array_keys(self::$list);
 	}
 
-	static function getIcon($type = ""){
+	static function getIcon($type = "")
+	{
 		
-		if(empty($type)){
+		if (empty($type)) {
 			return self::$icon;
 		}
 

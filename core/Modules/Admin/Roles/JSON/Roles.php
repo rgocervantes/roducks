@@ -31,18 +31,21 @@ use Roducks\Libs\Files\File;
 use Roducks\Libs\Data\Session;
 use App\Models\Users\Roles as RolesTable;
 
-class Roles extends _JSON{
+class Roles extends _JSON
+{
 
 	protected $_dispatchUrl = true;
 
-	private function _getType(){
+	private function _getType()
+	{
 		$role_type = Session::get('ROLE_TYPE');
 		$type = (!empty($role_type)) ? $role_type : 1;
 
 		return $type;
 	}
 
-	public function __construct(array $settings){
+	public function __construct(array $settings)
+	{
 		parent::__construct($settings);
 
 		$this->post->required();
@@ -50,7 +53,8 @@ class Roles extends _JSON{
 		$this->grantAccess->json();
 	}
 
-	public function search(){
+	public function search()
+	{
 		$db = $this->db();
 		$value = strtoupper($this->post->text("q"));
 		$RolesTable = RolesTable::open($db);
@@ -60,20 +64,22 @@ class Roles extends _JSON{
 		parent::output();
 	}
 
-	public function nameTaken(){
+	public function nameTaken()
+	{
 
 		$db = $this->db();
 		$value = strtoupper($this->post->text("q"));
 		$RolesTable = RolesTable::open($db);
 
-		if($RolesTable->nameTaken($value, $this->_getType())){
+		if ($RolesTable->nameTaken($value, $this->_getType())) {
 			$this->setError(0, Language::translate("Name already taken, please choose another.","Ya existe este nombre, por favor elige otro."));
 		}
 
 		parent::output();
 	}
 
-	public function save($id_role = ""){
+	public function save($id_role = "")
+	{
 
 		$method = $this->post->hidden("method");
 		$config = $this->post->hidden("config", "");
@@ -90,13 +96,13 @@ class Roles extends _JSON{
 		$valid = true;
 		$type = $this->_getType();
 
-		if($method == "insert"){
+		if ($method == "insert") {
 
 			// Make sure role's name does not exist yet, if so, refuse.
-			if($RolesTable->nameTaken($name, $type)){
+			if ($RolesTable->nameTaken($name, $type)) {
 				$this->setError(0, Language::translate("Name already taken, please choose another.","Ya existe este nombre, por favor elige otro."));
 				$valid = false;
-			}else{
+			} else {
 			
 				$configName = "role_" . Date::getCurrentDateFlat() . "_" . mt_rand();
 
@@ -112,14 +118,14 @@ class Roles extends _JSON{
 
 			}
 			
-		}else if($method == "update" && !empty($id_role)){
+		} else if ($method == "update" && !empty($id_role)) {
 			$RolesTable->update($id_role, ['name' => $name, 'updated_by' => Login::getAdminId(), 'updated_at' => Date::getCurrentDateTime()]);
 		}
 
-		if($valid){
+		if ($valid) {
 			$data = $this->post->data();
 			unset($data['method']);
-			if(empty($config)){
+			if (empty($config)) {
 				$data['config'] = $configName;
 			}
 
@@ -130,21 +136,22 @@ class Roles extends _JSON{
 		parent::output();
 	}
 
-	public function visibility(){
+	public function visibility()
+	{
 
 		$this->grantAccess->visibility();
 
 		$id_role = $this->post->param("id");
 		$value = $this->post->param("value");
 
-		if($id_role == Login::getAdminData("id_role")){
+		if ($id_role == Login::getAdminData("id_role")) {
 			$this->setError(1, Language::translate("Can't disable the role you belong to.","No puedes desactivar el rol al que perteneces."));
 		}
 
 		$db = $this->db();
 		$tx = RolesTable::open($db)->update($id_role, ['active' => $value]);
 		
-		if($tx === FALSE){
+		if ($tx === FALSE) {
 			$this->setError(0, TEXT_WAS_AN_ERROR);
 		}
 		

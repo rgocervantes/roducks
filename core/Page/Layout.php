@@ -23,12 +23,14 @@ namespace Roducks\Page;
 use Roducks\Framework\Core;
 use Roducks\Framework\Error;
 
-class Layout {
+class Layout
+{
 
 	static $data;
 	static $path;
 
-	static function view($name){
+	static function view($name)
+	{
 		
 		$include = false;
 		$view = (!is_null($name)) ? $name . FILE_TPL : "";
@@ -37,15 +39,15 @@ class Layout {
 
 		$file = $dir_view;
 
-		if(file_exists($dir_view)){
+		if (file_exists($dir_view)) {
 			$include = true;
 			$file = $dir_view;
-		} else if(file_exists($dir_view_core)){
+		} else if (file_exists($dir_view_core)) {
 			$include = true;
 			$file = $dir_view_core;
 		}
 	
-		if($include){
+		if ($include) {
 			extract(Template::$data);
 			include $file;
 		} else {
@@ -53,9 +55,10 @@ class Layout {
 		}
 	}
 
-	static private function _include($data){
+	static private function _include($data)
+	{
 
-		if(isset($data[0]) && isset($data[1])) {
+		if (isset($data[0]) && isset($data[1])) {
 			switch ($data[0]) {
 				case 'VIEW':
 					self::view($data[1]);
@@ -68,22 +71,23 @@ class Layout {
 
 	}
 
-	static function container($name){
+	static function container($name)
+	{
 
-		if($name == ''){
+		if ($name == '') {
 			return;
 		}
 
-		if(!isset(self::$data[$name])){
+		if (!isset(self::$data[$name])) {
 			Error::warning("Undefined Layout container", __LINE__, __FILE__, '');
 		} else {
 			$data = self::$data[$name];
 
-			if(empty($data)){
+			if (empty($data)) {
 				return;
 			}
 
-			if(is_array($data[0])) {
+			if (is_array($data[0])) {
 				foreach ($data as $key => $value) {
 					self::_include($value);
 				}
@@ -94,4 +98,4 @@ class Layout {
 
 	}
 
-} 
+}

@@ -25,7 +25,8 @@ use Roducks\Framework\Post;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Request\CORS;
 
-class JSON extends GenericPage {
+class JSON extends GenericPage
+{
 
 	protected $post;
 
@@ -40,15 +41,18 @@ class JSON extends GenericPage {
 	private $_jsonMessage = "OK!";
 	private $_jsonSuccess = true;
 	
-	static function encode($str){
+	static function encode($str)
+	{
 		return json_encode($str);
 	}
 
-	static function decode($str){
+	static function decode($str)
+	{
 		return json_decode($str, true);
 	}
 
-	static function stOutput($obj){
+	static function stOutput($obj)
+	{
 
 		$json = [
 			'code' => $obj['code'],
@@ -57,14 +61,15 @@ class JSON extends GenericPage {
 			'data' => $obj['data']
 		];
 
-		if(!$obj['format']) $json = $obj['data'];
+		if (!$obj['format']) $json = $obj['data'];
 
 		Http::setHeaderJSON();
 		echo self::encode($json);
 		exit;
 	}
 
-	static function error($message, array $data = []){
+	static function error($message, array $data = [])
+	{
 
 		$obj = [
 			'code' => 0,
@@ -77,7 +82,8 @@ class JSON extends GenericPage {
 		self::stOutput($obj);
 	}
 
-	static function response($message, $code = 200){
+	static function response($message, $code = 200)
+	{
 
 		switch ($code) {
 			case 404:
@@ -94,7 +100,8 @@ class JSON extends GenericPage {
 		self::stOutput(['format' => false, 'data' => ['message' => $message]]);
 	}
 
-	private function _jsonOutput($format = true){
+	private function _jsonOutput($format = true)
+	{
 
 		$obj = [
 			'code' => $this->_jsonCode,
@@ -108,41 +115,48 @@ class JSON extends GenericPage {
 
 	}	
 
-	protected function setStatus($obj){
-		if(isset($obj['code'])) $this->_jsonCode = $obj['code'];
-		if(isset($obj['success'])) $this->_jsonSuccess = $obj['success'];
-		if(isset($obj['message'])) $this->_jsonMessage = $obj['message'];
+	protected function setStatus($obj)
+	{
+		if (isset($obj['code'])) $this->_jsonCode = $obj['code'];
+		if (isset($obj['success'])) $this->_jsonSuccess = $obj['success'];
+		if (isset($obj['message'])) $this->_jsonMessage = $obj['message'];
 	}
 
-	protected function setSuccess($value){
+	protected function setSuccess($value)
+	{
 		$this->_jsonSuccess = $value;
 	}
 
-	protected function setError($code, $msg){
+	protected function setError($code, $msg)
+	{
 		$this->_jsonCode = $code;
 		$this->_jsonMessage = $msg;
 		$this->_jsonSuccess = false;
 	}
 
-	protected function setCode($code){
+	protected function setCode($code)
+	{
 		$this->_jsonCode = $code;
 	}
 
-	protected function setMessage($message){
+	protected function setMessage($message)
+	{
 		$this->_jsonMessage = $message;
 	}	
 
-	protected function data($key, $value = ""){
-		if(is_array($key)){
+	protected function data($key, $value = "")
+	{
+		if (is_array($key)) {
 			$this->_jsonData = array_merge($this->_jsonData, $key);
-		}else{
+		} else {
 			$this->_jsonData[$key] = $value;
 		}
 	}
 
-	protected function output($format = true){
+	protected function output($format = true)
+	{
 
-		if($this->_crossDomain){
+		if ($this->_crossDomain) {
 			$cors = new CORS;
 			$cors->allowDomains($this->_domains);
 			$cors->methods($this->_methods);
@@ -152,7 +166,8 @@ class JSON extends GenericPage {
 		$this->_jsonOutput($format);
 	}
 
-	protected function crossDomain(array $options = [], $domains = "*"){
+	protected function crossDomain(array $options = [], $domains = "*")
+	{
 		$this->_crossDomain = true;
 		$this->_methods = (count($options) > 0) ? $options : ["POST","OPTIONS"];
 		$this->_domains = $domains;
@@ -161,12 +176,14 @@ class JSON extends GenericPage {
 /* ------------------------------------*/
 /* 		PUBLIC METHODS
 /* ------------------------------------*/
-	public function __construct($settings){
+	public function __construct($settings)
+	{
 		parent::__construct($settings);
 		$this->post = Post::init();
 	}
 
-	public function getData(){
+	public function getData()
+	{
 		$this->output();
 	}
 

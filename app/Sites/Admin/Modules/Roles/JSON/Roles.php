@@ -22,6 +22,7 @@ namespace App\Sites\Admin\Modules\Roles\JSON;
 
 use Roducks\Modules\Admin\Roles\JSON\Roles as RolesJSON;
 
-class Roles extends RolesJSON{
+class Roles extends RolesJSON
+{
 
 }

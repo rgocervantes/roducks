@@ -26,19 +26,23 @@ use Roducks\Libs\Utils\Date;
 use App\Sites\_Global\Data\LogData;
 use App\Sites\_Global\Data\UserData;
 
-class Register extends Event{
+class Register extends Event
+{
 
-	public function onLogin($id_user){
+	public function onLogin($id_user)
+	{
 		UserData::init($id_user)->addOnce("log_date", Date::getCurrentDate());
 		LogData::init($id_user)->add("logIn", ['time' => Date::getCurrentTime(), 'ip' => Http::getIPClient()], true);
 	}
 
-	public function onLogout($id_user){
+	public function onLogout($id_user)
+	{
 		UserData::init($id_user)->addOnce("log_date", Date::getCurrentDate());
 		LogData::init($id_user)->add("logOut", ['time' => Date::getCurrentTime(), 'ip' => Http::getIPClient()], true);
 	}
 
-	public function onCreateAccount($id_user, $type){
+	public function onCreateAccount($id_user, $type)
+	{
 		// @TODO
 	}	
 

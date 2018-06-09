@@ -22,9 +22,11 @@ namespace App\Sites\Front\Modules\Home\Page;
 
 use Roducks\Modules\Front\Home\Page\Home as HomePage;
 
-class Home extends HomePage {
+class Home extends HomePage
+{
 
-	public function index(){
+	public function index()
+	{
 
 		$this->view->title(TEXT_WELCOME);
 		$this->view->data("foo", "Initialized FooVar!");
@@ -35,4 +37,4 @@ class Home extends HomePage {
 		return $this->view->output();
 
 	}
-} 
+}

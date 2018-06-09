@@ -22,6 +22,7 @@ namespace App\Sites\Front\Modules\Account\Page;
 
 use Roducks\Modules\Front\Account\Page\Account as AccountPage;
 
-class Account extends AccountPage {
+class Account extends AccountPage
+{
 
 }

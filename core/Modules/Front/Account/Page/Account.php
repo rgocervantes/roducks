@@ -26,16 +26,19 @@ use Roducks\Framework\Login;
 use Roducks\Framework\Role;
 use App\Models\Users\Users as UsersTable;
 
-class Account extends FrontPage {
+class Account extends FrontPage
+{
 
-	public function __construct(array $settings, View $view){
+	public function __construct(array $settings, View $view)
+	{
 		parent::__construct($settings, $view);
 		
 		$this->login->required();
 		$this->role(Role::TYPE_SUBSCRIBERS);
 	}
 
-	public function index(){
+	public function index()
+	{
 
 		$this->grantAccess->view();
 
@@ -48,7 +51,8 @@ class Account extends FrontPage {
 
 	}
 
-	public function edit(){
+	public function edit()
+	{
 
 		$this->grantAccess->edit();
 
@@ -60,7 +64,8 @@ class Account extends FrontPage {
 
 	}
 
-	public function changePassword(){
+	public function changePassword()
+	{
 
 		$this->grantAccess->password();
 		
@@ -69,7 +74,8 @@ class Account extends FrontPage {
 		return $this->view->output();
 	}
 
-	public function picture(){
+	public function picture()
+	{
 
 		$this->grantAccess->picture();
 
@@ -90,5 +96,4 @@ class Account extends FrontPage {
 		return $this->view->output();
 	}
 
-} 
-
+}

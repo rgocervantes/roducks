@@ -22,6 +22,7 @@ namespace App\Sites\Front\Blocks\Menu;
 
 use Roducks\Blocks\Menu\Menu as MenuBlock;
 
-class Menu extends MenuBlock {
+class Menu extends MenuBlock
+{
 
 }

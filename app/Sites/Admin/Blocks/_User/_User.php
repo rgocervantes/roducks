@@ -23,14 +23,16 @@ namespace App\Sites\Admin\Blocks\_User;
 use Roducks\Page\View;
 use Roducks\Blocks\User\User;
 
-class _User extends User{
+class _User extends User
+{
 
 	protected $_dispatchUrl = true;
 
-	public function __construct(array $settings, View $view){
+	public function __construct(array $settings, View $view)
+	{
 		parent::__construct($settings, $view);
 
 		$this->accessAdmin(); // Only can be dispatched when admin is logged in.
 	}	
 
-} 
+}

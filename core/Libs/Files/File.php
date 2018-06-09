@@ -25,9 +25,9 @@
 	$file->kb(150);
 	$file->upload(DIR_UPLOAD_USERS, "profile_user", "my_custom_name");
 
-	if($file->onSuccess()){
+	if ($file->onSuccess()) {
 		echo $file->getFilename();
-	}else{
+	} else {
 		echo $file->getMessage();
 	}
 
@@ -35,7 +35,8 @@
 
 namespace Roducks\Libs\Files;	
 
-final class File {
+final class File
+{
 
 /* 
 |-------------------------------|
@@ -61,15 +62,18 @@ final class File {
 			'application/octet-stream'
 		];
 
-	private function _getSize($f){
+	private function _getSize($f)
+	{
 		return ceil($this->_getAttribute($f,'size') / 1024);
 	}	
 
-	private function _setSize($n){
+	private function _setSize($n)
+	{
 		$this->_limit = $n;
 	}
 
-	private function _getAttribute($file, $attr){
+	private function _getAttribute($file, $attr)
+	{
 		return $_FILES[$file][$attr];			
 	}	
 
@@ -79,9 +83,10 @@ final class File {
 |-------------------------------|
 */
 
-	static function init(){
-		$ins = new File;
-		return $ins;
+	static function init()
+	{
+		$file = new File;
+		return $file;
 	}
 
 	/*
@@ -95,18 +100,20 @@ final class File {
 		]);
 
 	*/
-	static function move($files){
+	static function move($files)
+	{
 		foreach ($files as $file) {
 			$from = $file['from'].$file['file'];
-			if(file_exists($from) && file_exists($file['to']) && $file['from'] != $file['to']){
+			if (file_exists($from) && file_exists($file['to']) && $file['from'] != $file['to']) {
 				rename($file['from'].$file['file'], $file['to'].$file['file']);
 			}
 		}
 	}
 
-	static function create($path, $name, $content = ''){
+	static function create($path, $name, $content = '')
+	{
 
-		if($path != '' && $name != ''){
+		if ($path != '' && $name != '') {
 
 			$file = fopen($path . $name, "w");
 					fwrite($file, $content);
@@ -116,7 +123,8 @@ final class File {
 
 	}
 
-	static function createJSON($path, $name, $content = '', $encode = true){
+	static function createJSON($path, $name, $content = '', $encode = true)
+	{
 		$data = ($encode) ? json_encode($content) : $content;
 		self::create($path, preg_replace('/^(.+)\.json$/', '$1', $name) . ".json", $data);
 	}
@@ -127,47 +135,54 @@ final class File {
 |-------------------------------|
 */
 
-	public function type($arr){
+	public function type($arr)
+	{
 		$this->_ext = $arr;
 	}
 
-	public function kb($n){
+	public function kb($n)
+	{
 		$this->_setSize($n);
 	}
 
-	public function mb($n){
+	public function mb($n)
+	{
 		$cal = ceil($n * 1024);
 		$this->_setSize($cal);
 	}
 
-	public function onSuccess(){
+	public function onSuccess()
+	{
 		return $this->_success;
 	}
 
-	public function getMessage(){
+	public function getMessage()
+	{
 		return $this->_message;
 	}
 
-	public function getFilename(){
+	public function getFilename()
+	{
 		return $this->_filename;
 	}
 
-	public function upload($path, $file, $rename = null){
+	public function upload($path, $file, $rename = null)
+	{
 		
 		$filename = $this->_getAttribute($file,'name');
 		$this->_filename = $filename;
 
 		// if upload is successed
-		if(!empty($filename) && $this->_getAttribute($file,'error') == 0){
+		if (!empty($filename) && $this->_getAttribute($file,'error') == 0) {
 			
 			// Allowed size
-			if($this->_getSize($file) <= $this->_limit){
+			if ($this->_getSize($file) <= $this->_limit) {
 				
 				// Allowed type
-				if(in_array($this->_getAttribute($file,'type'), $this->_ext)){
+				if (in_array($this->_getAttribute($file,'type'), $this->_ext)) {
 					$this->_filename = (!is_null($rename)) ? $rename . preg_replace('/^.+(\.\w{3,4})$/', '$1', $filename) : $filename;
 					
-					if(move_uploaded_file($this->_getAttribute($file,'tmp_name'), $path . $this->_filename)){
+					if (move_uploaded_file($this->_getAttribute($file,'tmp_name'), $path . $this->_filename)) {
 						$this->_success = true;
 						$this->_message = "File was uploaded successfully.";
 						$code = 1;
@@ -176,16 +191,16 @@ final class File {
 						$code = 5;
 					}
 
-				}else{
+				} else {
 					$this->_message = "Type" . $this->_getAttribute($file,'type') . " is not allowed.";
 					$code = 2;					
 				}
-			}else{
+			} else {
 				$this->_message = "File size is too heavy: " . $this->_getSize($file) . " KB.";
 				$code = 3;
 			}
 
-		}else{
+		} else {
 			$this->_message = "There was an error:  #" . $this->_getAttribute($file,'error');
 			$code = 4;
 		}
@@ -198,16 +213,17 @@ final class File {
 
 	}
 	
-	public function update($path, $file){
+	public function update($path, $file)
+	{
 
 		$filename = $this->_getAttribute($file,'name');
 		$copy = $_POST[$file . '_copy'];
 
-		if(!empty($filename)){	
-			if(empty($copy)){
+		if (!empty($filename)) {	
+			if (empty($copy)) {
 				$this->upload($path, $file);
-			}else{
-				if($copy != $filename)
+			} else {
+				if ($copy != $filename)
 				{
 					$this->upload($path, $file);
 					$this->delete($path, $copy);
@@ -216,14 +232,16 @@ final class File {
 		}	
 	}
 
-	public function delete($path, $file){
+	public function delete($path, $file)
+	{
 		$des = $path . $file;
-		if(file_exists($des) && $file != ''){
+		if (file_exists($des) && $file != '') {
 			return @unlink($des);	
 		}
 	}
 
-	public function info($file){
+	public function info($file)
+	{
 
 			$details = [
 					'name' => $this->_getAttribute($file,'name'),
@@ -238,6 +256,3 @@ final class File {
 	}
 
 }
-
-
-?>

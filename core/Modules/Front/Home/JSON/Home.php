@@ -31,11 +31,13 @@ use Roducks\Libs\Utils\Date;
 use App\Models\Users\Users as UsersTable;
 use Roducks\Services\Auth as LoginAuth;
 
-class Home extends JSON{
+class Home extends JSON
+{
 
 	const REDIRECT_TO_URL = "/login";
 	
-	public function __construct(array $settings){
+	public function __construct(array $settings)
+	{
 		parent::__construct($settings);
 
 		$this->post->required();
@@ -44,11 +46,12 @@ class Home extends JSON{
 	/**
 	*	@type POST
 	*/
-	public function createAccount(){
+	public function createAccount()
+	{
 
 		Form::setKey($this->post->hidden('form-key'));		
 
-		if(Login::isSubscriberLoggedIn()){
+		if (Login::isSubscriberLoggedIn()) {
 			Http::sendHeaderForbidden();
 		}
 
@@ -64,11 +67,11 @@ class Home extends JSON{
 			'picture' 		 => Helper::getUserIcon($gender),
 			'password' 		 => $this->post->password('password'),
 			'created_at' 	 => Date::getCurrentDateTime(),
-			'updated_at'   => Date::getCurrentDateTime(),
+			'updated_at'	 => Date::getCurrentDateTime(),
 			'active' 		 => 1
 		];
 
-		if(SUBSCRIBERS_EXPIRE){
+		if (SUBSCRIBERS_EXPIRE) {
 
 			$expires = Date::addMonthsToCurrentDate(2);
 
@@ -93,12 +96,12 @@ class Home extends JSON{
 			Form::filter(Form::FILTER_STRING, $fields['password'])
 		]);
 
-		if(Form::isValid($form)){
+		if (Form::isValid($form)) {
 			$db = $this->db();
 			$user = UsersTable::open($db);
 			$tx = $user->create($fields);
 			
-			if($tx === false){
+			if ($tx === false) {
 				$this->setError(2, TEXT_ERROR_CREATING_USER);
 			} else {
 
@@ -117,9 +120,10 @@ class Home extends JSON{
 		parent::output();
 	}
 
-	public function restorePassword(){
+	public function restorePassword()
+	{
 
-		if(Login::isSubscriberLoggedIn()){
+		if (Login::isSubscriberLoggedIn()) {
 			Http::sendHeaderForbidden();
 		}		
 
@@ -132,19 +136,19 @@ class Home extends JSON{
 			Form::filter(Form::FILTER_STRING, $password)
 		]);
 
-		if(Form::isValid($form)){
+		if (Form::isValid($form)) {
 			$db = $this->db();
 			$user = UsersTable::open($db);
 			$user->filter(['email' => $email, 'token' => $token], ['id_user']);
 
-			if($user->rows()){
+			if ($user->rows()) {
 				$info = $user->fetch();
 
 				$id_user = $info['id_user'];
 
 				$tx1 = $user->changePassword($id_user, $password);
 				$tx2 = $user->update($id_user, ['token' => '']);
-				if($tx1 === false){
+				if ($tx1 === false) {
 					$this->setError(2, TEXT_ERROR_RESETING_PASSWORD);
 				} else {
 					$this->data("url_redirect", self::REDIRECT_TO_URL);
@@ -158,7 +162,8 @@ class Home extends JSON{
 		parent::output();
 	}
 
-	public function recoverPassword(){
+	public function recoverPassword()
+	{
 
 		$email = $this->post->text('email');
 
@@ -166,7 +171,7 @@ class Home extends JSON{
 		$user = UsersTable::open($db);	
 		$user->filter(['email' => $email],['id_user']);	
 
-		if($user->rows()){
+		if ($user->rows()) {
 			$info = $user->fetch();
 
 			$id_user = $info['id_user'];
@@ -174,7 +179,7 @@ class Home extends JSON{
 
 			$tx = $user->update($id_user, ['token' => $token]);
 
-			if($tx === false){
+			if ($tx === false) {
 				$this->setError(2, TEXT_WAS_AN_ERROR);
 			} else {
 
@@ -186,7 +191,7 @@ class Home extends JSON{
 		  			$sender->subject = TEXT_RECOVER_PASSWORD;
 		  		});
 
-		  		if(!$sender){
+		  		if (!$sender) {
 		  			$this->setError(1, TEXT_ERROR_SENDING_EMAIL);
 		  		}
 			}		  		
@@ -199,7 +204,8 @@ class Home extends JSON{
 
 	}
 
-	public function contactUsSubmit(){
+	public function contactUsSubmit()
+	{
 
   		Form::setKey($this->post->hidden('form-key'));
 
@@ -210,7 +216,7 @@ class Home extends JSON{
   			$sender->subject = TEXT_CONTACT_US;
 		});
 
-  		if(!$sender){
+  		if (!$sender) {
   			$this->setError(0, TEXT_ERROR_SENDING_EMAIL);
   		}
 

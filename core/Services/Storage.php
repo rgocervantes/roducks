@@ -56,7 +56,7 @@ class Storage extends Service
 	{
 		$path = Path::getData($dir) . Helper::ext($name, 'json');
 
-        if(file_exists($path)){
+        if (file_exists($path)) {
         	$content = \Roducks\Libs\Request\Request::getContent($path);
         	$json = \Roducks\Page\JSON::decode($content);
         } else {
@@ -101,10 +101,10 @@ class Storage extends Service
 		$image = new Image;
 		$image->crop($dir . $f, $dir . $full_image, $w, $h, $x, $y, 95);
 
-		if(count($cuts) > 0):
-			foreach($cuts as $c):
+		if (count($cuts) > 0) :
+			foreach($cuts as $c) :
 				$preset = $fn[0] . '_' . $c . '.' . $fn[1];
-				if($w >= $c): // if crop is greather than resize
+				if ($w >= $c) : // if crop is greather than resize
 					$image->load($dir . $full_image);
 					$image->resizeToWidth($c);
 					$image->save($dir . $preset, 95);	
@@ -121,10 +121,10 @@ class Storage extends Service
 
 		$copy = $this->post->param('copy');
 
-		if(!empty($copy)):
+		if (!empty($copy)) :
 			$file->delete($path, $copy);
 			// delte all the crops
-			if(count($cuts) > 0): foreach($cuts as $c):
+			if (count($cuts) > 0) : foreach($cuts as $c) :
 				$file->delete($path, Path::getCropName($copy, $c));
 			endforeach; endif;
 		endif;			
@@ -161,14 +161,14 @@ class Storage extends Service
 	{
 
 		$file = File::init();
-		if(count($types) > 0) $file->type($types);
-		if(count($size) > 0){
+		if (count($types) > 0) $file->type($types);
+		if (count($size) > 0) {
 			
-			if(strtoupper($size[1]) == 'KB'){
+			if (strtoupper($size[1]) == 'KB') {
 				$file->kb($size[0]);	
 			}
 			
-			if(strtoupper($size[1]) == 'MB'){
+			if (strtoupper($size[1]) == 'MB') {
 				$file->mb($size[0]);	
 			}		
 		
@@ -227,41 +227,41 @@ class Storage extends Service
 		$method = Helper::getCamelName($action, false);
 		$config = $this->config($class, $index, null);
 
-		if(is_null($config)){
+		if (is_null($config)) {
 			$method = "invalid";
 		}
 
 		switch ($method) {
 			case 'cropSquared':
-				if(isset($config['clipping']) && isset($config['dir_upload']) && isset($config['dir_uploaded']) && isset($config['squared_clippings'])){
+				if (isset($config['clipping']) && isset($config['dir_upload']) && isset($config['dir_uploaded']) && isset($config['squared_clippings'])) {
 					$this->_crop($config['clipping'], \App::getRealFilePath($config['dir_upload']), $config['dir_uploaded'], $config['squared_clippings']);
 				} else {
 					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
 				break;
 			case 'cropLandscape':
-				if(isset($config['clipping']) && isset($config['dir_upload']) && isset($config['dir_uploaded']) && isset($config['landscape_clippings'])){
+				if (isset($config['clipping']) && isset($config['dir_upload']) && isset($config['dir_uploaded']) && isset($config['landscape_clippings'])) {
 					$this->_crop($config['clipping'], \App::getRealFilePath($config['dir_upload']), $config['dir_uploaded'], $config['landscape_clippings']);
 				} else {
 					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
 				break;
 			case 'upload':
-				if(isset($config['prefix']) && isset($config['dir_upload']) && isset($config['dir_uploaded']) && isset($config['size']) && isset($config['types'])){
+				if (isset($config['prefix']) && isset($config['dir_upload']) && isset($config['dir_uploaded']) && isset($config['size']) && isset($config['types'])) {
 					$this->_upload($config['prefix'], \App::getRealFilePath($config['dir_upload']), $config['dir_uploaded'], $config['size'], $config['types']);
 				} else {
 					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
 				break;
 			case 'delete':
-				if(isset($config['dir_upload'])){
+				if (isset($config['dir_upload'])) {
 					$this->_deleteFile($config['dir_upload']);
 				} else {
 					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
 				break;
 			case 'deleteCrops':
-				if(isset($config['dir_upload']) && isset($config['squared_clippings'])){
+				if (isset($config['dir_upload']) && isset($config['squared_clippings'])) {
 					$this->_deleteCrops(\App::getRealFilePath($config['dir_upload']), $config['squared_clippings']);
 				} else {
 					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);

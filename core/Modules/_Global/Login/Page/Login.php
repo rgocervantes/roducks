@@ -26,18 +26,21 @@ use Roducks\Framework\Login as LoginAuth;
 use Roducks\Page\Page;
 use App\Models\Users\Users as UsersTable;
 
-class Login extends Page{
+class Login extends Page
+{
 
 	protected $_session;
 
-	public function login(){
+	public function login()
+	{
 
 		$login = new LoginAuth($this->_session, static::LOGIN_URL);
 		$login->redirect(); // obligatory
 
 	}
 	
-	public function logout(){
+	public function logout()
+	{
 
 		$id_user = LoginAuth::getId($this->_session);
 		LoginAuth::logout($this->_session);
@@ -51,4 +54,4 @@ class Login extends Page{
 		$this->redirect(static::LOGIN_URL);
 	}
 
-} 
+}

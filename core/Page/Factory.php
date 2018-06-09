@@ -22,11 +22,13 @@ namespace Roducks\Page;
 
 use Roducks\Framework\Core;
 
-class Factory extends Frame{
+class Factory extends Frame
+{
 
 	protected $_pageType = 'FACTORY';
 
-	public function __construct(array $settings, $page){
+	public function __construct(array $settings, $page)
+	{
 		parent::__construct($settings);
 
 		$class = get_class($page);

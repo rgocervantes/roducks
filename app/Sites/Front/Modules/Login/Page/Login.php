@@ -23,11 +23,13 @@ namespace App\Sites\Front\Modules\Login\Page;
 use Roducks\Framework\Login as LoginAuth;
 use Roducks\Modules\_Global\Login\Page\Login as LoginPage;
 
-class Login extends LoginPage{
+class Login extends LoginPage
+{
 
 	protected $_session = LoginAuth::SESSION_FRONT;
 
-	public function login(){
+	public function login()
+	{
 
 		parent::login();
 

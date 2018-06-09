@@ -20,7 +20,8 @@
 
 namespace Roducks\Libs\Output;
 
-class XML{
+class XML
+{
 
 /*
 |============================|
@@ -28,7 +29,7 @@ class XML{
 |============================|
 */	
 
-	protected $DOM, $xmlName, $xmlContent, $element, $root, $nodeRoot, $local, $NS, $rootAttrs = array();
+	protected $DOM, $xmlName, $xmlContent, $element, $root, $nodeRoot, $local, $NS, $rootAttrs = [];
 	
 	/*
 	*	The root element has a namespace
@@ -55,15 +56,17 @@ class XML{
 	/**
 	*	Http header
 	*/
-    static function header(){
+    static function header()
+    {
     	header("Content-type: text/xml; charset=utf-8");
     }
 
     /**
      *
      */
-    static function read($xml){
-    	if(!file_exists($xml)) return;
+    static function read($xml)
+    {
+    	if (!file_exists($xml)) return;
     	self::header();
     	readfile($xml);
     }
@@ -72,10 +75,11 @@ class XML{
 	*	Validates if file extension is set.
 	*	@return string
 	*/
-    static function ext($str){
+    static function ext($str)
+    {
         $ext = ".xml";
         $name = substr($str, -4);
-        if($name != $ext) return $str . $ext;
+        if ($name != $ext) return $str . $ext;
 
         return $str;
     }
@@ -84,25 +88,26 @@ class XML{
 	*	Create element
 	*	@return object
 	*/
-	private function addElements($obj = array()){
+	private function addElements(array $obj = [])
+	{
 
 		$NS = (isset($obj['ns'])) ? $obj['ns'] : $this->NS;
 
-		if(isset($obj['value'])):
-			if($this->has_ns($obj['name'])):
+		if (isset($obj['value'])) :
+			if ($this->_hasNS($obj['name'])) :
 				$element = $this->DOM->createElementNS($NS,$obj['name'],$obj['value']);
 			else:
 				$element = $this->DOM->createElement($obj['name'],$obj['value']);
 			endif;	
 		else:
 			
-			if($this->has_ns($obj['name'])):	
+			if ($this->_hasNS($obj['name'])) :	
 				$element = $this->DOM->createElementNS($NS,$obj['name']);
 			else:
 				$element = $this->DOM->createElement($obj['name']);
 			endif;	
 
-			if(isset($obj['cdata'])):
+			if (isset($obj['cdata'])) :
 				$cdata = $this->DOM->createCDATASection($obj['cdata']);
 				$element->appendChild($cdata);
 			endif;
@@ -110,19 +115,19 @@ class XML{
 		endif;
 
 		// append attributes to this element
-		if(isset($obj['attributes'])):
-			foreach($obj['attributes'] as $key => $value):
-				if($this->has_ns($key)):
+		if (isset($obj['attributes'])) :
+			foreach ($obj['attributes'] as $key => $value) :
+				if ($this->_hasNS($key)) :
 					// if attribute has its own namespace
 					list($attr_ns, $attr_key) = explode(":", $key);
 
-					if($attr_ns != $NS):
-						if(isset($this->rootAttrs['xmlns:'.$attr_ns])):
+					if ($attr_ns != $NS) :
+						if (isset($this->rootAttrs['xmlns:'.$attr_ns])) :
 							$NS = $this->rootAttrs['xmlns:'.$attr_ns];
 						endif;	
 					endif;	
 
-					if(is_array($value)):
+					if (is_array($value)) :
 						$element->setAttributeNS($value[1],$key,$value[0]);
 					else:
 						$element->setAttributeNS($NS,$key,$value);
@@ -141,14 +146,15 @@ class XML{
 
 		return $element;
 
-	}		
+	}
 
 	/**
 	*	find if an element has a namespace
 	*	@return bool
 	*/
-	private function has_ns($key){
-		if(preg_match('#:#', $key)) return true;
+	private function _hasNS($key)
+	{
+		if (preg_match('#:#', $key)) return true;
 
 		return false;
 	}
@@ -156,7 +162,8 @@ class XML{
 	/**
 	*	Remove child element by xpath query
 	*/
-    private function _removeNode($query){
+    private function _removeNode($query)
+    {
 
     	$this->load();
     	$xpath = new \DOMXPath($this->DOM);
@@ -175,15 +182,17 @@ class XML{
 	/**
 	*	@param: $type string
 	*/
-	public function encode($type){
+	public function encode($type) {
+
 		$this->encode_type = $type;
 	}
 
 	/**
 	*	File will be overwritten every time it's execute it
 	*/
-	public function overWrite(){
-		if($this->exists()){
+	public function overWrite()
+	{
+		if ($this->exists()) {
 			@unlink($this->xmlName);
 		}
 	}
@@ -191,35 +200,39 @@ class XML{
 	/**
 	*	Validates if xml exists
 	*/
-    public function exists(){
+    public function exists()
+    {
     	return file_exists($this->xmlName);
     }
 
     /**
     *	@param $xml string
     */
-	public function file($xml){
+	public function file($xml)
+	{
 
 		$str = substr($xml, 0, 4);
 		$this->xmlName = self::ext($xml);
 
-		if($str == "http" || $str != "<?xm"){
+		if ($str == "http" || $str != "<?xm") {
 			$this->local = true;
 			$this->xmlContent = ($this->is_ns) ? file_get_contents($this->xmlName) : $this->xmlName;
-		}else{
+		} else {
 			$this->xmlContent = file_get_contents($this->xmlName);
 		}
 
 	}	
 
-	public function nameSpaces(){
+	public function nameSpaces()
+	{
 		$this->is_ns = true;
 	}
 
 	/**
 	*	DOMDocument instance
 	*/
-	public function init(){
+	public function init()
+	{
 		$this->DOM = new \DOMDocument('1.0', $this->encode_type);
 		$this->DOM->preserveWhiteSpace = false;
 		$this->DOM->formatOutput = true;
@@ -228,19 +241,20 @@ class XML{
 	/**
 	*	@return object
 	*/
-	public function content(){
+	public function content()
+	{
 
-		if(!$this->exists()){
+		if (!$this->exists()) {
 			die("Invalid XML.");
 		}		
 
-		if($this->is_ns){
+		if ($this->is_ns) {
 			return new \SimpleXmlElement($this->xmlContent);
 		}
 
-		if($this->local){
+		if ($this->local) {
 			return simplexml_load_file($this->xmlContent);
-		}else{
+		} else {
 			return simplexml_load_string($this->xmlContent);
 		}		
 	}	
@@ -248,7 +262,8 @@ class XML{
 	/**
 	*	Load xml in DOM
 	*/
-	public function load(){
+	public function load()
+	{
 		$this->init();
 		$this->DOM->load($this->xmlName);
 	}
@@ -256,14 +271,16 @@ class XML{
 	/**
 	*	Save xml 
 	*/
-	public function save(){
+	public function save()
+	{
 		$this->DOM->save($this->xmlName);
 	}
 
 	/**
 	*	print xml output in browser
 	*/
-	public function output(){
+	public function output()
+	{
 		self::header();
 		echo $this->DOM->saveXML();
 	}	
@@ -271,14 +288,16 @@ class XML{
 	/**
 	*	Append xmlns atom into the root element
 	*/
-	public function namespaceRootAtom(){
+	public function namespaceRootAtom()
+	{
 		$this->namespaceRoot($this->atom);
 	}
 
 	/**
 	*	Append custom namespace into the root element
 	*/
-	public function namespaceRoot($name){
+	public function namespaceRoot($name)
+	{
 		$this->NS = $name;
 		$this->ns_root = true;
 	}
@@ -286,12 +305,13 @@ class XML{
 	/**
 	*	Define root node
 	*/
-	public function root($root = "root", $attrs = array()){
+	public function root($root = "root", array $attrs = [])
+	{
 
 		$this->nodeRoot = $root;
 		
 		// if xml does not exist
-		if(!$this->exists()):
+		if (!$this->exists()) :
 			
 			// load DOMDocument
 			$this->init();
@@ -303,15 +323,15 @@ class XML{
 			$this->root = $this->DOM->appendChild($element);
 			
 			// add attributes or namespaces into the root
-			if(count($attrs) > 0):
+			if (count($attrs) > 0) :
 
 				$this->rootAttrs = $attrs;
 
-				foreach($attrs as $key => $value):
-					if($this->has_ns($key)):
+				foreach ($attrs as $key => $value) :
+					if ($this->_hasNS($key)) :
 						list($attr_ns, $attr_key) = explode(":", $key);
 						$NS = $this->w3c;
-						if("xmlns" != $attr_ns) $NS = $this->rootAttrs['xmlns:'.$attr_ns];
+						if ("xmlns" != $attr_ns) $NS = $this->rootAttrs['xmlns:'.$attr_ns];
 						$element->setAttributeNS($NS, $key, $value);
 					else:
 						$element->setAttribute($key,$value);
@@ -328,7 +348,8 @@ class XML{
 	/**
 	*	Update existing xml
 	*/
-	public function update(){
+	public function update()
+	{
 		$this->load();
 		$this->root = $this->DOM->documentElement;
 	}
@@ -336,7 +357,8 @@ class XML{
 	/**
 	*	Remove node by search query
 	*/
-	public function removeNodeBySearch($query){
+	public function removeNodeBySearch($query)
+	{
 		$this->_removeNode("//*[@".$query."]");
 	}
 
@@ -351,11 +373,12 @@ class XML{
 	/**
 	*	Remove child element by xpath query
 	*/
-    public function removeNode($query, $x = "", $ns = ""){
+    public function removeNode($query, $x = "", $ns = "")
+    {
 
     	$xpath = new \DOMXpath($this->DOM);
 
-		if(!empty($x) && !empty($ns)){
+		if (!empty($x) && !empty($ns)) {
 			$xpath->registerNamespace($x, $ns);
 		}
 
@@ -366,7 +389,8 @@ class XML{
 	/**
 	*
 	*/
-	public function insertBefore($addPath, $beforeNode, $addNode, $x = "", $ns = ""){
+	public function insertBefore($addPath, $beforeNode, $addNode, $x = "", $ns = "")
+	{
 		
 		// XPath-Querys 
 		$parent_path = "//" . $this->nodeRoot . $addPath; 
@@ -374,7 +398,7 @@ class XML{
 		// Instance
 		$xpath = new \DOMXpath($this->DOM); 
 
-		if(!empty($x) && !empty($ns)){
+		if (!empty($x) && !empty($ns)) {
 			$xpath->registerNamespace($x, $ns);
 		}
 		 
@@ -392,14 +416,16 @@ class XML{
 	/**
 	*	Get elements by node given
 	*/
-    public function getElementByTagName($node, $index = 0){
+    public function getElementByTagName($node, $index = 0)
+    {
     	return $this->DOM->getElementsByTagName($node)->item($index);
     }
 
 	/**
 	*	Get element by id search
 	*/
-    public function getElementByIdSearch($id){
+    public function getElementByIdSearch($id)
+    {
     	
     	$xpath = new \DOMXPath($this->DOM);
         $element = $xpath->query("//*[@id='".$id."']")->item(0);
@@ -410,14 +436,16 @@ class XML{
 	/**
 	*	Count root's nodes
 	*/
- 	public function count($node){
+ 	public function count($node)
+ 	{
  		return $this->DOM->getElementsByTagName($node)->length;
  	} 	
 
 	/**
 	*	Create Node
 	*/
-	public function createNode($obj){
+	public function createNode($obj)
+	{
 		$element = $this->addElements($obj);
 
 		return $element;
@@ -426,12 +454,9 @@ class XML{
 	/**
 	*	Append node into root node
 	*/
-	public function appendChild($element){
+	public function appendChild($element)
+	{
 		$this->root->appendChild($element);
 	}
 
-
 }
-
-
-?>

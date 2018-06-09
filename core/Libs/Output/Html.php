@@ -22,11 +22,13 @@ namespace Roducks\Libs\Output;
 
 use Roducks\Libs\Files\Image;
 
-class Html {
+class Html
+{
 
-	static private function _getAttributes($params, $attrs){
+	static private function _getAttributes($params, $attrs)
+	{
 
-		if(empty($attrs)) {
+		if (empty($attrs)) {
 			return $params;
 		}
 
@@ -36,7 +38,8 @@ class Html {
 
 	}
 
-	static function getAttributes(array $attrs){
+	static function getAttributes(array $attrs)
+	{
 		$ret = [];
 
 		foreach ($attrs as $key => $value) {
@@ -46,11 +49,12 @@ class Html {
 		return implode(' ', $ret);
 	}
 
-	static function tag($name, $content = "", array $attrs = [], $closed = true){
+	static function tag($name, $content = "", array $attrs = [], $closed = true)
+	{
 		$params = self::getAttributes($attrs);
 		$tag = "<{$name} {$params}";
 
-		if($closed) {
+		if ($closed) {
 			$tag .= ">{$content}</{$name}>";
 		} else {
 			$tag .= "/>";
@@ -59,15 +63,17 @@ class Html {
 		return $tag;
 	}
 
-	static function div($content = "", array $attrs = []){
+	static function div($content = "", array $attrs = [])
+	{
 		return self::tag(__FUNCTION__, $content, $attrs);
 	}
 
-	static function img($path, $size = "", array $attrs = []){
+	static function img($path, $size = "", array $attrs = [])
+	{
 
 		$http = "";
 
-		if(is_array($path) && count($path) == 3){
+		if (is_array($path) && count($path) == 3) {
 			$img = $path[0] . $path[2];
 			$src = $path[1] . $path[2];
 		} else {
@@ -75,16 +81,16 @@ class Html {
 			$src = $path;
 		}
 
-		if(isset($attrs['http'])){
+		if (isset($attrs['http'])) {
 			$http = $attrs['http'];
 			unset($attrs['http']);
 		}
 		
 		$params = ['src' => $http.$src];
 
-		if(!empty($size) && $size != "auto") {
+		if (!empty($size) && $size != "auto") {
 
-			if(is_array($size) && count($size) == 2) {
+			if (is_array($size) && count($size) == 2) {
 				$xy = $size;
 			} else {
 				$xy = Image::getResize($img, $size);
@@ -103,5 +109,3 @@ class Html {
 	}
 
 }
- 
-?>

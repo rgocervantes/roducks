@@ -26,9 +26,11 @@ use Roducks\Framework\Role;
 use App\Models\Users\UsersRoles;
 use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 
-class LatestUsers extends Block{
+class LatestUsers extends Block
+{
 
-	public function grid($type, $url, $access, $data, $alt = ""){
+	public function grid($type, $url, $access, $data, $alt = "")
+	{
 
 		$this->view->data("icon", RolesHelper::getIcon($type));
 		$this->view->data("url", $url);
@@ -40,7 +42,8 @@ class LatestUsers extends Block{
 		return $this->view->output();
 	}
 
-	public function current($type, $url){
+	public function current($type, $url)
+	{
 
 		$this->role(Role::TYPE_USERS, $url);
 		$access = $this->grantAccess->getAccess();
@@ -56,7 +59,8 @@ class LatestUsers extends Block{
 
 	}
 
-	public function output($type, $url, $limit, $alt = ""){
+	public function output($type, $url, $limit, $alt = "")
+	{
 
 		$this->role(Role::TYPE_USERS, $url);
 		$access = $this->grantAccess->getAccess();
@@ -64,13 +68,13 @@ class LatestUsers extends Block{
 		$filter = [];
 		$filter['u.trash'] = 0; 
 
-		if(!Login::isSuperAdmin()){
+		if (!Login::isSuperAdmin()) {
 
-			if($this->grantAccess->hasAccess("descendants")/* || in_array($type, RolesHelper::getIds())*/){
+			if ($this->grantAccess->hasAccess("descendants")/* || in_array($type, RolesHelper::getIds())*/) {
 				$filter['u.id_user_parent'] = Login::getAdminId();
 			}
 
-			if($this->grantAccess->hasAccess("tree") && Login::roleSuperAdmin()){
+			if ($this->grantAccess->hasAccess("tree") && Login::roleSuperAdmin()) {
 				$filter['[BEGIN_COND]'] = "(";
 					$filter['[NON]u.id_user_parent:>'] = Login::getAdminData('id_user_parent');
 					$filter['[OR]u.id_role:>'] = Login::getAdminData('id_role');

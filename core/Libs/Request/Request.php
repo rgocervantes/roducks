@@ -46,11 +46,11 @@ Result
 	echo $request->getContentType();
 	echo $request->getHttpCode();
 
-	if($request->json()){
+	if ($request->json()) {
 		$response = $request->getOutput(true);
 	}
 	
-	if($request->success()){
+	if ($request->success()) {
 
 	} else {
 		
@@ -62,7 +62,8 @@ namespace Roducks\Libs\Request;
 
 use \stdClass;
 
-class Request extends stdClass {
+class Request extends stdClass
+{
 
 	private $_ch;
 	private $_url;
@@ -74,20 +75,24 @@ class Request extends stdClass {
 	private $_effectiveURL = '';
 	private $_params;
 
-	static function getContent($url = ""){
-		if(empty($url)) return "";
+	static function getContent($url = "")
+	{
+		if (empty($url)) return "";
 		return file_get_contents($url);
 	}
 
-	static function init($type,$url){
+	static function init($type,$url)
+	{
 		return new Request($type,$url);
 	}
 
-	static function get($url){
+	static function get($url)
+	{
 		return self::init('GET', $url);
 	}
 
-	static function post($url){
+	static function post($url)
+	{
 		return self::init('POST', $url);
 	}
 
@@ -99,31 +104,36 @@ class Request extends stdClass {
 	/**
 	*	$name = "XGET"
 	*/
-	private function _customRequest(){
+	private function _customRequest()
+	{
 		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, $this->_type);
 	}
 
-	public function setBody($k, $v){
+	public function setBody($k, $v)
+	{
 		$this->_params->$k = $v;
 	}
 
-	public function getBody(){
+	public function getBody()
+	{
 		return $this->_params;
 	}
 
-	public function __construct($type,$url){
+	public function __construct($type,$url)
+	{
 		$this->_params = new stdClass;
 		$this->_ch = curl_init();
 		$this->_url = $url;
 		$this->_type = strtoupper($type);
 
-		if($this->_type != 'POST' && $this->_type != 'GET'){
+		if ($this->_type != 'POST' && $this->_type != 'GET') {
 			$this->_customRequest();
 		}
 
 	}
 
-	public function body($values){
+	public function body($values)
+	{
 
 		switch ($this->_type) {
 			case 'GET':
@@ -142,36 +152,42 @@ class Request extends stdClass {
 
 	}
 
-	public function verbose(){
+	public function verbose()
+	{
 		curl_setopt($this->_ch, CURLOPT_VERBOSE, true);
 		return $this;		
 	}
 
-	public function ssl($option = true){
+	public function ssl($option = true)
+	{
 		$value = ($option) ? 1 : 0;
 		curl_setopt($this->_ch, CURLOPT_SSL_VERIFYPEER, $value);
 		curl_setopt($this->_ch, CURLOPT_SSL_VERIFYHOST, $value);
 		return $this;
 	}
 
-	public function timeout($seconds){
+	public function timeout($seconds)
+	{
 		curl_setopt($this->_ch, CURLOPT_TIMEOUT, $seconds);
 		return $this;
 	}
 
-	public function followRedirect($value = true){
+	public function followRedirect($value = true)
+	{
 		curl_setopt($this->_ch, CURLOPT_FOLLOWLOCATION, $value);
 		$this->redirect = true;
 		return $this;
 	}
 
-	public function referer($url = ""){
-		if(empty($url)) return $this;
+	public function referer($url = "")
+	{
+		if (empty($url)) return $this;
 		curl_setopt($this->_ch, CURLOPT_REFERER, $url);
 		return $this;
 	}
 
-	public function userAgent($agent = ""){
+	public function userAgent($agent = "")
+	{
 		$_agent = (empty($agent)) ? 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36' : $agent;
 		curl_setopt($this->_ch, CURLOPT_USERAGENT,$_agent);
 		return $this;
@@ -181,13 +197,15 @@ class Request extends stdClass {
 	 *	$cookie = 'fb_cookie';
 	 *
 	 */
-	public function cookieFile($cookie){
+	public function cookieFile($cookie)
+	{
  		curl_setopt($this->_ch, CURLOPT_COOKIEJAR, $cookie);
     	curl_setopt($this->_ch, CURLOPT_COOKIEFILE, $cookie);
     	return $this;
 	}
 
-	public function persistSession(){
+	public function persistSession()
+	{
 		// if we want to request has an active session
 
 		// current SESSION
@@ -207,11 +225,12 @@ class Request extends stdClass {
 			'Content-Length' => strlen(json_encode(['data' => "roducks.framework"]))
 		];
 	*/
-	public function headers(array $values = []){
+	public function headers(array $values = [])
+	{
 
 		$headers = [];
 
-		if(count($values) > 0){
+		if (count($values) > 0) {
 			foreach ($values as $key => $value) {
 				array_push($headers, "{$key}: {$value}");
 			}
@@ -221,14 +240,15 @@ class Request extends stdClass {
 		return $this;
 	}
 
-	public function execute(){
+	public function execute()
+	{
 
 		curl_setopt($this->_ch, CURLOPT_URL, $this->_url);
 		curl_setopt($this->_ch, CURLOPT_RETURNTRANSFER, 1); 
 		curl_setopt($this->_ch, CURLINFO_HEADER_OUT, 1); 
 		curl_setopt($this->_ch, CURLOPT_HEADER, 0);
 
-		if($this->_redirect)
+		if ($this->_redirect)
 			$this->_effectiveURL = curl_getinfo($this->_ch, CURLINFO_EFFECTIVE_URL);	
 
 		$this->_result = curl_exec($this->_ch); 
@@ -238,34 +258,41 @@ class Request extends stdClass {
 		curl_close($this->_ch);
 	}
 
-	public function success(){
+	public function success()
+	{
 		return ($this->_httpCode == 200);
 	}
 
-	public function json(){
+	public function json()
+	{
 		return ($this->_contentType == "application/json; charset=utf-8");
 	}
 
-	public function getOutput($inJSON = false){
+	public function getOutput($inJSON = false)
+	{
 
 		$result = ($this->json() && $inJSON) ? json_decode($this->_result, true) : $this->_result;
 
 		return $result;
 	} 
 
-	public function getError(){
+	public function getError()
+	{
 		return curl_error($this->_ch);
 	}
 
-	public function getContentType(){
+	public function getContentType()
+	{
 		return $this->_contentType;
 	}	
 
-	public function getHttpCode(){
+	public function getHttpCode()
+	{
 		return $this->_httpCode;
 	}
 
-	public function getEffectiveURL(){
+	public function getEffectiveURL()
+	{
 		return $this->_effectiveURL;
 	}
 

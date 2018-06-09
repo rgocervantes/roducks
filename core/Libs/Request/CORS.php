@@ -20,41 +20,49 @@
 
 namespace Roducks\Libs\Request;
 
-class CORS{
+class CORS
+{
 
-	static function accessControl($key,$value){
+	static function accessControl($key,$value)
+	{
 		Http::setHeader("Access-Control-{$key}", $value);
 	}
 	
 	/**
 	*	GET, POST, OPTIONS, PUT, DELETE
 	*/
-	public function methods(array $arr = []){
-		if(is_array($arr) && count($arr) > 0){
+	public function methods(array $arr = [])
+	{
+		if (is_array($arr) && count($arr) > 0) {
 			self::accessControl("Allow-Methods:",implode(", ",$arr));	
 		}
 	}
 
-	public function allowDomains($domains = "*"){
+	public function allowDomains($domains = "*")
+	{
 		$domains = (is_array($domains)) ? implode(" ", $domains) : $domains;
 		self::accessControl("Allow-Origin:", $domains);
 	}
 
-	public function headers(array $arr){
+	public function headers(array $arr)
+	{
 		$headers = (is_array($arr)) ? implode(", ", $arr) : $arr;
 		self::accessControl("Allow-Headers:", $headers);
 	}
 
-	public function exposeHeaders(array $arr){
+	public function exposeHeaders(array $arr)
+	{
 		$headers = (is_array($arr)) ? implode(" ", $arr) : $arr;
 		self::accessControl("Expose-Headers:", $headers);
 	}
 
-	public function credentails(){
+	public function credentails()
+	{
 		self::accessControl("Allow-Credentials:", "true");
 	}	
 
-	public function maxAge($value = 1728000){
+	public function maxAge($value = 1728000)
+	{
 		self::accessControl("Max-Age:", $value);
 	}
 

@@ -24,17 +24,19 @@ use Roducks\Framework\Helper;
 use Roducks\Framework\Core;
 use Roducks\Framework\Error;
 
-class Service extends JSON {
+class Service extends JSON
+{
 
 	var $rdks = 1;
 
-	static function init(){
-		
+	static function init()
+	{
 		$page = get_called_class();
 		return Core::loadService($page);
 	}
 
-	public function _disableServiceUrl($method){
+	public function _disableServiceUrl($method)
+	{
 		$error = "Methods that starts with \"<b style=\"color:#e69d97\">get</b>\" aren't allowed to be dispatched because they're supposed to \"<b style=\"color:#e69d97\">return</b>\" data.";
 		Error::methodNotFound("Can't dispatch URL", __LINE__, __FILE__, $this->pageObj->fileName, $this->pageObj->className, $method, $this->getParentClassName(),$error);
 	}

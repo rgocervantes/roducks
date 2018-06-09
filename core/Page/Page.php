@@ -30,7 +30,8 @@ use Roducks\Framework\Path;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Data\Session;
 
-class Page extends GenericPage {
+class Page extends GenericPage
+{
 	
 	const LOGIN_URL = "/login";
 
@@ -43,28 +44,33 @@ class Page extends GenericPage {
 //---------------------------------
 */
 
-	protected function redirect($url){
+	protected function redirect($url)
+	{
 		Http::redirect($url);
 	}
 
-	protected function hasData($bool){
-		if(!$bool){
+	protected function hasData($bool)
+	{
+		if (!$bool) {
 			$this->pageNotFound();
 		}
 	}
 
-	protected function isData(array $data){
-		if(empty($data)){
+	protected function isData(array $data)
+	{
+		if (empty($data)) {
 			$this->pageNotFound();
 		}
 	}
 
-	protected function forbiddenRequest(){
+	protected function forbiddenRequest()
+	{
 		$this->hasData(false);
 	}
 
-	protected function accountSubscriber($url = "/"){
-		if(Login::isSubscriberLoggedIn() || !ALLOW_SUBSCRIBERS_REGISTER){
+	protected function accountSubscriber($url = "/")
+	{
+		if (Login::isSubscriberLoggedIn() || !ALLOW_SUBSCRIBERS_REGISTER) {
 			$this->redirect($url);
 		}
 	}	
@@ -74,15 +80,17 @@ class Page extends GenericPage {
 //	PUBLIC METHODS
 //---------------------------------
 */
-	public function __construct(array $settings, View $view){
+	public function __construct(array $settings, View $view)
+	{
 		parent::__construct($settings);
 
 		$this->view = $view;
 		$this->view->parentPage($this->_getParentClassName());
-		if($this->_viewport) $this->view->meta('name','viewport',"width=device-width,initial-scale=1,shrink-to-fit=no");
+		if ($this->_viewport) $this->view->meta('name','viewport',"width=device-width,initial-scale=1,shrink-to-fit=no");
 	}
 
-	public function pageNotFound(){
+	public function pageNotFound()
+	{
 		Http::sendHeaderNotFound(false);
 		$this->view->assets->css(["page-404.css"]);
 		$this->view->assets->scriptsOnReady(["page-404"]);
@@ -92,24 +100,25 @@ class Page extends GenericPage {
 		exit;
 	}
 
-	public function _lang($type, $lang){
+	public function _lang($type, $lang)
+	{
 
 		$dir_languages = Core::getLanguagesPath($lang);
 		$set = true;
 
-		if(\App::fileExists($dir_languages)){
+		if (\App::fileExists($dir_languages)) {
 			
-			if(Language::isMultilanguage()){
+			if (Language::isMultilanguage()) {
 				$set = Language::set($lang);
 			}
 				
-			if($set){
+			if ($set) {
 
 				$relativeURL = URL::getRelativeURL();
 
-				if($relativeURL == URL::ROOT){
+				if ($relativeURL == URL::ROOT) {
 					$url = $relativeURL;
-				}else{
+				} else {
 					$split = explode(URL::ROOT, $relativeURL);
 					$split = Helper::getUrlParams($split);
 					$url = URL::ROOT . implode(URL::ROOT, $split);
@@ -118,7 +127,7 @@ class Page extends GenericPage {
 				Http::redirect($url);
 			}
 	
-		}else{
+		} else {
 			Error::debug(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $dir_languages, "Make sure file exists with translations.");
 		}
 
@@ -127,15 +136,16 @@ class Page extends GenericPage {
 	/**
 	 *
 	 */
-	public function _email($type, $tpl){
+	public function _email($type, $tpl)
+	{
 
-		if(!Session::exists(self::SESSION_EMAIL)){
+		if (!Session::exists(self::SESSION_EMAIL)) {
 			$this->pageNotFound();
 		}
 
 		$emailPath = Core::getEmailsPath($tpl);
 
-		if(file_exists($emailPath)):
+		if (file_exists($emailPath)):
 
 			$store = Session::get(self::SESSION_EMAIL);
 			$output = [];

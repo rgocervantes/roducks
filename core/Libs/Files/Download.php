@@ -25,13 +25,15 @@
 
 namespace Roducks\Libs\Files;
  
-class Download{
+class Download
+{
 
     const SALT_STRING = ":rdks";
  
-    private static function contentType($file_name){
+    private static function contentType($file_name)
+    {
  
-        if(strpos($file_name,".") !== false){
+        if (strpos($file_name,".") !== false) {
  
             $ext = explode(".",$file_name);
             $totals = count($ext);
@@ -45,15 +47,17 @@ class Download{
  
     }
  
-    private static function randId(){
+    private static function randId()
+    {
         return md5( time() . self::SALT_STRING);
     }
  
-    public static function attachment($file_name, $download_name = ""){
+    public static function attachment($file_name, $download_name = "")
+    {
 
         list($realFilePath, $fileExists) = \App::getRealPath($file_name);
 
-        if(!$fileExists){
+        if (!$fileExists) {
             header("HTTP/1.1 404 Not Found");
             die("File Not Found.");
         }
@@ -61,9 +65,9 @@ class Download{
         $type = self::contentType($file_name);
         $randId = self::randId();
 
-        if($type !== FALSE){
+        if ($type !== FALSE) {
  
-            switch($type){
+            switch($type) {
      
                 // ZIP or RAR
                 case 'zip':
@@ -115,7 +119,5 @@ class Download{
         }
 
     }
- 
+
 }
- 
-?>

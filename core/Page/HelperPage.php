@@ -20,11 +20,13 @@
 
 namespace Roducks\Page;
 
-class HelperPage extends Frame {
+class HelperPage extends Frame
+{
 
 	protected $_pageType = 'HELPER';
 
-	static function init(){
+	static function init()
+	{
 		$class = get_called_class();
 		$obj = new $class();
 

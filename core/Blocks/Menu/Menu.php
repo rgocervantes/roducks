@@ -23,14 +23,17 @@ namespace Roducks\Blocks\Menu;
 use Roducks\Page\Block;
 use Roducks\Framework\Login;
 
-class Menu extends Block{
+class Menu extends Block
+{
 
-	public function nav($type){
+	public function nav($type)
+	{
 		$this->view->load($type);
 		return $this->view->output();
 	}
 
-	public function simple(array $items = [], $tpl){
+	public function simple(array $items = [], $tpl)
+	{
 
 		$this->view->data("access", []);
 		$this->view->data("items", $items);
@@ -40,12 +43,13 @@ class Menu extends Block{
 
 	}
 
-	public function access($type, array $items = [], $tpl, $permission = ""){
+	public function access($type, array $items = [], $tpl, $permission = "")
+	{
 
 		$this->role($type);
 		$access = $this->grantAccess->getData();
 
-		if(!empty($permission) && !Login::isSuperAdmin()){
+		if (!empty($permission) && !Login::isSuperAdmin()) {
 			$access = $access[$permission];
 		}
 
