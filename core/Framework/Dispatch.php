@@ -29,7 +29,8 @@ use Roducks\Libs\Request\CORS;
 use App\Models\Data\UrlsUrlsLang;
 use App\Models\Users\Users as UsersTable;
 
-class Dispatch{
+class Dispatch
+{
 
 	static $httpMethods = ['GET','POST','OPTIONS','PUT','PATCH','DELETE'];
 
@@ -60,71 +61,89 @@ class Dispatch{
 	const PARAM_ARRAY = 'array';
 	const PARAM_NOT_EMPTY_ARRAY = 'not_empty_array';
 
-	static function page($class, $method){
+	static function page($class, $method)
+	{
 		$class = Helper::getCamelName($class);
 		return "{$class}/Page/{$class}::{$method}";
 	}
 
-	static function _page($class, $method){
+	static function _page($class, $method)
+	{
 		$class = Helper::getCamelName($class);
 		return "/_page/{$class}/{$method}";
-	}	
+	}
 
-	static function factory($class, $method){
+	static function factory($class, $method)
+	{
 		$class = Helper::getCamelName($class);
 		return "{$class}/Factory/{$class}::{$method}";
 	}	
 
-	static function _factory($class, $method){
+	static function _factory($class, $method)
+	{
 		$class = Helper::getCamelName($class);
 		return "/_factory/{$class}/{$method}";
 	}
 
-	static function json($class, $method){
+	static function json($class, $method)
+	{
 		$class = Helper::getCamelName($class);
 		return "{$class}/JSON/{$class}::{$method}";
 	}
 
-	static function _json($class, $method){
+	static function _json($class, $method)
+	{
 		$class = Helper::getCamelName($class);
 		return "/_json/{$class}/{$method}";
 	}
 
-	static function xml($class, $method){
+	static function xml($class, $method)
+	{
 		$class = Helper::getCamelName($class);
 		return "{$class}/XML/{$class}::{$method}";
 	}
 
-	static function _xml($class, $method){
+	static function _xml($class, $method)
+	{
 		$class = Helper::getCamelName($class);
 		return "/_xml/{$class}/{$method}";
 	}
 
-	static function service($class, $method){
+	static function service($class, $method)
+	{
 		$class = Helper::getCamelName($class);
 		return "Services/{$class}::{$method}";
 	}
 
-	static function _service($class, $method){
+	static function _service($class, $method)
+	{
 		$class = Helper::getCamelName($class);
 		return "/_service/{$class}/{$method}";
 	}
 
-	static function api($class, $method = ""){
+	static function api($class, $method = "")
+	{
 		$class = Helper::getCamelName($class);
 		return "API/{$class}::{$method}";
-	}		
+	}
 
-	static function values($arr){
+	static function event($class, $method = "")
+	{
+		$class = Helper::getCamelName($class);
+		return "{$class}::{$method}";
+	}
+
+	static function values($arr) {
 		return "(".implode("|", $arr).")";
 	}
 
-	static function getLastParams($params){
+	static function getLastParams($params)
+	{
 		
 		// Avoid empty params
 		$total = count($params) - 1;
 
-		if($total > 2){
+		if ($total > 2) {
 			$last = (isset($params[$total]) && empty($params[$total]) && $params[$total] != '0');
 		} else {
 			$last = (isset($params[2]) && ($params[2] == '0' || $params[2] == ""));
@@ -133,18 +152,19 @@ class Dispatch{
 		return $last;
 	}
 
-	static function httpRequestMethods($dispatcher){
+	static function httpRequestMethods($dispatcher)
+	{
 
 		$methods = self::$httpMethods;
 		$allowedMethods = [];
 
 		foreach ($methods as $method) {
-			if(isset($dispatcher[$method])){
+			if (isset($dispatcher[$method])) {
 				array_push($allowedMethods, $method);
 			}
 		}
 
-		if(!in_array(Http::getRequestMethod(), $allowedMethods)){
+		if (!in_array(Http::getRequestMethod(), $allowedMethods)) {
 			Http::sendMethodNotAllowed();
 		}
 
@@ -152,11 +172,12 @@ class Dispatch{
 
 	}
 
-	static function getRequestBody(array $values = []){
+	static function getRequestBody(array $values = [])
+	{
 
 		$obj = Request::obj();
 
-		if(count($values) > 0){
+		if (count($values) > 0) {
 			foreach ($values as $key => $value) {
 				$value = (Helper::isInteger($value)) ? intval($value) : $value;
 				$obj->$key = $value;
@@ -168,7 +189,8 @@ class Dispatch{
 
 	}
 
-	static function init(){
+	static function init()
+	{
 		
 		$URI = URL::getRelativeURL();
 
@@ -193,11 +215,11 @@ class Dispatch{
 
 		$siteConfig = Core::getSiteConfigFile("config", false);
 
-		if(isset($siteConfig['SESSION_NAME'])){
+		if (isset($siteConfig['SESSION_NAME'])) {
 			$sessionName = $siteConfig['SESSION_NAME'];
 			$isLoggedIn = Session::exists($sessionName);
 
-			if($isLoggedIn){
+			if ($isLoggedIn) {
 				$id_user = Login::getId($sessionName);	
 
 				$ip = Http::getIPClient();
@@ -208,16 +230,16 @@ class Dispatch{
 				$location = (!empty($row['location'])) ? $row['location'] : $ip;
 
 				// Expiration account
-				if($row['expires'] == 1 && Date::getCurrentDate() >= Date::parseDate($row['expiration_date'])){
+				if ($row['expires'] == 1 && Date::getCurrentDate() >= Date::parseDate($row['expiration_date'])) {
 					$user->update(['id_user' => $id_user],['loggedin' => 0,'active' => 0]);
 					$row['active'] = 0;
 					$secure = false;
 				}
 
 				// Log Out when User is disabled - or - Admin forces User to log out
-				if( $row['active'] == 0 || $row['loggedin'] == 0 ){
+				if ( $row['active'] == 0 || $row['loggedin'] == 0 ) {
 					
-					if($location == $ip && Login::security(true) && $secure === TRUE){
+					if ($location == $ip && Login::security(true) && $secure === TRUE) {
 						$user->update(['id_user' => $id_user],['loggedin' => 1]);
 					} else {
 						Login::logout($sessionName);
@@ -268,41 +290,41 @@ class Dispatch{
 		/* ------------------------------------*/
 
 		// We are in root
-		if($URI == URL::ROOT){
+		if ($URI == URL::ROOT) {
 
 			// Default view controller
-			if(isset($routers[$URI])){
+			if (isset($routers[$URI])) {
 				$dispatcher = $routers[$URI];
 				$found = true;				
-			}else{
+			} else {
 				Error::defaultPageIsMissing("Undefined default page",__LINE__, __FILE__, $routerPath);
 			}
 
-		}else{
+		} else {
 			
-			if(isset($params[0]) && !Helper::isDispatch($params[0])){
+			if (isset($params[0]) && !Helper::isDispatch($params[0])) {
 				
 				$subRouter = $params;
 				$mainPath = URL::ROOT.$params[0];
 				$altMainPath = $mainPath . URL::ROOT;
 
-				if($altMainPath == $URI){
+				if ($altMainPath == $URI) {
 					$mainPath = $altMainPath;
 					$params = [];
 				}
 
-				if(isset($routers[$mainPath]) || isset($routers[$altMainPath])){
+				if (isset($routers[$mainPath]) || isset($routers[$altMainPath])) {
 
-					if(!isset($routers[$mainPath])){
+					if (!isset($routers[$mainPath])) {
 						$mainPath = $altMainPath;
 					}
 
-					if(count($params) > 1){
+					if (count($params) > 1) {
 						unset($subRouter[0]);
 						$subRouter = Helper::resetArray($subRouter);
 						$subURI = URL::ROOT . implode(URL::ROOT, $subRouter);
 
-						if(isset($routers[$mainPath]['path'])){
+						if (isset($routers[$mainPath]['path'])) {
 							$router = $routers[$mainPath]['path'];
 						}
 						
@@ -344,7 +366,7 @@ class Dispatch{
 		        }, $key);
 
 				// Let's look if a URL matches
-				if(preg_match('#^'. $mainPath . $key . URL::REGEXP_GET .'$#', $URI, $urlPattern)){
+				if (preg_match('#^'. $mainPath . $key . URL::REGEXP_GET .'$#', $URI, $urlPattern)) {
 					$dispatcher = $value;
 					$found = true;
 					break;
@@ -353,7 +375,7 @@ class Dispatch{
 		}
 
 		// Let's search URL in database
-		if(!$found && FIND_URL_IN_DB){
+		if (!$found && FIND_URL_IN_DB) {
 
 			$db = Core::db(RDKS_ERRORS);
 			$baseURL = URL::getBaseURL();
@@ -368,14 +390,14 @@ class Dispatch{
 			]);
 
 			// It was found it
-			if($queryUrl->rows()){
+			if ($queryUrl->rows()) {
 
 				$rowUrl = $queryUrl->fetch();
 				$dispatcher = ['dispatch' => $rowUrl['dispatch']];
 
-				if($rowUrl['url'] == $baseURL && !empty($rowUrl['redirect'])){
+				if ($rowUrl['url'] == $baseURL && !empty($rowUrl['redirect'])) {
 					
-					if(!Environment::inDEV()){
+					if (!Environment::inDEV()) {
 						Http::sendHeaderMovedPermanently(false);
 					}
 
@@ -386,8 +408,8 @@ class Dispatch{
 		}
 
 		// Make sure we have a valid dispatcher 
-		if(isset($dispatcher['dispatch'])) {
-			if(Helper::regexp('#::#', $dispatcher['dispatch'])) {
+		if (isset($dispatcher['dispatch'])) {
+			if (Helper::regexp('#::#', $dispatcher['dispatch'])) {
 				list($page,$method) = explode("::", $dispatcher['dispatch']);
 			} else {
 				Error::debug("Bad dispatcher syntax",__LINE__, __FILE__, $routerPath);
@@ -401,23 +423,23 @@ class Dispatch{
 		$module = Helper::getModule($page);
 
 		// Let's see if module is enabled
-		if( 
+		if ( 
 			(!isset($modulesMap[$module]) || $modulesMap[$module] === FALSE) 
 		&& ($page != 'Output' && !Helper::isService($page) && !Helper::isApi($page) && $page != Helper::PAGE_NOT_FOUND) 
-		){
+		) {
 			Error::moduleDisabled("Module is disabled or undefined", __LINE__, __FILE__, Core::getSiteConfigPath("modules"), $module);	
 		} else {
 
-			if(Helper::isApi($page)){
+			if (Helper::isApi($page)) {
 				$allowedMethods = self::httpRequestMethods($dispatcher);
 			}
 
 			// Let's take a look if there's POST Params
-			if(isset($dispatcher['POST']) && is_array($dispatcher['POST']) && $requestMethod == 'POST') {
+			if (isset($dispatcher['POST']) && is_array($dispatcher['POST']) && $requestMethod == 'POST') {
 
-				if(isset($dispatcher['POST'][':empty'])){
-					if(!Post::stSentData()){
-						if(Helper::regexp('#::#', $dispatcher['POST'][':empty'])) {
+				if (isset($dispatcher['POST'][':empty'])) {
+					if (!Post::stSentData()) {
+						if (Helper::regexp('#::#', $dispatcher['POST'][':empty'])) {
 							list($page,$method) = explode("::", $dispatcher['POST'][':empty']);
 						} else {
 							Error::debug("Bad dispatcher syntax",__LINE__, __FILE__, $routerPath);
@@ -432,14 +454,14 @@ class Dispatch{
 
 					$val = (is_array($value)) ? array_keys($value)[0] : $value;
 					
-					if(!Post::stSent($key) && !Helper::isOptionalParam($val)) {
+					if (!Post::stSent($key) && !Helper::isOptionalParam($val)) {
 						$missingPOSTParams[] = "Post param <b style=\"color: #c00;\">{$key}</b> is <b>required.</b>";
 					} else {
 
-						if(Post::stSent($key)){
+						if (Post::stSent($key)) {
 
 							// Let's validate expecting match value
-							if(is_array($value)){
+							if (is_array($value)) {
 
 								$k = array_keys($value);
 								$v = array_values($value);
@@ -450,7 +472,7 @@ class Dispatch{
 								$err = "Param <b>{$key}</b> does not match with this regular expression: {$match}";
 								$regexp_rule = $match;
 
-								if(Helper::isConditional($match)){
+								if (Helper::isConditional($match)) {
 									$err = "Param <b>{$key}</b> <b style=\"color: #c00;\">ONLY</b> allows the next values: " . Helper::getOptions($match);
 									$regexp_rule = '/^'.$match.'$/';
 								}
@@ -506,7 +528,7 @@ class Dispatch{
 
 							}
 
-							if(!Helper::regexp($regexp, Post::stValue($key))){
+							if (!Helper::regexp($regexp, Post::stValue($key))) {
 								$missingPOSTParams[] = "Param <b style=\"color: #c00;\">{$key}</b> must be <b>". str_replace('optional_', '', $value) ."</b>.";
 							}
 						}
@@ -514,8 +536,8 @@ class Dispatch{
 				}
 
 				// Send Error
-				if(count($missingPOSTParams) > 0){
-					if($params[0] == '_json' || preg_match('#JSON#', $page)) {
+				if (count($missingPOSTParams) > 0) {
+					if ($params[0] == '_json' || preg_match('#JSON#', $page)) {
 						
 						$jsonData = (Environment::inDEV()) ? $missingPOSTParams : [];
 						
@@ -533,12 +555,12 @@ class Dispatch{
 			}
 
 			// Let's take a look if there's GET Params
-			if(isset($dispatcher['GET']) && is_array($dispatcher['GET']) && $requestMethod == 'GET'){
+			if (isset($dispatcher['GET']) && is_array($dispatcher['GET']) && $requestMethod == 'GET') {
 
-				foreach($dispatcher['GET'] as $key => $value){
+				foreach($dispatcher['GET'] as $key => $value) {
 				
 					// Let's validate expecting match value
-					if(is_array($value)){
+					if (is_array($value)) {
 
 						$k = array_keys($value);
 						$v = array_values($value);
@@ -549,21 +571,21 @@ class Dispatch{
 						$err = "Param <b>{$key}</b> does not match with this regular expression: {$match}";
 						$regexp = $match;
 						
-						if(isset($getGETParams[$key])){
+						if (isset($getGETParams[$key])) {
 
-							if(!Helper::regexp($regexp, $getGETParams[$key])){
+							if (!Helper::regexp($regexp, $getGETParams[$key])) {
 								Error::debug("Unexpected value",__LINE__, __FILE__, $routerPath,$err);
 							}
 						}
 					}
 
-					if(isset($getGETParams[$key])){
+					if (isset($getGETParams[$key])) {
 
-						if(Helper::isConditional($value)){
+						if (Helper::isConditional($value)) {
 							$err = "Param <b>{$key}</b> <b style=\"color: #c00;\">ONLY</b> allows the next values: <b>" . Helper::getOptions($value) . "</b>";
 							$regexp = '/^'.$value.'$/';
 
-							if(!Helper::regexp($regexp, $getGETParams[$key])){
+							if (!Helper::regexp($regexp, $getGETParams[$key])) {
 								Error::debug("Unexpected value",__LINE__, __FILE__, $routerPath,$err);
 							}
 
@@ -574,11 +596,11 @@ class Dispatch{
 					/* ----------------------------------------------*/
 					// OPTIONAL GET PARAMS
 					/* ----------------------------------------------*/	
-					if(Helper::isOptionalParam($value)){	
+					if (Helper::isOptionalParam($value)) {	
 					
-						if(isset($getGETParams[$key])){
+						if (isset($getGETParams[$key])) {
 
-							if(!empty($getGETParams[$key])){
+							if (!empty($getGETParams[$key])) {
 								
 								switch ($value) {
 
@@ -620,28 +642,28 @@ class Dispatch{
 
 								}	
 
-								if(!Helper::regexp($regexp, $getGETParams[$key])){
+								if (!Helper::regexp($regexp, $getGETParams[$key])) {
 									$missingGETParams[] = "Param <b>{$key}</b> must be <b>" . str_replace('optional_', '', $value) . "</b>.";
 								}
 
 
-							}else{
-								if(!Helper::isInteger($getGETParams[$key]))
+							} else {
+								if (!Helper::isInteger($getGETParams[$key]))
 									$missingGETParams[] = "Param <b>{$key}</b> is empty.";
 							}											
 
 						}						
 			
-					}else{
+					} else {
 					
 					/* ----------------------------------------------*/
 					// OBLIGATORY GET PARAMS
 					/* ----------------------------------------------*/
 						
-						if(!isset($getGETParams[$key])){
+						if (!isset($getGETParams[$key])) {
 							$missingGETParams[] = "GET Param <b>{$key}</b> is required.";
-						}else{
-							if(!empty($getGETParams[$key])){
+						} else {
+							if (!empty($getGETParams[$key])) {
 
 								switch ($value) {
 
@@ -683,12 +705,12 @@ class Dispatch{
 
 								}
 
-								if(!Helper::regexp($regexp, $getGETParams[$key])){
+								if (!Helper::regexp($regexp, $getGETParams[$key])) {
 									$missingGETParams[] = "Param <b>{$key}</b> must be <b>$value</b>.";
 								}
 
-							}else{
-								if(!Helper::isInteger($getGETParams[$key]))
+							} else {
+								if (!Helper::isInteger($getGETParams[$key]))
 								$missingGETParams[] = "Param <b>{$key}</b> is empty.";
 							}
 
@@ -702,19 +724,19 @@ class Dispatch{
 
 				// Unknown GET Params are not allowed
 				foreach ($getGETParams as $key => $value) {
-					if(!isset($dispatcher['GET'][$key])){
+					if (!isset($dispatcher['GET'][$key])) {
 						$unknownGETParams[] = "Unknown param <b>{$key}</b>.";
 					}
 				}
 
 				// Send Error
-				if(count($unknownGETParams) > 0){
+				if (count($unknownGETParams) > 0) {
 					Error::missingParams('Unknown GET param',__LINE__, __FILE__, $routerPath, $unknownGETParams);
 				}
 
 				// Send Error
-				if(count($missingGETParams) > 0){
-					if(Helper::isApi($page) && !Environment::inDEV()) {
+				if (count($missingGETParams) > 0) {
+					if (Helper::isApi($page) && !Environment::inDEV()) {
 						JSON::response(TEXT_INVALID_REQUEST, 501);
 					} else {
 						Error::missingParams('Invalid GET param',__LINE__, __FILE__, $routerPath, $missingGETParams);
@@ -728,13 +750,13 @@ class Dispatch{
 			/* ----------------------------------------------*/
 			$cors = new CORS;
 
-			if(count($allowedMethods) > 0){
+			if (count($allowedMethods) > 0) {
 				$cors->methods($allowedMethods);
 
 				$params = [];
 				$urlParams = 0;
 
-				if(isset($dispatcher['jwt']) && $dispatcher['jwt'] === TRUE) {
+				if (isset($dispatcher['jwt']) && $dispatcher['jwt'] === TRUE) {
 					$params['jwt'] = true;
 				}
 
@@ -751,15 +773,15 @@ class Dispatch{
 							break;
 					}
 
-					if(in_array($requestMethod, ['PUT','DELETE'])) {
+					if (in_array($requestMethod, ['PUT','DELETE'])) {
 						$request = Http::getBody();
 					}
 
-					if($requestMethod == 'GET'){
+					if ($requestMethod == 'GET') {
 						$request = $getGETParams;
 					}
 
-					if($requestMethod == 'POST'){
+					if ($requestMethod == 'POST') {
 						$request = Post::stData();
 					}
 
@@ -768,15 +790,15 @@ class Dispatch{
 				}
 
 				foreach ($urlPattern as $key => $value) {
-					if(!Helper::isInteger($key)) {
+					if (!Helper::isInteger($key)) {
 						$params[$key] = (Helper::isInteger($value)) ? intval($value) : $value;
 						$urlParams++;
 					}
 				}
 
-				if($requestMethod == 'GET') {
+				if ($requestMethod == 'GET') {
 
-					if($urlParams > 0) {
+					if ($urlParams > 0) {
 						$method = 'row';
 						unset($params['request']);
 					} else {
@@ -787,15 +809,15 @@ class Dispatch{
 
 			}
 
-			if(isset($dispatcher['headers'])){
+			if (isset($dispatcher['headers'])) {
 				$cors->headers($dispatcher['headers']);
 			}
 
-			if(isset($dispatcher['cors'])){
+			if (isset($dispatcher['cors'])) {
 				
 				$cors->allowDomains($dispatcher['cors']);
 
-				if(isset($dispatcher['max-age'])){
+				if (isset($dispatcher['max-age'])) {
 					$cors->maxAge($dispatcher['max-age']);
 				} else {
 					$cors->maxAge();
@@ -806,10 +828,10 @@ class Dispatch{
 			/* ----------------------------------------------*/
 			// Pass URL Params in Class method
 			/* ----------------------------------------------*/
-			if(isset($params[0]) && !Helper::isDispatch($params[0])){
+			if (isset($params[0]) && !Helper::isDispatch($params[0])) {
 				$params = [];
 				foreach ($urlPattern as $k => $v) {
-					if(!Helper::isInteger($k)){
+					if (!Helper::isInteger($k)) {
 						$params[$k] = $v;
 					}
 				}
@@ -818,7 +840,7 @@ class Dispatch{
 			/* ----------------------------------------------*/
 			// Dispatch page
 			/* ----------------------------------------------*/
-			if(Helper::isService($page) || Helper::isApi($page)) {
+			if (Helper::isService($page) || Helper::isApi($page)) {
 				$servicePath = Core::getServicesPath($page);
 				$page = $servicePath['service'];
 				$pagePath = $servicePath['path'];
@@ -826,11 +848,11 @@ class Dispatch{
 				$pagePath = ($page == Helper::PAGE_NOT_FOUND) ? '' : Core::getModulesPath();
 			}
 			
-			if($method == "_data_" || $method == "_block_") {
+			if ($method == "_data_" || $method == "_block_") {
 
 				$invalidParam = self::getLastParams($params);
 
-				if($invalidParam){
+				if ($invalidParam) {
 
 					$page = Helper::PAGE_NOT_FOUND;
 					$method = "pageNotFound";
@@ -858,16 +880,16 @@ class Dispatch{
 					$method = (!isset($params[2])) ? $action : $params[2];
 					$params = Helper::getUrlParams($params);
 
-					if((!isset($modulesMap[$page]) || $modulesMap[$page] === FALSE) && ($method == '_data_')){
+					if ((!isset($modulesMap[$page]) || $modulesMap[$page] === FALSE) && ($method == '_data_')) {
 						Error::moduleDisabled("Module is disabled or undefined", __LINE__, __FILE__, Core::getSiteConfigPath("modules"), $page);
 					}
 				}
 
-			} else if(($method == "_service_")) {
+			} else if (($method == "_service_")) {
 
 				$invalidParam = self::getLastParams($params);
 				
-				if($invalidParam){
+				if ($invalidParam) {
 					
 					$page = Helper::PAGE_NOT_FOUND;
 					$method = "pageNotFound";
@@ -899,10 +921,10 @@ class Dispatch{
 		|		  SET LANGUAGE  		 |
 		|--------------------------------|
 		*/
-		if(isset($rowUrl['id_lang']) && $method != "_lang"){
+		if (isset($rowUrl['id_lang']) && $method != "_lang") {
 			$iso = Language::getIso($rowUrl['id_lang']);
 
-			if($iso != Language::get()) {
+			if ($iso != Language::get()) {
 				Http::redirect(URL::lang($iso));
 			}
 		}

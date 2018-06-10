@@ -25,25 +25,29 @@ use Roducks\Page\Frame;
 use Roducks\Libs\Utils\Date;
 use App\Models\Data\EAV as EAVTable;
 
-class EAV extends Frame{
+class EAV extends Frame
+{
 
 	protected $_id;
 	protected $_entity;
 	protected $_pageType = 'DATA';
 
-	static function init($settings = ""){
+	static function init($settings = "")
+	{
 		$class = get_called_class();
 		$obj = new $class($settings);
 
 		return $obj;
 	}	
 
-	public function __construct($settings = ""){
+	public function __construct($settings = "")
+	{
 		parent::__construct();
 		$this->_entity = Helper::getTable($this->_entity);
 	}
 
-	private function _update($id, $value, $field){
+	private function _update($id, $value, $field)
+	{
 		$set = "set" . ucfirst($field);
 		$db = $this->db();
 		$data = EAVTable::open($db)->getRow($id);
@@ -54,7 +58,8 @@ class EAV extends Frame{
 		return $data->update();
 	}
 
-	public function add($key, $value, $rewrite = false){
+	public function add($key, $value, $rewrite = false)
+	{
 	
 		$db = $this->db();
 		$data = EAVTable::open($db)->prepare();
@@ -65,7 +70,7 @@ class EAV extends Frame{
 		$data->setCreatedDate(Date::getCurrentDateTime());
 		$data->setUpdatedDate(Date::getCurrentDateTime());		
 
-		if($rewrite){
+		if ($rewrite) {
 			return $data->insert();
 		} else {
 			return $data->insertOnce([
@@ -77,7 +82,8 @@ class EAV extends Frame{
 
 	}
 
-	public function addOnce($key, $value){
+	public function addOnce($key, $value)
+	{
 		$db = $this->db();
 		$data = EAVTable::open($db);
 		$data->filter([
@@ -87,28 +93,32 @@ class EAV extends Frame{
 			'text' => $value
 		]);
 
-		if(!$data->rows()){
+		if (!$data->rows()) {
 			return $this->add($key, $value, true);
 		}
 
 		return false;
 	}	
 
-	public function update($id, $value){
+	public function update($id, $value)
+	{
 		return $this->_update($id, $value, "text");
 	}
 
-	public function active($id, $value){
+	public function active($id, $value)
+	{
 		return $this->_update($id, $value, "active");
 	}	
 
-	public function remove($id){
+	public function remove($id)
+	{
 		$db = $this->db();
 		$data = EAVTable::open($db)->getRow($id);
 		$data->delete();
 	}	
 
-	public function getRows($field = null, $page = 1, $limit = 15, array $cond = []){
+	public function getRows($field = null, $page = 1, $limit = 15, array $cond = [])
+	{
 		$ret = [];
 		$output = ['pages' => 1, 'data' => $ret];
 
@@ -119,11 +129,11 @@ class EAV extends Frame{
 			'active' 	 => 1
 		];
 
-		if(count($cond) > 0){
+		if (count($cond) > 0) {
 			$filters = array_merge($filters, $cond);
 		}
 
-		if(is_null($field)){
+		if (is_null($field)) {
 			unset($filters['field']);
 		}
 
@@ -137,7 +147,7 @@ class EAV extends Frame{
 		$data = EAVTable::open($db);
 		$data->pagination($filters, ['id_index' => "desc"], $page, $limit, $fields);
 
-		if($data->rows()){
+		if ($data->rows()) {
 
 			while ($row = $data->fetch()) {
 				$ret[] = [
@@ -152,15 +162,16 @@ class EAV extends Frame{
 		return $output;
 	}
 
-	public function get($field){
+	public function get($field)
+	{
 		$data = $this->getRows();
 
 		return $data['data'];
 	}
 
-	public function getAll(){
+	public function getAll()
+	{
 		return $this->get(null);
 	}
-
 
 }

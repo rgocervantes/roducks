@@ -23,14 +23,16 @@ namespace Roducks\Framework;
 use Roducks\Libs\Output\Html;
 use Roducks\Libs\Files\Image;
 
-class UI {
+class UI
+{
 
 	const IMAGE_UNAVAILABLE = "unavailable.jpg";
 	const BG_TRANSPARENT = "";
 	const BG_WHITE = '#fff';
 	const BG_BLACK = '#000';
 
-	static function img($path, $size = "", array $attrs = []){
+	static function img($path, $size = "", array $attrs = [])
+	{
 		
 		$div = [];
 		$div['style'] = "";
@@ -38,14 +40,14 @@ class UI {
 		$icon = [];
 		$src = $path;
 
-		if(is_array($path)){
+		if (is_array($path)) {
 			$src = $path[0].$path[2];
 		}
 
-		if(!\App::fileExists($src) || !preg_match('/^.+\.(jpg|jpeg|png)$/i', $src)){
+		if (!\App::fileExists($src) || !preg_match('/^.+\.(jpg|jpeg|png)$/i', $src)) {
 			$icon = Path::getAppIcon(self::IMAGE_UNAVAILABLE);
 
-			if(\App::fileExists($icon[0].$icon[2])){
+			if (\App::fileExists($icon[0].$icon[2])) {
 				$src = $icon[0].$icon[2];
 				$resize = Image::getResize($src, $size);
 				$attrs['width'] = $resize[0];
@@ -53,45 +55,45 @@ class UI {
 			}
 		}
 
-		if(isset($attrs['square']) && $attrs['square']){
+		if (isset($attrs['square']) && $attrs['square']) {
 			unset($attrs['square']);
 
-			if(is_integer($size)){
+			if (is_integer($size)) {
 				$resize = Image::getResize($src, $size);
 				$attrs['width'] = $resize[0];
 				$attrs['height'] = $resize[1];
 
 				$div['style'] = "width:{$size}px; height:{$size}px;";
 
-				if($size > $attrs['width'] && $size > $attrs['height']){
-					if($attrs['width'] > $attrs['height']){
+				if ($size > $attrs['width'] && $size > $attrs['height']) {
+					if ($attrs['width'] > $attrs['height']) {
 						$paddingTop = ceil(($size - $attrs['height']) / 2);
-						if($paddingTop > 0)
+						if ($paddingTop > 0)
 							//$div['style'] .= " padding-top:{$paddingTop}px; text-align:center;";
 							$div['style'] .= " padding-top:{$paddingTop}px;";
 
-					} else if($attrs['height'] > $attrs['width']){
+					} else if ($attrs['height'] > $attrs['width']) {
 						//$div['style'] .= " text-align:center;";
 					}
 				} else {
 
-					if($attrs['width'] > $attrs['height']){
+					if ($attrs['width'] > $attrs['height']) {
 						$paddingTop = ceil(($size - $resize[1]) / 2);
-						if($paddingTop > 0)
+						if ($paddingTop > 0)
 							//$div['style'] .= " padding-top:{$paddingTop}px; text-align:center;";
 							$div['style'] .= " padding-top:{$paddingTop}px;";
-					} else if($attrs['height'] > $attrs['width']){
+					} else if ($attrs['height'] > $attrs['width']) {
 						//$div['style'] .= " text-align:center;";
 					}
 				}
 			}
 
-		} else if(isset($attrs['flex-w']) && $attrs['flex-w']){
+		} else if (isset($attrs['flex-w']) && $attrs['flex-w']) {
 			unset($attrs['flex-w']);
 
 			$resize = Image::getSize($src);
 
-			if($size < $resize[1]){
+			if ($size < $resize[1]) {
 
 				$attrs['width'] = ceil(($resize[0] * $size) / $resize[1]);
 				$attrs['height'] = $size;
@@ -103,16 +105,16 @@ class UI {
 				$paddingTop = ceil(($size - $resize[1]) / 2);
 				//$div['style'] = "width:{$resize[0]}px; height:{$size}px;";
 				$div['style'] = "height:{$size}px;";
-				if($paddingTop > 0)
+				if ($paddingTop > 0)
 					$div['style'] .= " padding-top:{$paddingTop}px;";
 			}
 
-		} else if(isset($attrs['flex-h']) && $attrs['flex-h']){
+		} else if (isset($attrs['flex-h']) && $attrs['flex-h']) {
 			unset($attrs['flex-h']);
 
 			$resize = Image::getSize($src);
 
-			if($size < $resize[0]){
+			if ($size < $resize[0]) {
 
 				$attrs['width'] = $size;
 				$attrs['height'] = ceil(($resize[1] * $size) / $resize[0]);
@@ -122,27 +124,27 @@ class UI {
 			//$div['style'] = "width:{$size}px;";
 		}
 
-		if(isset($attrs['center']) && $attrs['center']){
+		if (isset($attrs['center']) && $attrs['center']) {
 			unset($attrs['center']);
 			//$div['style'] .= " margin:0 auto; text-align:center;";
 			$div['style'] .= " text-align:center;";
 		}
 
-		if(isset($attrs['bg'])){
-			if($attrs['bg'] != self::BG_TRANSPARENT)
+		if (isset($attrs['bg'])) {
+			if ($attrs['bg'] != self::BG_TRANSPARENT)
 				$div['style'] .= " background: {$attrs['bg']};";
 			unset($attrs['bg']);
 		}
 
 		$rz = (!isset($conf['square']) && !isset($conf['flex-w']) && !isset($conf['flex-h'])) ? $size : "auto";
 
-		if(!empty($icon)){
+		if (!empty($icon)) {
 			$path = $icon[1].$icon[2];
 		}
 
 		$img = Html::img($path, $rz, $attrs);
 
-		if(empty($div['style'])){
+		if (empty($div['style'])) {
 			return $img;
 		}
 
@@ -150,19 +152,23 @@ class UI {
 
 	}
 
-	static function getUploadedImage($path, $size = "", array $attrs = []){
+	static function getUploadedImage($path, $size = "", array $attrs = [])
+	{
 		return self::img(Path::getAppUploadedImage($path), $size, $attrs);
 	}
 
-	static function getImage($path, $size = "", array $attrs = []){
+	static function getImage($path, $size = "", array $attrs = [])
+	{
 		return self::img(Path::getAppImage($path), $size, $attrs);
 	}
 
-	static function getIcon($path, $size = "", array $attrs = []){
+	static function getIcon($path, $size = "", array $attrs = [])
+	{
 		return self::img(Path::getAppIcon($path), $size, $attrs);
 	}	
 
-	static function getLogo($size = "", array $attrs = []){
+	static function getLogo($size = "", array $attrs = [])
+	{
 		return self::img(Path::getAppImage(LOGO_IMAGE), $size, $attrs);
 	}
 

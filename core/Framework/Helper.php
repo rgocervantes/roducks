@@ -20,7 +20,8 @@
 
 namespace Roducks\Framework;
 
-class Helper{
+class Helper
+{
 
 	const REGEXP_HTTP = '/^https?.+/';
 	const REGEXP_CONDITIONAL = '/^\((.+)\)$/';
@@ -68,168 +69,199 @@ class Helper{
 
 	const PAGE_NOT_FOUND = "Roducks\Page\Page";
 
-	static function regexp($regexp, $param){
-		if(preg_match($regexp, $param)){
+	static function regexp($regexp, $param)
+	{
+		if (preg_match($regexp, $param)) {
 			return true;
 		}
 
 		return false;
 	}
 
-	static function getMatches($regexp, $param){
-		if(preg_match($regexp, $param, $matches)){
+	static function getMatches($regexp, $param)
+	{
+		if (preg_match($regexp, $param, $matches)) {
 			return $matches[1];
 		}
 
 		return [];
 	}
 
-	static function isDispatch($dispatch){
+	static function isDispatch($dispatch)
+	{
 		return self::regexp(self::REGEXP_IS_URL_DISPATCH, $dispatch);
 	}
 
-	static function isUrlDispatch(){
+	static function isUrlDispatch()
+	{
 		$url = URL::getSplittedURL();
 		$dispatch = (isset($url[0])) ? $url[0] : "root";
 
 		return self::isDispatch($dispatch);
 	}
 
-	static function isBlockDispatched(){
+	static function isBlockDispatched()
+	{
 		$url = URL::getSplittedURL();
 		$dispatch = (isset($url[0])) ? $url[0] : "root";		
 		return self::regexp(self::REGEXP_IS_BLOCK_DISPATCHED, $dispatch);
 	}
 
-	static function isService($str){
+	static function isService($str)
+	{
 		return self::regexp(self::REGEXP_IS_SERVICE, $str);
 	}
 
-	static function isApi($str){
+	static function isApi($str)
+	{
 		return self::regexp(self::REGEXP_IS_API, $str);
 	}
 
-	static function isJson($str){
+	static function isJson($str)
+	{
 		return self::regexp(self::REGEXP_IS_JSON, $str);
 	}
 
-	static function isBlock($str){
+	static function isBlock($str)
+	{
 		return self::regexp(self::REGEXP_IS_BLOCK, $str);
 	}
 
-	static function isPage($str){
+	static function isPage($str)
+	{
 		return self::regexp(self::REGEXP_IS_PAGE, $str);
 	}	
 
-	static function isXml($str){
+	static function isXml($str)
+	{
 		return self::regexp(self::REGEXP_IS_XML, $str);
 	}		
 
-	static function isFactory($str){
+	static function isFactory($str)
+	{
 		return self::regexp(self::REGEXP_IS_FACTORY, $str);
 	}				
 
-	static function isInteger($str){
+	static function isInteger($str)
+	{
 		return self::regexp(self::REGEXP_INTEGER, $str);
 	}
 
-	static function isConditional($str){
+	static function isConditional($str)
+	{
 		return self::regexp(self::REGEXP_CONDITIONAL, $str);
 	}
 
-	static function isOptionalParam($str){
+	static function isOptionalParam($str)
+	{
 		return self::regexp(self::REGEXP_OPTIONAL_PARAM, $str);
 	}
 
-	static function hasSlashes($str){
+	static function hasSlashes($str)
+	{
 		return self::regexp(self::REGEXP_SLASHES, $str);
 	}
 
-	static function isHttp($str){
+	static function isHttp($str)
+	{
 		return self::regexp(self::REGEXP_HTTP, $str);
 	}
 
-	static function getFileExt($str){
+	static function getFileExt($str)
+	{
 		return self::getMatches(self::REGEXP_FILE_EXT, $str);
 	}
 
-	static function getFileExtVersion($str){
+	static function getFileExtVersion($str)
+	{
 		return self::getMatches(self::REGEXP_FILE_EXT_VERSION, $str);
 	}	
 
-	static function getOptions($str){
+	static function getOptions($str)
+	{
 		return str_replace(["(",")"], "", implode(", ", explode("|", $str)));
 	}
 
-	static function removeSlash($str){
+	static function removeSlash($str)
+	{
 		return preg_replace(self::REGEXP_RELATIVE_URL, '$1', $str);
 	}
 
-	static function removeUnderscore($str){
+	static function removeUnderscore($str)
+	{
 		return str_replace('_', '', $str);
 	}
 
 	/**
 	*	Utils
 	*/
-	static function getModule($page){
+	static function getModule($page)
+	{
 		$page = preg_replace(self::REGEXP_GET_MODULE, '$1', $page);
 		$page = self::getCamelName($page);
 
 		return $page;
 	}
 
-	static function getBlockName($path){
+	static function getBlockName($path)
+	{
 		return preg_replace('#('.DIR_BLOCKS.')_([a-zA-Z]+/)#', '$1$2', $path);
 	}
 
-	static function getBlockClassName($class){
+	static function getBlockClassName($class)
+	{
 
-		if(preg_match('/^core\\\Blocks\\\/', $class)){
+		if (preg_match('/^core\\\Blocks\\\/', $class)) {
 			$class = CORE_NS . "\\" . preg_replace('/^core\\\(.+)$/', '$1', $class);
-		} else if(preg_match('/^app\\\Blocks\\\/', $class)){
+		} else if (preg_match('/^app\\\Blocks\\\/', $class)) {
 			$class = APP_NS . "\\" . preg_replace('/^app\\\(.+)$/', '$1', $class);
 		}
 
 		return $class;
 	}
 
-	static function pageByFactory($str){
+	static function pageByFactory($str)
+	{
 		return preg_replace(self::REGEXP_IS_FACTORY, 'Page', $str);
 	}
 
-	static function getInvertedSlash($str){
+	static function getInvertedSlash($str)
+	{
 		return str_replace('/', '\\', $str);
 	}
 
-	static function getTable($class){
+	static function getTable($class)
+	{
 		return preg_replace('/^.+\\\([a-zA-Z_]+)$/', '$1', $class);
 	}	
 
-	static function replaceJsonAcents($str, $inverse = false, $esc = true){
+	static function replaceJsonAcents($str, $inverse = false, $esc = true)
+	{
 		$slash = ($esc) ? '\\' : '';
 	    $chars = ['á','é','í','ó','ú','ñ','Á','É','í','Ó','Ú','Ñ'];
 	    $replacement = [$slash.'u00e1',$slash.'u00e9',$slash.'u00ed',$slash.'u00f3',$slash.'u00fa',$slash.'u00f1',$slash.'u00c1',$slash.'u00c9',$slash.'u00cd',$slash.'u00d3',$slash.'u00da',$slash.'u00d1'];
 
-	    if($inverse){
+	    if ($inverse) {
 	    	return str_replace($replacement, $chars, $str);
 	    }
 	                 
 		return str_replace($chars, $replacement, $str);        
 	}
 
-	static function replaceAcents($str, $inverse = false){
+	static function replaceAcents($str, $inverse = false)
+	{
 	    $chars = ['á','é','í','ó','ú','ñ','Á','É','í','Ó','Ú','Ñ'];
 	    $replacement = ['a','e','i','o','u','n','A','E','I','O','U','N'];
 
-	    if($inverse){
+	    if ($inverse) {
 	    	return str_replace($replacement, $chars, $str);
 	    }
 
 		return str_replace($chars, $replacement, $str);        
 	}
 
-	static function removeSpecialChars($str){
+	static function removeSpecialChars($str)
+	{
 		$str = strtolower($str);
 		$str = self::replaceAcents($str);
 		$str = str_replace(array("#","@","$","%","&","/","(",")","=","?","¿","¡","!","'",'"',"*","+",",",".","-"), "", $str);
@@ -238,15 +270,17 @@ class Helper{
 		return $str;
 	}
 
-	static function addZero($n){
+	static function addZero($n)
+	{
 
-		if(strlen((string)$n) < 2) return "0" . $n;
+		if (strlen((string)$n) < 2) return "0" . $n;
 
 		return $n;
 
 	}
 
-	static function getGender($gender){
+	static function getGender($gender)
+	{
 		$types = [
 			'male' => TEXT_MALE,
 			'female' => TEXT_FEMALE
@@ -255,40 +289,47 @@ class Helper{
 		return (isset($types[$gender])) ? $types[$gender] : $types['male'];
 	}
 
-	static function getUserIcon($gender){
+	static function getUserIcon($gender)
+	{
 		$rand = rand(1,4);
 		return "user_{$gender}_{$rand}.jpg";
 	}
 
-	static function integerLength($value, $n){
+	static function integerLength($value, $n)
+	{
 		return self::regexp("/^\d{$n}$/",$value);
 	}
 
-	static function stringLength($value, $n){
+	static function stringLength($value, $n)
+	{
 		return self::regexp("/^\w{$n}$/",$value);
 	}
 
-	static function floatNumber($n){
+	static function floatNumber($n)
+	{
 
-		if(preg_match('/^\d+\.\d{1,2}$/', $n)){
+		if (preg_match('/^\d+\.\d{1,2}$/', $n)) {
 			return $n;
 		}
 
 		return "$n.00";
 	}
 
-	static function fixDecimal($value, $decimals = 2){
+	static function fixDecimal($value, $decimals = 2)
+	{
 		return number_format($value,$decimals,'.','');
 	}
 
-	static function dataType($value){
+	static function dataType($value)
+	{
 		return (self::isInteger($value)) ? intval($value) : $value;
 	}
 
-	static function truncate($str, $chars = 50, $points = "..."){
+	static function truncate($str, $chars = 50, $points = "...")
+	{
 		$len = strlen($str);
 
-		if($len >= $chars){
+		if ($len >= $chars) {
 			return substr($str, 0, $chars) . $points;
 		}
 
@@ -313,7 +354,8 @@ class Helper{
 			Helper::mailHTML($email_settings, $msg);
 		-----------------------------------------------------------
 	*/		
-	static function mailHTML($params, $message){
+	static function mailHTML($params, $message)
+	{
 
 		if (strtoupper(substr(PHP_OS,0,3)=='WIN')) {
 		  $eol="\r\n";
@@ -332,15 +374,18 @@ class Helper{
 
 	}
 
-	static function getHelperPath($str){
+	static function getHelperPath($str)
+	{
 		return str_replace(['Page','JSON','XML'], 'Helper', $str);
 	}
 
-	static function getHelperFileName($file){
+	static function getHelperFileName($file)
+	{
 		return preg_replace('#^app/Sites/([a-zA-Z]+)/Modules/(.+)$#', 'core/Modules/$1/$2', $file);
 	}
 
-	static function getCoreHelperclassName($className){
+	static function getCoreHelperclassName($className)
+	{
 		$classPath = str_replace("\\","/", $className);
 		$coreClassName = preg_replace('/^App\/Sites\/([a-zA-Z]+)\/Modules\/(.+)$/', 'Roducks\\Modules\\\$1\\\$2', $classPath);
 		$coreClassName = str_replace("/", "\\", $coreClassName);
@@ -348,10 +393,11 @@ class Helper{
 		return $coreClassName;		
 	}
 
-	static function getCamelName($url, $ret = true, $sep = "-"){
+	static function getCamelName($url, $ret = true, $sep = "-")
+	{
 		$pts = explode($sep, $url);
 
-		if(count($pts) == 1 && !$ret){
+		if (count($pts) == 1 && !$ret) {
 			return $url;
 		}
 
@@ -363,21 +409,23 @@ class Helper{
 			$urlCamel = $urlCamel . $v;
 		}
 
-		if(Helper::regexp(self::REGEXP_IS_URL_DISPATCH, $urlCamel)){
+		if (Helper::regexp(self::REGEXP_IS_URL_DISPATCH, $urlCamel)) {
 			$urlCamel = '_'. ucfirst(substr($urlCamel, 1));
 		}
 
 		return $urlCamel;
 	}	
 
-	static function getClassName($class, $index = '$2'){
+	static function getClassName($class, $index = '$2')
+	{
 		$class = str_replace("\\","/", $class);
 		$class = preg_replace('/^(.+)\/(.+)$/', $index, $class);
 
 		return $class;
 	}
 
-	static function getConventionName($str, $sep = "-"){
+	static function getConventionName($str, $sep = "-")
+	{
 
 		$abc = [
 			"A" => 1,
@@ -420,11 +468,13 @@ class Helper{
 
 	}
 
-	static function resetArray(array $arr = []){
+	static function resetArray(array $arr = [])
+	{
 		return array_merge(array(), $arr);
 	}
 
-	static function getArrayValue($data, $index, $value){
+	static function getArrayValue($data, $index, $value)
+	{
 
 		if (is_array($index)) {
 
@@ -440,7 +490,8 @@ class Helper{
 
 	}
 
-	static function getUrlParams(array $params = []){
+	static function getUrlParams(array $params = [])
+	{
 		
 		unset($params[0]);
 		unset($params[1]);
@@ -449,17 +500,18 @@ class Helper{
 		return self::resetArray($params);
 	}
 
-	static function getPairParams(array $params = []){
+	static function getPairParams(array $params = [])
+	{
 		$ret = [];
 		$i = 0;
 
-		if(count($params) % 2 == 1){
+		if (count($params) % 2 == 1) {
 			return $params;
 		}
 
 		foreach ($params as $key => $param) {
 			$pair = ($i % 2);
-			if($pair == 0) {
+			if ($pair == 0) {
 				$param = self::replaceJsonAcents($param, true, false);
 				$value = (isset($params[$i+1])) ? $params[$i+1] : "";
 				$value = self::replaceJsonAcents($value, true, false);
@@ -473,23 +525,26 @@ class Helper{
 		return $ret;
 	}
 
-	static function removeFileExt($str){
+	static function removeFileExt($str)
+	{
 		return preg_replace('/^(.+)\.[a-z]+$/', '$1', $str);
 	}
 
-	static function pre($arr, $die = false){
+	static function pre($arr, $die = false)
+	{
 
 		echo '<pre>';
 		print_r($arr);
 		echo '</pre>';
 
-		if($die){
+		if ($die) {
 			exit;
 		}
 	}
 
-	static function ext($file, $ext){
-		if(!self::regexp('/(\.'.$ext.')$/', $file)){
+	static function ext($file, $ext)
+	{
+		if (!self::regexp('/(\.'.$ext.')$/', $file)) {
 			return $file . "." . $ext;
 		}
 
@@ -499,10 +554,11 @@ class Helper{
 	/*
 	*	Clean POST data
 	*/
-	static function cleanData($arr){
+	static function cleanData($arr)
+	{
 		$clean = [];
 
-		foreach($arr as $key => $value):
+		foreach ($arr as $key => $value):
 			$clean[$key] = strip_tags(trim($value));
 		endforeach;	
 

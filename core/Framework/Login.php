@@ -23,7 +23,8 @@ namespace Roducks\Framework;
 use Roducks\Libs\Data\Session;
 use Roducks\Libs\Request\Http;
 
-class Login {
+class Login
+{
 
 	const SESSION_ADMIN = "RDKS_ADMIN";
 	const SESSION_FRONT = "RDKS_FRONT";
@@ -41,7 +42,8 @@ class Login {
 | -----------------------------
 |*/
 
-	static function generatePassword($pwd){
+	static function generatePassword($pwd)
+	{
 
    		$salt = hash(self::ENCRYPT, uniqid(mt_rand(1, mt_getrandmax()), true));
     	$password = hash(self::ENCRYPT, $pwd . $salt);
@@ -49,18 +51,21 @@ class Login {
 		return ['salt' => $salt, 'password' => $password];
 	}
 
-	static function getToken($word = "token"){
+	static function getToken($word = "token")
+	{
 		$password = self::generatePassword($word);
 
 		return $password['salt'];
 	}
 
-	static function paywall($db_password, $db_salt, $input_password){
+	static function paywall($db_password, $db_salt, $input_password)
+	{
 		return ($db_password == hash(self::ENCRYPT, $input_password . $db_salt));
 	}
 
-	static function security($return = true){
-		if($return){
+	static function security($return = true)
+	{
+		if ($return) {
 			return Session::exists(self::SESSION_SECURITY);
 		} else {
 			Session::reset(self::SESSION_SECURITY);
@@ -70,21 +75,23 @@ class Login {
 	/**
 	*	@return array
 	*/
-	static function getSession($name){
+	static function getSession($name)
+	{
 
-		if(Session::exists($name)){
+		if (Session::exists($name)) {
 			return Session::get($name);
 		}
 
 		return [];
 	}	
 
-	static function getData($session, $index){
+	static function getData($session, $index)
+	{
 
 		$data = self::getSession($session);
 
-		if(is_array($data) && count($data) > 0){
-			if(isset($data[$index])){
+		if (is_array($data) && count($data) > 0) {
+			if (isset($data[$index])) {
 				return $data[$index];
 			}
 		}
@@ -92,11 +99,13 @@ class Login {
 		return "";
 	}
 
-	static function getId($session){
+	static function getId($session)
+	{
 		return self::getData($session, "id_user");
 	}
 
-	static function logout($session){
+	static function logout($session)
+	{
 		Session::reset(self::SESSION_SECURITY);
 		Session::reset($session);
 	}	
@@ -110,62 +119,74 @@ class Login {
 	/**
 	*	@return bool
 	*/
-	static function isAdminLoggedIn(){
+	static function isAdminLoggedIn()
+	{
 		return Session::exists(self::SESSION_ADMIN);
 	}
 
 	/**
 	*	@return array
 	*/
-	static function getAdmin(){
+	static function getAdmin()
+	{
 		return self::getSession(self::SESSION_ADMIN);
 	}	
 
-	static function getAdminData($index){
+	static function getAdminData($index)
+	{
 		return self::getData(self::SESSION_ADMIN,$index);
 	}
 
-	static function getAdminId(){
+	static function getAdminId()
+	{
 		return self::getAdminData('id_user');
 	}
 	 
-	static function getAdminName(){
+	static function getAdminName()
+	{
 		return self::getAdminData('first_name');
 	} 
 
-	static function getAdminLastName(){
+	static function getAdminLastName()
+	{
 		return self::getAdminData('last_name');
 	} 	
 
-	static function getAdminFullName(){
+	static function getAdminFullName()
+	{
 		return self::getAdminData('first_name') . " " . self::getAdminData('last_name');
 	} 		
 
-	static function getAdminPicture(){
+	static function getAdminPicture()
+	{
 		return self::getAdminData('picture');
 	} 
 
-	static function getAdminEmail(){
+	static function getAdminEmail()
+	{
 		return self::getAdminData('email');
 	} 		
 
-	static function getSuperAdminId(){
+	static function getSuperAdminId()
+	{
 		return 1;
 	}
 
-	static function isSuperAdmin(){
+	static function isSuperAdmin()
+	{
 		return (self::getAdminId() == self::getSuperAdminId());
 	}
 
 	/**
 	*	@param $obj array
 	*/
-	static function setAdmin($obj){
+	static function setAdmin($obj)
+	{
 
 		$data = self::getAdmin();
 
 		// if there's data in session, we merge it
-		if(count($data) > 0){
+		if (count($data) > 0) {
 			$obj = array_merge($data, $obj);
 		}
 
@@ -176,26 +197,31 @@ class Login {
 	*	@param $id integer USER ID
 	*	@param $obj array Session data
 	*/	
-	static function updateAdmin($id, $obj){
-		if($id == self::getAdminId()){
+	static function updateAdmin($id, $obj)
+	{
+		if ($id == self::getAdminId()) {
 			self::setAdmin($obj);
 		}
 	}
 
-	static function logoutAdmin(){
+	static function logoutAdmin()
+	{
 		Session::reset(self::SESSION_SECURITY);
 		Session::reset(self::SESSION_ADMIN);
 	}	
 
-	static function roleSuperAdminMaster(){
+	static function roleSuperAdminMaster()
+	{
 		return (self::getAdminData('id_role') == 1);
 	}
 
-	static function roleSuperAdmin(){
+	static function roleSuperAdmin()
+	{
 		return (self::getAdminData('id_role') == 2);
 	}
 
-	static function roleAdmin(){
+	static function roleAdmin()
+	{
 		return (self::getAdminData('id_role') == 6);
 	}
 
@@ -208,54 +234,64 @@ class Login {
 	/**
 	*	@return bool
 	*/
-	static function isSubscriberLoggedIn(){
+	static function isSubscriberLoggedIn()
+	{
 		return Session::exists(self::SESSION_FRONT);
 	}
 
 	/**
 	*	@return array
 	*/
-	static function getSubscriber(){
+	static function getSubscriber()
+	{
 		return self::getSession(self::SESSION_FRONT);
 	}		
 
-	static function getSubscriberData($index){
+	static function getSubscriberData($index)
+	{
 		return self::getData(self::SESSION_FRONT,$index);
 	}
 
-	static function getSubscriberId(){
+	static function getSubscriberId()
+	{
 		return self::getSubscriberData('id_user');
 	}	
 
-	static function getSubscriberName(){
+	static function getSubscriberName()
+	{
 		return self::getSubscriberData('first_name');
 	} 
 
-	static function getSubscriberLastName(){
+	static function getSubscriberLastName()
+	{
 		return self::getSubscriberData('last_name');
 	} 	
 
-	static function getSubscriberFullName(){
+	static function getSubscriberFullName()
+	{
 		return self::getSubscriberData('first_name') . " " . self::getSubscriberData('last_name');
 	} 
 
-	static function getSubscriberPicture(){
+	static function getSubscriberPicture()
+	{
 		return self::getSubscriberData('picture');
 	} 
 
-	static function getSubscriberEmail(){
+	static function getSubscriberEmail()
+	{
 		return self::getSubscriberData('email');
 	} 	
 
 	/**
 	*	@param $obj array
 	*/
-	static function setSubscriber($obj){
+	static function setSubscriber($obj)
+	{
 
 		$data = self::getSubscriber();
 
 		// if there's data in session, we merge it
-		if(count($data) > 0){
+		if (count($data) > 0) {
 			$obj = array_merge($data, $obj);
 		}
 		
@@ -266,13 +302,15 @@ class Login {
 	*	@param $id integer USER ID
 	*	@param $obj array Session data
 	*/	
-	static function updateSubscriber($id, $obj){
-		if($id == self::getSubscriberId()){
+	static function updateSubscriber($id, $obj)
+	{
+		if ($id == self::getSubscriberId()) {
 			self::setSubscriber($obj);
 		}
 	}	
 
-	static function logoutSubscriber(){
+	static function logoutSubscriber()
+	{
 		Session::reset(self::SESSION_SECURITY);
 		Session::reset(self::SESSION_FRONT);
 	}
@@ -286,54 +324,64 @@ class Login {
 	/**
 	*	@return bool
 	*/
-	static function isClientLoggedIn(){
+	static function isClientLoggedIn()
+	{
 		return Session::exists(self::SESSION_CLIENT);
 	}
 
 	/**
 	*	@return array
 	*/
-	static function getClient(){
+	static function getClient()
+	{
 		return self::getSession(self::SESSION_CLIENT);
 	}
 
-	static function getClientData($index){
+	static function getClientData($index)
+	{
 		return self::getData(self::SESSION_CLIENT,$index);
 	}
 
-	static function getClientId(){
+	static function getClientId()
+	{
 		return self::getClientData('id_user');
 	}
 
-	static function getClientName(){
+	static function getClientName()
+	{
 		return self::getClientData('first_name');
 	} 
 
-	static function getClientLastName(){
+	static function getClientLastName()
+	{
 		return self::getClientData('last_name');
 	} 	
 
-	static function getClientFullName(){
+	static function getClientFullName()
+	{
 		return self::getClientData('first_name') . " " . self::getClientData('last_name');
 	} 
 
-	static function getClientPicture(){
+	static function getClientPicture()
+	{
 		return self::getClientData('picture');
 	} 
 
-	static function getClientEmail(){
+	static function getClientEmail()
+	{
 		return self::getClientData('email');
 	} 	
 
 	/**
 	*	@param $obj array
 	*/
-	static function setClient($obj){
+	static function setClient($obj)
+	{
 
 		$data = self::getClient();
 
 		// if there's data in session, we merge it
-		if(count($data) > 0){
+		if (count($data) > 0) {
 			$obj = array_merge($data, $obj);
 		}
 		
@@ -344,13 +392,15 @@ class Login {
 	*	@param $id integer USER ID
 	*	@param $obj array Session data
 	*/	
-	static function updateClient($id, $obj){
-		if($id == self::getClientId()){
+	static function updateClient($id, $obj)
+	{
+		if ($id == self::getClientId()) {
 			self::setClient($obj);
 		}
 	}	
 
-	static function logoutClient(){
+	static function logoutClient()
+	{
 		Session::reset(self::SESSION_SECURITY);
 		Session::reset(self::SESSION_CLIENT);
 	}	
@@ -364,14 +414,15 @@ class Login {
 	 *	@example 
 	 *	@var $session = Login::SESSION_ADMIN
 	 */
-	public function __construct($session, $url){
+	public function __construct($session, $url)
+	{
 		$this->_session = Session::exists($session);
 		$this->_url = $url;
 	}
 
-	public function required(){
-
-		if(!$this->_session){
+	public function required()
+	{
+		if (!$this->_session) {
 			Http::redirect($this->_url);
 		}
 	}
@@ -379,13 +430,11 @@ class Login {
 	/**
 	*	@var $url string URL
 	*/	
-	public function redirect($url = "/"){
-
-		if($this->_session){
+	public function redirect($url = "/")
+	{
+		if ($this->_session) {
 			Http::redirect($url);
 		}
 	}
 
 }
-
-?>

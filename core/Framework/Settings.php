@@ -20,11 +20,13 @@
 
 namespace Roducks\Framework;
 
-class Settings extends EAV{
+class Settings extends EAV
+{
 
 	const ENTITY = "_settings";
 
-	public function __construct(){
+	public function __construct()
+	{
 			
 		$this->_id = 0;
 		$this->_entity = self::ENTITY;
@@ -32,19 +34,23 @@ class Settings extends EAV{
 		parent::__construct();
 	}
 	
-	static function getPageTitle(){
+	static function getPageTitle()
+	{
 		return PAGE_TITLE;
 	} 
 
-	static function getEmailFrom(){
+	static function getEmailFrom()
+	{
 		return EMAIL_FROM;
 	}
 
-	static function getEmailTo(){
+	static function getEmailTo()
+	{
 		return EMAIL_TO;
 	} 
 
-	static function getLogoImage(){
+	static function getLogoImage()
+	{
 		return LOGO_IMAGE;
 	}
 

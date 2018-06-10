@@ -22,12 +22,13 @@ namespace Roducks\Framework;
 
 use Roducks\Libs\Request\Http;
 
-class URL{
+class URL
+{
 
 	const ROOT = "/";
 
-	const CSRF_ATTACK_BASE_URL = '"\'\\(\){}<>\[\]=!@$%;'; // Forbidden chars
-	const CSRF_ATTACK_GET_PARAMS = '\/\'\\(\){}<>\[\]!@$%'; // No dots nor slashes are allowed
+	const CSRF_ATTACK_BASE_URL = '"\'\\(\) {}<>\[\]=!@$%;'; // Forbidden chars
+	const CSRF_ATTACK_GET_PARAMS = '\/\'\\(\) {}<>\[\]!@$%'; // No dots nor slashes are allowed
 	const CSRF_ATTACK_RULE_1 = '\.{2,}'; // More than 1 dot
 	const CSRF_ATTACK_RULE_2 = '\.(exe|ini|inc|doc|php|phtml|sql)$'; // extensions
 	const CSRF_ATTACK_RULE_3 = '-[\-]+'; // more than 1 dashes
@@ -36,48 +37,51 @@ class URL{
 
 	const REGEXP_GET = '(\?[a-zA-Z0-9_\-=&+]+)?';
 
-	static function preventCSRFAttack(){
+	static function preventCSRFAttack()
+	{
 
 		$baseURL = self::getBaseURL();
 		$relativeURL = self::getRelativeURL();
 		$GETParams = self::getBaseGETParams();
 		
-		if(preg_match('/['.self::CSRF_ATTACK_BASE_URL.']+/', $baseURL) 
+		if (preg_match('/['.self::CSRF_ATTACK_BASE_URL.']+/', $baseURL) 
 		||	preg_match('/'.self::CSRF_ATTACK_RULE_1.'/', $baseURL)
 		||	preg_match('/'.self::CSRF_ATTACK_RULE_2.'/', $baseURL)
 		||	preg_match('/'.self::CSRF_ATTACK_RULE_3.'/', $baseURL)
 		||	preg_match('/'.self::CSRF_ATTACK_RULE_4.'/', $baseURL)
 		||	preg_match('/'.self::CSRF_ATTACK_END_URL.'/', $relativeURL)
-		){
+		) {
 			Http::sendHeaderForbidden();
 		}
 
-		if(!is_null($GETParams)){
+		if (!is_null($GETParams)) {
 
-			if(preg_match('/['.self::CSRF_ATTACK_GET_PARAMS .']+/', $GETParams)){
+			if (preg_match('/['.self::CSRF_ATTACK_GET_PARAMS .']+/', $GETParams)) {
 				Http::sendHeaderForbidden();
 			}
 		}
 
 	}
 
-	static function lang($iso, $rel = true){
+	static function lang($iso, $rel = true)
+	{
 		$relativeURL = self::getRelativeURL();
 		$url = "/_lang/{$iso}";
 
-		if($relativeURL != self::ROOT && $rel){
+		if ($relativeURL != self::ROOT && $rel) {
 			$url .= $relativeURL;
 		}
 
 		return $url;
 	}
 	
-	static function getURLArguments(){
+	static function getURLArguments()
+	{
 
 		$uri = self::getRelativeURL();
 		$get = null;
 
-		if(preg_match('#\?#', $uri)){
+		if (preg_match('#\?#', $uri)) {
 			list($url, $get) = explode("?", $uri);
 			$uri = $url;
 		}
@@ -86,23 +90,26 @@ class URL{
 
 	}
 
-	static function getBaseURL(){
+	static function getBaseURL()
+	{
 		$baseURL = self::getURLArguments();
 
 		return $baseURL[0];
 	}
 
-	static function getBaseGETParams(){
+	static function getBaseGETParams()
+	{
 		$baseURL = self::getURLArguments();
 
 		return $baseURL[1];
 	}	
 
-	static function serializeGETParams($url){
+	static function serializeGETParams($url)
+	{
 
 		$params = [];
 
-		if(preg_match('#^'.self::REGEXP_GET.'$#', $url)){
+		if (preg_match('#^'.self::REGEXP_GET.'$#', $url)) {
 			list($qm, $p) = explode("?", $url);
 			
 			$params = Http::serializeParams($p);
@@ -113,7 +120,8 @@ class URL{
 
 	}
 
-	static function getParams(){
+	static function getParams()
+	{
 		
 		$uri = self::getBaseURL();
 
@@ -125,7 +133,8 @@ class URL{
 
 	}
 
-	static function getPairParams(){
+	static function getPairParams()
+	{
 
 		$params = self::getSplittedURL();
 		$ret = Helper::getPairParams($params);
@@ -133,7 +142,8 @@ class URL{
 		return $ret;
 	}
 
-	static function goToURL($inDEV, $inPro){
+	static function goToURL($inDEV, $inPro)
+	{
 		$subdomain = (Environment::inDEV()) ? $inDEV : $inPro;
 		return Http::getProtocol() . $subdomain . "." . DOMAIN_NAME;
 	}
@@ -143,16 +153,18 @@ class URL{
 	|	MOST COMMON
 	|----------------------------------
 	*/
-	static function getDomainName(){
+	static function getDomainName()
+	{
 		return Http::getServerName();
 	}
 
-	static function getSplittedURL(){
+	static function getSplittedURL()
+	{
 		$params = self::getParams();
 		$ret = [];
 
-		foreach($params as $param){
-			if(!empty($param)){
+		foreach ($params as $param) {
+			if (!empty($param)) {
 				$ret[] = $param;
 			}
 		}
@@ -161,40 +173,46 @@ class URL{
 
 	}
 
-	static function getGETParams(){
+	static function getGETParams()
+	{
 
 		$baseGETParams = self::getBaseGETParams();
 
-		if(is_null($baseGETParams)) return array();
+		if (is_null($baseGETParams)) return array();
 
 		return self::serializeGETParams('?'.$baseGETParams);
 	}
 
-	static function getRelativeURL($withParams = true){
+	static function getRelativeURL($withParams = true)
+	{
 
-		if(!$withParams){
+		if (!$withParams) {
 			return self::getBaseURL();
 		}
 
 		return Http::getURI();
 	}
 
-	static function getAbsoluteURL($withParams = true){
+	static function getAbsoluteURL($withParams = true)
+	{
 		$relativeURL = (self::getRelativeURL($withParams) != self::ROOT) ? self::getRelativeURL($withParams) : '';
 		return self::getDomainName() . $relativeURL;
 	}
 
-	static function getFrontURL($path = ""){
+	static function getFrontURL($path = "")
+	{
 		return self::goToURL("local", Core::DEFAULT_SUBDOMAIN) . $path;
 	}
 
-	static function getAdminURL($path = ""){
+	static function getAdminURL($path = "")
+	{
 		return self::goToURL("admin.local", Core::ADMIN_SUBDOMAIN) . $path;
 	}
 
-	static function setURL($url = "/", array $params = [], $complete = true){
+	static function setURL($url = "/", array $params = [], $complete = true)
+	{
 
-		if(count($params) == 0){
+		if (count($params) == 0) {
 			return $url;
 		}
 
@@ -203,7 +221,7 @@ class URL{
 		$arr = array_merge($getParams, $params);
 		$ret = [];
 
-		foreach($arr as $key => $value){
+		foreach ($arr as $key => $value) {
 			$ret[] = $key."=".$value;
 		}
 
@@ -211,19 +229,22 @@ class URL{
 
 	}
 
-	static function setAbsoluteURL($path = ""){
+	static function setAbsoluteURL($path = "")
+	{
 		return self::getDomainName() . $path;
 	}
 
-	static function getURL(array $params = [], $complete = true){
-		if(count($params) == 0){
+	static function getURL(array $params = [], $complete = true)
+	{
+		if (count($params) == 0) {
 			return self::getRelativeURL();
 		}
 
 		return self::setURL(self::getBaseURL(), $params, $complete);
 	}
 
-	static function setQueryString(array $params = [], $complete = true){
+	static function setQueryString(array $params = [], $complete = true)
+	{
 		return self::setURL("", $params, $complete);
 	}
 

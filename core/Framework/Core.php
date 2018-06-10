@@ -23,19 +23,21 @@ namespace Roducks\Framework;
 use Roducks\Libs\ORM\DB;
 use Roducks\Page\View;
 
-class Core{
+class Core
+{
 
-	const DS = "/";
 	const DEFAULT_SUBDOMAIN = 'www';
 	const ADMIN_SUBDOMAIN = 'admin';
 	const GLOBAL_DIRECTORY = '_Global';
 
-	static function getVersion(){
+	static function getVersion()
+	{
 		return RDKS_VERSION;
 	}
 
-	static function getClassNamespace($class){
-		if($class == Helper::PAGE_NOT_FOUND){
+	static function getClassNamespace($class)
+	{
+		if ($class == Helper::PAGE_NOT_FOUND) {
 			return $class;
 		}
 
@@ -44,52 +46,62 @@ class Core{
 		return str_replace('/', '\\', $class);
 	}
 
-	static function db($display_errors = false){
+	static function db($display_errors = false)
+	{
 		return DB::get($display_errors, [DB_HOST,DB_USER,DB_PASSWORD,DB_NAME]);
 	}
 
-	static function openDb($display_errors = false, array $conn = []){
+	static function openDb($display_errors = false, array $conn = [])
+	{
 		return DB::open($display_errors, $conn);
 	}	
 
-	static function getSitePath($site = ""){
+	static function getSitePath($site = "")
+	{
 		$folder = (!empty($site)) ? $site : RDKS_SITE;
-		return DIR_APP_SITES . $folder . self::DS;
+		return DIR_APP_SITES . $folder . DIRECTORY_SEPARATOR;
 	}
 
-	static function getGlobalPath(){
-		return DIR_APP_SITES . self::GLOBAL_DIRECTORY . self::DS;
+	static function getGlobalPath()
+	{
+		return DIR_APP_SITES . self::GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR;
 	}
 
-	static function getAppConfigPath($file){
+	static function getAppConfigPath($file)
+	{
 		return DIR_APP_CONFIG . $file . FILE_INC;
 	}
 
-	static function getSiteConfigPath($file, $site = ""){
+	static function getSiteConfigPath($file, $site = "")
+	{
 		return self::getSitePath($site) . DIR_CONFIG . $file . FILE_INC; 		
 	}
 
-	static function getSiteModuleConfigPath($site, $module){
-		return self::getSitePath($site) . DIR_MODULES . $module . self::DS . DIR_CONFIG . "config" . FILE_INC;
+	static function getSiteModuleConfigPath($site, $module)
+	{
+		return self::getSitePath($site) . DIR_MODULES . $module . DIRECTORY_SEPARATOR . DIR_CONFIG . "config" . FILE_INC;
 	}
 
-	static function getGlobalConfigPath($file){
+	static function getGlobalConfigPath($file)
+	{
 		return self::getGlobalPath() . DIR_CONFIG . $file . FILE_INC; 		
 	}
 
-	static function getPageConfigPath($page){
-		return self::getModulesPath() . Helper::getCamelName($page) . self::DS . DIR_CONFIG . "config" . FILE_INC;
+	static function getPageConfigPath($page)
+	{
+		return self::getModulesPath() . Helper::getCamelName($page) . DIRECTORY_SEPARATOR . DIR_CONFIG . "config" . FILE_INC;
 	}
 
-	static function getPath($dir, $tpl, $slash = true){
+	static function getPath($dir, $tpl, $slash = true)
+	{
 
-		$ds = ($slash) ? self::DS : '';
+		$ds = ($slash) ? DIRECTORY_SEPARATOR : '';
 		$global = self::getGlobalPath() . $dir . $tpl . $ds;
 		$global = \App::getRealFilePath($global);
 		$site = self::getSitePath() . $dir . $tpl . $ds;
 		list($realPath, $fileExists) = \App::getRealPath($site);
 
-		if($fileExists) {
+		if ($fileExists) {
 			return $realPath;
 		}
 
@@ -100,11 +112,13 @@ class Core{
 	*
 	*/
 
-	static function getLanguagesPath($lang){
+	static function getLanguagesPath($lang)
+	{
 		return DIR_APP_LANGUAGES . $lang . FILE_INC;
 	}
 
-	static function getServicesPath($service = ""){
+	static function getServicesPath($service = "")
+	{
 
 		$path1 = self::getSitePath();
 		$path2 = self::getGlobalPath();
@@ -115,11 +129,11 @@ class Core{
 		$global = $path2 . $service . FILE_EXT;
 		$core = $path3 . $service . FILE_EXT;
 
-		if(\App::fileExists($site)) {
+		if (\App::fileExists($site)) {
 			$path = $path1;
-		} else if(\App::fileExists($global)) {
+		} else if (\App::fileExists($global)) {
 			$path = $path2;
-		} else if(\App::fileExists($core)){
+		} else if (\App::fileExists($core)) {
 			$path = "Roducks\\";
 		}
 
@@ -127,41 +141,45 @@ class Core{
 
 	}
 
-	static function getCoreModulesPath($ns = true){
+	static function getCoreModulesPath($ns = true)
+	{
 
 		$namespace = CORE_NS;
 
-		if(!$ns){
+		if (!$ns) {
 			$namespace = "";
 		}
 
-		return $namespace . self::DS . DIR_CORE . DIR_MODULES . RDKS_SITE . self::DS;
+		return $namespace . DIRECTORY_SEPARATOR . DIR_CORE . DIR_MODULES . RDKS_SITE . DIRECTORY_SEPARATOR;
 	}
 
-	static function getModulesPath(){
+	static function getModulesPath()
+	{
 		return self::getSitePath() . DIR_MODULES;
 	}
 
-	static function getCoreModulesPathFrom($path){
+	static function getCoreModulesPathFrom($path)
+	{
 		return str_replace(self::getModulesPath(), self::getCoreModulesPath(false), $path);
 	}
 
-	static function getBlocksPath($tpl){
+	static function getBlocksPath($tpl)
+	{
 
-		$path0 = DIR_CORE . DIR_BLOCKS . $tpl . self::DS;
-		$path1 = self::getSitePath() . DIR_BLOCKS . $tpl  . self::DS;
-		$path2 = self::getGlobalPath() . DIR_BLOCKS . $tpl . self::DS;
+		$path0 = DIR_CORE . DIR_BLOCKS . $tpl . DIRECTORY_SEPARATOR;
+		$path1 = self::getSitePath() . DIR_BLOCKS . $tpl  . DIRECTORY_SEPARATOR;
+		$path2 = self::getGlobalPath() . DIR_BLOCKS . $tpl . DIRECTORY_SEPARATOR;
 		$path = $path1;
 
 		$core = $path0 . $tpl . FILE_EXT;
 		$site = $path1 . $tpl . FILE_EXT;
 		$global = $path2 . $tpl . FILE_EXT;
 
-		if(\App::fileExists($site)) {
+		if (\App::fileExists($site)) {
 			$path = $path1;
-		} else if(\App::fileExists($global)) {
+		} else if (\App::fileExists($global)) {
 			$path = $path2;
-		} else if(\App::fileExists($core)){
+		} else if (\App::fileExists($core)) {
 			$path = $path0;
 		}
 
@@ -169,9 +187,10 @@ class Core{
 
 	}
 
-	static function getViewsPath($parentPage, $path, $tpl){
+	static function getViewsPath($parentPage, $path, $tpl)
+	{
 
-		if($path == Helper::PAGE_NOT_FOUND) {
+		if ($path == Helper::PAGE_NOT_FOUND) {
 			return DIR_CORE;
 		}
 
@@ -184,46 +203,46 @@ class Core{
 		$globalBlocks = self::getGlobalPath() . DIR_BLOCKS;
 
 		$parentPath = Helper::getClassName($parentPage, '$1');
-		$pathCore = $parentPath . self::DS;
+		$pathCore = $parentPath . DIRECTORY_SEPARATOR;
 		$file = Helper::getClassName($path);
 
 		// Remove underscore for block name, example: app/sites/admin/blocks/_Roles/
-		if(Helper::regexp(Helper::REGEXP_IS_URL_DISPATCH, $file)){
+		if (Helper::regexp(Helper::REGEXP_IS_URL_DISPATCH, $file)) {
 			$path = Helper::getBlockName($path);
 		}
 
-		if(\App::fileExists($path.$view)) {
+		if (\App::fileExists($path.$view)) {
 
 			$found = true;
 
-		} else if(Helper::regexp('#^'. $coreModules .'#', $parentPath)){
+		} else if (Helper::regexp('#^'. $coreModules .'#', $parentPath)) {
 
 			$file = str_replace($coreModules, "", $parentPath);
-			$path = DIR_CORE . DIR_MODULES . $file . self::DS;
+			$path = DIR_CORE . DIR_MODULES . $file . DIRECTORY_SEPARATOR;
 
-			if(\App::fileExists($path.$view)){
+			if (\App::fileExists($path.$view)) {
 				$found = true;
 			}	
 		} else {
 
 			$file = Helper::removeUnderscore($file);
 
-			if(Helper::isBlock($path)) {
+			if (Helper::isBlock($path)) {
 
-				if(\App::fileExists($siteBlocks.$file.$view) && !empty($tpl)){
+				if (\App::fileExists($siteBlocks.$file.$view) && !empty($tpl)) {
 					$path = $siteBlocks.$file;
 					$found = true;
-				} else if(\App::fileExists($globalBlocks.$file.$view) && !empty($tpl)){
+				} else if (\App::fileExists($globalBlocks.$file.$view) && !empty($tpl)) {
 					$path = $globalBlocks.$file;
 					$found = true;
-				} else if(\App::fileExists($coreBlocks.$file.$view) && !empty($tpl)){
+				} else if (\App::fileExists($coreBlocks.$file.$view) && !empty($tpl)) {
 					$path = $coreBlocks.$file;
 					$found = true;
 				}
 			}
 		}
 
-		if(!$found){
+		if (!$found) {
 			Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $path.$view);
 		}
 
@@ -231,34 +250,41 @@ class Core{
 
 	}	
 
-	static function getAllSiteConfigPath($file){
+	static function getAllSiteConfigPath($file)
+	{
 		return self::getPath(DIR_CONFIG, $file . FILE_INC, false);
 	}
 
-	static function getTemplatesPath($tpl){
+	static function getTemplatesPath($tpl)
+	{
 		return self::getPath(DIR_TEMPLATES, $tpl);
 	}	
 
-	static function getLayoutsPath($tpl){
+	static function getLayoutsPath($tpl)
+	{
 		return self::getPath(DIR_LAYOUTS, $tpl . FILE_TPL, false);
 	}
 
-	static function getMenuPath($tpl){
+	static function getMenuPath($tpl)
+	{
 		return self::getPath(DIR_MENUS, $tpl . FILE_INC, false);
 	}			
 
-	static function getEmailsPath($tpl){
+	static function getEmailsPath($tpl)
+	{
 		return self::getPath(DIR_EMAILS, $tpl . FILE_TPL, false);		
 	}
 
-	static function getEventsPath($event = ""){
+	static function getEventsPath($event = "")
+	{
 		return self::getPath(DIR_EVENTS, $event, false);
 	}
 
 	/**
 	*
 	*/
-	static function getCacheConfig(){
+	static function getCacheConfig()
+	{
 		$local = (Environment::inDEV()) ? ".local" : "";
 		$siteMemcache = self::getSiteConfigPath("memcache{$local}");
 		$appMemcache = self::getAppConfigPath("memcache{$local}");
@@ -266,10 +292,10 @@ class Core{
 		list($realPath1, $fileExists1) = \App::getRealPath($siteMemcache);
 		list($realPath2, $fileExists2) = \App::getRealPath($appMemcache);
 
-		if($fileExists1){
+		if ($fileExists1) {
 			include_once $realPath1;
 			return $memcache;
-		} else if($fileExists2){
+		} else if ($fileExists2) {
 			include_once $realPath2;
 			return $memcache;
 		}
@@ -277,24 +303,24 @@ class Core{
 		return [];	
 	}
 
-	static function getFileVar($path, $name, $required = true){
-
+	static function getFileVar($path, $name, $required = true)
+	{
 		list($realPath, $fileExists) = \App::getRealPath($path);
-		if($name == "menu"){
+		if ($name == "menu") {
 			$fileExists = file_exists($path);
 			$realPath = $path;
 		}
 
-		if($name == "config"){
+		if ($name == "config") {
 			$local = str_replace("config", "config.local", $path);
 			list($realPathx, $fileExistsx) = \App::getRealPath($local);
-			if ($fileExistsx){
+			if ($fileExistsx) {
 				$fileExists = true;
 				$realPath = $realPathx;
 			}
 		}
 
-		if($fileExists){
+		if ($fileExists) {
 			if ($name == "router") {
 				include $realPath;
 			} else {
@@ -309,8 +335,8 @@ class Core{
 		}
 	}
 
-	static function getLocalConfigFile($name, $var = "config"){
-
+	static function getLocalConfigFile($name, $var = "config")
+	{
 		$local = "{$name}.local";
 		$file_local = self::getAppConfigPath($local);
 
@@ -324,124 +350,145 @@ class Core{
 	/**
 	*	Environments config
 	*/
-	static function getEnvConfigFile(){
+	static function getEnvConfigFile()
+	{
 		return self::getLocalConfigFile("environments","environments");		
 	}
 
 	/**
 	*	App config
 	*/
-	static function getAppConfigFile($name = "config", $required = true){
+	static function getAppConfigFile($name = "config", $required = true)
+	{
 		return self::getLocalConfigFile($name);
 	}
 
 	/**
 	*	Providers config
 	*/
-	static function getAliasesConfigFile(){
+	static function getAliasesConfigFile()
+	{
 		return self::getLocalConfigFile("aliases");		
 	}
 
 	/**
 	*	Site config
 	*/
-	static function getSiteByNameConfigFile($site, $required = true){
+	static function getSiteByNameConfigFile($site, $required = true)
+	{
 		$name = "config";
 		return self::getFileVar(self::getSiteConfigPath($name, $site), $name, $required);
 	}
 
-	static function getSiteConfigFile($name = "config", $required = true){
+	static function getSiteConfigFile($name = "config", $required = true)
+	{
 		return self::getFileVar(self::getSiteConfigPath($name), $name, $required);
 	}
 
-	static function getSiteModuleConfigFile($site, $module){
+	static function getSiteModuleConfigFile($site, $module)
+	{
 		return self::getFileVar(self::getSiteModuleConfigPath($site, $module), "config", false);
 	}
 
-	static function getRouterFile(){
+	static function getRouterFile()
+	{
 		self::getFileVar(self::getSiteConfigPath("router"), "router", true);
 	}
 
-	static function getModulesFile(){
+	static function getModulesFile()
+	{
 		return self::getSiteConfigFile("modules");
 	}
 
-	static function getAssetsFile(){
+	static function getAssetsFile()
+	{
 		return self::getSiteConfigFile("assets");
 	}
 
-	static function getMenuFile($file){
+	static function getMenuFile($file)
+	{
 		return self::getFileVar(self::getMenuPath($file), "menu", false);
 	}
 
 	/**
 	*	Global configs
 	*/
-	static function getGlobalConfigFile(){
+	static function getGlobalConfigFile()
+	{
 		return self::getFileVar(self::getGlobalConfigPath("config"), "config", false);
 	}
 
-	static function getPluginsFile(){
+	static function getPluginsFile()
+	{
 		return self::getFileVar(self::getGlobalConfigPath("plugins"), "plugins", false);
 	}	
 
-	static function getEventsFile(){
+	static function getEventsFile()
+	{
 		return self::getFileVar(self::getAllSiteConfigPath("events"), "events", false);
 	}
 
 	/**
 	*	Page configs
 	*/
-	static function getModuleConfigFile($class, $required = true){
+	static function getModuleConfigFile($class, $required = true)
+	{
 		return self::getFileVar(self::getPageConfigPath($class), "config", $required);
 	}
 
 	/**
 	*	Database configs
 	*/
-	static function getDbSiteConfigFile($name, $required = true){
+	static function getDbSiteConfigFile($name, $required = true)
+	{
 		return self::getFileVar(self::getSiteConfigPath($name), "database", $required);
 	}
 
-	static function getDbAppConfigFile($name, $required = true){
+	static function getDbAppConfigFile($name, $required = true)
+	{
 		return self::getFileVar(self::getAppConfigPath($name), "database", $required);
 	}	
 
 	/**
 	*	Load file
 	*/
-	static function loadFile($path, $file){
-		if(empty($path) || empty($file)) return false;
+	static function loadFile($path, $file)
+	{
+		if (empty($path) || empty($file)) return false;
 
 		$resource = $path.$file;
 
 		list($realPath, $fileExists) = \App::getRealPath($resource);
 
-		if($fileExists){
+		if ($fileExists) {
 			include_once $realPath;
-		}else{
+		} else {
 			Error::debug("File Not Found", __LINE__, __FILE__, $resource);
 		}
 	}
 
-	static function loadConfig($name){
+	static function loadConfig($name)
+	{
 		self::loadFile(DIR_CORE_CONFIG, $name . FILE_INC);
 	}
 
-	static function loadAppLanguages(){
+	static function loadAppLanguages()
+	{
 		self::loadFile(DIR_APP_LANGUAGES, Language::get() . FILE_INC);
 	}
 
-	static function callMethod($class, $method, $obj, $path, $params){
+	static function callMethod($class, $method, $obj, $path, $params)
+	{
 
-		if(method_exists($class, $method)){
+		if (method_exists($class, $method)) {
 			call_user_func_array(array($obj,$method), $params);
-		}else{
+		} else {
 			Error::methodNotFound(TEXT_METHOD_NOT_FOUND, __LINE__, __FILE__, $path['fileName'], $class, $method, $obj->getParentClassName());
 		}
 	}
 	
-	static function loadPage($path, $page, $action, array $urlParam = [], array $params = [], $return = false, array $url = []){
+	static function loadPage($path, $page, $action, array $urlParam = [], array $params = [], $return = false, array $url = [])
+	{
 
 		$autoload = true;
 		$isBlock = false; 
@@ -465,7 +512,7 @@ class Core{
 		];
 
 		// ONLY for Pages and Blocks pass assets and view instance
-		if(Helper::isPage($class) || Helper::isBlock($class) || Helper::isFactory($class)) {
+		if (Helper::isPage($class) || Helper::isBlock($class) || Helper::isFactory($class)) {
 
 			// Asset Instance
 			$asset = new Asset;
@@ -473,7 +520,7 @@ class Core{
 			// View Instance
 			$view = new View($asset, $filePath, $url);
 
-			if(Helper::isPage($class) || Helper::isFactory($class)){
+			if (Helper::isPage($class) || Helper::isFactory($class)) {
 
 				$assetsMap = [];
 				$assetsMap['js'] = "JS";
@@ -489,7 +536,7 @@ class Core{
 				$assetsFile = self::getAssetsFile();
 				
 				foreach ($assetsMap as $key => $value) {
-					if(isset($assetsFile[$value])){
+					if (isset($assetsFile[$value])) {
 						if ($key == "plugins") {
 							$view->assets->$key($assetsFile[$value], false);
 						} else {
@@ -499,33 +546,33 @@ class Core{
 				}
 			}
 
-			if(Helper::isBlock($class)){
+			if (Helper::isBlock($class)) {
 
 			    $path = str_replace("\\","/", $class) . FILE_EXT;
 			    $class = Helper::getBlockClassName($class);
 			    $isBlock = true;
 			    list($realPath, $fileExists) = \App::getRealPath($path);
 
-			    if($fileExists){
+			    if ($fileExists) {
 
 					include_once $realPath;
 
-					if(!class_exists($class)) {
+					if (!class_exists($class)) {
 						$autoload = false;
 					}
-			    }else{
+			    } else {
 			    	$autoload = false;
 			    	Error::debug(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $path);
 			    }
 
 			}
 
-			if($autoload){
+			if ($autoload) {
 				// Call Page|JSON|Block and pass View
 				$obj = new $class($pageObj, $view);
 				$obj->setLang(Language::get());
 
-				if($isBlock){
+				if ($isBlock) {
 					$obj->setVars($urlParam);
 				}
 			}
@@ -535,14 +582,14 @@ class Core{
 			// Call Api|Service
 			$obj = new $class($pageObj);
 
-			if(Helper::isApi($page) && isset($params['jwt'])){
+			if (Helper::isApi($page) && isset($params['jwt'])) {
 				unset($params['jwt']);
 				$obj->verifyToken();
 			}
 
-		    if(Helper::isService($page)){
-				if(Helper::regexp('/^get/', $method)){
-					if(method_exists($class, $method)){
+		    if (Helper::isService($page)) {
+				if (Helper::regexp('/^get/', $method)) {
+					if (method_exists($class, $method)) {
 						$obj->_disableServiceUrl($method);
 					}
 		   		}
@@ -550,18 +597,19 @@ class Core{
 
 		}
 
-		if(!Helper::isFactory($class)) {
-			if(!$return){
-				if($autoload)
+		if (!Helper::isFactory($class)) {
+			if (!$return) {
+				if ($autoload)
 					self::callMethod($class, $method, $obj, $pageObj, $params);
-			}else{
+			} else {
 				return $obj;
 			}
 		}
 
 	}
 
-	static function loadService($page){
+	static function loadService($page)
+	{
 
 		$page = Helper::getClassName($page);
 		$page = DIR_SERVICES . Helper::getCamelName($page);

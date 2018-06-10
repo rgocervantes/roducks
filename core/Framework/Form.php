@@ -23,7 +23,8 @@ namespace Roducks\Framework;
 use Roducks\Libs\Data\Session;
 use Roducks\Libs\Request\Http;
 
-class Form {
+class Form
+{
 
 	const HASH_KEY = "RDKS_HASH_KEY";
 
@@ -38,21 +39,24 @@ class Form {
 	const FILTER_DATETIME = 9;
 	const FILTER_DECIMAL = 10;
 
-	static function getKey(){
+	static function getKey()
+	{
 		$token = Login::getToken();
 		Session::set(self::HASH_KEY, $token);
 		return $token;
 	}
 
-	static function setKey($token = ""){
-		if( (Session::exists(self::HASH_KEY) && $token != Session::get(self::HASH_KEY)) || empty($token) ){
+	static function setKey($token = "")
+	{
+		if ( (Session::exists(self::HASH_KEY) && $token != Session::get(self::HASH_KEY)) || empty($token) ) {
 			Http::setHeaderInvalidRequest();
 		} else {
 			Session::reset(self::HASH_KEY);
 		}
 	}
 
-	static function filter($filter, $data, $message = "Error", $field = ""){
+	static function filter($filter, $data, $message = "Error", $field = "")
+	{
 		return [
 			'field' => $field,
 			'filter' => $filter,
@@ -61,23 +65,28 @@ class Form {
 		];
 	}
 
-	static function values(array $values){
+	static function values(array $values)
+	{
 		return $values;
 	}
 
-	static function match($text){
+	static function match($text)
+	{
 		return self::values([$text]);
 	}
 
-	static function regexp($rule){
+	static function regexp($rule)
+	{
 		return self::values(['regexp' => $rule]);
 	}
 
-	static function greaterThan($n){
+	static function greaterThan($n)
+	{
 		return self::values(['greater_than' => $n]);
 	}
 
-	static function lessThan($n){
+	static function lessThan($n)
+	{
 		return self::values(['less_than' => $n]);
 	}
 
@@ -85,7 +94,8 @@ class Form {
 	*	@param $filters array	
 	*	@return bool
 	*/
-	static function validation($filters){
+	static function validation($filters)
+	{
 
 		$alert = [];
 		$error = 0;
@@ -93,34 +103,34 @@ class Form {
 
 		foreach($filters as $value):
 
-			if(is_array($value['filter'])){
+			if (is_array($value['filter'])) {
 				
-				if(is_array($value['filter'])){
+				if (is_array($value['filter'])) {
 
-					if(isset($value['filter']['regexp'])){
+					if (isset($value['filter']['regexp'])) {
 
-						if(!Helper::regexp($value['filter']['regexp'], $value['data'])){
+						if (!Helper::regexp($value['filter']['regexp'], $value['data'])) {
 							$error++;
 							array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
 						}
 
-					} else if(isset($value['filter']['greater_than'])){
+					} else if (isset($value['filter']['greater_than'])) {
 
-						if(intval($value['data']) < $value['filter']['greater_than']){
+						if (intval($value['data']) < $value['filter']['greater_than']) {
 							$error++;
 							array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
 						}					
 
-					} else if(isset($value['filter']['less_than'])){
+					} else if (isset($value['filter']['less_than'])) {
 
-						if(intval($value['data']) > $value['filter']['less_than']){
+						if (intval($value['data']) > $value['filter']['less_than']) {
 							$error++;
 							array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
 						}
 
 					} else {
 
-						if(!in_array($value['data'], $value['filter'])){
+						if (!in_array($value['data'], $value['filter'])) {
 							$error++;
 							array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
 						}
@@ -171,7 +181,7 @@ class Form {
 						break;	
 				endswitch;
 
-				if(!Helper::regexp($rule, $value['data'])){
+				if (!Helper::regexp($rule, $value['data'])) {
 					$error++;
 					array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
 				}
@@ -180,7 +190,7 @@ class Form {
 
 		endforeach;
 
-		if($error > 0){
+		if ($error > 0) {
 			$valid = false;
 		} else {
 			array_push($alert, ['message' => "Error", 'field' => ""]);
@@ -189,8 +199,9 @@ class Form {
 		return ['valid' => $valid, 'error' => ['message' => $alert[0]['message'], 'field' => $alert[0]['field']]];
 	}
 
-	static function isValid($form){
-		if($form['valid'] !== FALSE){
+	static function isValid($form)
+	{
+		if ($form['valid'] !== FALSE) {
 			return true;
 		}
 		return false;

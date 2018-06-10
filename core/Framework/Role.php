@@ -20,7 +20,8 @@
 
 namespace Roducks\Framework;
 
-class Role {
+class Role
+{
 
 	const URL = "/roles";
 
@@ -60,20 +61,24 @@ class Role {
 		]
 	];
 
-	static function getRole($type){
+	static function getRole($type)
+	{
 		return (isset(self::$types[$type])) ? self::$types[$type] : [];
 	}
 
-	static function getData($type, $index){
+	static function getData($type, $index)
+	{
 		$role = self::getRole($type);
 		return (isset($role[$index])) ? $role[$index] : '';
 	}
 
-	static function getIds(){
+	static function getIds()
+	{
 		return array_keys(self::$types);
 	}
 
-	static function getList(array $list = []){
+	static function getList(array $list = [])
+	{
 		$ret = [];
 
 		foreach ($list as $type => $role) {
@@ -83,7 +88,8 @@ class Role {
 		return $ret;
 	}
 
-	static function getMenu(array $list = []){
+	static function getMenu(array $list = [])
+	{
 
 		$menu = [];
 
@@ -98,15 +104,18 @@ class Role {
 		return $menu;
 	}
 
-	static function getTitle($type){
+	static function getTitle($type)
+	{
 		return self::getData($type, "title");
 	}
 
-	static function getSession($type){
+	static function getSession($type)
+	{
 		return self::getData($type, "session");
 	}
 
-	static function getIcon($type){
+	static function getIcon($type)
+	{
 		return self::getData($type, "icon");
 	}
 

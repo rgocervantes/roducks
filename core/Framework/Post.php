@@ -22,17 +22,20 @@ namespace Roducks\Framework;
 
 use Roducks\Libs\Request\Http;
 
-class Post {
+class Post
+{
 
-	static function init(){
+	static function init()
+	{
 		$ins = new Post;
 		return $ins;
 	}
 
-	static function value($name, $clean = false){
+	static function value($name, $clean = false)
+	{
 		$v = $_POST[$name];
 
-		if($clean){
+		if ($clean) {
 			return $v;
 		}
 
@@ -42,85 +45,103 @@ class Post {
 		return $v;
 	}
 
-	static function stData(){
+	static function stData()
+	{
 		return $_POST;
 	}	
 
-	static function stSentData(){
+	static function stSentData()
+	{
 		return (count(self::stData()) > 0);
 	}
 
-	static function stRequired(){
-		if(Http::getRequestMethod() != 'POST' || !self::stSentData()){
+	static function stRequired()
+	{
+		if (Http::getRequestMethod() != 'POST' || !self::stSentData()) {
 			Http::setHeaderInvalidRequest();
 		}
 	}
 
-	static function stSent($name){
+	static function stSent($name)
+	{
 		return isset($_POST[$name]);
 	}
 
-	static function stValue($name, $default = "", $clean = false){
-		if(!self::stSent($name))
+	static function stValue($name, $default = "", $clean = false)
+	{
+		if (!self::stSent($name))
 			return "";
 
 		$value = (is_array($_POST[$name])) ? $_POST[$name] : self::value($name, $clean);
 		return (self::stSent($name)) ? $value : $default;
 	}	
 
-	public function sentData(){
+	public function sentData()
+	{
 		return self::stSentData();
 	}
 
-	public function data(){
+	public function data()
+	{
 		return self::stData();
 	}
 
-	public function required(){
+	public function required()
+	{
 		self::stRequired();
 	}
 
-	public function sent($name){
+	public function sent($name)
+	{
 		return self::stSent($name);
 	}
 
-	public function text($name, $default = ""){
+	public function text($name, $default = "")
+	{
 		return self::stValue($name, $default);
 	}
 
-	public function param($name, $default = ""){
+	public function param($name, $default = "")
+	{
 		return $this->text($name, $default);
 	}	
 
-	public function hidden($name, $default = ""){
+	public function hidden($name, $default = "")
+	{
 		return $this->text($name, $default);
 	}	
 
-	public function password($name, $default = ""){
+	public function password($name, $default = "")
+	{
 		return $this->text($name, $default);
 	}
 
-	public function checkbox($name, $default = ""){
+	public function checkbox($name, $default = "")
+	{
 		return $this->text($name, $default);
 	}
 
-	public function radio($name, $default = ""){
+	public function radio($name, $default = "")
+	{
 		return $this->text($name, $default);
 	}
 
-	public function textarea($name, $default = ""){
+	public function textarea($name, $default = "")
+	{
 		return $this->text($name, $default);
 	}
 
-	public function textareaRich($name, $default = ""){
+	public function textareaRich($name, $default = "")
+	{
 		return self::value($name, $default, true);
 	}	
 
-	public function filter($name, $text = ""){
+	public function filter($name, $text = "")
+	{
 
 		$value = $this->text($name, $text);
 
-		if(preg_match('#[|]#', $value)){
+		if (preg_match('#[|]#', $value)) {
 			list($value, $text) = explode("|", $value);
 		}
 
@@ -131,7 +152,8 @@ class Post {
 		return $ret;
 	}
 
-	public function select($name, $text = ""){
+	public function select($name, $text = "")
+	{
 		return $this->filter($name, $text)->value;
 	}				
 

@@ -41,8 +41,8 @@ class Router
 	static function _add($endpoint, $data)
 	{
 
-		if(is_array($endpoint)){
-			if(isset($endpoint['uri']) && isset($endpoint['id'])) {
+		if (is_array($endpoint)) {
+			if (isset($endpoint['uri']) && isset($endpoint['id'])) {
 				$key = array_keys($endpoint['uri'])[0];
 				$endpoint = array_values($endpoint['uri'])[0] . $endpoint['id'];
 			} else {
@@ -54,10 +54,10 @@ class Router
 			$key = $endpoint;
 		}
 
-		if(preg_match('/@/', $key)) {
+		if (preg_match('/@/', $key)) {
 			list($aux, $path) = explode("@", $key);
 
-			if($endpoint == "/"){
+			if ($endpoint == "/") {
 				self::$_dispatch[self::$_version.$path] = $data;
 			} else {
 				self::$_dispatch[$path]['path'][self::$_version.$endpoint] = $data;
@@ -142,7 +142,7 @@ class Router
 		$options = ['catalog', 'store', 'update', 'row', 'remove'];
 
 		foreach ($options as $option) {
-			if(!isset($methods[$option])){
+			if (!isset($methods[$option])) {
 				$methods[$option] = [];
 			}
 		}

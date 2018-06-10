@@ -34,7 +34,7 @@ App::define('RDKS_MODE', $environment['mode']); // LOCAL | QA | PRO
 App::define('RDKS_SUBDOMAIN', $environment['subdomain']);
 
 // In case subdomain folder does not exist
-if(!App::fileExists(Core::getSitePath()) || empty($environment['site'])){
+if (!App::fileExists(Core::getSitePath()) || empty($environment['site'])) {
 	Error::siteFolderNotFound("Folder was not found.", __LINE__, __FILE__, Core::getAppConfigPath("environments.local"), DIR_APP_SITES);
 }
 
@@ -47,22 +47,22 @@ $siteDbConfig = Core::getSiteConfigPath($environment['database']);
 $appDbConfig = Core::getAppConfigPath($environment['database']);
 
 // get site data base config if exists
-if(App::fileExists($siteDbConfig)){
+if (App::fileExists($siteDbConfig)) {
 	$dbConfig = Core::getDbSiteConfigFile($environment['database'], false);
 	$dbFile = $siteDbConfig;
-}else{
+} else {
 	// get app data base config
 	$dbConfig = Core::getDbAppConfigFile($environment['database'], true);
 	$dbFile = $appDbConfig;
 }
 
-if(!isset($dbConfig['host'])){
+if (!isset($dbConfig['host'])) {
 	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $dbFile, 'host', 'localhost');
-} else if(!isset($dbConfig['name'])){
+} else if (!isset($dbConfig['name'])) {
 	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $dbFile, 'name', 'roducks');
-} else if(!isset($dbConfig['user'])){
+} else if (!isset($dbConfig['user'])) {
 	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $dbFile, 'user', 'xxxxxx');
-} else if(!isset($dbConfig['password'])){
+} else if (!isset($dbConfig['password'])) {
 	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $dbFile, 'password', 'xxxxxx');
 }
 

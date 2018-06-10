@@ -23,13 +23,15 @@ namespace Roducks\Framework;
 use Roducks\Libs\Data\Cookie;
 use Roducks\Libs\Request\Http;
 
-class Language{
+class Language
+{
 
 	const COOKIE_ID = "RDKS_LANG";
 	const ID_ENGLISH = 1;
 	const ID_ESPANOL = 2;
 
-	static function getList(){
+	static function getList()
+	{
 
 		$langs = [];
 
@@ -55,12 +57,13 @@ class Language{
 
 	}
 
-	static function getIso($id){
+	static function getIso($id)
+	{
 		$langs = self::getList();
 		$iso = "en";
 
 		foreach ($langs as $key => $value) {
-			if($value['id'] == $id){
+			if ($value['id'] == $id) {
 				$iso = $key;
 				break;
 			}
@@ -69,13 +72,15 @@ class Language{
 		return $iso;
 	}
 
-	static function isMultilanguage(){
+	static function isMultilanguage()
+	{
 		return MULTILANGUAGE;
 	}
 
-	static function getDefault(){
+	static function getDefault()
+	{
 		
-		if(MULTILANGUAGE && BROWSER_LANGUAGE){
+		if (MULTILANGUAGE && BROWSER_LANGUAGE) {
 			return Http::getBrowserLanguage(DEFAULT_LANGUAGE);
 		}
 
@@ -83,11 +88,12 @@ class Language{
 		
 	}
 
-	static function set($value){
+	static function set($value)
+	{
 
 		$list = array_keys(self::getList());
 		
-		if(preg_match('/^\w{2}$/', $value) && in_array($value, $list)){
+		if (preg_match('/^\w{2}$/', $value) && in_array($value, $list)) {
 			Cookie::set(self::COOKIE_ID, $value, DOMAIN_NAME);
 			return true;
 		}
@@ -95,42 +101,49 @@ class Language{
 		return false;
 	}
 
-	static function get(){
+	static function get()
+	{
 		return (Cookie::exists(self::COOKIE_ID)) ? Cookie::get(self::COOKIE_ID) : self::getDefault();
 	}
 
-	static function getId(){
+	static function getId()
+	{
 		$list = self::getList();
 		$iso = self::get();
 
 		return (isset($list[$iso])) ? $list[$iso]['id'] : $list[DEFAULT_LANGUAGE]['id'];
 	}
 
-	static function english(){
+	static function english()
+	{
 		return (self::get() == "en");
 	}
 
-	static function spanish(){
+	static function spanish()
+	{
 		return (self::get() == "es");
 	}
 
-	static function toEnglish($es, $en){
-		if(self::english()){
+	static function toEnglish($es, $en)
+	{
+		if (self::english()) {
 			return $en;
 		}
 
 		return $es;
 	}
 
-	static function toSpanish($en, $es){
-		if(self::spanish()){
+	static function toSpanish($en, $es)
+	{
+		if (self::spanish()) {
 			return $es;
 		}
 
 		return $en;
 	}	
 
-	static function translate($en, $es){
+	static function translate($en, $es)
+	{
 		return self::toSpanish($en, $es);
 	}
 	

@@ -23,7 +23,8 @@ namespace Roducks\Framework;
 use Roducks\Libs\Utils\Date;
 use Roducks\Page\Frame;
 
-class Cli extends Frame{
+class Cli extends Frame
+{
 
 	const SUCCESS = 1;
 	const FAILURE = 2;
@@ -45,7 +46,8 @@ class Cli extends Frame{
 
 	protected $_params = [];	
 
-	static function line($text, $px = 0, $break = true){
+	static function line($text, $px = 0, $break = true)
+	{
 		
 		$space = self::SPACE;
 		$long1 = strlen($space);
@@ -54,7 +56,7 @@ class Cli extends Frame{
 		$long = substr($space, 0, $diff);
 		$ln = self::LN;
 
-		if(!$break){
+		if (!$break) {
 			$ln = "";
 		}
 
@@ -62,7 +64,8 @@ class Cli extends Frame{
 
 	}
 
-	static private function _colorize($text, $status) {
+	static private function _colorize($text, $status)
+	{
 		$out = "";
 
 		switch($status) {
@@ -83,18 +86,20 @@ class Cli extends Frame{
 		return chr(27) . "{$out}{$text}" . chr(27);
 	}
 
-	static private function _dialog($title, $output, $color){
+	static private function _dialog($title, $output, $color)
+	{
 
 		echo self::_colorize(self::SPACE, $color) . self::LN;
-		if(!is_null($title)) echo self::_colorize(self::line("  {$title}: "), $color);
-		if(!is_null($title)) echo self::_colorize(self::SPACE, $color) . self::LN;
+		if (!is_null($title)) echo self::_colorize(self::line("  {$title}: "), $color);
+		if (!is_null($title)) echo self::_colorize(self::SPACE, $color) . self::LN;
 		echo self::_colorize($output, $color);
 		echo self::_colorize(self::SPACE, $color) . self::LN;
 
 		echo "\033[0m".self::LN;		
 	}
 
-	static function println($text, $color = "NOTE", $px = 0){
+	static function println($text, $color = "NOTE", $px = 0)
+	{
 		echo self::LN;
 
 		echo self::_colorize(self::SPACE, $color) . self::LN;
@@ -104,91 +109,111 @@ class Cli extends Frame{
 
 	}
 
-	private function _getOutput(array $arr = [], $bullet = ""){
+	private function _getOutput(array $arr = [], $bullet = "")
+	{
 		return (count($arr) > 0) ? $bullet . implode($bullet, $arr) : self::LN;
 	}
 
-	private function _getList(array $arr = []){
+	private function _getList(array $arr = [])
+	{
 		return $this->_getOutput($arr, "  - ");
 	}
 
-	private function _getLines(array $arr = []){
+	private function _getLines(array $arr = [])
+	{
 		return $this->_getOutput($arr, "  ");
 	}
 
-	private function _color($text, $code){
+	private function _color($text, $code)
+	{
 		return "\033[{$code} {$text}\033[0m";
 	}
 
-	private function _getWarnings(){
+	private function _getWarnings()
+	{
 		return $this->_getList($this->_warnings);
 	}
 
-	private function _getErrors(){
+	private function _getErrors() {
 		return $this->_getList($this->_errors);
 	}
 
-	private function _getResult(){
+	private function _getResult()
+	{
 		return $this->_getList($this->_result);
 	}
 
-	private function _getSuccess(){
+	private function _getSuccess()
+	{
 		return $this->_getList($this->_success);
 	}
 
-	protected function result($message = ""){
+	protected function result($message = "")
+	{
 		array_push($this->_result, self::line($message, 4));
 	}
 
-	protected function success($message = ""){
+	protected function success($message = "")
+	{
 		array_push($this->_success, self::line($message, 4));
 	}
 
-	protected function warning($message = ""){
+	protected function warning($message = "")
+	{
 		array_push($this->_warnings, self::line($message, 4));
 	}
 
-	protected function error($message = ""){
+	protected function error($message = "")
+	{
 		array_push($this->_errors, self::line($message, 4));
 	}
 
-	protected function correct($message = ""){
+	protected function correct($message = "")
+	{
 		array_push($this->_correct, self::line($message, 2));
 	}
 
-	protected function wrong($message = ""){
+	protected function wrong($message = "")
+	{
 		array_push($this->_wrong, self::line($message, 2));
 	}
 
-	protected function getParam($key, $value = ""){
-		if(isset($this->_args[$key])){
+	protected function getParam($key, $value = "")
+	{
+		if (isset($this->_args[$key])) {
 			return $this->_args[$key];
 		}
 
 		return $value;
 	}
 
-	protected function getFlag($key){
+	protected function getFlag($key)
+	{
 		return isset($this->_flags[$key]);
 	}
 
-	protected function getAnswer(){
+	protected function getAnswer()
+	{
 		return $this->_answer;
 	}
 
-	protected function entered($option){
+	protected function entered($option)
+	{
 		return ($this->getAnswer() == $option);
 	}
 
-	protected function yes(){
+	protected function yes()
+	{
 		return $this->entered("y");
 	}
 
-	protected function no(){
+	protected function no()
+	{
 		return $this->entered("n");
 	}
 
-	protected function yesNo(){
+	protected function yesNo()
+	{
 		$answer = $this->getAnswer();
 
 		if (!in_array($answer, ["y","n"])) {
@@ -196,27 +221,32 @@ class Cli extends Frame{
 		}
 	}
 
-	protected function colorGreen($text){
+	protected function colorGreen($text)
+	{
 		return $this->_color($text, "0;32m");
 	}
 
-	protected function colorRed($text){
+	protected function colorRed($text)
+	{
 		return $this->_color($text, "0;31m");
 	}
 
-	protected function bgGreenColorRed($text){
+	protected function bgGreenColorRed($text)
+	{
 		$text = self::line($text, 4, false);
 		return "\033[0;31m\033[42m{$text}\033[0m";
 	}
 
-	protected function prompt($text){
+	protected function prompt($text)
+	{
 		$prompt = "{$text}: ";
 		echo $prompt;
 		$answer =  rtrim( fgets( STDIN ));
 		$this->_answer = $answer;
 	}
 
-	protected function output(){
+	protected function output()
+	{
 		
 		if (count($this->_result) > 0) {
 			echo self::LN;
@@ -226,7 +256,7 @@ class Cli extends Frame{
 
 		if (count($this->_success) > 0) {
 
-			if(count($this->_result) == 0) echo self::LN; 
+			if (count($this->_result) == 0) echo self::LN; 
 
 			$success = $this->_getSuccess();
 			self::_dialog("Success", $success, self::SUCCESS);
@@ -234,7 +264,7 @@ class Cli extends Frame{
 
 		if (count($this->_warnings) > 0) {
 
-			if(count($this->_result) == 0 && count($this->_success) == 0) echo self::LN; 
+			if (count($this->_result) == 0 && count($this->_success) == 0) echo self::LN; 
 
 			$warnings = $this->_getWarnings();
 			self::_dialog("Warnings", $warnings, self::WARNING);
@@ -242,7 +272,7 @@ class Cli extends Frame{
 
 		if (count($this->_errors) > 0) {
 
-			if(count($this->_result) == 0 && count($this->_success) == 0 && count($this->_warnings) == 0) echo self::LN; 
+			if (count($this->_result) == 0 && count($this->_success) == 0 && count($this->_warnings) == 0) echo self::LN; 
 
 			$errors = $this->_getErrors();
 			self::_dialog("Errors", $errors, self::FAILURE);
@@ -264,7 +294,8 @@ class Cli extends Frame{
 
 	}
 
-	protected function reset(){
+	protected function reset()
+	{
 		$this->_warnings = [];
 		$this->_errors = [];
 		$this->_result = [];
@@ -273,7 +304,8 @@ class Cli extends Frame{
 		$this->_wrong = [];
 	}
 
-	public function __construct(array $args = []){
+	public function __construct(array $args = [])
+	{
 
 		$p = 0;
 		$c = 1;
@@ -282,7 +314,7 @@ class Cli extends Frame{
 
 		foreach ($args as $key => $value) {
 
-			if($c > 2) {
+			if ($c > 2) {
 
 				if ($value == 1) {
 					if (isset($this->_params[$p])) {

@@ -22,14 +22,16 @@ namespace Roducks\Framework;
 
 use Roducks\Libs\Request\Http;
 
-class Environment{
+class Environment
+{
 
 	const DEV = 1;
 	const QA = 2;
 	const PRO = 3;
 	const CLI = 4; 
 
-	static function getConfig(){
+	static function getConfig()
+	{
 
 		$subdomain = Http::getSubdomain(DOMAIN_NAME, Core::DEFAULT_SUBDOMAIN);
 		$config = Core::getEnvConfigFile();
@@ -39,7 +41,7 @@ class Environment{
 		$mode = (isset($config[$subdomain]['mode'])) ? $config[$subdomain]['mode'] : self::PRO;
 		$errors = ($mode == self::DEV) ? true : false;
 
-		if($errors && !isset($config[$subdomain]['database'])){
+		if ($errors && !isset($config[$subdomain]['database'])) {
 			$database .= ".local";
 		}
 
@@ -52,19 +54,23 @@ class Environment{
 		];
 	}
 
-	static function inDEV(){
+	static function inDEV()
+	{
 		return (RDKS_MODE == self::DEV);
 	}
 
-	static function inCLI(){
+	static function inCLI()
+	{
 		return (RDKS_MODE == self::CLI);
 	}	
 
-	static function inQA(){
+	static function inQA()
+	{
 		return (RDKS_MODE == self::QA);
 	}
 
-	static function inPRO(){
+	static function inPRO()
+	{
 		return (RDKS_MODE == self::PRO);
 	}	
 

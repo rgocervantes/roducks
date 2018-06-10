@@ -23,44 +23,51 @@ namespace Roducks\Framework;
 use Roducks\Libs\Utils\Date;
 use Roducks\Libs\Request\Http;
 
-class Error{
+class Error
+{
 
-	static function log($message, $file = ""){
+	static function log($message, $file = "")
+	{
 		$code = (!empty($file)) ? 3 : 0;
 		error_log(Date::getCurrentDateTime() . " - " . $message);
 	}
 
-	static function on(){
+	static function on()
+	{
 		error_reporting(E_ALL);
 		//error_reporting(E_ALL && !E_NOTICE);
 		ini_set("display_errors", 1);
 	}
 
-	static function off(){
+	static function off()
+	{
 		error_reporting(0);
 		ini_set("display_errors", 0);
 	}	
 
-	static function display(){
-		if(RDKS_ERRORS){
+	static function display()
+	{
+		if (RDKS_ERRORS) {
 			self::on();
 		} else {
 			self::off();
 		}
 	}
 
-	static function pageNotFound(){
+	static function pageNotFound()
+	{
 		Core::loadPage(DIR_CORE_PAGE, Helper::PAGE_NOT_FOUND, "pageNotFound");
 		exit;
 	}
 
-	static function block($title, $line, $path, $file, $error = ""){
+	static function block($title, $line, $path, $file, $error = "")
+	{
 
 		$markup = '<div style="font-family:Arial; text-align:left; padding:10px; background:#076364; border:solid 2px #4d9191; margin-bottom:5px; color: #bcdee0;">';
 		$markup .= '<h1 style="margin:0">'. $title .'</h1>'; 
 		$markup .= '<div style="font-family:monospace;font-size:16px;"><b>File: </b>' . $file . '</div><br>'; 
 		
-		if(!empty($error)){
+		if (!empty($error)) {
 			$markup .= '<h2 style="margin:0">Error Message:</h2>'; 
 			$markup .= '<div style="background:#07292b; font-family:monospace; font-size:16px; padding:10px; color: #c0dfdf; margin: 10px 0; border:solid 1px #4d9191;">'; 	
 			$markup .= $error;
@@ -73,7 +80,7 @@ class Error{
 		return $markup;
 	}
 
-	static function _throw($title, $line, $path, $file, $error = ""){
+	static function _throw($title, $line, $path, $file, $error = "") {
 		$markup = '<html><head><title>Roducks Debugger</title></head><body style="background: #031415; color: #fff;">';
 		$markup .= '<div style="text-align:center; margin-top: 40px;">';		
 			$markup .= '<div style="font-family:monospace;">';
@@ -89,45 +96,49 @@ class Error{
 		die($markup);
 	}
 
-	static function debug($title, $line, $path, $file, $error = ""){
+	static function debug($title, $line, $path, $file, $error = "")
+	{
 
-		if(RDKS_ERRORS){
-			if(Helper::isBlock($file) && !Helper::isBlockDispatched()){
+		if (RDKS_ERRORS) {
+			if (Helper::isBlock($file) && !Helper::isBlockDispatched()) {
 				echo self::block($title, $line, $path, $file, $error);
 			} else {
 				$params = URL::getGETParams();
 				
-				if(isset($params['rdks']) && $params['rdks'] == 1){
+				if (isset($params['rdks']) && $params['rdks'] == 1) {
 					echo self::block($title, $line, $path, $file, $error);
 					exit;
 				} else {
 					self::_throw($title, $line, $path, $file, $error);
 				}
 			}
-		}else{
-			if(!Helper::isBlock($file) && !Helper::isBlockDispatched()){
-				if(!Environment::inCLI())
+		} else {
+			if (!Helper::isBlock($file) && !Helper::isBlockDispatched()) {
+				if (!Environment::inCLI())
 					self::pageNotFound();
 			}
 		}
 	}
 	
-	static function warning($title, $line, $path, $file, $error = ""){
-		if(RDKS_ERRORS){	
+	static function warning($title, $line, $path, $file, $error = "")
+	{
+		if (RDKS_ERRORS) {	
 			echo self::block($title, $line, $path, $file, $error);
 		}
 	}
 
-	static function fatal($title, $line, $path, $file, $error = ""){
-		if(RDKS_ERRORS){
+	static function fatal($title, $line, $path, $file, $error = "")
+	{
+		if (RDKS_ERRORS) {
 			self::_throw($title, $line, $path, $file, $error);
 		} else {
-			if(!Environment::inCLI())
+			if (!Environment::inCLI())
 				Http::sendHeaderNotFound();
 		}	
 	}
 
-	static function cantDispatchFactory($pagePath, $page){
+	static function cantDispatchFactory($pagePath, $page)
+	{
 
 		$factory = preg_replace('#/Page/#', '/Factory/', $pagePath).$page.FILE_EXT;
 
@@ -140,12 +151,13 @@ class Error{
 		$error .= "^<br>";
 		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Click on this link</span><br><br>";
 
-		if(isset($params[0]) && $params[0] == '_page' && file_exists($factory)){
+		if (isset($params[0]) && $params[0] == '_page' && file_exists($factory)) {
 			self::debug("Can't dispatch URL",__LINE__, __FILE__, $pagePath.$page.FILE_EXT, $error); 
 		}		
 	}	
 
-	static function cantDispatchURL($title, $page, $line, $path, $file, $extend){
+	static function cantDispatchURL($title, $page, $line, $path, $file, $extend)
+	{
 
 		$class = Helper::getClassName($page);
 		$ns = Helper::getClassName($page,'$1');
@@ -160,13 +172,14 @@ class Error{
 		self::debug($title, $line, $path, $file, $error);
 	}
 
-	static function view($title, $line, $path, $file, $visibility, $extend, $call, $alert = "An error occurred in"){
+	static function view($title, $line, $path, $file, $visibility, $extend, $call, $alert = "An error occurred in")
+	{
 		$method = Helper::getClassName($call,'$2');
 		$ns = Helper::getClassName($call,'$1');
 		$ns = Helper::getInvertedSlash($ns);
 		$error = "";
 
-		if(Helper::regexp('#::#', $method)){
+		if (Helper::regexp('#::#', $method)) {
 
 			list($class, $method) = explode("::", $method);
 
@@ -184,7 +197,8 @@ class Error{
 		self::debug($title, $line, $path, $file, $error);
 	}
 
-	static function undefinedVariable($title, $page, $line, $path, $file, $param, $extend){
+	static function undefinedVariable($title, $page, $line, $path, $file, $param, $extend)
+	{
 
 		$class = Helper::getClassName($page);
 		$ns = Helper::getClassName($page,'$1');
@@ -200,7 +214,8 @@ class Error{
 		self::debug($title, $line, $path, $file, $error);
 	}
 
-	static function classNotFound($title, $line, $path, $file, $page){
+	static function classNotFound($title, $line, $path, $file, $page)
+	{
 
 		$class = Helper::getClassName($page);
 		$ns = Helper::getClassName($page,'$1');
@@ -216,7 +231,8 @@ class Error{
 		self::debug($title, $line, $path, $file, $error);
 	}	
 
-	static function methodNotFound($title, $line, $path, $file, $page, $method, $extend, $alert = "Make sure this method is defined."){
+	static function methodNotFound($title, $line, $path, $file, $page, $method, $extend, $alert = "Make sure this method is defined.")
+	{
 
 		$class = Helper::getClassName($page);
 		$ns = Helper::getClassName($page,'$1');
@@ -234,7 +250,8 @@ class Error{
 		self::debug($title, $line, $path, $file, $error);
 	}		
 
-	static function siteFolderNotFound($title, $line, $path, $file, $dir){
+	static function siteFolderNotFound($title, $line, $path, $file, $dir)
+	{
 		
 		$subdomain = RDKS_SUBDOMAIN;
 		$site = RDKS_SITE;
@@ -254,7 +271,8 @@ class Error{
 		self::debug($title, $line, $path, $file, $error);
 	}
 
-	static function moduleDisabled($title, $line, $path, $file, $module){
+	static function moduleDisabled($title, $line, $path, $file, $module)
+	{
 
 		$error = "<span style=\"color:#FF9800;\">return</span> [<br>";
 		$error .= "...<br>";		
@@ -267,7 +285,8 @@ class Error{
 		self::debug($title, $line, $path, $file, $error);	
 	}
 
-	static function defaultPageIsMissing($title, $line, $path, $file){
+	static function defaultPageIsMissing($title, $line, $path, $file)
+	{
 
 		$error = "<span style=\"color:#3bde9a; \">Router</span><span style=\"color:#00BCD4;\">::</span><span style=\"color:#bc99e0; \">init</span><span style=\"color:#00BCD4;\">(</span><span style=\"color:#FF9800;\">function</span> <span style=\"color:#00BCD4;\">()</span> {<br>";
 		$error .= "...<br>";
@@ -280,7 +299,8 @@ class Error{
 		self::debug($title, $line, $path, $file, $error);	
 	}
 
-	static function missionDispatchIndex($url, $title, $line, $path, $file){
+	static function missionDispatchIndex($url, $title, $line, $path, $file)
+	{
 
 		$error = "<span style=\"color:#FF9800;\">return</span> [<br>";
 		$error .= "...<br>";
@@ -295,7 +315,8 @@ class Error{
 		self::debug($title, $line, $path, $file, $error);	
 	}
 
-	static function missingDbConfig($title, $line, $path, $file, $key, $value){
+	static function missingDbConfig($title, $line, $path, $file, $key, $value)
+	{
 		
 		$error = "<span style=\"color:#FF9800;\">return</span> [<br>";
 		$error .= "...<br>";
@@ -308,7 +329,8 @@ class Error{
 		self::debug($title, $line, $path, $file, $error);	
 	}
 
-	static function missingParams($title, $line, $path, $file, $missingParams){
+	static function missingParams($title, $line, $path, $file, $missingParams)
+	{
 		$error = "";
 		foreach ($missingParams as $key => $value) {
 			$error .= "{$value}<br>";
@@ -317,7 +339,8 @@ class Error{
 		self::debug($title, $line, $path, $file, $error);		
 	}
 
-	static function security(){
+	static function security()
+	{
 
 		$error = '<div class="alert alert-danger" role="alert">';
 			$error .= '<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> ';
@@ -327,6 +350,5 @@ class Error{
 		echo $error;
 
 	}
-
 
 } 

@@ -20,38 +20,46 @@
 
 namespace Roducks\Framework;
 
-class Path{
+class Path
+{
 
-	static function get($path = ""){
+	static function get($path = "")
+	{
 		return \App::getRealFilePath($path);
 	}
 
-	static function exists($file){
+	static function exists($file)
+	{
 		return file_exists(self::get($file));
 	}
 
-	static function getData($path = ""){
+	static function getData($path = "")
+	{
 		return self::get(DIR_APP_DATA . $path);
 	}
 
-	static function getStorage($path = ""){
+	static function getStorage($path = "")
+	{
 		return self::getData("storage/{$path}");
 	}
 
-	static function getTmp($path = ""){
+	static function getTmp($path = "")
+	{
 		return self::getData("tmp/{$path}");
 	}
 
-	static function getRoles($path = ""){
+	static function getRoles($path = "")
+	{
 		return self::get(DIR_ROLES . $path);
 	}
 
-	static function getCropName($src, $s){
+	static function getCropName($src, $s)
+	{
 
 		$img = explode(".", $src);
 		$size = count($img);
 
-		if($size > 2):
+		if ($size > 2) :
 			$res = $size - 1;
 			$ext = $img[ $res ];
 			unset($img[ $res ]);
@@ -137,46 +145,56 @@ class Path{
 	/**
 	*
 	*/
-	static function getUploadsUsers($file = ""){
+	static function getUploadsUsers($file = "")
+	{
 		return DIR_DATA_UPLOADS_USERS . $file;
 	}	
 
-	static function getUploadedUsers($file = ""){
+	static function getUploadedUsers($file = "")
+	{
 		return DIR_DATA_UPLOADED_USERS . $file;
 	}
 
 	/**
 	*
 	*/
-	static function getAppUploadedImage($file){
+	static function getAppUploadedImage($file)
+	{
 		return [DIR_DATA_UPLOADS_IMAGES, DIR_DATA_UPLOADED_IMAGES, $file];
 	}
 
-	static function getAppImage($file){
+	static function getAppImage($file)
+	{
 		return [DIR_APP_IMAGES, DIR_ASSETS_IMAGES, $file];
 	}
 
-	static function getAppIcon($file){
+	static function getAppIcon($file)
+	{
 		return [DIR_APP_ICONS, DIR_ASSETS_ICONS, $file];
 	}	
 
-	static function getImage($file = ""){
+	static function getImage($file = "")
+	{
 		return DIR_ASSETS_IMAGES . $file;
 	}
 
-	static function getIcon($file = "") {
+	static function getIcon($file = "")
+	{
 		return DIR_ASSETS_ICONS . $file;
 	}	
 
-	static function getLogo(){
+	static function getLogo()
+	{
 		return self::getImage(LOGO_IMAGE);
 	}
 
-	static function getImageAbsolute($file){
+	static function getImageAbsolute($file)
+	{
 		return URL::setAbsoluteURL(self::getImage($file));
 	}
 
-	static function getPublicUploadedUsers($file){
+	static function getPublicUploadedUsers($file)
+	{
 		return URL::setAbsoluteURL(self::getUploadedUsers($file));
 	}
 

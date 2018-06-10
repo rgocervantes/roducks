@@ -52,23 +52,23 @@ App::$aliases = Core::getAliasesConfigFile();
 |             AUTOLOAD           |
 |--------------------------------|
 */
-spl_autoload_register(function($class){
+spl_autoload_register(function($class) {
 
     $composer = false;
     $isEvent = false;
 
-    if(isset(App::$aliases[$class])){
+    if (isset(App::$aliases[$class])) {
         class_alias(App::$aliases[$class], $class);
         $class = App::$aliases[$class];
     }
 
-    if(preg_match('/^Roducks\\\/', $class)){
+    if (preg_match('/^Roducks\\\/', $class)) {
 
         $path = str_replace("\\","/", $class) . FILE_EXT;
         $path = str_replace("Roducks/","core/", $path);
         $isEvent = preg_match('#/Events/#', $path);
 
-    } else if(preg_match('/^App\\\/', $class)){
+    } else if (preg_match('/^App\\\/', $class)) {
 
         $path = str_replace("App\\","app\\",$class);
         $path = str_replace("\\","/", $path) . FILE_EXT;
@@ -76,7 +76,7 @@ spl_autoload_register(function($class){
 
     } else {
         
-        if(isset(App::$composer[$class])){
+        if (isset(App::$composer[$class])) {
             $path = App::$composer[$class];
             $composer = true;
         } else {
@@ -89,14 +89,14 @@ spl_autoload_register(function($class){
 
     list($realPath, $fileExists) = ($composer) ? App::getComposerPath($path) : App::getRealPath($path);
 
-    if($fileExists || $isEvent){
+    if ($fileExists || $isEvent) {
 
-        if(!$isEvent)
+        if (!$isEvent)
             include_once $realPath;
 
-		if(!class_exists($class) && !preg_match('#Interfaces#', $class)) {
-            if(php_sapi_name() != "cli"){
-                if(!$isEvent)
+		if (!class_exists($class) && !preg_match('#Interfaces#', $class)) {
+            if (php_sapi_name() != "cli") {
+                if (!$isEvent)
                     Error::classNotFound(TEXT_CLASS_NOT_FOUND,__LINE__, __FILE__, $path, $class);
             } else {
                 Cli::println("Class '{$class}' was not found.", Cli::FAILURE, -1);
@@ -104,8 +104,8 @@ spl_autoload_register(function($class){
 		}
     }else{
 
-        if(php_sapi_name() != "cli"){
-            if(!$isEvent)
+        if (php_sapi_name() != "cli") {
+            if (!$isEvent)
                 Error::debug(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $path);
         } else {
             Cli::println("Script file not found: {$path}", Cli::FAILURE, -1);
@@ -139,7 +139,7 @@ App::define('TEXT_METHOD_NOT_FOUND', TEXT_METHOD . " Not Found");
 */
 $appConfig = Core::getAppConfigFile();
 
-if(!isset($appConfig['domain_name']) || empty($appConfig['domain_name'])){
+if (!isset($appConfig['domain_name']) || empty($appConfig['domain_name'])) {
     Http::sendHeaderNotFound();
 }
 

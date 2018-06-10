@@ -22,7 +22,8 @@ namespace Roducks\Framework;
 
 use Roducks\Libs\Output\Html;
 
-class Asset{
+class Asset
+{
 
 	private $_scriptsInline = [];
 	private $_scriptsOnReady = [];
@@ -31,15 +32,16 @@ class Asset{
 	private $_css_alt = "";
 	private $_js_alt = "";
 
-	static function load($scripts, $data){
+	static function load($scripts, $data)
+	{
 
-		if(is_array($scripts)){
+		if (is_array($scripts)) {
 
 			extract($data);
 			foreach ($scripts as $script) {
 				$script_path = DIR_ASSETS_SCRIPTS . Helper::ext($script,"inc");
 				list($realPath, $fileExists) = \App::getRealPath($script_path);
-				if($fileExists){
+				if ($fileExists) {
 					include $realPath;
 					echo "\n";
 				}
@@ -47,24 +49,27 @@ class Asset{
 		}
 	}
 
-	static function includeInLine($scripts = array(), $data){
-		if(count($scripts) > 0) self::load($scripts, $data);
+	static function includeInLine(array $scripts = [], $data)
+	{
+		if (count($scripts) > 0) self::load($scripts, $data);
 	}
 
-	static function includeOnReady($scripts, $data){
-		if(count($scripts) > 0){
-			echo "\n$(document).ready(function(){\n\n";
+	static function includeOnReady($scripts, $data)
+	{
+		if (count($scripts) > 0) {
+			echo "\n$(document).ready(function() {\n\n";
 			self::load($scripts, $data);	
 			echo "\n});\n\n";			
 		}
 	}
 	
-	private function _getResource($dir, $script, $type){
+	private function _getResource($dir, $script, $type)
+	{
 
 		$attrs = [];
 
-		if(is_array($script)){
-			if(isset($script['src'])){
+		if (is_array($script)) {
+			if (isset($script['src'])) {
 				$attrs = $script;
 				$script = $script['src'];
 				unset($attrs['src']);
@@ -78,28 +83,29 @@ class Asset{
 		$load = true;
 		$resource = preg_replace('/^(.+)\?v=[0-9.]+$/', '$1', $script);
 
-		if(Helper::isHttp($script)){
+		if (Helper::isHttp($script)) {
 			$file = $resource;
 		}else{
 			$file = $dir . $resource;
 			$file_repo =  str_replace('/public/', 'public/assets/', $file);
 
-			if(!\App::fileExists($file_repo)) $load = false;
+			if (!\App::fileExists($file_repo)) $load = false;
 		} 
 
 		return ['load' => $load, 'file' => $dir.$script, 'attrs' => $attrs];
 
 	}
 
-	private function _cssMeta($dir, $arr, $alt = false){
+	private function _cssMeta($dir, $arr, $alt = false)
+	{
 
-		foreach($arr as $css){
+		foreach($arr as $css) {
 			$resource = $this->_getResource($dir, $css, "css");
 			
-			if($resource['load']){
+			if ($resource['load']) {
 				$file = $resource['file'];
 				$p = (preg_match('/\?v=[0-9\.]+$/', $file)) ? "&t" : "?t";
-				if(Environment::inDEV()) $file = $file .  $p . "=" . time();
+				if (Environment::inDEV()) $file = $file .  $p . "=" . time();
 				$attrs = (!empty($resource['attrs'])) ? " " . Html::getAttributes($resource['attrs']) : "";
 				$tag = "<link type=\"text/css\" rel=\"stylesheet\" href=\"{$file}\"{$attrs} />\n";
 			
@@ -112,15 +118,16 @@ class Asset{
 		}
 	}
 
-	private function _jsMeta($dir, $arr, $alt = false){
+	private function _jsMeta($dir, $arr, $alt = false)
+	{
 
-		foreach($arr as $js){
+		foreach($arr as $js) {
 			$resource = $this->_getResource($dir, $js, "js");
 			
-			if($resource['load']){
+			if ($resource['load']) {
 				$file = $resource['file'];
 				$p = (preg_match('/\?v=[0-9\.]+$/', $file)) ? "&t" : "?t";
-				if(Environment::inDEV()) $file = $file .  $p . "=" . time();
+				if (Environment::inDEV()) $file = $file .  $p . "=" . time();
 				$attrs = (!empty($resource['attrs'])) ? " " . Html::getAttributes($resource['attrs']) : "";
 				$tag = "<script type=\"text/javascript\" src=\"{$file}\"{$attrs}></script>\n";
 
@@ -136,28 +143,33 @@ class Asset{
 	/**
 	*	Get values
 	*/
-	public function getScriptsInline(){
+	public function getScriptsInline()
+	{
 		return $this->_scriptsInline;
 	}
 
-	public function getScriptsOnReady(){
+	public function getScriptsOnReady()
+	{
 		return $this->_scriptsOnReady;
 	}
 
-	public function getCss(){
+	public function getCss()
+	{
 		return $this->_css . $this->_css_alt;
 	}
 
-	public function getJs(){
+	public function getJs()
+	{
 		return $this->_js . $this->_js_alt;
 	}
 
 	/**
 	*	Set values
 	*/
-	public function scriptsInline($scripts, $overwrite = false){
+	public function scriptsInline($scripts, $overwrite = false)
+	{
 
-		if($overwrite){
+		if ($overwrite) {
 			$this->_scriptsInline = $scripts; 
 		} else {
 			$this->_scriptsInline = array_merge($this->_scriptsInline, $scripts);
@@ -165,9 +177,10 @@ class Asset{
 
 	}	
 
-	public function scriptsOnReady($scripts, $overwrite = false){
+	public function scriptsOnReady($scripts, $overwrite = false)
+	{
 
-		if($overwrite){
+		if ($overwrite) {
 			$this->_scriptsOnReady = $scripts; 
 		} else {
 			$this->_scriptsOnReady = array_merge($this->_scriptsOnReady, $scripts);
@@ -175,27 +188,30 @@ class Asset{
 
 	}
 
-	public function css($arr, $overwrite = false){
+	public function css($arr, $overwrite = false)
+	{
 
-		if($overwrite){
+		if ($overwrite) {
 			$this->_css = "";
 		}
 
 		$this->_cssMeta(DIR_ASSETS_CSS, $arr, true);
 	}
 
-	public function js($arr, $overwrite = false){
+	public function js($arr, $overwrite = false)
+	{
 
-		if($overwrite){
+		if ($overwrite) {
 			$this->_js = "";
 		}
 
 		$this->_jsMeta(DIR_ASSETS_JS, $arr, true);
 	}
 
-	public function plugins(array $options = [], $alt = false){
+	public function plugins(array $options = [], $alt = false)
+	{
 
-		if($alt){
+		if ($alt) {
 			$this->_css_alt = "";
 			$this->_js_alt = "";
 		}
@@ -203,10 +219,10 @@ class Asset{
 		$pluginsFile = Core::getPluginsFile();
 
 		foreach ($options as $option) {
-			if(isset($pluginsFile[$option])) {
+			if (isset($pluginsFile[$option])) {
 				foreach ($pluginsFile[$option] as $src => $value) {
 
-					if(is_array($value)){
+					if (is_array($value)) {
 						$value['src'] = $src;
 						$file = $value;
 						$fileExt = $src;

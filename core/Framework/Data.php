@@ -23,7 +23,8 @@ namespace Roducks\Framework;
 use Roducks\Page\XML;
 use Roducks\Libs\Files\Directory;
 
-abstract class Data extends XML{
+abstract class Data extends XML
+{
 
 	private $_xmlFile;
 	protected $_fileName;
@@ -32,14 +33,16 @@ abstract class Data extends XML{
 	protected $_pageType = 'DATA';
 	protected $_makeDir = true;
 
-	static function init($settings){
+	static function init($settings)
+	{
 		$class = get_called_class();
 		$obj = new $class($settings);
 
 		return $obj;
 	}	
 
-	private function _node($key){
+	private function _node($key)
+	{
 
 		$field = $this->doc->createNode([
 				'name' => $key
@@ -48,7 +51,8 @@ abstract class Data extends XML{
 		return $field;
 	}	
 
-	private function _field($key, $value){
+	private function _field($key, $value)
+	{
 		
 		$field = $this->doc->createNode([
 				'name' => $key,
@@ -58,21 +62,23 @@ abstract class Data extends XML{
 		return $field;
 	}
 
-	public function __construct(){
+	public function __construct()
+	{
 			
 		$this->_dirStorage = DIR_DATA_STORAGE_XML;	
 		$dir = $this->_dirStorage . $this->_filePath;
-		if($this->_makeDir) Directory::make(Path::get(), $dir);
+		if ($this->_makeDir) Directory::make(Path::get(), $dir);
 		$this->_xmlFile = $dir . Helper::ext($this->_fileName, "xml");
 
 		parent::__construct();
 	}
 
-	public function add($key, $value, $rewrite = false){
+	public function add($key, $value, $rewrite = false)
+	{
 
 		$field = $this->get($key);
 
-		if(!empty($field) && !$rewrite){
+		if (!empty($field) && !$rewrite) {
 			return;
 		}
 
@@ -80,7 +86,7 @@ abstract class Data extends XML{
 		$this->doc->namespaceRootAtom();
 		$this->doc->root("data");
 
-		if(is_array($value)){
+		if (is_array($value)) {
 
 			$field = $this->_node($key);
 
@@ -97,9 +103,10 @@ abstract class Data extends XML{
 
 	}
 
-	public function getAll(){
+	public function getAll()
+	{
 
-		if(!file_exists($this->_xmlFile)){
+		if (!file_exists($this->_xmlFile)) {
 			return [];
 		}
 		
@@ -108,10 +115,11 @@ abstract class Data extends XML{
 		return $this->doc->content()->children();
 	}
 
-	public function get($field){
+	public function get($field)
+	{
 		$content = $this->getAll();
 
-		if(is_array($content) && count($content) == 0){
+		if (is_array($content) && count($content) == 0) {
 			return "";
 		}
 

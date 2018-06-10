@@ -18,26 +18,30 @@
  *
  */
 
-class App {
+class App
+{
 
 	const COMPOSER_CLASS_MAP = 'vendor/composer/autoload_classmap.php';
 
 	static $aliases = [],
 		$composer = [];
 
-	static function define($name, $value){
-		if(!defined($name)){
+	static function define($name, $value)
+	{
+		if (!defined($name)) {
 			define($name, $value);
 		}
 	}
 
-	static function text($name, $value){
+	static function text($name, $value)
+	{
 		self::define("TEXT_{$name}", $value);
 	}
 
-	static function getRealPath($path){
+	static function getRealPath($path)
+	{
 
-	    if(preg_match('/^core\/Framework/', $path)){
+	    if (preg_match('/^core\/Framework/', $path)) {
 	        $path = str_replace('core/Framework/', '', $path);
 	        $fileExists = file_exists(__DIR__  . "/" . $path);
 	    } else {
@@ -49,28 +53,32 @@ class App {
 	    return [$path, $fileExists];
 	}
 
-	static function getRealFilePath($path){
+	static function getRealFilePath($path)
+	{
 		list($realPath, $fileExists) = self::getRealPath($path);
 		return $realPath;
 	}
 
-	static function fileExists($path){
+	static function fileExists($path)
+	{
 		list($realPath, $fileExists) = self::getRealPath($path);
 		return $fileExists;
 	}
 
-	static function getComposerPath($path){
+	static function getComposerPath($path)
+	{
 
 		$fileExists = file_exists($path);
 
 	    return [$path, $fileExists];		
 	}
 
-	static function getComposerMap(){
+	static function getComposerMap()
+	{
 
 		list($realPath, $fileExists) = self::getRealPath(self::COMPOSER_CLASS_MAP);
 
-		if($fileExists){
+		if ($fileExists) {
 			return include $realPath;
 		}
 
