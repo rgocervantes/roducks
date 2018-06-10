@@ -69,7 +69,6 @@ class Dispatch
 
 	static function _page($class, $method)
 	{
-		$class = Helper::getCamelName($class);
 		return "/_page/{$class}/{$method}";
 	}
 
@@ -81,7 +80,6 @@ class Dispatch
 
 	static function _factory($class, $method)
 	{
-		$class = Helper::getCamelName($class);
 		return "/_factory/{$class}/{$method}";
 	}
 
@@ -93,7 +91,6 @@ class Dispatch
 
 	static function _json($class, $method)
 	{
-		$class = Helper::getCamelName($class);
 		return "/_json/{$class}/{$method}";
 	}
 
@@ -105,7 +102,6 @@ class Dispatch
 
 	static function _xml($class, $method)
 	{
-		$class = Helper::getCamelName($class);
 		return "/_xml/{$class}/{$method}";
 	}
 
@@ -117,7 +113,6 @@ class Dispatch
 
 	static function _service($class, $method)
 	{
-		$class = Helper::getCamelName($class);
 		return "/_service/{$class}/{$method}";
 	}
 
@@ -130,6 +125,7 @@ class Dispatch
 	static function event($class, $method = "")
 	{
 		$class = Helper::getCamelName($class);
+		$method = Helper::getCamelName($method, false);
 		return "{$class}::{$method}";
 	}
 
