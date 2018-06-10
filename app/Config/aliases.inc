@@ -31,6 +31,7 @@ return [
 	'Post' 				=> 'Roducks\\Framework\\Post',
 	'Path' 				=> 'Roducks\\Framework\\Path',
 	'Login' 			=> 'Roducks\\Framework\\Login',
+	'Storage' 			=> 'Roducks\\Services\\Storage',
 	/*
 	|----------------------------------------------------------------------
 	|	Libs
@@ -40,7 +41,6 @@ return [
 	'Request' 			=> 'Roducks\\Libs\\Request\\Request',
 	'Directory' 		=> 'Roducks\\Libs\\Files\\Directory',
 	'DB' 				=> 'Roducks\\Libs\\ORM\\DB',
-	'Table' 			=> 'Roducks\\Libs\\ORM\\Table',
 	'Query' 			=> 'Roducks\\Libs\\ORM\\Query',
 	'Model' 			=> 'Roducks\\Libs\\ORM\\Model',
 ];
