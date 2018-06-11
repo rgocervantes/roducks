@@ -57,7 +57,7 @@ endif;
 require "./core/Framework/Bootstrap.php";
 
 use Roducks\Framework\Core;
-use Roducks\Framework\Cli;
+use Roducks\Framework\CLI;
 use Roducks\Framework\Environment;
 use Roducks\Framework\Helper;
 
@@ -103,7 +103,7 @@ if(isset($params[0])){
 
 	$cls = $name;
 	$name = Helper::getCamelName($name);
-	$script = "App\Cli\\" . $name;
+	$script = "App\\CLI\\" . $name;
 
 	if(!class_exists($script)) {
 		return;
@@ -113,10 +113,10 @@ if(isset($params[0])){
 	if(method_exists($class, $method)){
 		$class->$method();
 	} else {
-		Cli::println("Unknown command: {$cls}::{$method}", Cli::FAILURE);
+		CLI::println("Unknown command: {$cls}::{$method}", CLI::FAILURE);
 	}
 	
 }else{
-	Cli::println("Please set a command", Cli::FAILURE);
+	CLI::println("Please set a command", CLI::FAILURE);
 }
 

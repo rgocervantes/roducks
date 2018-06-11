@@ -31,7 +31,7 @@ include_once "Core" . FILE_EXT;
 
 use Roducks\Framework\Core;
 use Roducks\Framework\Error;
-use Roducks\Framework\Cli;
+use Roducks\Framework\CLI;
 
 /*
 |--------------------------------|
@@ -99,7 +99,7 @@ spl_autoload_register(function($class) {
                 if (!$isEvent)
                     Error::classNotFound(TEXT_CLASS_NOT_FOUND,__LINE__, __FILE__, $path, $class);
             } else {
-                Cli::println("Class '{$class}' was not found.", Cli::FAILURE, -1);
+                CLI::println("Class '{$class}' was not found.", CLI::FAILURE, -1);
             }
 		}
     }else{
@@ -108,7 +108,7 @@ spl_autoload_register(function($class) {
             if (!$isEvent)
                 Error::debug(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $path);
         } else {
-            Cli::println("Script file not found: {$path}", Cli::FAILURE, -1);
+            CLI::println("Script file not found: {$path}", CLI::FAILURE, -1);
         }  
     }
 });

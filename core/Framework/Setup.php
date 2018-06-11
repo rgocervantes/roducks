@@ -24,7 +24,7 @@ use Roducks\Libs\ORM\DB;
 use Roducks\Libs\ORM\Query;
 use Roducks\Libs\Output\CSV;
 
-abstract class Setup extends Cli
+abstract class Setup extends CLI
 {
 
 	const COMMENTS = "";
