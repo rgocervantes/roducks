@@ -71,7 +71,7 @@ class Users extends Model
 	{
 		$row = $this->row($id);
 
-		if (!$this->rows()) {
+		if (!$this->rows()) {
 			return false;
 		}
 

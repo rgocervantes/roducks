@@ -47,15 +47,15 @@ class User extends CLI
 		$password = $this->getParam('password', "");
 		$gender = $this->getParam('gender', "male");
 
-		if (!empty($email) && !empty($password)) {
+		if (!empty($email) && !empty($password)) {
 
-			if (strlen($password) >= 7) {
+			if (strlen($password) >= 7) {
 
 				$db = $this->db();
 				$user = UsersTable::open($db);
 				$total = $user->getTableTotalRows();
 
-				if ($total == 0) {
+				if ($total == 0) {
 
 					$data = [
 						'id_user_tree' => '0',
@@ -73,7 +73,7 @@ class User extends CLI
 
 					$tx = $user->create($data);
 
-					if ($tx === false) {
+					if ($tx === false) {
 						$this->error("User could not be created.");
 					} else {
 						$this->success("User was created successfully!");
@@ -101,13 +101,13 @@ class User extends CLI
 		$email = $this->getParam('email', "");
 		$password = $this->getParam('password', "");
 
-		if (!empty($email) && !empty($password)) {
+		if (!empty($email) && !empty($password)) {
 
 			$db = $this->db();
 			$user = UsersTable::open($db);
 			$user->filter(['email' => $email]);
 
-			if ($user->rows()) {
+			if ($user->rows()) {
 				$row = $user->fetch();
 
 				$user->changePassword($row['id_user'], $password);
@@ -129,9 +129,9 @@ class User extends CLI
 
 		$id = $this->getParam('id', 1);
 		$db = $this->db();
-		$user = UsersTable::open($db)->load($id);
+		$user = UsersTable::open($db)->getRow($id);
 
-		if ($user->getId()) {
+		if ($user->foundRow()) {
 			$this->result( $user->getFirstName() . " " . $user->getLastName() );
 			$this->result( $user->getEmail() );
 		} else {

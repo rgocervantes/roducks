@@ -54,8 +54,8 @@ class Roles extends Model
 		$id_role = Login::getAdminData('id_role');
 		$this->filter(["name:%like%" => $value, 'type' => $type, 'id_role:>' => $id_role]);
 
-		if($this->rows()){
-			while($row = $this->fetch()){
+		if ($this->rows()) {
+			while ($row = $this->fetch()) {
 				$ret[] = [
 					'text' => $row['name'],
 					'value' => $row['id_role']
