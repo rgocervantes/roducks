@@ -241,8 +241,13 @@ class Cli extends Frame
 	{
 		$prompt = "{$text}: ";
 		echo $prompt;
-		$answer =  rtrim( fgets( STDIN ));
+		$answer = rtrim( fgets( STDIN ));
 		$this->_answer = $answer;
+	}
+
+	protected function promptConfirm($text)
+	{
+		$this->prompt("{$text} [y/n]");
 	}
 
 	protected function output()

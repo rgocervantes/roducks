@@ -125,7 +125,7 @@ class Schema extends Setup
 		if ($prompt) {
 
 			$this->reset();
-			$this->prompt("Do you want to run these scripts [y/n]");
+			$this->promptConfirm("Do you want to run these scripts?");
 
 			if ($this->yes()) {
 
