@@ -86,7 +86,7 @@ class API extends Service
 
 	protected function data($key, $value = "")
 	{
-		if(is_array($key)){
+		if (is_array($key)) {
 			parent::data(['data' => $key]);
 		}else{
 			parent::data($key, $value);
@@ -117,7 +117,7 @@ class API extends Service
 	        "data" => []
 		];
 
-		if(count($data) > 0){
+		if (count($data) > 0) {
 			$token['data'] = $data;
 		}
 
@@ -129,7 +129,7 @@ class API extends Service
 	{
 		$verifyToken = $this->verifyToken();
 
-		if(!$verifyToken){
+		if (!$verifyToken) {
 			return [];
 		}
 

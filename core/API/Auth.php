@@ -42,12 +42,12 @@ class Auth extends API
 		$users->auth($email, $type);
 
 		// Is authentication Ok?
-		if($users->rows()){
+		if ($users->rows()) {
 
 			$auth = $users->fetch();
 
 			// Is user active and nor in trash?
-			if($auth['active'] == 1 && $auth['trash'] == 0) {
+			if ($auth['active'] == 1 && $auth['trash'] == 0) {
 
 				// Password matches and role is active
 				$valid = (Login::paywall($auth['password'], $auth['salt'], $password) && $auth['ractive'] == 1);
@@ -67,7 +67,7 @@ class Auth extends API
 		$password = $this->post->param('password');
 		$auth = $this->_authenticate(Role::TYPE_USERS, $email, $password);
 
-		if($auth['valid']){
+		if ($auth['valid']) {
 
 			$data = $auth['data'];
 
