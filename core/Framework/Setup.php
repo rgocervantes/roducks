@@ -33,7 +33,7 @@ abstract class Setup extends CLI
 	static private function _getCSV($file)
 	{
 		$csv = new CSV();
-        $csv->file(\App::getRealFilePath("app/Schema/Data/"), $file);
+        $csv->file(Path::get(DIR_SCHEMA_DATA), $file);
 
         return $csv;
 	}

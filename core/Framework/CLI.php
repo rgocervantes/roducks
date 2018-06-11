@@ -38,13 +38,12 @@ class CLI extends Frame
 		$_flags = [],
 		$_warnings = [],
 		$_errors = [],
-		$_result = [],
+		$_info = [],
 		$_success = [],
 		$_correct = [],
 		$_wrong = [],
-		$_answer = "";
-
-	protected $_params = [];	
+		$_answer = "",
+		$_badAnswer = false;
 
 	static function line($text, $px = 0, $break = true)
 	{
@@ -109,6 +108,19 @@ class CLI extends Frame
 
 	}
 
+	private function _prompt($text)
+	{
+		$this->reset();
+
+		$prompt = "{$text}: ";
+		echo $prompt;
+		$this->_answer = rtrim( fgets( STDIN ));
+
+		if (!in_array($this->_answer, ['y','n'])) {
+			$this->_badAnswer = true;
+		}
+	}
+
 	private function _getOutput(array $arr = [], $bullet = "")
 	{
 		return (count($arr) > 0) ? $bullet . implode($bullet, $arr) : self::LN;
@@ -138,9 +150,9 @@ class CLI extends Frame
 		return $this->_getList($this->_errors);
 	}
 
-	private function _getResult()
+	private function _getInfo()
 	{
-		return $this->_getList($this->_result);
+		return $this->_getList($this->_info);
 	}
 
 	private function _getSuccess()
@@ -148,9 +160,25 @@ class CLI extends Frame
 		return $this->_getList($this->_success);
 	}
 
-	protected function result($message = "")
+	private function _entered($option)
 	{
-		array_push($this->_result, self::line($message, 4));
+		return ($this->getAnswer() == $option);
+	}
+
+	protected function reset()
+	{
+		$this->_warnings = [];
+		$this->_errors = [];
+		$this->_info = [];
+		$this->_success = [];
+		$this->_correct = [];
+		$this->_wrong = [];
+		$this->_badAnswer = false;
+	}
+
+	protected function info($message = "")
+	{
+		array_push($this->_info, self::line($message, 4));
 	}
 
 	protected function success($message = "")
@@ -181,7 +209,9 @@ class CLI extends Frame
 	protected function getParam($key, $value = "")
 	{
 		if (isset($this->_args[$key])) {
-			return $this->_args[$key];
+			if ($this->_args[$key] != 1) {
+				$value = $this->_args[$key];
+			}
 		}
 
 		return $value;
@@ -197,28 +227,14 @@ class CLI extends Frame
 		return $this->_answer;
 	}
 
-	protected function entered($option)
-	{
-		return ($this->getAnswer() == $option);
-	}
-
 	protected function yes()
 	{
-		return $this->entered("y");
+		return $this->_entered("y");
 	}
 
 	protected function no()
 	{
-		return $this->entered("n");
-	}
-
-	protected function yesNo()
-	{
-		$answer = $this->getAnswer();
-
-		if (!in_array($answer, ["y","n"])) {
-			$this->wrong("Unknown option: " . $answer);
-		}
+		return $this->_entered("n");
 	}
 
 	protected function colorGreen($text)
@@ -239,29 +255,29 @@ class CLI extends Frame
 
 	protected function prompt($text)
 	{
-		$prompt = "{$text}: ";
-		echo $prompt;
-		$answer = rtrim( fgets( STDIN ));
-		$this->_answer = $answer;
-	}
-
-	protected function promptConfirm($text)
-	{
-		$this->prompt("{$text} [y/n]");
+		$this->_prompt("{$text} [y/n]");
 	}
 
 	protected function output()
 	{
-		
-		if (count($this->_result) > 0) {
+
+		if ($this->_badAnswer) {
+
+			$this->reset();
+			$this->wrong("Unreconized option: '".$this->getAnswer()."'");
+			$this->wrong("Set 'y' (yes) or 'n' (no)");
+
+		}
+
+		if (count($this->_info) > 0) {
 			echo self::LN;
-			$result = $this->_getResult();
+			$result = $this->_getInfo();
 			self::_dialog("Message", $result, self::NOTE);
 		}
 
 		if (count($this->_success) > 0) {
 
-			if (count($this->_result) == 0) echo self::LN; 
+			if (count($this->_info) == 0) echo self::LN; 
 
 			$success = $this->_getSuccess();
 			self::_dialog("Success", $success, self::SUCCESS);
@@ -269,7 +285,7 @@ class CLI extends Frame
 
 		if (count($this->_warnings) > 0) {
 
-			if (count($this->_result) == 0 && count($this->_success) == 0) echo self::LN; 
+			if (count($this->_info) == 0 && count($this->_success) == 0) echo self::LN; 
 
 			$warnings = $this->_getWarnings();
 			self::_dialog("Warnings", $warnings, self::WARNING);
@@ -277,7 +293,7 @@ class CLI extends Frame
 
 		if (count($this->_errors) > 0) {
 
-			if (count($this->_result) == 0 && count($this->_success) == 0 && count($this->_warnings) == 0) echo self::LN; 
+			if (count($this->_info) == 0 && count($this->_success) == 0 && count($this->_warnings) == 0) echo self::LN; 
 
 			$errors = $this->_getErrors();
 			self::_dialog("Errors", $errors, self::FAILURE);
@@ -296,47 +312,28 @@ class CLI extends Frame
 			$output = $this->_getLines($this->_wrong);
 			self::_dialog(null, $output, self::FAILURE);
 		}
-
+	
 	}
 
-	protected function reset()
-	{
-		$this->_warnings = [];
-		$this->_errors = [];
-		$this->_result = [];
-		$this->_success = [];
-		$this->_correct = [];
-		$this->_wrong = [];
-	}
-
-	public function __construct(array $args = [])
+	public function __construct(array $flags, array $args = [])
 	{
 
 		$p = 0;
 		$c = 1;
 
-		$this->_flags = $args;
+		$this->_flags = $flags;
 
 		foreach ($args as $key => $value) {
 
-			if ($c > 2) {
+			if ($c > 1) {
 
-				if ($value == 1) {
-					if (isset($this->_params[$p])) {
-						$k = $this->_params[$p];
-						$this->_args[$k] = $key;
-						$p++;
-					}
-
-				} else {
-					$this->_args[$key] = $value;
-				}
+				$this->_args[$key] = $value;
 
 			}
 
 			$c++;
 		}
-		
+
 	}
 
 } 

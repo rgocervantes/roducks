@@ -34,10 +34,6 @@ use Roducks\Libs\ORM\Query;
 class Schema extends Setup
 {
 
-	protected $_params = [
-		'script'
-	];
-
 	private $_count = 0;
 
 	static function _getFiles($folder)
@@ -89,10 +85,9 @@ class Schema extends Setup
 
 	}
 
-	public function setup()
+	public function setup($script = null)
 	{
 
-		$script = $this->getParam('script', null);
 		$prompt = true;
 
 		if (!is_null($script)) {
@@ -100,7 +95,7 @@ class Schema extends Setup
 			$total = 1;
 
 			if ($total == $this->_count) {
-				$this->result("Script is already set up.");
+				$this->info("Script is already set up.");
 			}
 
 		} else {
@@ -115,7 +110,7 @@ class Schema extends Setup
 
 			if ($total == $this->_count) {
 				$prompt = false;
-				$this->result("There are no scripts to set up.");
+				$this->info("There are no scripts to set up.");
 			}
 
 		}
@@ -124,8 +119,7 @@ class Schema extends Setup
 
 		if ($prompt) {
 
-			$this->reset();
-			$this->promptConfirm("Do you want to run these scripts?");
+			$this->prompt("Do you want to run these scripts?");
 
 			if ($this->yes()) {
 
@@ -134,8 +128,6 @@ class Schema extends Setup
 					$this->_search($file, true);
 				}
 
-			} else {
-				$this->yesNo();
 			}
 
 			parent::output();
@@ -149,7 +141,7 @@ class Schema extends Setup
 		$files = self::_getFiles("Sql");
 		$total = count($files);
 		$count = 0;
-		$label = ($this->getFlag('save')) ? "saved" : "imported";
+		$label = ($this->getFlag('--save')) ? "saved" : "imported";
 
 		if ($total > 0) {
 			if ($files[0] == "roducks.sql") {
@@ -162,14 +154,14 @@ class Schema extends Setup
 
 			if ($this->isUnsaved($file, 'sql')) {
 
-				if ($this->getFlag('save')) {
+				if ($this->getFlag('--save')) {
 
 					$this->saved($file, 'sql');
-					$this->result("{$file} is {$label}!");
+					$this->info("{$file} is {$label}!");
 
 				} else {
 
-					$this->result("{$file} needs to be {$label}");
+					$this->info("{$file} needs to be {$label}");
 
 				}
 			} else {
@@ -179,7 +171,7 @@ class Schema extends Setup
 		}
 
 		if ($total == $count) {
-			$this->result("There are no scripts to be {$label}.");
+			$this->info("There are no scripts to be {$label}.");
 		}
 
 		parent::output();

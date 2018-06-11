@@ -530,6 +530,24 @@ class Helper
 		return preg_replace('/^(.+)\.[a-z]+$/', '$1', $str);
 	}
 
+	static function getCliParams($args)
+	{
+		$params = [];
+		$c = 1;
+
+		foreach ($args as $key => $value) {
+
+			if ($c > 1) {
+				$params[] = ($value == 1) ? $key : $value;
+			}
+
+			$c++;
+		}
+
+		return $params;
+
+	}
+
 	static function pre($arr, $die = false)
 	{
 

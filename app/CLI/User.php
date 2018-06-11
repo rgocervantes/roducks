@@ -35,16 +35,9 @@ use App\Models\Users\Users as UsersTable;
 class User extends CLI
 {
 
-	protected $_params = [
-		'email',
-		'password'
-	];
-
-	public function create()
+	public function create($email = "", $password = "")
 	{
-		
-		$email = $this->getParam('email', "");
-		$password = $this->getParam('password', "");
+
 		$gender = $this->getParam('gender', "male");
 
 		if (!empty($email) && !empty($password)) {
@@ -132,8 +125,8 @@ class User extends CLI
 		$user = UsersTable::open($db)->getRow($id);
 
 		if ($user->foundRow()) {
-			$this->result( $user->getFirstName() . " " . $user->getLastName() );
-			$this->result( $user->getEmail() );
+			$this->info( $user->getFirstName() . " " . $user->getLastName() );
+			$this->info( $user->getEmail() );
 		} else {
 			$this->error("Invalid user ID.");
 		}

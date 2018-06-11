@@ -78,6 +78,7 @@ App::define('DIR_DATA_UPLOADED_PDF', DIR_DATA_UPLOADED . "pdf/");
 App::define('DIR_DATA_UPLOADED_ZIP', DIR_DATA_UPLOADED . "zip/");
 
 App::define('DIR_ROLES', DIR_APP_DATA . "roles/");
+App::define('DIR_SCHEMA_DATA', DIR_APP . "Schema/Data/");
 
 App::define('DIR_ASSETS', "assets/");
 App::define('DIR_PUBLIC', "public/");
