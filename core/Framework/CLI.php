@@ -317,23 +317,17 @@ class CLI extends Frame
 
 	public function __construct(array $flags, array $args = [])
 	{
-
-		$p = 0;
 		$c = 1;
-
 		$this->_flags = $flags;
 
 		foreach ($args as $key => $value) {
 
 			if ($c > 1) {
-
 				$this->_args[$key] = $value;
-
 			}
 
 			$c++;
 		}
-
 	}
 
 } 

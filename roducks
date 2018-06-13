@@ -24,12 +24,11 @@ if (!isset($argv) || php_sapi_name() != "cli") die("Unauthorized to access");
 $params = [];
 $values = [];
 $flags = [];
-$p = 0;
 
 if (is_array($argv) && count($argv) > 0) :
 unset($argv[0]);
 
-    foreach ($argv as $arg) : $p++;
+    foreach ($argv as $arg) :
 
     	if($arg == '--') :
     		continue;
