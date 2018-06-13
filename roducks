@@ -127,7 +127,7 @@ if (isset($params[0])) {
 		$values = Helper::getCliParams($values);
 		call_user_func_array(array($class,$method), $values);
 	} else {
-		CLI::println("Unknown command: {$cls}::{$method}", CLI::FAILURE);
+		CLI::println("Unknown command: {$cls}:{$method}", CLI::FAILURE);
 	}
 	
 } else {
