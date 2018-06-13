@@ -64,11 +64,7 @@ php roducks user:create --dev <YOUR_EMAIL> <YOUR_PASSWORD>
 
 19. Run commands below to create static folder
 ```
-cd public/
-
-mkdir static
-
-cd ..
+mkdir -p public/static
 
 pwd
 ```
@@ -108,11 +104,7 @@ php roducks user:create --pro <YOUR_EMAIL> <YOUR_PASSWORD>
 ```
 11. Run commands below to create static folder
 ```
-cd public/
-
-mkdir static
-
-cd ..
+mkdir -p public/static
 
 pwd
 ```
