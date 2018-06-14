@@ -43,17 +43,17 @@ class User extends Block
 		$squared = Path::getIcon("users/{$img}");
 		$original = $squared;
 
-		if (!empty($img)) {
+		if (!empty($img)) {
 
 			$cropped = Path::getCropName($img, $resize);
 			
-			if (\App::fileExists( Path::getUploadsUsers($cropped) )) {
+			if (\App::fileExists( Path::getUploadsUsers($cropped) )) {
 				$squared = Path::getUploadedUsers($cropped);
 			} else {
 				$cropped = Path::getCropName($img, 'full');
 			}
 
-			if (\App::fileExists( Path::getUploadsUsers($img) )) {
+			if (\App::fileExists( Path::getUploadsUsers($img) )) {
 				$original = Path::getUploadedUsers($img);
 			} 
 
@@ -67,7 +67,7 @@ class User extends Block
 	public function card($id = "")
 	{
 
-		if (empty($id)) {
+		if (empty($id)) {
 			return $this->view->error('public', __METHOD__, "\$id param cannot be zero.");
 		}
 
@@ -75,7 +75,7 @@ class User extends Block
 		$join = UsersRoles::open($db);
 		$user = $join->getUser($id)->fetch();
 
-		if ($join->rows()) {
+		if ($join->rows()) {
 	
 			$this->_picture($user['picture'], 150);
 			$this->view->data("first_name", $user['first_name']." ".$user['last_name']);
