@@ -30,7 +30,9 @@
 	  $cache->set($cacheName, $xmlResponse, Cache::expirationInMinutes(5)); // 5 minutes
 	}
 	 
-	echo $xmlResponse;   
+	echo $xmlResponse;
+
+	$cache->delete($cacheName);
 
 */
 namespace Roducks\Libs\Data;
@@ -44,28 +46,27 @@ class Cache
 	
 	static function init(array $servers = [],$port)
 	{
-		if (self::$memcacheObj == NULL) {
+		if (is_null(self::$memcacheObj)) {
 			if (class_exists('Memcached')) {
-				self::$memcacheObj = new Memcached;
+				self::$memcacheObj = new \Memcached;
 				self::$servers = $servers;
 				self::$port = $port;
 				foreach($servers as $server){
 					self::$memcacheObj->addServer($server, $port);
 				}
-			} else {
-				return false;
 			}
 		}
+
 		return self::$memcacheObj;
 	}
 
-	static function getItems()
+	static function items()
 	{
 
 		foreach (self::$servers as $server) {
 
 			$items = self::cacheSlab(self::sendCommand($server,self::$port,"stats items"));
-			$data = array();
+			$data = [];
 
 			foreach ($items as $key => $value) {
 				$vars = self::cacheItems(self::sendCommand($server,self::$port,"stats cachedump $key $value[number]"));
@@ -80,9 +81,9 @@ class Cache
 
 	}
 
-	static function removeItems()
+	static function clean()
 	{
-		$items = self::getItems();
+		$items = self::items();
 
 		foreach ($items as $item) {
 			self::$memcacheObj->delete($item);

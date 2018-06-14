@@ -27,7 +27,9 @@ use Roducks\Framework\Login;
 use Roducks\Framework\Role;
 use Roducks\Framework\Error;
 use Roducks\Framework\Helper;
+use Roducks\Framework\Environment;
 use Roducks\Libs\Request\Http;
+use Roducks\Libs\Data\Cache;
 
 abstract class Frame
 {
@@ -43,6 +45,7 @@ abstract class Frame
 	protected $_pageType = 'FRAME'; // PAGE|BLOCK|FACTORY
 
 	private $_lang;
+	private $_cache = null;
 
 /*
 //---------------------------------
@@ -116,6 +119,36 @@ abstract class Frame
 //	PROTECTED METHODS
 //---------------------------------
 */
+	protected function cache($action = 'default')
+	{
+
+		if (is_null($this->_cache)) {
+			$memcache = Core::getCacheConfig();
+			$config = (Environment::inDEV()) ? '.local' : '';
+			if (count($memcache) > 0) {
+				$this->_cache = Cache::init($memcache['servers'],$memcache['port']);
+				if (is_null($this->_cache)) {
+					Error::fatal('Unable to connect to Memcache', __LINE__, __FILE__, "app/Config/memcache{$config}.inc");
+				}
+			} else {
+				Error::fatal('Missing Cache config', __LINE__, __FILE__, "app/Config/memcache{$config}.inc");
+			}
+		}
+
+		switch ($action) {
+			case 'items':
+				return Cache::items();
+				break;
+			case 'clean':
+				Cache::clean();
+				break;
+			default:
+				return $this->_cache;
+				break;
+		}
+
+	}
+
 	protected function getLang()
 	{
 		return $this->_lang;
@@ -290,24 +323,6 @@ abstract class Frame
 		$session = (empty($session)) ? $type : $session;
 		$this->grantAccess = new GrantAccess($class, $session);
 	}	
-
-	protected function initCache()
-	{
-
-		/* ------------------------------------*/
-		/* 		MEMCACHED
-		/* ------------------------------------*/
-		$memcache = Core::getCacheConfig();
-		if (count($memcache) > 0) {
-			$cache = Cache::init($memcache['servers'],$memcache['port']);
-			if ($cache !== false) {
-				return $cache;
-			}	
-		}
-
-		return false;
-
-	}
 
 	protected function params(array $values = [])
 	{
