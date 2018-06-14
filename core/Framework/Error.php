@@ -80,7 +80,8 @@ class Error
 		return $markup;
 	}
 
-	static function _throw($title, $line, $path, $file, $error = "") {
+	static function _throw($title, $line, $path, $file, $error = "")
+	{
 		$markup = '<html><head><title>Roducks Debugger</title></head><body style="background: #031415; color: #fff;">';
 		$markup .= '<div style="text-align:center; margin-top: 40px;">';		
 			$markup .= '<div style="font-family:monospace;">';
