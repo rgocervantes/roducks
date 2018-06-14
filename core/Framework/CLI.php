@@ -223,7 +223,7 @@ class CLI extends Frame
 
 	protected function getAnswer()
 	{
-		return $this->_answer;
+		return Helper::dataType($this->_answer);
 	}
 
 	protected function yes()
@@ -254,7 +254,7 @@ class CLI extends Frame
 
 	protected function prompt($text)
 	{
-		$this->_prompt($text);
+		$this->_prompt("{$text} ");
 	}
 
 	protected function promptYN($text)
