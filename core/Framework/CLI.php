@@ -108,15 +108,14 @@ class CLI extends Frame
 
 	}
 
-	private function _prompt($text)
+	private function _prompt($text, $yn = false)
 	{
 		$this->reset();
 
-		$prompt = "{$text}: ";
-		echo $prompt;
+		echo $text;
 		$this->_answer = rtrim( fgets( STDIN ));
 
-		if (!in_array($this->_answer, ['y','n'])) {
+		if (!in_array($this->_answer, ['y','n']) && $yn) {
 			$this->_badAnswer = true;
 		}
 	}
@@ -255,7 +254,12 @@ class CLI extends Frame
 
 	protected function prompt($text)
 	{
-		$this->_prompt("{$text} [y/n]");
+		$this->_prompt($text);
+	}
+
+	protected function promptYN($text)
+	{
+		$this->_prompt("{$text}: [y/n]", true);
 	}
 
 	protected function output()
