@@ -37,6 +37,8 @@
 */
 namespace Roducks\Libs\Data;
 
+use \Memcached;
+
 class Cache
 {
 
@@ -47,13 +49,15 @@ class Cache
 	static function init(array $servers = [],$port)
 	{
 		if (is_null(self::$memcacheObj)) {
-			if (class_exists('Memcached')) {
-				self::$memcacheObj = new \Memcached;
+			if (class_exists('Memcached', false)) {
+
+				self::$memcacheObj = new Memcached;
 				self::$servers = $servers;
 				self::$port = $port;
+
 				foreach($servers as $server){
 					self::$memcacheObj->addServer($server, $port);
-				}
+				}				
 			}
 		}
 

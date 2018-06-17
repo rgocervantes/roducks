@@ -43,6 +43,7 @@ abstract class Frame
 	protected $grantAccess;			
 	protected $_dispatchUrl = false;
 	protected $_pageType = 'FRAME'; // PAGE|BLOCK|FACTORY
+	protected $_inLocal = true;
 
 	private $_lang;
 	private $_cache = null;
@@ -123,15 +124,31 @@ abstract class Frame
 	{
 
 		if (is_null($this->_cache)) {
-			$memcache = Core::getCacheConfig();
-			$config = (Environment::inDEV()) ? '.local' : '';
+			$memcache = Core::getCacheConfig($this->_inLocal);
+			$config = (Environment::inDEV() || $this->_inLocal) ? '.local' : '';
+			$errorMessage1 = 'Unable to connect to Memcache';
+			$errorMessage2 = 'Missing Cache config';
+			$errorFile = "app/Config/memcache{$config}.inc";
+
 			if (count($memcache) > 0) {
+
+				$servers = implode(',', $memcache['servers']);
+				$errorConn = "with -> Servers: {$servers}; Port: {$memcache['port']}";
+
 				$this->_cache = Cache::init($memcache['servers'],$memcache['port']);
 				if (is_null($this->_cache)) {
-					Error::fatal('Unable to connect to Memcache', __LINE__, __FILE__, "app/Config/memcache{$config}.inc");
+					if (Environment::inCLI()) {
+						throw new \Exception("{$errorMessage1} {$errorConn}", 1);
+					} else {
+						Error::fatal($errorMessage1, __LINE__, __FILE__, $errorConn);
+					}
 				}
 			} else {
-				Error::fatal('Missing Cache config', __LINE__, __FILE__, "app/Config/memcache{$config}.inc");
+				if (Environment::inCLI()) {
+					throw new \Exception("{$errorMessage2}: {$errorFile}", 1);
+				} else {
+					Error::fatal($errorMessage2, __LINE__, __FILE__, $errorFile);
+				}
 			}
 		}
 
@@ -548,6 +565,11 @@ abstract class Frame
 	public function getParentClassName()
 	{
 		return '\\'.$this->_getParentClassName();
-	}	
+	}
+
+	public function inLocal($bool)
+	{
+		$this->_inLocal = $bool;
+	}
 
 } 

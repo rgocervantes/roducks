@@ -283,9 +283,9 @@ class Core
 	/**
 	*
 	*/
-	static function getCacheConfig()
+	static function getCacheConfig($local = true)
 	{
-		$local = (Environment::inDEV()) ? ".local" : "";
+		$local = (Environment::inDEV() || $local) ? ".local" : "";
 		$siteMemcache = self::getSiteConfigPath("memcache{$local}");
 		$appMemcache = self::getAppConfigPath("memcache{$local}");
 
@@ -293,11 +293,9 @@ class Core
 		list($realPath2, $fileExists2) = \App::getRealPath($appMemcache);
 
 		if ($fileExists1) {
-			include_once $realPath1;
-			return $memcache;
+			return include_once $realPath1;
 		} else if ($fileExists2) {
-			include_once $realPath2;
-			return $memcache;
+			return include_once $realPath2;
 		}
 
 		return [];	

@@ -31,13 +31,20 @@ class Cache extends CLI
 
 	public function clean($item = "all")
 	{
-		if ($type != "all") {
-			$this->cache('init')->delete($iem);
-		} else {
-			$this->cache('clean');
-		}
 
-		$this->success("Cache memory was cleaned.");
+		try {
+			
+			if ($item != "all") {
+				$this->cache('init')->delete($iem);
+			} else {
+				$this->cache('clean');
+			}
+
+			$this->success("Cache memory was cleaned.");
+
+		} catch (\Exception $e) {
+			$this->error($e->getMessage());			
+		}
 
 		parent::output();
 	}
