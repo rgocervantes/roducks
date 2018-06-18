@@ -119,7 +119,7 @@ if (isset($params[0])) {
 	$script = "App\\CLI\\" . $name;
 
 	if (!class_exists($script)) {
-		CLI::println("Class not exists: $script", CLI::FAILURE);
+		exit;
 	}
 	
 	$class = new $script($flags, $values);
