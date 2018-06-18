@@ -36,7 +36,7 @@ class Environment
 		$subdomain = Http::getSubdomain(DOMAIN_NAME, Core::DEFAULT_SUBDOMAIN);
 		$config = Core::getEnvConfigFile();
 
-		$site = (isset($config[$subdomain]['site'])) ? $config[$subdomain]['site'] : "front";
+		$site = (isset($config[$subdomain]['site'])) ? $config[$subdomain]['site'] : "Front";
 		$database = (isset($config[$subdomain]['database'])) ? $config[$subdomain]['database'] : "database";
 		$mode = (isset($config[$subdomain]['mode'])) ? $config[$subdomain]['mode'] : self::PRO;
 		$errors = ($mode == self::DEV) ? true : false;

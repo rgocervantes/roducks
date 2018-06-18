@@ -546,7 +546,7 @@ class Core
 
 			if (Helper::isBlock($class)) {
 
-			    $path = str_replace("\\","/", $class) . FILE_EXT;
+				$path = $pageObj['fileName'];
 			    $class = Helper::getBlockClassName($class);
 			    $isBlock = true;
 			    list($realPath, $fileExists) = \App::getRealPath($path);
