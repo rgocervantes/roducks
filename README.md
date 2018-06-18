@@ -70,7 +70,7 @@ pwd
 ```
 20. Copy the route of your project and replace it by `<PATH>` in order to create a symbolic link
 ```
-ln -s <PATH>/roducks/app/Data/uploads <PATH>/roducks/public/static
+ln -s <PATH>/app/Data/uploads <PATH>/public/static
 ```
 21. Type in a Web Browser `http://admin.local.<YOUR_DOMAIN_NAME>` and Log In with your credentials to enter to Admin.
 22. Type in a Web Browser `http://local.<YOUR_DOMAIN_NAME>` to see the Front-End.
@@ -110,7 +110,7 @@ pwd
 ```
 12. Copy the route of your project and replace it by `<PATH>` in order to create a symbolic link
 ```
-ln -s <PATH>/roducks/app/Data/uploads <PATH>/roducks/public/static
+ln -s <PATH>/app/Data/uploads <PATH>/public/static
 ```
 13. Type in a Web Browser `http://admin.<YOUR_DOMAIN_NAME>` and Log In with your credentials to enter to the Back-End.
 14. Type in a Web Browser `http://www.<YOUR_DOMAIN_NAME>` to see the Front-End.
