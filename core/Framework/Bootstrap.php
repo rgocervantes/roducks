@@ -157,8 +157,8 @@ if (!isset($appConfig['domain_name']) || empty($appConfig['domain_name'])) {
 
     App::define('RDKS_ERRORS', true);
 
-    if (App::fileExists(Core::getAppConfigPath('config'))) {
-        Error::missingDbConfig("Undefined Domain Name", __LINE__, __FILE__, Core::getAppConfigPath('config'), 'domain_name', '');
+    if (App::fileExists(Core::getAppConfigPath('config.local'))) {
+        Error::missingDbConfig("Undefined Domain Name", __LINE__, __FILE__, Core::getAppConfigPath('config.local'), 'domain_name', '');
     } else {
         App::define('RDKS_SITE', 'Front');
         App::define('RDKS_MODE', 3);
