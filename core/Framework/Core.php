@@ -46,14 +46,38 @@ class Core
 		return str_replace('/', '\\', $class);
 	}
 
-	static function db($display_errors = false)
+	static function db()
 	{
-		return DB::get($display_errors, [DB_HOST,DB_USER,DB_PASSWORD,DB_NAME]);
+		try {
+			return DB::get([DB_HOST,DB_USER,DB_PASSWORD,DB_NAME]);
+		} catch (\Exception $e) {
+			if (RDKS_ERRORS) {
+
+				if ($e->getMessage() == 'user') {
+					$file = (Environment::inDEV()) ? 'database.local' : 'database';
+					Error::missingDbConfig("Missing DB Credentails", __LINE__, __FILE__, self::getAppConfigPath($file), $e->getMessage(), '');
+				} else {
+					Error::fatal("MySQLi", __LINE__, __FILE__, '', $e->getMessage());
+				}
+
+			} else {
+				Error::pageNotFound();
+			}
+
+		}
 	}
 
-	static function openDb($display_errors = false, array $conn = [])
+	static function openDb(array $conn = [])
 	{
-		return DB::open($display_errors, $conn);
+		try {
+			return DB::open($conn);
+		} catch (\Exception $e) {
+			if (RDKS_ERRORS) {
+				Error::fatal("Missing DB Credentails", __LINE__, __FILE__, '', $e->getMessage());
+			} else {
+				Error::pageNotFound();
+			}
+		}
 	}	
 
 	static function getSitePath($site = "")

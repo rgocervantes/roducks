@@ -27,27 +27,38 @@ class DB
     static $_error = 0;
 
     // Open a new connection
-    static function open($display_errors, array $conn = [])
+    static function open(array $conn = [])
     {
 
-        $mysqli = new \mysqli($conn[0],$conn[1],$conn[2],$conn[3]);
-        $mysqli->set_charset('utf8');
-
-        if ($mysqli->connect_errno && $display_errors === TRUE) {
-            echo $mysqli->connect_errno." :: ".$mysqli->connect_error;
-            exit;
+        if (empty($conn[1])) {
+            throw new \Exception("user", 1);
         }
 
-        return $mysqli;
+        mysqli_report(MYSQLI_REPORT_STRICT);
+
+        try {
+            $mysqli = new \mysqli($conn[0],$conn[1],$conn[2],$conn[3]);
+
+            if ($mysqli->connect_errno) {
+                throw new \Exception("{$mysqli->connect_errno} :: {$mysqli->connect_error}", 1);
+            }
+
+            $mysqli->set_charset('utf8');
+
+            return $mysqli;
+
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage(), 1);
+        }
 
     }
 
     // Get Singleton :)
-    static function get($display_errors, array $conn = [])
+    static function get(array $conn = [])
     {
 
         if(is_null(self::$_mysqli)){
-            self::$_mysqli = self::open($display_errors, $conn);
+            self::$_mysqli = self::open($conn);
         }
 
         return self::$_mysqli;
