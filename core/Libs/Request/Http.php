@@ -131,6 +131,11 @@ class Http
 		return $uri;
 	}
 
+	static function getPort()
+	{
+		return $_SERVER['SERVER_PORT'];
+	}
+
 	static function getIPClient()
 	{
 		return $_SERVER['REMOTE_ADDR'];

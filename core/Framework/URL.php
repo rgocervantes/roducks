@@ -145,7 +145,14 @@ class URL
 	static function goToURL($inDEV, $inPro)
 	{
 		$subdomain = (Environment::inDEV()) ? $inDEV : $inPro;
-		return Http::getProtocol() . $subdomain . "." . DOMAIN_NAME;
+		$serverPort = Http::getPort();
+		$port = '';
+		
+		if ($serverPort != 80) {
+			$port = ":{$serverPort}";
+		}
+
+		return Http::getProtocol() . $subdomain . "." . DOMAIN_NAME . $port;
 	}
 
 	/*
