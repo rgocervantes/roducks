@@ -53,11 +53,14 @@ class Core
 		} catch (\Exception $e) {
 			if (RDKS_ERRORS) {
 
+				$file = (Environment::inDEV()) ? 'database.local' : 'database';
+				$config = self::getAppConfigPath($file);
+
 				if ($e->getMessage() == 'user') {
-					$file = (Environment::inDEV()) ? 'database.local' : 'database';
-					Error::missingDbConfig("Missing DB Credentails", __LINE__, __FILE__, self::getAppConfigPath($file), $e->getMessage(), '');
+					
+					Error::missingDbConfig("Missing DB Credentails", __LINE__, __FILE__, $config, $e->getMessage(), '');
 				} else {
-					Error::fatal("MySQLi", __LINE__, __FILE__, '', $e->getMessage());
+					Error::fatal("MySQLi", __LINE__, __FILE__, $config, $e->getMessage());
 				}
 
 			} else {
