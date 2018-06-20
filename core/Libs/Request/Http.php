@@ -125,7 +125,10 @@ class Http
 
 	static function getURI()
 	{
-		return filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
+		$uri = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
+		$uri = str_replace(self::getServerName(), '', $uri);
+
+		return $uri;
 	}
 
 	static function getIPClient()
