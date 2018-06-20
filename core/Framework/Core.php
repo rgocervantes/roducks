@@ -470,9 +470,10 @@ class Core
 		self::loadFile(DIR_CORE_CONFIG, $name . FILE_INC);
 	}
 
-	static function loadAppLanguages()
+	static function loadAppLanguages($iso = "")
 	{
-		self::loadFile(DIR_APP_LANGUAGES, Language::get() . FILE_INC);
+		$lang = (empty($iso)) ? Language::get() : $iso;
+		self::loadFile(DIR_APP_LANGUAGES, $lang . FILE_INC);
 	}
 
 	static function callMethod($class, $method, $obj, $path, $params)
