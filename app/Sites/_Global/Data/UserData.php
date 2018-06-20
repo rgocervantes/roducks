@@ -23,9 +23,11 @@ namespace App\Sites\_Global\Data;
 use Roducks\Framework\EAV;
 use App\Models\Users\Users;
 
-class UserData extends EAV{
+class UserData extends EAV
+{
 
-	public function __construct($id){
+	public function __construct($id)
+	{
 			
 		$this->_id = $id;
 		$this->_entity = Users::CLASS;

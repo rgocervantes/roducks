@@ -24,20 +24,24 @@ use Roducks\Framework\Data;
 use Roducks\Libs\Utils\Date;
 use Roducks\Libs\Output\XML;
 
-class LogData extends Data{
+class LogData extends Data
+{
 
 	private $_dataId;
 
-	static function getFileName($id){
+	static function getFileName($id)
+	{
 		return "user_{$id}";
 	}
 
-	static function getFilePath($date){
+	static function getFilePath($date)
+	{
 		$d = explode("-", $date);
 		return "log/users/{$d[0]}/{$d[1]}/{$d[2]}/";
 	}
 
-	public function __construct($id){
+	public function __construct($id)
+	{
 		$date = Date::getCurrentDate();
 		$this->_dataId = $id;
 		$this->_filePath = self::getFilePath($date);
@@ -46,7 +50,8 @@ class LogData extends Data{
 		parent::__construct();
 	}
 
-	public function getContent($date){
+	public function getContent($date)
+	{
 
 		$fileName = $this->_dirStorage . self::getFilePath($date) . self::getFileName($this->_dataId);
 
