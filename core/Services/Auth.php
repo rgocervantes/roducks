@@ -135,14 +135,14 @@ class Auth extends Service
 
 		$auth = $this->_authenticate($session, $type, $email, $password);
 
-		if (!is_bool($return)) {
+		if ($return) {
+			return $auth;
+		} else {
 			$this->setStatus($auth);
 			parent::output();
-		} else {
-			return $auth;
 		}
 
-	}		
+	}
 
 	private function _paywall($id)
 	{
