@@ -152,6 +152,29 @@ class Request extends stdClass
 
 	}
 
+	/**
+	 *	@param $proxy URL
+	 *	@param $proxyauth user:password
+	 */
+	public function proxy($proxy = null, $proxyauth = null, $tunnel = false, $type = false)
+	{
+		if ($tunnel) {
+			curl_setopt($this->_ch, CURLOPT_HTTPPROXYTUNNEL, 1);
+		}
+
+		curl_setopt($this->_ch, CURLOPT_PROXY, $proxy);     // PROXY details with port
+		
+		if (!is_null($proxyauth)) {
+			curl_setopt($this->_ch, CURLOPT_PROXYUSERPWD, $proxyauth);   // Use if proxy have username and password
+		}
+
+		if ($type) {
+			curl_setopt($this->_ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5); // If expected to call with specific PROXY type	
+		}
+		
+		return $this;	
+	}
+
 	public function verbose()
 	{
 		curl_setopt($this->_ch, CURLOPT_VERBOSE, true);
@@ -172,11 +195,22 @@ class Request extends stdClass
 		return $this;
 	}
 
-	public function followRedirect($value = true)
+	public function followRedirect($value = true, $redirects = 1)
 	{
 		curl_setopt($this->_ch, CURLOPT_FOLLOWLOCATION, $value);
-		$this->redirect = true;
+
+		if ($redirects > 1) {
+			curl_setopt($this->_ch, CURLOPT_MAXREDIRS, $redirects); //if http server gives redirection responce
+		}
+
+		$this->_redirect = true;
+
 		return $this;
+	}
+
+	public function encoding($type = "gzip")
+	{
+		curl_setopt($this->_ch, CURLOPT_ENCODING, $type); // the page encoding
 	}
 
 	public function referer($url = "")
