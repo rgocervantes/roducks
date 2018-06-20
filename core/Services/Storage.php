@@ -140,9 +140,9 @@ class Storage extends Service
 	{
 		
 		$file = $this->post->param("cropper");
-		$this->__makeCrops($fx, $dir, $file, $cuts);
+		$this->__makeCrops($fx, Path::get($dir), $file, $cuts);
 		$cuts = array_merge(array($fx), $cuts);
-		$this->__deleteCrops($dir, $cuts);
+		$this->__deleteCrops(Path::get($dir), $cuts);
 
 		$data = [
 			'dir' => $dir2,
@@ -178,7 +178,7 @@ class Storage extends Service
 		Directory::make(Path::get(), $dir);
 
 		$filename = (!is_null($this->_fileName)) ? $this->_fileName : $prefix . Date::getCurrentDateTimeFlat();
-		$resp = $file->upload($dir, $this->_input, $filename);
+		$resp = $file->upload(Path::get($dir), $this->_input, $filename);
 
 		$data = [
 				'success' => $resp['success'],
@@ -234,21 +234,21 @@ class Storage extends Service
 		switch ($method) {
 			case 'cropSquared':
 				if (isset($config['clipping']) && isset($config['dir_upload']) && isset($config['dir_uploaded']) && isset($config['squared_clippings'])) {
-					$this->_crop($config['clipping'], \App::getRealFilePath($config['dir_upload']), $config['dir_uploaded'], $config['squared_clippings']);
+					$this->_crop($config['clipping'], $config['dir_upload'], $config['dir_uploaded'], $config['squared_clippings']);
 				} else {
 					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
 				break;
 			case 'cropLandscape':
 				if (isset($config['clipping']) && isset($config['dir_upload']) && isset($config['dir_uploaded']) && isset($config['landscape_clippings'])) {
-					$this->_crop($config['clipping'], \App::getRealFilePath($config['dir_upload']), $config['dir_uploaded'], $config['landscape_clippings']);
+					$this->_crop($config['clipping'], $config['dir_upload'], $config['dir_uploaded'], $config['landscape_clippings']);
 				} else {
 					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
 				break;
 			case 'upload':
 				if (isset($config['prefix']) && isset($config['dir_upload']) && isset($config['dir_uploaded']) && isset($config['size']) && isset($config['types'])) {
-					$this->_upload($config['prefix'], \App::getRealFilePath($config['dir_upload']), $config['dir_uploaded'], $config['size'], $config['types']);
+					$this->_upload($config['prefix'], $config['dir_upload'], $config['dir_uploaded'], $config['size'], $config['types']);
 				} else {
 					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
@@ -262,7 +262,7 @@ class Storage extends Service
 				break;
 			case 'deleteCrops':
 				if (isset($config['dir_upload']) && isset($config['squared_clippings'])) {
-					$this->_deleteCrops(\App::getRealFilePath($config['dir_upload']), $config['squared_clippings']);
+					$this->_deleteCrops($config['dir_upload'], $config['squared_clippings']);
 				} else {
 					$this->_serviceError(0, TEXT_SERVICE_UNAVAILABLE);
 				}
