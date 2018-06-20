@@ -118,7 +118,7 @@ class Roles extends AdminPage
 		];
 
 		$this->view->tpl("totalPages", $data->getTotalPages());
-		$this->view->tpl("pageRedirect", URL::setParams(['page' => ""]));
+		$this->view->tpl("pageRedirect", URL::setQueryString(['page' => ""]));
 		$this->view->tpl("btnCreateUrl", "/roles/add");
 		$this->view->tpl("autocomplete", $autocomplete);
 

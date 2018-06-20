@@ -172,8 +172,12 @@ class Auth extends Service
 	/**
 	*	@return json
 	*/	
-	public function loginAdmin($return)
+	public function loginAdmin($return = false)
 	{
+		if ($return) {
+			return $this->_login(Login::SESSION_ADMIN, Role::TYPE_USERS, $return);
+		}
+
 		$this->_login(Login::SESSION_ADMIN, Role::TYPE_USERS, $return);
 	}	
 
@@ -182,8 +186,12 @@ class Auth extends Service
 		$this->_paywall($id);		
 	}
 
-	public function loginSubscriber($return)
+	public function loginSubscriber($return = false)
 	{
+		if ($return) {
+			return $this->_login(Login::SESSION_FRONT, Role::TYPE_SUBSCRIBERS, $return);
+		}
+
 		$this->_login(Login::SESSION_FRONT, Role::TYPE_SUBSCRIBERS, $return);
 	}
 

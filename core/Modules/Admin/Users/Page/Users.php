@@ -161,7 +161,7 @@ class Users extends AdminPage
 
 		if ($isTrash) {
 			$totals = $inTrash;
-			$paramTrash = URL::setParams(['trash' => $this->trash]);
+			$paramTrash = URL::setQueryString(['trash' => $this->trash]);
 		}
 
 		$this->view->assets->scriptsInline(["pager","grid","popover","users","roles.modal"]);
@@ -172,7 +172,7 @@ class Users extends AdminPage
 		$this->view->data("data", $users);
 		$this->view->data("totals", $totals);
 		$this->view->tpl("totalPages", $users->getTotalPages());
-		$this->view->tpl("pageRedirect", URL::setParams(['page' => ""]));
+		$this->view->tpl("pageRedirect", URL::setQueryString(['page' => ""]));
 		$this->view->data("access", $access);
 		$this->view->data("type", $this->_type);
 		$this->view->data("icon", RolesHelper::getIcon($this->_type));
@@ -212,7 +212,7 @@ class Users extends AdminPage
 		$paramTrash = "";
 
 		if ($this->trash == 1) {
-			$paramTrash = URL::setParams(['trash' => $this->trash]);
+			$paramTrash = URL::setQueryString(['trash' => $this->trash]);
 		}
 
 		$this->redirect("{$this->_url}{$paramTrash}");
@@ -264,7 +264,11 @@ class Users extends AdminPage
 			}
 		}
 
-		$data = UserData::init($id_user)->getRows('log_date', $this->page, $this->_rowsPerPage, $filter);
+		try {
+			$data = UserData::init($id_user)->getRows('log_date', $this->page, $this->_rowsPerPage, $filter);
+		} catch (\Exception $e) {
+			die($e->getMessage());
+		}
 
 		$this->view->assets->scriptsInline(["pager","logs"]);
 		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","datepicker-range.ready.inc"]);		
@@ -279,7 +283,7 @@ class Users extends AdminPage
 		$this->view->data("urlReset", "{$this->_url}/reset-logs/id/{$id_user}");
 		$this->view->data("id_user", $id_user);
 		$this->view->tpl("totalPages", $data['pages']);
-		$this->view->tpl("pageRedirect", URL::setParams(['page' => ""]));		
+		$this->view->tpl("pageRedirect", URL::setQueryString(['page' => ""]));		
 
 		$this->view->layout("sidebar-content",[
 			'CONTENT' => [

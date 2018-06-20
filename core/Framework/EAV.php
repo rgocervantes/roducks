@@ -145,7 +145,11 @@ class EAV extends Frame
 
 		$db = $this->db();
 		$data = EAVTable::open($db);
-		$data->pagination($filters, ['id_index' => "desc"], $page, $limit, $fields);
+		$data
+		->select($fields)
+		->where($filters)
+		->orderBy(['id_index' => "desc"])
+		->paginate($page, $limit);
 
 		if ($data->rows()) {
 

@@ -22,7 +22,7 @@ namespace App\Sites\Admin\Modules\Users\Page;
 
 use Roducks\Page\View;
 use Roducks\Framework\Role;
-use Roducks\Modules\admin\Users\Page\Users as UsersPage;
+use Roducks\Modules\Admin\Users\Page\Users as UsersPage;
 use App\Sites\Admin\Modules\Users\Helper\Users as UsersHelper;
 
 class Users extends UsersPage
