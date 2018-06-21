@@ -135,29 +135,29 @@ class Schema extends Setup
 
 	}
 
-	public function sql()
+	private function _sql($save = false, $loop = true)
 	{
 
 		$files = self::_getFiles("Sql");
 		$total = count($files);
 		$count = 0;
-		$label = ($this->getFlag('--save')) ? "saved" : "imported";
-
-		if ($total > 0) {
-			if ($files[0] == "roducks.sql") {
-				unset($files[0]);
-				$total--;
-			}
-		}
+		$prompt = true;
+		$saved = ($this->getFlag('--save') || $save);
+		$label = "imported";
 
 		foreach ($files as $file) {
 
+			if ($file == "roducks.sql") {
+				$total--;
+				continue;
+			}
+
 			if ($this->isUnsaved($file, 'sql')) {
 
-				if ($this->getFlag('--save')) {
+				if ($saved) {
 
 					$this->saved($file, 'sql');
-					$this->info("{$file} is {$label}!");
+					$this->success("{$file} was {$label}!");
 
 				} else {
 
@@ -171,11 +171,26 @@ class Schema extends Setup
 		}
 
 		if ($total == $count) {
+			$prompt = false;
 			$this->info("There are no scripts to be {$label}.");
 		}
 
 		parent::output();
 
+		if (!$this->getFlag('--save') && $loop && $prompt) {
+			$this->promptYN("Did you already import these SQL scripts by your own?");
+
+			if ($this->yes()) {
+				$this->_sql(true, false);
+			}
+
+		}
+
+	}
+
+	public function sql()
+	{
+		$this->_sql(false);
 	}
 
 }
