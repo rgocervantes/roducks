@@ -211,6 +211,7 @@ class Request extends stdClass
 	public function encoding($type = "gzip")
 	{
 		curl_setopt($this->_ch, CURLOPT_ENCODING, $type); // the page encoding
+		return $this;
 	}
 
 	public function referer($url = "")
