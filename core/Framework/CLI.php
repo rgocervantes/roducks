@@ -259,7 +259,7 @@ class CLI extends Frame
 
 	protected function promptYN($text)
 	{
-		$this->_prompt("{$text}: [y/n]", true);
+		$this->_prompt("{$text} [y/n]: ", true);
 	}
 
 	protected function output()
