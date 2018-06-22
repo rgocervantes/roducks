@@ -51,22 +51,24 @@ class Core
 		try {
 			return DB::get([DB_HOST,DB_USER,DB_PASSWORD,DB_NAME]);
 		} catch (\Exception $e) {
+
+			$file = (Environment::inDEV()) ? 'database.local' : 'database';
+			$config = self::getAppConfigPath($file);
+
 			if (RDKS_ERRORS) {
-
-				$file = (Environment::inDEV()) ? 'database.local' : 'database';
-				$config = self::getAppConfigPath($file);
-
 				if ($e->getMessage() == 'user') {
-					
 					Error::missingDbConfig("Missing DB Credentails", __LINE__, __FILE__, $config, $e->getMessage(), '');
 				} else {
 					Error::fatal("MySQLi", __LINE__, __FILE__, $config, $e->getMessage());
 				}
 
 			} else {
-				Error::pageNotFound();
+				if (!Environment::inCLI()) {
+					Error::pageNotFound();
+				} else {
+					CLI::println("Unconfigured file: {$config}", CLI::FAILURE);
+				}
 			}
-
 		}
 	}
 
@@ -78,10 +80,14 @@ class Core
 			if (RDKS_ERRORS) {
 				Error::fatal("Missing DB Credentails", __LINE__, __FILE__, '', $e->getMessage());
 			} else {
-				Error::pageNotFound();
+				if (!Environment::inCLI()) {
+					Error::pageNotFound();
+				} else {
+					CLI::println("Unconfigured file: {$config}", CLI::FAILURE);
+				}
 			}
 		}
-	}	
+	}
 
 	static function getSitePath($site = "")
 	{

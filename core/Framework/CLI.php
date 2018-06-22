@@ -59,6 +59,18 @@ class CLI extends Frame
 			$ln = "";
 		}
 
+		if ($text == '[x]') {
+			return ["EMPTY", $text];
+		}
+
+		if (preg_match('/^\[x\].+$/', $text)) {
+			return ['NO_BULLET', $text];
+		}
+
+		if (preg_match('/^\[\*\].+$/', $text)) {
+			return ['BULLET', $text];
+		}
+
 		return $text.$long.$ln;
 
 	}
@@ -122,7 +134,26 @@ class CLI extends Frame
 
 	private function _getOutput(array $arr = [], $bullet = "")
 	{
-		return (count($arr) > 0) ? $bullet . implode($bullet, $arr) : self::LN;
+
+		$lines = "";
+
+		foreach ($arr as $key => $value) {
+
+			if (is_array($value)) {
+
+				if ($value[0] == 'EMPTY') {
+					$lines .= self::line("");
+				} else if ($value[0] == 'NO_BULLET') {
+					$lines .= self::line(preg_replace('/^\[x\](.+)$/', '  $1', $value[1]));
+				} else if ($value[0] == 'BULLET') {
+					$lines .= self::line(preg_replace('/^\[\*\](.+)$/', '  * $1', $value[1]));
+				}
+
+			} else {
+				$lines .= $bullet.$value;
+			}
+		}
+		return (count($arr) > 0) ? $lines : self::LN;
 	}
 
 	private function _getList(array $arr = [])

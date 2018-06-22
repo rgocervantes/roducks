@@ -73,7 +73,11 @@ class User extends CLI
 					}
 
 				} else {
-					$this->warning("Super Admin was already created.");
+					$this->warning("[*]Super Admin was already created.");
+					$this->warning("[x]");
+					$this->warning("[*]If you want to reset password, run this command:");
+					$this->warning("[x]");
+					$this->warning("[x]php roducks user:reset --pro <EMAIL> <NEW_PASSWORD>");
 				}
 
 			} else {
