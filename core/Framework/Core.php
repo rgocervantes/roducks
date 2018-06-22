@@ -52,21 +52,25 @@ class Core
 			return DB::get([DB_HOST,DB_USER,DB_PASSWORD,DB_NAME]);
 		} catch (\Exception $e) {
 
-			$file = (Environment::inDEV()) ? 'database.local' : 'database';
+			$file = (Environment::inDEV() || RDKS_ERRORS) ? 'database.local' : 'database';
 			$config = self::getAppConfigPath($file);
 
 			if (RDKS_ERRORS) {
-				if ($e->getMessage() == 'user') {
-					Error::missingDbConfig("Missing DB Credentails", __LINE__, __FILE__, $config, $e->getMessage(), '');
+				if (!Environment::inCLI()) {
+					if ($e->getMessage() == 'user') {
+						Error::missingDbConfig("Missing DB Credentails", __LINE__, __FILE__, $config, $e->getMessage(), '');
+					} else {
+						Error::fatal("MySQLi", __LINE__, __FILE__, $config, $e->getMessage());
+					}
 				} else {
-					Error::fatal("MySQLi", __LINE__, __FILE__, $config, $e->getMessage());
+					CLI::printError("Unconfigured file: {$config}", CLI::FAILURE);
 				}
 
 			} else {
 				if (!Environment::inCLI()) {
 					Error::pageNotFound();
 				} else {
-					CLI::println("Unconfigured file: {$config}", CLI::FAILURE);
+					CLI::printError("Unconfigured file: {$config}", CLI::FAILURE);
 				}
 			}
 		}
@@ -83,7 +87,7 @@ class Core
 				if (!Environment::inCLI()) {
 					Error::pageNotFound();
 				} else {
-					CLI::println("Unconfigured file: {$config}", CLI::FAILURE);
+					CLI::printError("Unconfigured file: {$config}", CLI::FAILURE);
 				}
 			}
 		}

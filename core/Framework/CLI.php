@@ -120,6 +120,12 @@ class CLI extends Frame
 
 	}
 
+	static function printError($text, $color = "NOTE", $px = 0)
+	{
+		self::println($text, $color, $px);
+		exit;
+	}
+
 	private function _prompt($text, $yn = false)
 	{
 		$this->reset();
