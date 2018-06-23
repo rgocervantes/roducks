@@ -37,7 +37,7 @@ App::define('DIR_IMAGES', "images/");
 App::define('DIR_ICONS', "icons/");
 
 App::define('DIR_APP', "app/");
-	App::define('DIR_APP_CONFIG', DIR_APP . DIR_CONFIG);
+	App::define('DIR_APP_CONFIG', "config/");
 	App::define('DIR_APP_DATA', DIR_APP . "Data/");
 	App::define('DIR_APP_LANGUAGES', DIR_APP . "Lang/");
 	App::define('DIR_APP_SITES', DIR_APP . "Sites/");
