@@ -28,6 +28,6 @@ deploy.sh
 
 # Roducks Local files
 public/static
+config/*.local.inc
 app/Data
-app/Config/*.local.inc
 app/Sites/*/Config/*.local.inc
