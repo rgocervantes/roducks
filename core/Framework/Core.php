@@ -87,7 +87,7 @@ class Core
 				if (!Environment::inCLI()) {
 					Error::pageNotFound();
 				} else {
-					CLI::printError("Unconfigured file: {$config}", CLI::FAILURE);
+					CLI::printError("Missing DB Credentails", CLI::FAILURE);
 				}
 			}
 		}
