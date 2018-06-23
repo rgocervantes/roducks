@@ -59,7 +59,7 @@ cp config/database.local.inc.sample config/database.local.inc
 
 18. Run the command below to create the **Super Admin User**.
 ```
-php roducks user:create --dev <YOUR_EMAIL> <YOUR_PASSWORD>
+php roducks user:create --dev <YOUR_EMAIL> <YOUR_PASSWORD> --super-admin
 ```
 
 19. Run commands below to create static folder
@@ -100,7 +100,7 @@ cp core/Data/Config/* app/Data/roles/
 9. Edit file `config/database.inc` and set data of your Database’s User and Password.
 10. Run the command below to create the **Super Admin User**.
 ```
-php roducks user:create --pro <YOUR_EMAIL> <YOUR_PASSWORD>
+php roducks user:create --pro <YOUR_EMAIL> <YOUR_PASSWORD> --super-admin
 ```
 11. Run commands below to create static folder
 ```

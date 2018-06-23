@@ -244,6 +244,11 @@ class CLI extends Frame
 
 	protected function getParam($key, $value = "")
 	{
+
+		if (is_string($value)) {
+			$value = str_replace('+', ' ', $value);
+		}
+
 		if (isset($this->_args[$key])) {
 			if ($this->_args[$key] != 1) {
 				$value = $this->_args[$key];

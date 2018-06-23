@@ -19,10 +19,11 @@
  *	-----------------
  *	COMMAND LINE
  *	-----------------
- *	php roducks user:create --pro dummy@yoursite.com duke017
- *	php roducks user:create --pro dummy@yoursite.com duke017 gender=female
+ *	php roducks user:create --pro dummy@yoursite.com duke017 --super-admin
+ *	php roducks user:create --pro dummy@yoursite.com duke017 gender=female firstname=Rod lastname=Cervantes+TC
  *	php roducks user:reset --pro dummy@yoursite.com duke017
  *	php roducks user:who --pro id=1
+ *	php roducks user:who --pro email=dummy@yoursite.com
  */
 
 namespace App\CLI;
@@ -47,8 +48,19 @@ class User extends CLI
 				$db = $this->db();
 				$user = UsersTable::open($db);
 				$total = $user->getTableTotalRows();
+				$first_name = $this->getParam('firstname', "Super");
+				$last_name = $this->getParam('lastname', "Admin+Master");
 
-				if ($total == 0) {
+				if ($total > 0 && $this->getFlag('--super-admin')) {
+
+					$flag = ($this->getFlag('--dev')) ? '--dev' : '--pro';
+					$this->warning("[*]Super Admin was already created.");
+					$this->warning("[x]");
+					$this->warning("[*]If you want to reset password, run this command:");
+					$this->warning("[x]");
+					$this->warning("[x]php roducks user:reset {$flag} <EMAIL> <NEW_PASSWORD>");
+
+				} else {
 
 					$data = [
 						'id_user_tree' => '0',
@@ -56,8 +68,8 @@ class User extends CLI
 						'active' => 1,
 						'email' => $email,
 						'password' => $password,
-						'first_name' => "Super",
-						'last_name' => "Admin Master",
+						'first_name' => $first_name,
+						'last_name' => $last_name,
 						'gender' => $gender,
 						'picture' => Helper::getUserIcon($gender),
 						'created_at' => UsersTable::now(),
@@ -72,13 +84,6 @@ class User extends CLI
 						$this->success("User was created successfully!");
 					}
 
-				} else {
-					$flag = ($this->getFlag('--dev')) ? '--dev' : '--pro';
-					$this->warning("[*]Super Admin was already created.");
-					$this->warning("[x]");
-					$this->warning("[*]If you want to reset password, run this command:");
-					$this->warning("[x]");
-					$this->warning("[x]php roducks user:reset {$flag} <EMAIL> <NEW_PASSWORD>");
 				}
 
 			} else {
@@ -105,7 +110,7 @@ class User extends CLI
 			$user = UsersTable::open($db);
 			$user->filter(['email' => $email]);
 
-			if ($user->rows()) {
+			if ($user->foundRow()) {
 				$row = $user->fetch();
 
 				$user->changePassword($row['id_user'], $password);
@@ -126,14 +131,24 @@ class User extends CLI
 	{
 
 		$id = $this->getParam('id', 1);
+		$email = $this->getParam('email', null);
 		$db = $this->db();
-		$user = UsersTable::open($db)->getRow($id);
+		$usersTable = UsersTable::open($db);
 
-		if ($user->foundRow()) {
-			$this->info( $user->getFirstName() . " " . $user->getLastName() );
-			$this->info( $user->getEmail() );
+		if (!is_null($email)) {
+			$usersTable->filter(['email' => $email]);
+			$user = $usersTable->fetch();
+			$error = "Invalid email: '{$email}'";
 		} else {
-			$this->error("Invalid user ID.");
+			$user = $usersTable->row($id);
+			$error = "Invalid user ID -> {$id}";
+		}
+
+		if ($usersTable->foundRow()) {
+			$this->info( $user['first_name'] . " " . $user['last_name'] );
+			$this->info( $user['email'] );
+		} else {
+			$this->error($error);
 		}
 
 		parent::output();
