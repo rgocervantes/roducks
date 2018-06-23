@@ -33,9 +33,9 @@
 
 return [
 	'www' => [
-		'site' => "Front",
+		'site' => 'Front',
 	],
 	'admin' => [
-		'site' => "Admin",
+		'site' => 'Admin',
 	]
 ];

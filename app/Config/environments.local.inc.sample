@@ -35,11 +35,11 @@ use Roducks\Framework\Environment;
 
 return [
 	'local' => [
-		'site' => "Front",
+		'site' => 'Front',
 		'mode' => Environment::DEV
 	],
 	'admin.local' => [
-		'site' => "Admin",
+		'site' => 'Admin',
 		'mode' => Environment::DEV
 	]
 ];
