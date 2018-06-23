@@ -21,8 +21,10 @@
  *	-----------------
  *	php roducks schema:setup --pro
  *	php roducks schema:setup --pro Setup_2017_09_02_Rod
+ *	php roducks schema:setup --pro Setup_2017_09_02_Rod --run
  *	php roducks schema:sql --pro
  *	php roducks schema:sql --pro --save
+ *	php roducks schema:sql --pro test.sql --save
  */
 
 namespace App\CLI;
@@ -30,6 +32,7 @@ namespace App\CLI;
 use Roducks\Framework\Setup;
 use Roducks\Libs\Files\Directory;
 use Roducks\Libs\ORM\Query;
+use Helper;
 
 class Schema extends Setup
 {
@@ -47,7 +50,7 @@ class Schema extends Setup
 	private function _run($script, $run)
 	{
 
-		$class = "App\Schema\Setup\\" . $script;
+		$class = "App\\Schema\\Setup\\" . $script;
 		$dialog = ($run) ? 'success' : 'result';
 
 		if (class_exists($class)) {
@@ -89,23 +92,37 @@ class Schema extends Setup
 	{
 
 		$prompt = true;
+		$files = self::_getFiles("Setup");
+		$setup = Helper::ext($script, 'php');
+		$run = $this->getFlag('--run');
 
 		if (!is_null($script)) {
-			$this->_search($script);
-			$total = 1;
+			if (in_array($setup, $files)) {
+				$this->_search($script, $run);
+				$total = 1;
+				$files = [];
+				array_push($files, $setup);
 
-			if ($total == $this->_count) {
-				$this->info("Script is already set up.");
+				if ($total == $this->_count) {
+					$prompt = false;
+					$this->warning("[*]{$script} is already set up.");
+				} else {
+					if (!$run) {
+						$this->info("[*]{$script}");
+					}
+				}
+			} else {
+				$prompt = false;
+				$this->error("[*]File: 'app/Schema/Setup/{$setup}' does not exist.");
 			}
 
 		} else {
 
-			$files = self::_getFiles("Setup");
 			$total = count($files);
 
 			foreach ($files as $file) {
 				$file = str_replace(FILE_EXT, '', $file);
-				$this->_search($file, false);
+				$this->_search($file, $run);
 			}
 
 			if ($total == $this->_count) {
@@ -117,9 +134,9 @@ class Schema extends Setup
 
 		parent::output();
 
-		if ($prompt) {
+		if ($prompt && !$run) {
 
-			$this->prompt("Do you want to run these scripts?");
+			$this->promptYN("Do you want to run these scripts?");
 
 			if ($this->yes()) {
 
@@ -135,7 +152,7 @@ class Schema extends Setup
 
 	}
 
-	private function _sql($save = false, $loop = true)
+	private function _sql($script, $save = false, $loop = true)
 	{
 
 		$files = self::_getFiles("Sql");
@@ -144,28 +161,55 @@ class Schema extends Setup
 		$prompt = true;
 		$saved = ($this->getFlag('--save') || $save);
 		$label = "imported";
+		$message = "Did you already import these SQL scripts by your own?";
 
-		foreach ($files as $file) {
+		if (is_null($script)) {
+			foreach ($files as $file) {
 
-			if ($file == "roducks.sql") {
-				$total--;
-				continue;
-			}
-
-			if ($this->isUnsaved($file, 'sql')) {
-
-				if ($saved) {
-
-					$this->saved($file, 'sql');
-					$this->success("{$file} was {$label}!");
-
-				} else {
-
-					$this->info("{$file} needs to be {$label}");
-
+				if ($file == "roducks.sql") {
+					$total--;
+					continue;
 				}
+
+				if ($this->isUnsaved($file, 'sql')) {
+
+					if ($saved) {
+						$this->saved($file, 'sql');
+						$this->success("{$file} was {$label}!");
+					} else {
+						$this->info("{$file} needs to be {$label}");
+
+					}
+				} else {
+					$count++;
+				}
+
+			}
+		} else {
+			$total = 1;
+			$count = 0;
+			$script = Helper::ext($script, 'sql');
+
+			if (in_array($script, $files)) {
+
+				if ($this->isUnsaved($script, 'sql') ) {
+
+					if ($saved) {
+						$this->saved($script, 'sql');
+						$this->success("{$script} was {$label}!");
+						$prompt = false;
+					} else {
+						$this->info("{$script} needs to be {$label}");
+						$message = "Did you already import this SQL script by your own?";
+					}
+				} else {
+					$prompt = false;
+					$this->warning("[*]{$script} was already {$label}!");
+				}
+
 			} else {
-				$count++;
+				$prompt = false;
+				$this->error("[*]{$script} does not exist.");
 			}
 
 		}
@@ -178,19 +222,19 @@ class Schema extends Setup
 		parent::output();
 
 		if (!$this->getFlag('--save') && $loop && $prompt) {
-			$this->promptYN("Did you already import these SQL scripts by your own?");
+			$this->promptYN($message);
 
 			if ($this->yes()) {
-				$this->_sql(true, false);
+				$this->_sql($script, true, false);
 			}
 
 		}
 
 	}
 
-	public function sql()
+	public function sql($script = null)
 	{
-		$this->_sql(false);
+		$this->_sql($script, false);
 	}
 
 }
