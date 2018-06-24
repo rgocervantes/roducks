@@ -51,7 +51,7 @@ class Schema extends Setup
 	{
 
 		$class = "App\\Schema\\Setup\\" . $script;
-		$dialog = ($run) ? 'success' : 'result';
+		$dialog = ($run) ? 'success' : 'info';
 
 		if (class_exists($class)) {
 			$obj = new $class();
