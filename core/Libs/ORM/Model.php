@@ -489,6 +489,11 @@ class Model extends Query
 		return $this->count($this->id);
 	}
 
+	public function get()
+	{
+		return $this->filter();
+	}
+
 	public function getData()
 	{
 

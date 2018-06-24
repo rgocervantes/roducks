@@ -30,12 +30,13 @@ class UrlsLang extends Model
 		'id_url'		 => Model::TYPE_INTEGER,
 		'id_lang'		 => Model::TYPE_INTEGER,
 		'url'			 => Model::TYPE_BLOB,
+		'redirect'		 => Model::TYPE_BLOB,
 		'dispatch' 		 => Model::TYPE_VARCHAR,
 		'title'	 		 => Model::TYPE_BLOB,
 		'layout'		 => Model::TYPE_VARCHAR,
 		'template'		 => Model::TYPE_VARCHAR,
-		'pview'	 		 => Model::TYPE_VARCHAR,	
-		'updated_date'	 => Model::TYPE_DATETIME				
+		'tpl'	 		 => Model::TYPE_VARCHAR,	
+		'updated_at'	 => Model::TYPE_DATETIME				
 	];
 
 }

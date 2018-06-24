@@ -20,9 +20,7 @@
 
 namespace Roducks\Framework;
 
-use Roducks\Framework\Helper;
 use Roducks\Page\Frame;
-use Roducks\Libs\Utils\Date;
 use App\Models\Data\EAV as EAVTable;
 
 class EAV extends Frame
@@ -52,13 +50,72 @@ class EAV extends Frame
 		$db = $this->db();
 		$data = EAVTable::open($db)->getRow($id);
 		$data->$set($value);
-		$data->setUpdatedDate(Date::getCurrentDateTime());
+		$data->setUpdatedAt(EAVTable::now());
 		$data->where(['entity' => $this->_entity]);	
 		
 		return $data->update();
 	}
 
-	public function add($key, $value, $rewrite = false)
+	private function _getRows($paginate = true, $field = null, $orderBy = "desc", $page = 1, $limit = 15, array $cond = [])
+	{
+		$ret = [];
+		$output = ['pages' => 1, 'data' => $ret];
+
+		$filters = [
+			'id_rel'	 => $this->_id,
+			'entity' 	 => $this->_entity,
+			'field' 	 => $field,
+			'active' 	 => 1
+		];
+
+		if (count($cond) > 0) {
+			$filters = array_merge($filters, $cond);
+		}
+
+		$db = $this->db();
+		$data = EAVTable::open($db);
+
+		$fields = [
+			EAVTable::field("id_index"),
+			EAVTable::field("field"),
+			EAVTable::field("text")
+		];
+
+		if (is_null($field)) {
+			unset($filters['field']);
+		}
+
+		$data
+		->select($fields)
+		->where($filters)
+		->orderBy(['id_index' => $orderBy]);
+
+		if ($paginate) {
+
+			$data->paginate($page, $limit);
+
+		} else {
+			
+			$data->get();
+
+		}
+
+		if ($data->rows()) {
+
+			while ($row = $data->fetch()) {
+				$ret[] = [
+					'id' => $row['id_index'],
+					$row['field'] => $row['text']
+				];
+			}
+
+			return ['pages' => $data->getTotalPages(), 'data' => $ret];
+		}
+
+		return $output;
+	}
+
+	public function add($key, $value, $rewrite = true)
 	{
 	
 		$db = $this->db();
@@ -67,8 +124,8 @@ class EAV extends Frame
 		$data->setEntity($this->_entity);
 		$data->setField($key);
 		$data->setText($value);
-		$data->setCreatedDate(Date::getCurrentDateTime());
-		$data->setUpdatedDate(Date::getCurrentDateTime());		
+		$data->setCreatedAt(EAVTable::now());
+		$data->setUpdatedAt(EAVTable::now());		
 
 		if ($rewrite) {
 			return $data->insert();
@@ -82,7 +139,7 @@ class EAV extends Frame
 
 	}
 
-	public function addOnce($key, $value)
+	public function unique($key, $value)
 	{
 		$db = $this->db();
 		$data = EAVTable::open($db);
@@ -94,7 +151,7 @@ class EAV extends Frame
 		]);
 
 		if (!$data->rows()) {
-			return $this->add($key, $value, true);
+			return $this->add($key, $value);
 		}
 
 		return false;
@@ -115,67 +172,23 @@ class EAV extends Frame
 		$db = $this->db();
 		$data = EAVTable::open($db)->getRow($id);
 		$data->delete();
-	}	
-
-	public function getRows($field = null, $page = 1, $limit = 15, array $cond = [])
-	{
-		$ret = [];
-		$output = ['pages' => 1, 'data' => $ret];
-
-		$filters = [
-			'id_rel'	 => $this->_id,
-			'entity' 	 => $this->_entity,
-			'field' 	 => $field,
-			'active' 	 => 1
-		];
-
-		if (count($cond) > 0) {
-			$filters = array_merge($filters, $cond);
-		}
-
-		if (is_null($field)) {
-			unset($filters['field']);
-		}
-
-		$fields = [
-			EAVTable::field("id_index"),
-			EAVTable::field("field"),
-			EAVTable::field("text")
-		];
-
-		$db = $this->db();
-		$data = EAVTable::open($db);
-		$data
-		->select($fields)
-		->where($filters)
-		->orderBy(['id_index' => "desc"])
-		->paginate($page, $limit);
-
-		if ($data->rows()) {
-
-			while ($row = $data->fetch()) {
-				$ret[] = [
-					'id' => $row['id_index'],
-					$row['field'] => $row['text']
-				];
-			}
-
-			return ['pages' => $data->getTotalPages(), 'data' => $ret];
-		}
-
-		return $output;
 	}
 
-	public function get($field)
+	public function getRows($field = null, $orderBy = "desc", $page = 1, $limit = 15, array $cond = [])
 	{
-		$data = $this->getRows();
+		return $this->_getRows(true, $field, $orderBy, $page, $limit, $cond);
+	}
+
+	public function get($field, $orderBy = "desc")
+	{
+		$data = $this->_getRows(false, $field, $orderBy);
 
 		return $data['data'];
 	}
 
-	public function getAll()
+	public function getAll($orderBy = "desc")
 	{
-		return $this->get(null);
+		return $this->get(null, $orderBy);
 	}
 
 }

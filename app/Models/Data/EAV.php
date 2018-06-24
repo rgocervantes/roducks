@@ -32,8 +32,8 @@ class EAV extends Model
 		'field'			 => Model::TYPE_VARCHAR,
 		'text'		 	 => Model::TYPE_VARCHAR,
 		'active'		 => Model::TYPE_BOOL,		
-		'created_date'	 => Model::TYPE_DATETIME,
-		'updated_date'	 => Model::TYPE_DATETIME		
+		'created_at'	 => Model::TYPE_DATETIME,
+		'updated_at'	 => Model::TYPE_DATETIME		
 	];
 
 }
