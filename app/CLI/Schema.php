@@ -95,6 +95,7 @@ class Schema extends Setup
 		$files = self::_getFiles("Setup");
 		$setup = Helper::ext($script, 'php');
 		$run = $this->getFlag('--run');
+		$message = "these scripts"; 
 
 		if (!is_null($script)) {
 			if (in_array($setup, $files)) {
@@ -107,9 +108,7 @@ class Schema extends Setup
 					$prompt = false;
 					$this->warning("[*]{$script} is already set up.");
 				} else {
-					if (!$run) {
-						$this->info("[*]{$script}");
-					}
+					$message = "this script";
 				}
 			} else {
 				$prompt = false;
@@ -136,7 +135,7 @@ class Schema extends Setup
 
 		if ($prompt && !$run) {
 
-			$this->promptYN("Do you want to run these scripts?");
+			$this->promptYN("Do you want to run {$message}?");
 
 			if ($this->yes()) {
 
