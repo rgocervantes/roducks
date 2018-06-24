@@ -189,6 +189,7 @@ class Schema extends Setup
 			$total = 1;
 			$count = 0;
 			$script = Helper::ext($script, 'sql');
+			$sql = "app/Schema/Sql/{$script}";
 
 			if (in_array($script, $files)) {
 
@@ -196,20 +197,20 @@ class Schema extends Setup
 
 					if ($saved) {
 						$this->saved($script, 'sql');
-						$this->success("{$script} was {$label}!");
+						$this->success("File: {$sql} was {$label}!");
 						$prompt = false;
 					} else {
-						$this->info("{$script} needs to be {$label}");
+						$this->info("File: {$sql} needs to be {$label}");
 						$message = "Did you already import this SQL script by your own?";
 					}
 				} else {
 					$prompt = false;
-					$this->warning("[*]{$script} was already {$label}!");
+					$this->warning("[*]File: {$sql} was already {$label}!");
 				}
 
 			} else {
 				$prompt = false;
-				$this->error("[*]{$script} does not exist.");
+				$this->error("[*]File: {$sql} does not exist.");
 			}
 
 		}

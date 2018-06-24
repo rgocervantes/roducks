@@ -145,6 +145,12 @@ class User extends CLI
 		}
 
 		if ($usersTable->foundRow()) {
+			
+			if ($user['id_user'] == 1) {
+				$this->info("[*] Super Admin");
+				$this->info("[x]");
+			}
+
 			$this->info( $user['first_name'] . " " . $user['last_name'] );
 			$this->info( $user['email'] );
 		} else {
