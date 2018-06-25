@@ -56,7 +56,7 @@ class Log extends Data
 		$fileName = self::getFilePath($date) . self::getFileName($this->_dataId);
 
 		$xml = new XML;
-		$xml->file($fileName);
+		$xml->file(Path::getData($fileName));
 		$data = $xml->content()->children();
 
 		return $data;

@@ -64,11 +64,9 @@ abstract class Data extends XML
 
 	public function __construct()
 	{
-			
-		$this->_dirStorage = DIR_DATA_STORAGE_XML;	
-		$dir = $this->_dirStorage . $this->_filePath;
-		if ($this->_makeDir) Directory::make(Path::get(), $dir);
-		$this->_xmlFile = $dir . Helper::ext($this->_fileName, "xml");
+
+		if ($this->_makeDir) Directory::make(Path::getData(), $this->_filePath);
+		$this->_xmlFile = Path::getData($this->_filePath . Helper::ext($this->_fileName, "xml"));
 
 		parent::__construct();
 	}
@@ -106,7 +104,7 @@ abstract class Data extends XML
 	public function getAll()
 	{
 
-		if (!file_exists($this->_xmlFile)) {
+		if (!\App::fileExists($this->_xmlFile)) {
 			return [];
 		}
 		
