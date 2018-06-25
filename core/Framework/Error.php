@@ -262,8 +262,8 @@ class Error
 		$error .= "<span style=\"color:#FF9800;\">return</span> [<br>";
 		$error .= "...<br>";		
 		$error .= "&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$subdomain}'</span> <span style=\"color:#00BCD4;\">=></span> [<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'site'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#bc99e0;\">\"{$site}\"</span>,<br>";
-		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'site'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#bc99e0;\">'{$site}'</span>,<br>";
+		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
 		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this folder exists in: <span style=\"color:#bcd92e; \">{$dir}</span></span><br><br>";
 		$error .= "&nbsp;&nbsp;],<br>";
 		$error .= "...<br>";
