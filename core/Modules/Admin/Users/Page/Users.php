@@ -30,10 +30,10 @@ use Roducks\Page\View;
 use Roducks\Page\JSON;
 use Roducks\Libs\Data\Session;
 use Roducks\Libs\Utils\Date;
+use Roducks\Services\Storage;
 use App\Models\Users\Users as UsersTable;
 use App\Models\Users\Roles as RolesTable;
 use App\Models\Users\UsersRoles;
-use App\Sites\_Global\Data\UserData;
 use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 
 class Users extends AdminPage
@@ -41,8 +41,8 @@ class Users extends AdminPage
 
 	const DATE_RANGE_USERS = 'RDKS_DATE_RANGE_USERS';
 	const DATE_RANGE_LOGS = 'RDKS_DATE_RANGE_LOGS';
-
-	protected $_rowsPerPage = 15;
+	const ROWS_PER_PAGE = 15;
+	
 	protected $_type;
 	protected $_url;
 	protected $_title;
@@ -153,7 +153,7 @@ class Users extends AdminPage
 
 		$cond = array_merge($filter, $search);
 
-		$users = UsersRoles::open($db)->getAll($this->_type, $this->page, $this->_rowsPerPage, "desc", $cond);
+		$users = UsersRoles::open($db)->getAll($this->_type, $this->page, static::ROWS_PER_PAGE, "desc", $cond);
 		$inTrash = UsersRoles::open($db)->inTrash($this->_type, $filter);
 		$totals = UsersRoles::open($db)->totals($this->_type, $filter);
 		$isTrash = ($this->trash == 1) ? true : false;
@@ -265,7 +265,7 @@ class Users extends AdminPage
 		}
 
 		try {
-			$data = UserData::init($id_user)->getRows('log_date', $this->page, $this->_rowsPerPage, $filter);
+			$data = Storage::user($id_user)->getRows('log_date', "desc", $this->page, static::ROWS_PER_PAGE, $filter);
 		} catch (\Exception $e) {
 			die($e->getMessage());
 		}

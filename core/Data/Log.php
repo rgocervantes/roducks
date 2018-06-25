@@ -29,11 +29,6 @@ class Log extends Data
 
 	private $_dataId;
 
-	static function init($id)
-	{
-		return new Log($id);
-	}
-
 	static function getFileName($id)
 	{
 		return "user_{$id}";
@@ -58,7 +53,7 @@ class Log extends Data
 	public function getContent($date)
 	{
 
-		$fileName = $this->_dirStorage . self::getFilePath($date) . self::getFileName($this->_dataId);
+		$fileName = self::getFilePath($date) . self::getFileName($this->_dataId);
 
 		$xml = new XML;
 		$xml->file($fileName);
