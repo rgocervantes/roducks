@@ -22,6 +22,6 @@ use Roducks\Framework\Dispatch;
 
 return [
 	'onEventLogin' 			 => Dispatch::event('register', 'on-login'),
-	'onEventLogout' 		 => Dispatch::event('register', 'on-logout')
+	'onEventLogout' 		 => Dispatch::event('register', 'on-logout'),
 	'onEventCreateAccount'	 => Dispatch::event('register', 'on-create-account')
 ];

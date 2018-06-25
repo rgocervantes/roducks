@@ -287,11 +287,6 @@ class Core
 
 	}	
 
-	static function getAllSiteConfigPath($file)
-	{
-		return self::getPath(DIR_CONFIG, $file . FILE_INC, false);
-	}
-
 	static function getTemplatesPath($tpl)
 	{
 		return self::getPath(DIR_TEMPLATES, $tpl);
@@ -312,9 +307,18 @@ class Core
 		return self::getPath(DIR_EMAILS, $tpl . FILE_TPL, false);		
 	}
 
-	static function getEventsPath($event = "")
+	static function getEventsPath()
 	{
-		return self::getPath(DIR_EVENTS, $event, false);
+
+		$global = self::getGlobalPath() . DIR_EVENTS;
+		$site = self::getSitePath() . DIR_EVENTS;
+		list($realPath, $fileExists) = \App::getRealPath($site);
+
+		if ($fileExists) {
+			return $site;
+		}
+
+		return $global;
 	}
 
 	/**
@@ -455,12 +459,12 @@ class Core
 
 	static function getPluginsFile()
 	{
-		return self::getFileVar(self::getGlobalConfigPath("plugins"), "plugins", false);
+		return self::getFileVar(self::getAppConfigPath("plugins"), "plugins", false);
 	}	
 
 	static function getEventsFile()
 	{
-		return self::getFileVar(self::getAllSiteConfigPath("events"), "events", false);
+		return self::getFileVar(self::getAppConfigPath("events"), "events", false);
 	}
 
 	/**

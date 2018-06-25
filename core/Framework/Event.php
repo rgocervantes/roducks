@@ -27,7 +27,7 @@ abstract class Event extends Frame
 
 	protected $_pageType = 'EVENT';
 
-	static function dispatch($e, $settings)
+	static function dispatch($e, array $settings = [])
 	{
 
 		if (!is_array($settings)) {
@@ -46,8 +46,8 @@ abstract class Event extends Frame
 				$class = Core::getClassNamespace($path) . $page;
 				$file = $path . $page . FILE_EXT;
 
-				if (file_exists($file)) {
-					include_once $file;
+				if (Path::exists($file)) {
+					include_once Path::get($file);
 				}
 
 				if (class_exists($class)) {
