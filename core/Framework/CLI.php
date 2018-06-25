@@ -361,7 +361,7 @@ class CLI extends Frame
 	
 	}
 
-	public function __construct(array $flags, array $args = [])
+	public function __construct(array $flags = [], array $args = [])
 	{
 		$c = 1;
 		$this->_flags = $flags;

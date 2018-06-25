@@ -55,24 +55,25 @@ class Schema extends Setup
 
 		if (class_exists($class)) {
 			$obj = new $class();
+			
 			if (method_exists($obj, 'schema')) {
-				if ($run) $obj->schema($this->db());
-				if (method_exists($obj, 'store')) { 
-					if ($run) $obj->store($this->db());
-				}
-				$finished = $obj->finished($script, $run);
-
-				if (!is_null($finished['success'])) {
-					$this->$dialog($finished['success']);
-				}
-
-				if (!is_null($finished['error'])) {
-					$this->error($finished['error']);
-				}
-
-			} else {
-				self::println("Undefined method 'schema' -> {$class}::{$method}");
+				if ($run) $obj->schema($this->db());	
 			}
+
+			if (method_exists($obj, 'data')) { 
+				if ($run) $obj->data($this->db());
+			}
+
+			$finished = $obj->finished($script, $run);
+
+			if (!is_null($finished['success'])) {
+				$this->$dialog($finished['success']);
+			}
+
+			if (!is_null($finished['error'])) {
+				$this->error($finished['error']);
+			}
+
 		}
 
 	}

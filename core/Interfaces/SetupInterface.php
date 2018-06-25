@@ -25,6 +25,6 @@ Interface SetupInterface
 
 	public function schema(\mysqli $db);
 
-	public function store(\mysqli $db);
+	public function data(\mysqli $db);
 
 }
