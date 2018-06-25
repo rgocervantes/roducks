@@ -18,48 +18,21 @@
  *
  */
 
-namespace App\Sites\_Global\Data;
+namespace Roducks\Data;
 
-use Roducks\Framework\Data;
-use Roducks\Libs\Utils\Date;
-use Roducks\Libs\Output\XML;
+use Roducks\Framework\EAV;
+use App\Models\Users\Users;
 
-class LogData extends Data
+class User extends EAV
 {
-
-	private $_dataId;
-
-	static function getFileName($id)
-	{
-		return "user_{$id}";
-	}
-
-	static function getFilePath($date)
-	{
-		$d = explode("-", $date);
-		return "log/users/{$d[0]}/{$d[1]}/{$d[2]}/";
-	}
 
 	public function __construct($id)
 	{
-		$date = Date::getCurrentDate();
-		$this->_dataId = $id;
-		$this->_filePath = self::getFilePath($date);
-		$this->_fileName = self::getFileName($id, $date);
-	
+			
+		$this->_id = $id;
+		$this->_entity = Users::CLASS;
+		
 		parent::__construct();
-	}
-
-	public function getContent($date)
-	{
-
-		$fileName = $this->_dirStorage . self::getFilePath($date) . self::getFileName($this->_dataId);
-
-		$xml = new XML;
-		$xml->file($fileName);
-		$data = $xml->content()->children();
-
-		return $data;
 	}
 
 }

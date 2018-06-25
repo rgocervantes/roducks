@@ -23,22 +23,21 @@ namespace App\Sites\_Global\Events;
 use Roducks\Framework\Event;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Utils\Date;
-use App\Sites\_Global\Data\LogData;
-use App\Sites\_Global\Data\UserData;
+use Roducks\Services\Storage;
 
 class Register extends Event
 {
 
 	public function onLogin($id_user)
 	{
-		UserData::init($id_user)->addOnce("log_date", Date::getCurrentDate());
-		LogData::init($id_user)->add("logIn", ['time' => Date::getCurrentTime(), 'ip' => Http::getIPClient()], true);
+		Storage::user($id_user)->unique("log_date", Date::getCurrentDate());
+		Storage::log($id_user)->add("logIn", ['time' => Date::getCurrentTime(), 'ip' => Http::getIPClient()], true);
 	}
 
 	public function onLogout($id_user)
 	{
-		UserData::init($id_user)->addOnce("log_date", Date::getCurrentDate());
-		LogData::init($id_user)->add("logOut", ['time' => Date::getCurrentTime(), 'ip' => Http::getIPClient()], true);
+		Storage::user($id_user)->unique("log_date", Date::getCurrentDate());
+		Storage::log($id_user)->add("logOut", ['time' => Date::getCurrentTime(), 'ip' => Http::getIPClient()], true);
 	}
 
 	public function onCreateAccount($id_user, $type)

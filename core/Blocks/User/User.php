@@ -27,7 +27,7 @@ use Roducks\Framework\Helper;
 use Roducks\Framework\Login;
 use Roducks\Framework\Path;
 use Roducks\Libs\Utils\Date;
-use App\Sites\_Global\Data\LogData;
+use Roducks\Services\Storage;
 use App\Models\Users\UsersRoles;
 
 class User extends Block
@@ -104,8 +104,7 @@ class User extends Block
 			'date' => [$date, 'PARAM', Dispatch::PARAM_STRING, Helper::VALID_DATE_YYYY_MM_DD]
 		]);
 
-		$logData = LogData::init($id);
-		$data = $logData->getContent($date);
+		$data = Storage::log($id)->getContent($date);
 
 		$this->view->data("data", $data);
 		$this->view->load("logs");

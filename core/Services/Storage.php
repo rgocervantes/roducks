@@ -25,6 +25,8 @@ use Roducks\Page\JSON;
 use Roducks\Framework\Dispatch;
 use Roducks\Framework\Helper;
 use Roducks\Framework\Path;
+use Roducks\Data\User as UserData;
+use Roducks\Data\Log as LogData;
 use Roducks\Libs\Files\Image;
 use Roducks\Libs\Files\File;
 use Roducks\Libs\Files\Directory;
@@ -39,6 +41,16 @@ class Storage extends Service
 			$_response = [],
 			$_fileName = null,
 			$_input = "uploader";
+
+	static function user($id)
+	{
+		return UserData::init($id);
+	}
+
+	static function log($id)
+	{
+		return LogData::init($id);
+	}
 
 	static function issetJSON($dir, $name)
 	{
