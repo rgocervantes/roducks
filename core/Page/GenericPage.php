@@ -54,7 +54,7 @@ class GenericPage extends Frame
 
 			if ($found) {
 				$helper = Helper::getHelperPath($className);
-				$this->_helper = $helper::init();
+				$this->_helper = $helper::init($className);
 			}
 		}
 	}

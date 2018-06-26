@@ -25,10 +25,15 @@ class HelperPage extends Frame
 
 	protected $_pageType = 'HELPER';
 
-	static function init()
+	static function init($className)
 	{
 		$class = get_called_class();
-		$obj = new $class();
+		$obj = new $class([
+				'className' 	=> $className,
+				'filePath'		=> "",
+				'fileName' 		=> "", 
+				'urlParam'		=> "",
+		]);
 
 		return $obj;
 	}
