@@ -184,12 +184,12 @@ abstract class Frame
 
 	protected function db()
 	{
-		return Core::db(RDKS_ERRORS);
+		return Core::db();
 	}	
 
 	protected function openDb(array $conn = [])
 	{
-		return Core::openDb(RDKS_ERRORS, $conn);
+		return Core::openDb($conn);
 	}
 
 	/*
