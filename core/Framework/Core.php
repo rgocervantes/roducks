@@ -380,7 +380,7 @@ class Core
 		}
 	}
 
-	static function getLocalConfigFile($name, $var = "config")
+	static function getLocalConfigFile($name, $var = "config", $required = true)
 	{
 		$local = "{$name}.local";
 		$file_local = self::getAppConfigPath($local);
@@ -389,7 +389,7 @@ class Core
 
 		$file = ($fileExists) ? $local : $name;
 
-		return self::getFileVar(self::getAppConfigPath($file), $var);		
+		return self::getFileVar(self::getAppConfigPath($file), $var, $required);		
 	}
 
 	/**
@@ -470,7 +470,7 @@ class Core
 
 	static function getEventsFile()
 	{
-		return self::getFileVar(self::getAppConfigPath("events"), "events", false);
+		return self::getLocalConfigFile("events", "events", false);
 	}
 
 	/**

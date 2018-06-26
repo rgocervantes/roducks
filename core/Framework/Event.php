@@ -27,7 +27,7 @@ abstract class Event extends Frame
 
 	protected $_pageType = 'EVENT';
 
-	static function dispatch($e, array $settings = [])
+	static function dispatch($e, $settings = "")
 	{
 
 		if (!is_array($settings)) {
