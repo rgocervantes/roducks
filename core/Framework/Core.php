@@ -363,7 +363,13 @@ class Core
 			if ($name == "router") {
 				include $realPath;
 			} else {
-				return include $realPath;
+				$config = include $realPath;
+				
+				if (!is_array($config)) {
+					return [];
+				}
+
+				return $config;
 			}
 		} else {
 			if ($required) {
