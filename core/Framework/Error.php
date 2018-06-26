@@ -210,7 +210,8 @@ class Error
 		$ns = Helper::getInvertedSlash($ns);	
 
 		$error = "<span style=\"color:#3bde9a;\">namespace</span> {$ns};<br><br>";
-		$error .= "<span style=\"color:#bcd92e;\">class</span> <span style=\"color:#00BCD4;\">{$class}</span> <span style=\"color:#bc99e0;\">extends</span> <span style=\"color:#00BCD4;\">{$extend}</span> {<br><br>";
+		$error .= "<span style=\"color:#bcd92e;\">class</span> <span style=\"color:#00BCD4;\">{$class}</span> <span style=\"color:#bc99e0;\">extends</span> <span style=\"color:#00BCD4;\">{$extend}</span><br>";
+		$error .= "{<br>";
 		$error .= "&nbsp;&nbsp;<span style=\"color:#3bde9a; \">var</span> <span style=\"color:#FF9800;\">\${$param};</span><br>";
 		$error .= "&nbsp;&nbsp;^<br>";
 		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this property is defined.</span><br>...";			
@@ -223,10 +224,11 @@ class Error
 
 		$class = Helper::getClassName($page);
 		$ns = Helper::getClassName($page,'$1');
-		$ns = Helper::getInvertedSlash($ns);		
+		$extend = Helper::getExtendClass($ns);
+		$ns = Helper::getInvertedSlash($ns);
 
 		$error = "<span style=\"color:#3bde9a;\">namespace</span> {$ns};<br><br>";
-		$error .= "<span style=\"color:#bcd92e;\">class</span> <span style=\"color:#00BCD4;\">{$class}</span> <span style=\"color:#bc99e0;\">extends</span> <span style=\"color:#bcd92e;\">...</span><br>";
+		$error .= "<span style=\"color:#bcd92e;\">class</span> <span style=\"color:#00BCD4;\">{$class}</span> <span style=\"color:#bc99e0;\">extends</span> <span style=\"color:#bcd92e;\">{$extend}</span><br>";
 		$error .= "{<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>";		
 		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this class is defined.</span><br>";					

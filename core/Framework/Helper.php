@@ -384,6 +384,28 @@ class Helper
 		return preg_replace('#^app/Sites/([a-zA-Z]+)/Modules/(.+)$#', 'core/Modules/$1/$2', $file);
 	}
 
+	static function getExtendClass($class)
+	{
+
+		$type = preg_replace('/.+\/([a-zA-Z]+)$/', '$1', $class);
+		$ns = "\\Roducks\\Page\\Page";
+
+		switch ($type) {
+			case 'Helper':
+				$ns = "\\Roducks\\Page\\Helper";
+				break;
+			case 'JSON':
+				$ns = "\\Roducks\\Page\\JSON";
+				break;
+			case 'XML':
+				$ns = "\\Roducks\\Page\\XML";
+				break;
+		}
+
+		return $ns;
+
+	}
+
 	static function getCoreHelperclassName($className)
 	{
 		$classPath = str_replace("\\","/", $className);

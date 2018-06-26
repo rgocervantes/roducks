@@ -61,7 +61,7 @@ class Dispatch
 	const PARAM_ARRAY = 'array';
 	const PARAM_NOT_EMPTY_ARRAY = 'not_empty_array';
 
-	static function page($class, $method)
+	static function page($class, $method = "index")
 	{
 		$class = Helper::getCamelName($class);
 		return "{$class}/Page/{$class}::{$method}";
@@ -83,7 +83,7 @@ class Dispatch
 		return "/_factory/{$class}/{$method}";
 	}
 
-	static function json($class, $method)
+	static function json($class, $method = "output")
 	{
 		$class = Helper::getCamelName($class);
 		return "{$class}/JSON/{$class}::{$method}";
@@ -105,7 +105,7 @@ class Dispatch
 		return "/_xml/{$class}/{$method}";
 	}
 
-	static function service($class, $method)
+	static function service($class, $method = "output")
 	{
 		$class = Helper::getCamelName($class);
 		return "Services/{$class}::{$method}";
@@ -122,7 +122,7 @@ class Dispatch
 		return "API/{$class}::{$method}";
 	}
 
-	static function event($class, $method = "")
+	static function event($class, $method = "run")
 	{
 		$class = Helper::getCamelName($class);
 		$method = Helper::getCamelName($method, false);
