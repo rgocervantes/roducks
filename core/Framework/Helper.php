@@ -498,6 +498,10 @@ class Helper
 	static function getArrayValue($data, $index, $value)
 	{
 
+		if (empty($value)) {
+			$value = [];
+		}
+
 		if (is_array($index)) {
 
 			$ret = $data;

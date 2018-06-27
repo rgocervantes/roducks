@@ -240,7 +240,7 @@ abstract class Frame
 		$this->config('admin:users', "user:prefix"], 1);
 
 	*/
-	protected function config($tag, $var, $value = "")
+	protected function config($tag, $var = "", $value = "")
 	{
 
 		$type = null;
@@ -276,8 +276,16 @@ abstract class Frame
 			$var = explode(":", $var);
 		}
 
+		if (empty($config)) {
+			$value = [];
+		}
+
+		if (empty($var)) {
+			return $config;
+		}
+
 		return Helper::getArrayValue($config, $var, $value);		
-		
+
 	}
 
 	protected function getViewData()
