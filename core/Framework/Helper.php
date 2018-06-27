@@ -499,7 +499,9 @@ class Helper
 	{
 
 		if (empty($value)) {
-			$value = [];
+			if (!is_null($value)) {
+				$value = [];
+			}
 		}
 
 		if (is_array($index)) {

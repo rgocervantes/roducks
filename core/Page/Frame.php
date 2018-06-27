@@ -243,12 +243,13 @@ abstract class Frame
 	protected function config($tag, $var = "", $value = "")
 	{
 
+		$name = "";
 		$type = null;
 		$config = [];
 
 		if (Helper::regexp("#:#", $tag)) {
 			list($tag, $type) = explode(":", $tag);
-			$type = Helper::getCamelName($type);
+			$name = Helper::getCamelName($type);
 		}
 
 		switch ($tag) {
@@ -257,30 +258,36 @@ abstract class Frame
 				break;
 			
 			case 'site':
-				$config = (is_null($type)) ? $this->getSiteConfig() : $this->getSiteConfig($type);
+				$config = $this->getSiteConfig($name);
 				break;
 
 			case 'module':
-				$config = (is_null($type)) ? $this->getModuleConfig() : $this->getModuleConfig($type);
+				$config = $this->getModuleConfig($name);
+				break;
+
+			case 'file':
+				$config = (!is_null($type)) ? Core::getLocalConfigFile($type, "config", false) : [];
 				break;
 
 			default:
 				$tag = Helper::getCamelName($tag);
-				$config = $this->getSiteModuleConfig($tag, $type);
+				$config = $this->getSiteModuleConfig($tag, $name);
 				break;
 
+		}
+
+		if (empty($var)) {
+			return $config;
 		}
 
 		if (Helper::regexp("#:#", $var)) {
 			$var = explode(":", $var);
 		}
 
-		if (empty($config)) {
-			$value = [];
-		}
-
-		if (empty($var)) {
-			return $config;
+		if (empty($config) && empty($value)) {
+			if (!is_null($value)) {
+				$value = [];
+			}
 		}
 
 		return Helper::getArrayValue($config, $var, $value);		

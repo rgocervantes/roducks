@@ -465,7 +465,7 @@ class Core
 
 	static function getPluginsFile()
 	{
-		return self::getFileVar(self::getAppConfigPath("plugins"), "plugins", false);
+		return self::getLocalConfigFile("plugins", "plugins", false);
 	}	
 
 	static function getEventsFile()
