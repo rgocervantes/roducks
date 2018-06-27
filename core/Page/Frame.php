@@ -128,7 +128,7 @@ abstract class Frame
 			$config = (Environment::inDEV() || $this->_inLocal) ? '.local' : '';
 			$errorMessage1 = 'Unable to connect to Memcache';
 			$errorMessage2 = 'Missing Cache config';
-			$errorFile = "app/Config/memcache{$config}.inc";
+			$errorFile = "config/memcache{$config}.inc";
 
 			if (count($memcache) > 0) {
 
