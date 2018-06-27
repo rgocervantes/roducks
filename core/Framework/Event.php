@@ -29,31 +29,6 @@ abstract class Event extends Frame
 
 	static function dispatch($e, $settings = "")
 	{
-
-		if (!is_array($settings)) {
-			$settings = [$settings];
-		}
-
-		$events = Core::getEventsFile();
-		
-		if (isset($events[$e])) {
-			$dispatch = $events[$e];
-
-			if (Helper::regexp('#::#', $dispatch)) {
-				list($page,$method) = explode("::", $dispatch);
-			
-				$path = Core::getEventsPath();
-				$class = Core::getClassNamespace($path) . $page;
-				$file = $path . $page . FILE_EXT;
-
-				if (Path::exists($file)) {
-					include_once Path::get($file);
-				}
-
-				if (class_exists($class)) {
-					Core::loadPage($path, $page, $method, array(), $settings);
-				}
-			} 
-		}
+		Core::dispatchEvent($e, $settings);
 	}
 }

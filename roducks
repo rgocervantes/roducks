@@ -21,47 +21,6 @@
 
 if (!isset($argv) || php_sapi_name() != "cli") die("Unauthorized to access"); 
 
-$params = [];
-$values = [];
-$flags = [];
-
-if (is_array($argv) && count($argv) > 0) :
-unset($argv[0]);
-
-    foreach ($argv as $arg) :
-
-    	if($arg == '--') :
-    		continue;
-    	endif;
-
-    	if (in_array($arg, ['--dev','--pro'])) :
-
-			if (!isset($flags['--dev'])) :
-				$flags[$arg] = 1;
-			endif;
-
-			continue;
-
-    	endif;
-
-    	if (preg_match('#=#', $arg)) :
-        	list($k, $v) = explode("=",$arg);
-       		$values[$k] = $v;
-       	else:
-       		if (preg_match('/^--/', $arg)) :
-				$flags[$arg] = 1;
-       		else :
-				$params[] = $arg;
-       			$values[$arg] = 1;
-       		endif;
-       	endif;
-    endforeach;
-endif;
-
-if (!isset($flags['--dev']) && !isset($flags['--pro'])) :
-	$flags['--pro'] = 1;
-endif;
-
 /*
 |--------------------------------|
 |		 LOAD BOOTSTRAP			 |
@@ -69,69 +28,9 @@ endif;
 */
 require "./core/Framework/Bootstrap.php";
 
-use Roducks\Framework\Core;
-use Roducks\Framework\CLI;
-use Roducks\Framework\Environment;
-use Roducks\Framework\Helper;
-
-Core::loadFile(DIR_APP_LANGUAGES, 'en' . FILE_INC);
-
 /*
 |--------------------------------|
-|		 CHECK ENVIRONMENT  	 |
+|	     	 RUN CLI 			 |
 |--------------------------------|
 */
-
-$db_name = "database";
-$dev = isset($flags['--dev']);
-$db = (isset($values['db'])) ? $values['db'] : $db_name;
-
-if ($dev) {
-	$db_name = $db . '.local';
-}
-
-$environment = [
-	'errors' => $dev,
-	'subdomain' => Core::DEFAULT_SUBDOMAIN,
-	'site' => "Front",
-	'mode' => Environment::CLI,
-	'database' => $db_name
-];
-
-/*
-|--------------------------------|
-|			RUN SCRIPT  		 |
-|--------------------------------|
-*/
-require "./core/Framework/Run" . FILE_EXT;
-
-if (isset($params[0])) {
-
-	$method = "run";
-	$name = $params[0];
-
-	if (preg_match('#:#', $name)) {
-		list($name, $method) = explode(":", $name);
-	}
-
-	$cls = $name;
-	$name = Helper::getCamelName($name);
-	$script = "App\\CLI\\" . $name;
-
-	if (!class_exists($script)) {
-		exit;
-	}
-	
-	$class = new $script($flags, $values);
-	$class->inLocal($dev);
-	if (method_exists($class, $method)) {
-		$values = Helper::getCliParams($values);
-		call_user_func_array(array($class,$method), $values);
-	} else {
-		CLI::println("Unknown command: {$cls}:{$method}", CLI::FAILURE);
-	}
-	
-} else {
-	CLI::println("Please set a command", CLI::FAILURE);
-}
-
+\Roducks\Framework\Core::CLI($argv);

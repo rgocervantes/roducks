@@ -666,4 +666,144 @@ class Core
 		return self::loadPage($pagePath, $page, "", array(),array(), true);
 	}
 
+	static function dispatchEvent($e, $settings)
+	{
+		if (!is_array($settings)) {
+			$settings = [$settings];
+		}
+
+		$events = self::getEventsFile();
+		
+		if (isset($events[$e])) {
+			$dispatch = $events[$e];
+
+			if (Helper::regexp('#::#', $dispatch)) {
+				list($page,$method) = explode("::", $dispatch);
+			
+				$path = self::getEventsPath();
+				$class = self::getClassNamespace($path) . $page;
+				$file = $path . $page . FILE_EXT;
+
+				if (Path::exists($file)) {
+					include_once Path::get($file);
+				}
+
+				if (class_exists($class)) {
+					self::loadPage($path, $page, $method, array(), $settings);
+				}
+			}
+		}		
+	}
+
+	static function CLI($arguments)
+	{
+		$params = [];
+		$values = [];
+		$flags = [];
+
+		if (is_array($arguments) && count($arguments) > 0) :
+		unset($arguments[0]);
+
+		    foreach ($arguments as $arg) :
+
+		    	if($arg == '--') :
+		    		continue;
+		    	endif;
+
+		    	if (in_array($arg, ['--dev','--pro'])) :
+
+					if (!isset($flags['--dev'])) :
+						$flags[$arg] = 1;
+					endif;
+
+					continue;
+
+		    	endif;
+
+		    	if (preg_match('#=#', $arg)) :
+		        	list($k, $v) = explode("=",$arg);
+		       		$values[$k] = $v;
+		       	else:
+		       		if (preg_match('/^--/', $arg)) :
+						$flags[$arg] = 1;
+		       		else :
+						$params[] = $arg;
+		       			$values[$arg] = 1;
+		       		endif;
+		       	endif;
+		    endforeach;
+		endif;
+
+		if (!isset($flags['--dev']) && !isset($flags['--pro'])) :
+			$flags['--pro'] = 1;
+		endif;
+
+		/*
+		|--------------------------------|
+		|		 LOAD LANGUAGE			 |
+		|--------------------------------|
+		*/
+		self::loadAppLanguages('en');
+
+		/*
+		|--------------------------------|
+		|		 CHECK ENVIRONMENT  	 |
+		|--------------------------------|
+		*/
+
+		$db_name = "database";
+		$dev = isset($flags['--dev']);
+		$db = (isset($values['db'])) ? $values['db'] : $db_name;
+
+		if ($dev) {
+			$db_name = $db . '.local';
+		}
+
+		$environment = [
+			'errors' => $dev,
+			'subdomain' => self::DEFAULT_SUBDOMAIN,
+			'site' => "Front",
+			'mode' => Environment::CLI,
+			'database' => $db_name
+		];
+
+		/*
+		|--------------------------------|
+		|			RUN SCRIPT  		 |
+		|--------------------------------|
+		*/
+		require "./core/Framework/Run" . FILE_EXT;
+
+		if (isset($params[0])) {
+
+			$method = "run";
+			$name = $params[0];
+
+			if (preg_match('#:#', $name)) {
+				list($name, $method) = explode(":", $name);
+			}
+
+			$cls = $name;
+			$name = Helper::getCamelName($name);
+			$script = "App\\CLI\\" . $name;
+
+			if (!class_exists($script)) {
+				exit;
+			}
+			
+			$class = new $script($flags, $values);
+			$class->inLocal($dev);
+			if (method_exists($class, $method)) {
+				$values = Helper::getCliParams($values);
+				call_user_func_array(array($class,$method), $values);
+			} else {
+				CLI::println("Unknown command: {$cls}:{$method}", CLI::FAILURE);
+			}
+			
+		} else {
+			CLI::println("Please set a command", CLI::FAILURE);
+		}
+
+	}
+
 }
