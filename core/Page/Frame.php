@@ -248,6 +248,7 @@ abstract class Frame
 
 		if (Helper::regexp("#:#", $tag)) {
 			list($tag, $type) = explode(":", $tag);
+			$type = Helper::getCamelName($type);
 		}
 
 		switch ($tag) {
@@ -265,8 +266,6 @@ abstract class Frame
 
 			default:
 				$tag = Helper::getCamelName($tag);
-				$type = Helper::getCamelName($type);
-
 				$config = $this->getSiteModuleConfig($tag, $type);
 				break;
 
