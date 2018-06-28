@@ -24,17 +24,18 @@ use Roducks\Framework\Login;
 use Roducks\Framework\Role;
 use Roducks\Framework\Language;
 use Roducks\Framework\Path;
-use Roducks\Page\_JSON;
+use Roducks\Page\JSON;
 use Roducks\Libs\Utils\Date;
 use Roducks\Libs\Files\Directory;
 use Roducks\Libs\Files\File;
 use Roducks\Libs\Data\Session;
 use App\Models\Users\Roles as RolesTable;
 
-class Roles extends _JSON
+class Roles extends JSON
 {
 
 	protected $_dispatchUrl = true;
+	protected $_authentication = true;
 
 	private function _getType()
 	{

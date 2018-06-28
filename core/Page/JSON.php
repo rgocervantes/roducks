@@ -29,6 +29,7 @@ class JSON extends GenericPage
 {
 
 	protected $post;
+	protected $_authentication = false;
 
 	private $_crossDomain = false;
 	private $_methods = [];
@@ -179,6 +180,11 @@ class JSON extends GenericPage
 	public function __construct($settings)
 	{
 		parent::__construct($settings);
+		
+		if ($this->_authentication) {
+			$this->accessAdmin();
+		}
+
 		$this->post = Post::init();
 	}
 

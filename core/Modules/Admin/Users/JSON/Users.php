@@ -25,17 +25,18 @@ use Roducks\Framework\Role;
 use Roducks\Framework\Form;
 use Roducks\Framework\Helper;
 use Roducks\Framework\Event;
-use Roducks\Page\_JSON;
+use Roducks\Page\JSON;
 use Roducks\Page\View;
 use Roducks\Libs\Utils\Date;
 use App\Models\Users\Users as UsersTable;
 
-class Users extends _JSON
+class Users extends JSON
 {
 
 	private $_fields;
 
 	protected $_dispatchUrl = true;
+	protected $_authentication = true;
 	protected $_type;
 	protected $_url;	
 	protected $_user;
