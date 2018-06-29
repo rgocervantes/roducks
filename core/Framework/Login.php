@@ -31,7 +31,6 @@ class Login
 	const SESSION_CLIENT = "RDKS_CLIENT";
 	const SESSION_SUPPLIER = "RDKS_SUPPLIER";
 	const SESSION_SECURITY = "RDKS_SECURITY";
-	const ENCRYPT = "sha512";
 
 	private $_url;
 	private $_session = false;
@@ -44,23 +43,12 @@ class Login
 
 	static function generatePassword($pwd)
 	{
-
-   		$salt = hash(self::ENCRYPT, uniqid(mt_rand(1, mt_getrandmax()), true));
-    	$password = hash(self::ENCRYPT, $pwd . $salt);
-
-		return ['salt' => $salt, 'password' => $password];
-	}
-
-	static function getToken($word = "token")
-	{
-		$password = self::generatePassword($word);
-
-		return $password['salt'];
+   		return Hash::getSaltPassword($pwd);
 	}
 
 	static function paywall($db_password, $db_salt, $input_password)
 	{
-		return ($db_password == hash(self::ENCRYPT, $input_password . $db_salt));
+		return ($db_password == Hash::get($input_password . $db_salt));
 	}
 
 	static function security($return = true)

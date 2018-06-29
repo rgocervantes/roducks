@@ -41,7 +41,7 @@ class Form
 
 	static function getKey()
 	{
-		$token = Login::getToken();
+		$token = Hash::getToken();
 		Session::set(self::HASH_KEY, $token);
 		return $token;
 	}

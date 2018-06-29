@@ -21,6 +21,7 @@
 namespace Roducks\Modules\Front\Home\JSON;
 
 use Roducks\Framework\Login;
+use Roducks\Framework\Hash;
 use Roducks\Framework\Role;
 use Roducks\Framework\Form;
 use Roducks\Framework\Helper;
@@ -175,7 +176,7 @@ class Home extends JSON
 			$info = $user->fetch();
 
 			$id_user = $info['id_user'];
-			$token = Login::getToken();
+			$token = Hash::getToken();
 
 			$tx = $user->update($id_user, ['token' => $token]);
 
