@@ -365,14 +365,6 @@ class XML
 	}
 
 	/**
-	*	Count root's nodes
-	*/
- 	public function count($node)
- 	{
- 		return $this->_DOM->getElementsByTagName($node)->length;
- 	}
-
-	/**
 	*	Get elements by node given
 	*/
     public function getElementByTagName($node)
@@ -391,12 +383,7 @@ class XML
     public function getLastElementByTagName($node)
     {
     	$index = $this->count($node) - 1;
-    	return $this->getElementByTagName($node)->item($index);
-    }
-
-    public function getElementById($id)
-    {
-    	return $this->_DOM->getElementById($id)->item(0);
+    	return $this->getElementsByTagName($node)->item($index);
     }
 
     public function getElementByQuery($query)
@@ -406,6 +393,35 @@ class XML
 
         return $element;
     }
+
+    public function getElementById($id)
+    {
+    	return $this->getElementByQuery("//*[@id='{$id}']");
+    }
+
+    public function getChildNodes($parentNode)
+    {
+    	return $this->getElementByTagName($parentNode)->item(0)->childNodes;
+    }
+
+    public function cdata($value)
+    {
+    	return $this->_DOM->createCDATASection($value);
+    }
+
+    public function cdataSection($node, $value)
+    {
+    	$node->nodeValue = '';
+		$node->appendChild($this->cdata($value));
+    }
+
+	/**
+	*	Count root's nodes
+	*/
+ 	public function count($node)
+ 	{
+ 		return $this->getElementByTagName($node)->length;
+ 	}
 
 	/**
 	*	Create Node

@@ -79,6 +79,11 @@ class CSV
         return $str;
     }
 
+    static function function init($name)
+    {
+        return new CSV($name);
+    }
+
     public function __construct($name)
     {
         $this->_doc = self::_ext($name);
