@@ -83,7 +83,7 @@ class XML
 	*	Create element
 	*	@return object
 	*/
-	private function addElements(array $obj = [])
+	private function _addElements(array $obj = [])
 	{
 
 		$NS = (isset($obj['ns'])) ? $obj['ns'] : $this->_NS;
@@ -428,7 +428,7 @@ class XML
 	*/
 	public function createNode($obj)
 	{
-		$element = $this->addElements($obj);
+		$element = $this->_addElements($obj);
 
 		return $element;
 	}
