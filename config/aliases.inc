@@ -39,7 +39,8 @@ return [
 	*/
 	'Date' 				=> 'Roducks\\Libs\\Utils\\Date',
 	'Request' 			=> 'Roducks\\Libs\\Request\\Request',
-	'Directory' 		=> 'Roducks\\Libs\\Files\\Directory',
+	'Lib\\Directory' 		=> 'Roducks\\Libs\\Files\\Directory',
+	'Lib\\File' 		=> 'Roducks\\Libs\\Files\\File',
 	'DB' 				=> 'Roducks\\Libs\\ORM\\DB',
 	'Query' 			=> 'Roducks\\Libs\\ORM\\Query',
 	'Model' 			=> 'Roducks\\Libs\\ORM\\Model',

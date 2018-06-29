@@ -19,29 +19,31 @@
  */
 /*
 
-    # CREATE A CSV
-    $csv = new CSV();
-    $csv->file(DIR_UPLOADS, "my_csv_example");
-    
-    $txt = ''; // important to use a variable to append data     
-
-    # HEADERS
-    $txt .= $csv->headers(array("ID",
-                            "TITLE",
-                            "DESC"
-                            ));
-
-    # ROWS
+    $dir = Path::getData("csv/");
+    Directory::make($dir);
+     
+    $csv = new CSV("sample");
+    $csv->path($dir);
+     
+    // HEADERS
+    $csv->headers([
+        "ID",
+        "TITLE",
+        "DESC"
+    ]);
+     
+    // ROWS
     for($i = 1; $i<=10; $i++) :
-        $txt .= $csv->row(array($i,
-                                "Lorem Ipsum",
-                                "This is an example"
-                            ));
+        $csv->row([
+            $i,
+            "Lorem Ipsum",
+            "This is an example"
+        ]);
     endfor;
-
-    # SAVE & EXPORT
-    $csv->save($txt); 
-    $csv->download($txt); 
+     
+    // SAVE & DOWNLOAD
+    $csv->save();
+    $csv->download();
 
 */
 
@@ -56,8 +58,9 @@ class CSV
     private $_doc;
     private $_path;
     private $_file;
+    private $_rows = '';
 
-    private function escape($fields)
+    private function _escape($fields)
     {
         $fill = [];
  
@@ -76,6 +79,11 @@ class CSV
         return $str;
     }
 
+    public function __construct($name)
+    {
+        $this->_doc = self::_ext($name);
+    }
+
     /**
     *   Set your own delimiter, by default is separated by commas
     */
@@ -84,9 +92,8 @@ class CSV
         $this->_delimiter = $s;
     }    
 
-    public function file($path, $name)
+    public function path($path)
     {
-        $this->_doc = self::_ext($name);
         $this->_file = $path . $this->_doc;
     }
 
@@ -95,43 +102,43 @@ class CSV
         $raw = '';
  
         if (is_array($rows) && count($rows) > 0) :
-            $raw .= $this->escape($rows);
+            $raw .= $this->_escape($rows);
         endif;
  
-        return $raw . "\n";
+        $this->_rows .= $raw . "\n";
     }
 
     public function headers($obj)
     {
-        return $this->row($obj);
+        $this->_rows .= $this->row($obj);
     }
 
     /*------------ SAVE CSV --------------*/
-    public function save($report)
+    public function save()
     {
         $csv_file = fopen($this->_file,"w");
-                    fwrite($csv_file,$report);
+                    fwrite($csv_file,$this->_rows);
                     fclose($csv_file);
     }
  
     /*------------ EXPORT CSV ------------*/
-    public function download($report)
+    public function download()
     {
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="'.$this->_doc.'"');
-        echo $report;
+        echo $this->_rows;
     }
 
     /*
         # READ CSV
 
-        $csv = new CSV();
-        $csv->file(\App::getRealFilePath("app/Schema/Data/"), "sample_table");
+        $csv = new CSV("sample_table");
+        $csv->path(Path::get("app/Schema/Data/"));
         
         if ($csv->read()) {
 
-            while (($data = $csv->fetch()) !== FALSE) {
-                Helper::pre($data);
+            while (($row = $csv->fetch()) !== FALSE) {
+                Helper::pre($row);
             }
 
             $csv->stop();
