@@ -2,12 +2,16 @@
 use Roducks\Framework\Login; 
 ?>
 <ul class="dropdown-menu">
-<? foreach ($items as $key => $value): ?>
-	<?php if(isset($value['separator'])): ?>
+<? foreach ($items as $key => $value) : ?>
+	<?php if (isset($value['separator'])) : ?>
 	<li role="separator" class="divider"></li>
 <?php else: 
 
-	if(is_array($value['access']) && count($value['access']) == 2) {
+	if (!isset($value['access'])) {
+		$value['access'] = "all";
+	}
+
+	if (is_array($value['access']) && count($value['access']) == 2) {
 		$action = isset($access[$value['access'][0]][$value['access'][1]]);
 		$all = "refuse";
 	} else {
@@ -15,12 +19,12 @@ use Roducks\Framework\Login;
 		$all = $value['access'];
 	}
 
-	if($action || $all == "all" || Login::isSuperAdmin()): 
+	if ($action || $all == "all" || Login::isSuperAdmin()) : 
 
 ?>
 		<li>
 			<a href="<?php echo $value['link']; ?>">
-		<?php if(isset($value['icon'])): ?>
+		<?php if (isset($value['icon'])): ?>
 			<span class="glyphicon glyphicon-<?php echo $value['icon']; ?>" aria-hidden="true"></span> 
 		<?php endif; ?>
 			<?php echo $value['text']; ?></a>

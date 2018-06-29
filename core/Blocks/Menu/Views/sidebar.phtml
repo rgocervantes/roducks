@@ -1,9 +1,9 @@
 <?php 
 use Roducks\Framework\Login;
 
-$i=0; foreach ($items as $key => $value): 
+$i=0; foreach ($items as $key => $value) : 
 
-	if(is_array($value['access']) && count($value['access']) == 2) {
+	if (is_array($value['access']) && count($value['access']) == 2) {
 		$action = isset($access[$value['access'][0]][$value['access'][1]]);
 		$all = "refuse";
 	} else {
@@ -11,7 +11,7 @@ $i=0; foreach ($items as $key => $value):
 		$all = $value['access'];
 	}
 
-	if($action || $all == "all" || Login::isSuperAdmin()): $i++; 
+	if ($action || $all == "all" || Login::isSuperAdmin()) : $i++; 
 
 ?>	
 <ul class="nav nav-sidebar">
@@ -19,9 +19,9 @@ $i=0; foreach ($items as $key => $value):
 </ul>
  
 <ul class="nav nav-sidebar">
-	<?php foreach ($value['children'] as $k => $v):  
+	<?php foreach ($value['children'] as $k => $v) :  
 
-	if(is_array($v['access']) && count($v['access']) == 2) {
+	if (is_array($v['access']) && count($v['access']) == 2) {
 		$ac = isset($access[$v['access'][0]][$v['access'][1]]);
 		$al = "refuse";
 	} else {
@@ -29,7 +29,7 @@ $i=0; foreach ($items as $key => $value):
 		$al = $value['access'];
 	}
 
-	if($ac || $al == "all" || Login::isSuperAdmin()):
+	if ($ac || $al == "all" || Login::isSuperAdmin()) :
 
 	?>
 		<li><a href="<?php echo $v['link']; ?>"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> <?php echo $v['text']; ?></a></li>
@@ -37,6 +37,6 @@ $i=0; foreach ($items as $key => $value):
 </ul>
 <?php endif; ?>
 <?php endforeach; ?>
-<?php if($i > 0): ?>
+<?php if ($i > 0) : ?>
 <hr />
 <?php endif; ?>
