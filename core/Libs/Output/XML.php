@@ -268,7 +268,7 @@ class XML
 	/**
 	*	Save xml 
 	*/
-	public function save()
+	public function save($overwrite = false)
 	{
 		$this->_DOM->save($this->_xmlName);
 	}
@@ -280,24 +280,23 @@ class XML
 	{
 		self::header();
 		echo $this->_DOM->saveXML();
-	}	
+	}
 
 	/**
 	*	Append custom namespace into the root element
 	*/
-	public function namespace($name)
+	public function rootNS($name)
 	{
 		$this->_NS = $name;
 		$this->_ns_root = true;
 	}
 
-
 	/**
 	*	Append xmlns atom into the root element
 	*/
-	public function namespaceAtom()
+	public function rootNSAtom()
 	{
-		$this->namespace($this->_atom);
+		$this->rootNS($this->_atom);
 	}
 
 	/**

@@ -169,12 +169,68 @@ class Directory
 	}
 
 	/**
-	*	Example: Directory::move(DIR_DATA_TMP . "new_package/other/", DIR_DATA_TMP . "new_package/example/other/");
-	*
+	 *	@example Directory::move(DIR_DATA_TMP . "new_package/other/", DIR_DATA_TMP . "new_package/example/other/");
 	*/
 	static function move($origin, $destination)
 	{
 		rename($origin, $destination);
+	}
+
+	static private function _zip($path, $route, array $exclude = [], array $storage = [])
+	{
+
+		$ds = (!empty($route)) ? DIRECTORY_SEPARATOR : '';
+		$name = $path . $route . $ds;
+
+		if (count($exclude) > 0) {
+
+			if (isset($exclude[$route])) {
+				return [];
+			}
+		}
+
+		$dir = Directory::open($name);
+
+		if (!empty($dir['files'])) {
+			$storage[$route] = $dir['files'];
+		}
+
+		if (!empty($dir['folders'])) {
+
+			$subfolders = [];
+
+			foreach ($dir['folders'] as $folder) {
+				$sub = $route . DIRECTORY_SEPARATOR . $folder;
+				if (empty($route)) {
+					$sub = substr($sub, 1);
+				}
+				$storage = array_merge($storage, self::_zip($path, $sub, $exclude, $storage));
+			}
+
+		}
+
+		return $storage;
+
+	}
+
+	/**
+	 * @example 
+	 *
+	 *	Directory::zip([
+	 * 	 'path' => Path::getData(),
+	 *   'folder' => '',
+	 *	 'exlude' => [Path::getData('zip/') => true],
+	 *	 'destination' => Path::getData('zip/'),
+	 *	 'filename' => 'rodrigo',
+	 * ]);
+	 */
+	static function zip($obj)
+	{
+		$exclude = (isset($obj['exclude'])) ? $obj['exclude'] : [];
+		$files = self::_zip($obj['path'], '', $exclude);
+
+		self::make($obj['destination']);
+		Zip::create($obj['path'], $files, "{$obj['destination']}{$obj['filename']}.zip");
 	}
 
 }

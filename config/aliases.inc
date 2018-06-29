@@ -39,9 +39,15 @@ return [
 	*/
 	'Date' 				=> 'Roducks\\Libs\\Utils\\Date',
 	'Request' 			=> 'Roducks\\Libs\\Request\\Request',
-	'Lib\\Directory' 		=> 'Roducks\\Libs\\Files\\Directory',
-	'Lib\\File' 		=> 'Roducks\\Libs\\Files\\File',
 	'DB' 				=> 'Roducks\\Libs\\ORM\\DB',
 	'Query' 			=> 'Roducks\\Libs\\ORM\\Query',
 	'Model' 			=> 'Roducks\\Libs\\ORM\\Model',
+	'Lib\\Directory' 	=> 'Roducks\\Libs\\Files\\Directory',
+	'Lib\\Download' 	=> 'Roducks\\Libs\\Files\\Download',
+	'Lib\\File' 		=> 'Roducks\\Libs\\Files\\File',
+	'Lib\\Image' 		=> 'Roducks\\Libs\\Files\\Image',
+	'Lib\\Zip' 			=> 'Roducks\\Libs\\Files\\Zip',
+	'Lib\\PDF' 			=> 'Roducks\\Libs\\Files\\PDF',
+	'Lib\\CSV' 			=> 'Roducks\\Libs\\Output\\CSV',
+	'Lib\\XML' 			=> 'Roducks\\Libs\\Output\\XML',
 ];

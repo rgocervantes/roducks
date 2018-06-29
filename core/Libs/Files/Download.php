@@ -30,7 +30,7 @@ class Download
 
     const SALT_STRING = ":rdks";
  
-    private static function contentType($file_name)
+    static private function _contentType($file_name)
     {
  
         if (strpos($file_name,".") !== false) {
@@ -44,10 +44,9 @@ class Download
         }
  
         return false;
- 
     }
  
-    private static function randId()
+    static private function _randId()
     {
         return md5( time() . self::SALT_STRING);
     }
@@ -55,15 +54,13 @@ class Download
     public static function attachment($file_name, $download_name = "")
     {
 
-        list($realFilePath, $fileExists) = \App::getRealPath($file_name);
-
-        if (!$fileExists) {
+        if (!file_exists($file_name)) {
             header("HTTP/1.1 404 Not Found");
             die("File Not Found.");
         }
 
-        $type = self::contentType($file_name);
-        $randId = self::randId();
+        $type = self::_contentType($file_name);
+        $randId = self::_randId();
 
         if ($type !== FALSE) {
  
@@ -77,7 +74,7 @@ class Download
      
                     header ("Content-Type: application/octet-stream");
                     header ("Accept-Ranges: bytes");
-                    header ("Content-Length: ".filesize($realFilePath));
+                    header ("Content-Length: ".filesize($file_name));
                     header ("Content-Disposition: attachment; filename=". $file . '.' . $type);           
      
                 break;
@@ -114,7 +111,7 @@ class Download
                 break;
             }
 
-            readfile($realFilePath);
+            readfile($file_name);
  
         }
 

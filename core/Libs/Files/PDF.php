@@ -24,7 +24,7 @@ class PDF
 {
  
     private $pdf,
-            $log = array();
+            $log = [];
  
     public function __construct($path, $name)
     {

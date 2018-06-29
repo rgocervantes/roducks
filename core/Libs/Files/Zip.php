@@ -22,25 +22,28 @@
 ----------------------------------------
 |		ZIP
 ----------------------------------------
-		$filename = "profiles_";
-		$tmp = DIR_TMP;
-		$files = array();
-		$files[] = array('path' => $tmp,
-						 'folder' => "package/",
-						 'name' => $filename . ".csv");
+	$filename = "profiles_";
+	$tmp = Path::getData("zip/");
+	$files = [];
+	$files[] = [
+		'path' => $tmp,
+		'folder' => "package/",
+		'name' => $filename . ".csv"
+	];
 
-
-		Zip::create($files, $tmp . "new_package.zip");
+	Zip::create($files, $tmp . "new_package.zip");
 		
 ----------------------------------------
 |		UNZIP
 ----------------------------------------
-		$tmp = DIR_TMP;
-		Zip::extract($tmp . "package.zip");
+	$tmp = Path::getData("zip/");
+	Zip::extract($tmp . "package.zip");
 
 */
 
 namespace Roducks\Libs\Files;
+
+use Helper;
 
 class Zip
 {
@@ -48,7 +51,7 @@ class Zip
 	/**
 	*	Zip folder of files
 	*/
-	public static function create($files = array(),$destination = '')
+	public static function create($path, array $listing = [], $destination = '')
 	{
 		//if the zip file already exists and overwrite is false, return false
 		//if (file_exists($destination) && !$overwrite) { return false; }
@@ -56,16 +59,26 @@ class Zip
 		$overwrite = (file_exists($destination)) ? true : false;
 		
 		//vars
-		$valid_files = array();
+		$valid_files = [];
 		//if files were passed in...
-		if (is_array($files)) {
-			//cycle through each file
-			foreach ($files as $file) {
-				//make sure the file exists
-				if (file_exists($file['path'] . $file['name'])) {
-					$valid_files[] = $file;
+		if (is_array($listing)) {
+
+			foreach ($listing as $route => $files) {
+				//cycle through each file
+				foreach ($files as $file) {
+					//make sure the file exists
+					$filename = $route . DIRECTORY_SEPARATOR . $file;
+					$filepath = $path . $filename;
+
+					if (file_exists($filepath)) {
+						$valid_files[] = [
+							'path' => $filepath,
+							'name' => $filename
+						];
+					}
 				}
 			}
+
 		}
 
 		//if we have good files...
@@ -78,7 +91,7 @@ class Zip
 			}
 			//add the files
 			foreach ($valid_files as $file) {
-				$zip->addFile($file['path'] . $file['name'],(isset($file['folder'])) ? $file['folder'] . $file['name'] : $file['name']);
+				$zip->addFile($file['path'], $file['name']);
 			}
 			//debug
 			//echo 'The zip archive contains ',$zip->numFiles,' files with a status of ',$zip->status;
