@@ -21,16 +21,79 @@
 namespace Roducks\Page;
 
 use Roducks\Libs\Output\XML as XMLDoc;
+use Lib\Directory;
+use Path;
 
 class XML extends Frame
 {
 
+	private $_xmlName = '';
+
 	protected $doc;
+	protected $readable = true;
+	protected $overwrite = false;
+	protected $path = 'xml/';
+	protected $file = '';
+	protected $NS = [];
+	protected $root = 'xml';
+	protected $rootNS = '';
 
 	public function __construct(array $settings = [])
 	{
+
 		parent::__construct($settings);
-		$this->doc = new XMLDoc;
+
+		$overwrite = ($settings['method'] == 'overwrite' || $this->overwrite);
+
+		if ($overwrite) {
+			Directory::make(Path::getData($this->path));
+		}
+
+		$this->doc = XMLDoc::init();
+
+		if (!empty($this->file)) {
+			$this->_xmlName = Path::getData("{$this->path}{$this->file}");
+
+			if ($settings['method'] != 'read') {
+				$this->doc->file($this->_xmlName);
+			}
+		}
+
+		switch ($settings['method']) {
+			case 'write':
+			case 'overwrite':
+			case 'output':
+
+				if (!empty($this->rootNS)) {
+					$this->doc->rootNS($this->rootNS);
+				}
+
+				if ($overwrite) {
+					$this->doc->overwrite();
+				}
+
+				$this->doc->root($this->root, $this->NS);
+
+				break;
+			case 'parse':
+				$this->doc->load();
+
+				if ($overwrite) {
+					$this->doc->overwrite();
+				}
+
+				break;	
+		}
+
+	}
+
+	public function read()
+	{
+		if ($this->readable) {
+			$this->doc->read($this->_xmlName);
+		} else {
+			echo "XML is not able to be shown.";
+		}
 	}
 
 }

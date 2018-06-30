@@ -59,6 +59,25 @@ class XML
 	}
 
 	/**
+	*	Validates if file extension is set.
+	*	@return string
+	*/
+    static private function _ext($str)
+    {
+        $ext = ".xml";
+        $name = substr($str, -4);
+        if ($name != $ext) return $str . $ext;
+
+        return $str;
+    }
+
+    static private function _notFound()
+    {
+    	header("HTTP/1.1 404 Not Found");
+		die("XML does not exist.");
+    }
+
+	/**
 	*	Http header
 	*/
     static function header()
@@ -66,17 +85,18 @@ class XML
     	header("Content-type: text/xml; charset=utf-8");
     }
 
-	/**
-	*	Validates if file extension is set.
-	*	@return string
-	*/
-    static function ext($str)
+    static function init()
     {
-        $ext = ".xml";
-        $name = substr($str, -4);
-        if ($name != $ext) return $str . $ext;
+    	return new XML();
+    }
 
-        return $str;
+    static function parse($name)
+    {
+    	$xml = self::init();
+		$xml->file($name);
+		$xml->load();
+
+		return $xml;
     }
 
 	/**
@@ -168,24 +188,11 @@ class XML
     {
 		
 		if (!$this->exists()) {
-			die("XML does not exist.");
+			self::_notFound();
 		}
 
     	self::header();
     	readfile($this->_xmlName);
-    }
-
-	/**
-	*	Remove child element by xpath query
-	*/
-    private function _removeNode($query)
-    {
-
-    	$this->_update();
-    	$xpath = new \DOMXPath($this->_DOM);
-        $element = $xpath->query("//*[@".$query."]")->item(0);
-
-        $this->_root->removeChild($element);
     }
 
 /*
@@ -198,7 +205,7 @@ class XML
 	{
 
 		if (!$this->exists()) {
-			die("XML does not exist.");
+			self::_notFound();
 		}
 
 		$this->_update();
@@ -237,7 +244,11 @@ class XML
 	{
 
 		$str = substr($xml, 0, 4);
-		$this->_xmlName = self::ext($xml);
+		$this->_xmlName = self::_ext($xml);
+
+		if (empty($xml)) {
+			return;
+		}
 		
 		if ($this->exists()) {
 			$this->_xmlContent = file_get_contents($this->_xmlName);
@@ -261,8 +272,12 @@ class XML
 
     public function read($xml)
     {
-		$this->file($xml);
-		$this->_read();
+    	if (!empty($xml)) {
+			$this->file($xml);
+			$this->_read();
+    	} else {
+    		die("Invalid XML.");
+    	}
     }
 
 	/**
@@ -270,7 +285,9 @@ class XML
 	*/
 	public function save()
 	{
-		$this->_DOM->save($this->_xmlName);
+		if (!empty($this->_xmlName)) {
+			$this->_DOM->save($this->_xmlName);
+		}
 	}
 
 	/**
@@ -297,6 +314,14 @@ class XML
 	public function rootNSAtom()
 	{
 		$this->rootNS($this->_atom);
+	}
+
+	/**
+	*	Append xmlns atom into the root element
+	*/
+	public function rootNSW3c()
+	{
+		$this->rootNS($this->_w3c);
 	}
 
 	/**
@@ -343,28 +368,6 @@ class XML
 		endif;	
 	}
 
-	/**
-	*	Get elements by node given
-	*/
-    public function getElementByTagName($node)
-    {
-    	return $this->_DOM->getElementsByTagName($node); // ->item($index);
-    }
-
-	/**
-	*	Get elements by node given
-	*/
-    public function getElementByTagNameNS($NS, $node)
-    {
-    	return $this->_DOM->getElementsByTagNameNS($NS, $node); // ->item($index);
-    }
-
-    public function getLastElementByTagName($node)
-    {
-    	$index = $this->count($node) - 1;
-    	return $this->getElementsByTagName($node)->item($index);
-    }
-
     public function getElementByQuery($query)
     {
     	$xpath = new \DOMXPath($this->_DOM);
@@ -373,51 +376,46 @@ class XML
         return $element;
     }
 
+	/**
+	*	Get elements by node given
+	*/
+    public function getElementsByTagName($nodeName)
+    {
+    	return $this->_DOM->getElementsByTagName($nodeName); // ->item($index);
+    }
+
+    /**
+     * Returns the first node
+     */
+    public function getElementByTagName($nodeName)
+    {
+    	return $this->getElementsByTagName($nodeName)->item(0);
+    }
+
+	/**
+	*	Count nodes
+	*/
+ 	public function count($nodeName)
+ 	{
+ 		return $this->getElementsByTagName($nodeName)->length;
+ 	}
+
+    public function getLastElementByTagName($node)
+    {
+    	$total = $this->count($node);
+    	$index = ($total > 0) ? $total - 1 : 0;
+    	return $this->getElementsByTagName($node)->item($index);
+    }
+
     public function getElementById($id)
     {
     	return $this->getElementByQuery("//*[@id='{$id}']");
     }
 
-    public function getChildNodes($parentNode)
+    public function getChildNodes($parentNodeName)
     {
-    	return $this->getElementByTagName($parentNode)->item(0)->childNodes;
+    	return $this->getElementsByTagName($parentNodeName)->item(0)->childNodes;
     }
-
-    public function cdata($value)
-    {
-    	return $this->_DOM->createCDATASection($value);
-    }
-
-    public function cdataSection($node, $value)
-    {
-    	$node->nodeValue = '';
-		$node->appendChild($this->cdata($value));
-    }
-
-	/**
-	*	Count root's nodes
-	*/
- 	public function count($node)
- 	{
- 		return $this->getElementByTagName($node)->length;
- 	}
-
-	public function removeNode($node)
-	{
-		$node->parentNode->removeChild($node);
-	}
-
-	public function replaceNode($node, $newNode)
-	{
-		$this->prependChild($node, $newNode);
-		$this->removeNode($node, $newNode);
-	}
-
-	public function removeNodeById($id)
-	{
-		$node = $this->getElementById($id);
-		$this->removeNode($node);
-	}
 
 	/**
 	*	Create Node
@@ -466,5 +464,42 @@ class XML
 		}
 
 	}
+
+	public function removeNode($node)
+	{
+		if ($node->nodeName != $this->_root->nodeName) {
+			$node->parentNode->removeChild($node);
+		}
+	}
+
+	public function removeNodeById($id)
+	{
+		$node = $this->getElementById($id);
+		$this->removeNode($node);
+	}
+
+	public function replaceNode($node, $newNode)
+	{
+		$this->prependChildNode($node, $newNode);
+		$this->removeNode($node, $newNode);
+	}
+
+	public function replaceNodeById($id, $newNode)
+	{
+		$node = $this->getElementById($id);
+		$this->prependChildNode($node, $newNode);
+		$this->removeNode($node, $newNode);
+	}
+
+    public function cdata($value)
+    {
+    	return $this->_DOM->createCDATASection($value);
+    }
+
+    public function cdataSection($node, $value)
+    {
+    	$node->nodeValue = '';
+		$node->appendChild($this->cdata($value));
+    }
 
 }
