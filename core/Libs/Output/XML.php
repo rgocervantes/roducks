@@ -161,6 +161,20 @@ class XML
 		$this->_root = $this->_DOM->documentElement;
 	}
 
+    /**
+     *
+     */
+    private function _read()
+    {
+		
+		if (!$this->exists()) {
+			die("XML does not exist.");
+		}
+
+    	self::header();
+    	readfile($this->_xmlName);
+    }
+
 	/**
 	*	Remove child element by xpath query
 	*/
@@ -245,24 +259,10 @@ class XML
 
 	}
 
-    /**
-     *
-     */
-    public function read()
-    {
-		
-		if (!$this->exists()) {
-			die("XML does not exist.");
-		}
-
-    	self::header();
-    	readfile($this->_xmlName);
-    }
-
-    public function expose($xml)
+    public function read($xml)
     {
 		$this->file($xml);
-		$this->read();
+		$this->_read();
     }
 
 	/**
