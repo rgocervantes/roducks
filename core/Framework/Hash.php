@@ -40,7 +40,7 @@ class Hash
 
 	static function getToken()
 	{
-		$password = self::getSalt('token');
+		$password = self::getSaltPassword('token');
 		return $password['salt'];
 	}
 
