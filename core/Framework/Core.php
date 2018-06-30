@@ -526,10 +526,13 @@ class Core
 	static function callMethod($class, $method, $obj, $path, $params)
 	{
 
-		if (method_exists($class, $method)) {
+		$underscore = (Helper::regexp('/^_/', $method));
+		
+		if (method_exists($class, $method) && !$underscore) {
 			call_user_func_array(array($obj,$method), $params);
 		} else {
-			Error::methodNotFound(TEXT_METHOD_NOT_FOUND, __LINE__, __FILE__, $path['fileName'], $class, $method, $obj->getParentClassName());
+			$error = ($underscore) ? "Methods with \"<b style=\"color:#e69d97\">underscore</b>\" is not allowed." : null;
+			Error::methodNotFound(TEXT_METHOD_NOT_FOUND, __LINE__, __FILE__, $path['fileName'], $class, $method, $obj->getParentClassName(), $error);
 		}
 	}
 	
@@ -625,7 +628,7 @@ class Core
 
 		} else {
 
-			// Call Api|Service
+			// Call API|Service|Event|XML
 			$obj = new $class($pageObj);
 
 			if (Helper::isApi($page) && isset($params['jwt'])) {

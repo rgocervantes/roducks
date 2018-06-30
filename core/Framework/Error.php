@@ -238,8 +238,12 @@ class Error
 		self::debug($title, $line, $path, $file, $error);
 	}	
 
-	static function methodNotFound($title, $line, $path, $file, $page, $method, $extend, $alert = "Make sure this method is defined.")
+	static function methodNotFound($title, $line, $path, $file, $page, $method, $extend, $alert = null)
 	{
+
+		if (is_null($alert)) {
+			$alert = "Make sure this method is defined.";
+		}
 
 		$class = Helper::getClassName($page);
 		$ns = Helper::getClassName($page,'$1');

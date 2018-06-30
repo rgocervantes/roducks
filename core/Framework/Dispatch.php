@@ -865,6 +865,9 @@ class Dispatch
 							$dType = ($type == 'json' || $type == 'xml') ? strtoupper($type) : ucfirst($type);
 							$pagePath = Core::getModulesPath() . $page . "/" . $dType . "/";
 							$action = ($type == 'page' || $type == 'factory') ? 'index' : 'getData';
+							if ($type == 'xml') {
+								$action = 'output';
+							}
 							break;
 						case '_block_':
 							$pagePath = Core::getBlocksPath($page);
@@ -881,7 +884,7 @@ class Dispatch
 					}
 				}
 
-			} else if (($method == "_service_")) {
+			} else if ($method == "_service_") {
 
 				$invalidParam = self::getLastParams($params);
 				
