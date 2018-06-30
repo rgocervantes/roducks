@@ -268,7 +268,7 @@ class XML
 	/**
 	*	Save xml 
 	*/
-	public function save($overwrite = false)
+	public function save()
 	{
 		$this->_DOM->save($this->_xmlName);
 	}
@@ -344,27 +344,6 @@ class XML
 	}
 
 	/**
-	*
-	*/
-	public function prependChild($node, $newNode)
-	{
-		// Insert the new element 
-		$node->parentNode->insertBefore($newNode, $node); 
-
-	}
-
-	public function removeNode($node)
-	{
-		$node->parentNode->removeChild($node);
-	}
-
-	public function replaceNode($node, $newNode)
-	{
-		$this->prependChild($node, $newNode);
-		$this->removeNode($node, $newNode);
-	}
-
-	/**
 	*	Get elements by node given
 	*/
     public function getElementByTagName($node)
@@ -423,6 +402,23 @@ class XML
  		return $this->getElementByTagName($node)->length;
  	}
 
+	public function removeNode($node)
+	{
+		$node->parentNode->removeChild($node);
+	}
+
+	public function replaceNode($node, $newNode)
+	{
+		$this->prependChild($node, $newNode);
+		$this->removeNode($node, $newNode);
+	}
+
+	public function removeNodeById($id)
+	{
+		$node = $this->getElementById($id);
+		$this->removeNode($node);
+	}
+
 	/**
 	*	Create Node
 	*/
@@ -439,6 +435,36 @@ class XML
 	public function appendChild($element)
 	{
 		$this->_root->appendChild($element);
+	}
+
+	/**
+	*	Prepend node
+	*/
+	public function prependChildNode($node, $newNode)
+	{
+		$node->parentNode->insertBefore($newNode, $node);
+	}
+
+	/**
+	*	Prepend node in root
+	*/
+	public function prependChild($newNode)
+	{
+		$rootNodeName = $this->_root->nodeName;
+
+		if (self::_hasNS($rootNodeName)) {
+			list($ns, $rootNodeName) = explode(':', $rootNodeName);
+		}
+
+		$total = $this->getChildNodes($rootNodeName)->length;
+
+		if ($total > 0) {
+			$firstNode = $this->getChildNodes($rootNodeName)[0];
+			$this->prependChildNode($firstNode, $newNode);
+		} else {
+			$this->appendChild($newNode);
+		}
+
 	}
 
 }
