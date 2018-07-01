@@ -37,9 +37,9 @@ class Directory
 		return $dir;
 	}
 
-	/*
-	Directory::folder("example");
-	*/
+	/**
+	 * @example Directory::folder("example");
+	 */
 	static private function _folder($folder, $chmod = 0755)
 	{
 		if (!empty($folder)) {
@@ -49,7 +49,39 @@ class Directory
 		}
 	}	
 
-	// Directory::open("files/books/children/");
+	static private function _tree($path, $route, array $exclude = [], array $storage = [])
+	{
+
+		$name = $path . $route;
+
+		if (count($exclude) > 0) {
+
+			if (isset($exclude[$route])) {
+				return [];
+			}
+		}
+
+		$dir = self::open($name);
+
+		if (!empty($dir['files'])) {
+			$storage[$route] = $dir['files'];
+		}
+
+		if (!empty($dir['folders'])) {
+
+			foreach ($dir['folders'] as $folder) {
+				$sub = $route . $folder;
+				$storage = array_merge($storage, self::_tree($path, $sub, $exclude, $storage));
+			}
+
+		}
+
+		return $storage;
+	}
+
+	/**
+	 * @example Directory::open(Path::getData("files/books/children/"));
+	 */
 	static function open($dir)
 	{
 
@@ -65,7 +97,7 @@ class Directory
 	   		while($x = readdir($dir_handle)) {
 	       		if ($x != "." && $x != "..") {
 	          		if (is_dir($dirname . $x)) {
-	          			$folders[] = $x;
+	          			$folders[] = $x.DIRECTORY_SEPARATOR;
 	          		}else{
 	          			$files[] = $x;
 	          		}
@@ -75,15 +107,16 @@ class Directory
 	   		closedir($dir_handle);
 		}
 		 
-   		return ['folders' => $folders,
-   				'files' => $files
-   				];
+   		return [
+   			'folders' => $folders,
+   			'files' => $files
+   			];
 
 	}
 	
-	/*
-	Directory::make(Path::get(), "foo/bar");
-	*/
+	/**
+	 * @example Directory::make(Path::getData(), "foo/bar");
+	 */
 	static function make($base, $dir = "", $chmod = 0755)
 	{
 
@@ -92,10 +125,10 @@ class Directory
 		if (preg_match('#\/#', $dir)) {
 
 			$guide = "";
-			$slashes = explode("/", $dir);
+			$slashes = explode(DIRECTORY_SEPARATOR, $dir);
 
 			foreach ($slashes as $key => $value) {
-				$guide = $guide . $value . "/";
+				$guide = $guide . $value . DIRECTORY_SEPARATOR;
 				$folder = $base . $guide;
 				self::_folder($folder, $chmod);
 			}
@@ -106,13 +139,14 @@ class Directory
 	
 	}
 	
-	/*
-	*	Delete files and folders inside of another.
-	*/
-	static function remove($dirname)
+	/**
+	 * @example Directory::remove(Path::getData("tmp/"));
+	 */
+	static function remove($dir)
 	{
 
 		$dir_handle = false;
+		$dirname = self::_getDir($dir);
 
 		if (is_dir($dirname))
        		$dir_handle = opendir($dirname);
@@ -121,10 +155,10 @@ class Directory
  
    		while($file = readdir($dir_handle)) {
        		if ($file != "." && $file != "..") {
-          		if (!is_dir($dirname."/".$file))
-             	unlink($dirname."/".$file);
+          		if (!is_dir($dirname.$file))
+             	unlink($dirname.$file);
          	else
-             	self::remove($dirname.'/'.$file);    
+             	self::remove($dirname.$file);    
        		}
     	}
    		closedir($dir_handle);
@@ -133,8 +167,8 @@ class Directory
 	}
 
 	/**
-	*	Directory::clean("app/tmp/cards/", [Directory::REMAIN_FOLDERS, Directory::REMOVE_FILES]);
-	*/
+	 * @example Directory::clean(Path::getData("tmp/cards/"), [Directory::REMAIN_FOLDERS, Directory::REMOVE_FILES]);
+	 */
 	static function clean($dirname, array $options = [])
 	{
 		$content = self::open($dirname);
@@ -152,14 +186,14 @@ class Directory
 					case self::REMOVE_FOLDERS:
 						
 						foreach ($content['folders'] as $folder) {
-							self::remove($dirname.$folder."/");
+							self::remove($dirname.$folder.DIRECTORY_SEPARATOR);
 						}
 
 						break;
 					case self::REMAIN_FOLDERS:
 						
 						foreach ($content['folders'] as $folder) {
-							self::clean($dirname.$folder."/", [self::REMAIN_FOLDERS, self::REMOVE_FILES]);
+							self::clean($dirname.$folder.DIRECTORY_SEPARATOR, [self::REMAIN_FOLDERS, self::REMOVE_FILES]);
 						}
 
 						break;						
@@ -169,48 +203,21 @@ class Directory
 	}
 
 	/**
-	 *	@example Directory::move(DIR_DATA_TMP . "new_package/other/", DIR_DATA_TMP . "new_package/example/other/");
+	 *	@example Directory::move(Path::getData(), "xml/", Path::getData(), "content/xml");
 	*/
-	static function move($origin, $destination)
+	static function move($path1, $origin, $path2, $destination = "")
 	{
-		rename($origin, $destination);
-	}
+		self::make($path2, $destination);
+		$tree = self::_tree($path1, $origin);
 
-	static private function _zip($path, $route, array $exclude = [], array $storage = [])
-	{
-
-		$ds = (!empty($route)) ? DIRECTORY_SEPARATOR : '';
-		$name = $path . $route . $ds;
-
-		if (count($exclude) > 0) {
-
-			if (isset($exclude[$route])) {
-				return [];
+		foreach ($tree as $route => $files) {
+			self::make($path2, $route);
+			foreach ($files as $file) {
+				File::move($path1.$route.$file, $path2.$destination.$file);
 			}
 		}
 
-		$dir = Directory::open($name);
-
-		if (!empty($dir['files'])) {
-			$storage[$route] = $dir['files'];
-		}
-
-		if (!empty($dir['folders'])) {
-
-			$subfolders = [];
-
-			foreach ($dir['folders'] as $folder) {
-				$sub = $route . DIRECTORY_SEPARATOR . $folder;
-				if (empty($route)) {
-					$sub = substr($sub, 1);
-				}
-				$storage = array_merge($storage, self::_zip($path, $sub, $exclude, $storage));
-			}
-
-		}
-
-		return $storage;
-
+		self::remove($path1.$origin);
 	}
 
 	/**
@@ -218,8 +225,7 @@ class Directory
 	 *
 	 *	Directory::zip([
 	 * 	 'path' => Path::getData(),
-	 *   'folder' => '',
-	 *	 'exlude' => [Path::getData('zip/') => true],
+	 *	 'exlude' => [Path::getData('zip/') => 1],
 	 *	 'destination' => Path::getData('zip/'),
 	 *	 'filename' => 'rodrigo',
 	 * ]);
@@ -227,7 +233,7 @@ class Directory
 	static function zip($obj)
 	{
 		$exclude = (isset($obj['exclude'])) ? $obj['exclude'] : [];
-		$files = self::_zip($obj['path'], '', $exclude);
+		$files = self::_tree($obj['path'], '', $exclude);
 
 		self::make($obj['destination']);
 		Zip::create($obj['path'], $files, "{$obj['destination']}{$obj['filename']}.zip");

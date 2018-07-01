@@ -20,7 +20,7 @@
 /*
 	USAGE:
 	
-	$file = new File;
+	$file = File::init();
 	$file->type(['image/jpg','image/jpeg','image/png']);
 	$file->kb(150);
 	$file->upload(DIR_UPLOAD_USERS, "profile_user", "my_custom_name");
@@ -89,31 +89,28 @@ final class File
 		return $file;
 	}
 
-	/*
-
-		File::move([
-			[
-				'from' => DIR_DATA_STORAGE_XML, 
-				'to' => DIR_DATA_STORAGE_XML."comments/", 
-				'file' => "blogx.xml"
-			]
-		]);
-
-	*/
-	static function move($files)
+	/**
+	 * @example File::remove(Path::getData("xml/home.xml"));
+	 */
+	static function remove($filename)
 	{
-		foreach ($files as $file) {
-			$from = $file['from'].$file['file'];
-			if (file_exists($from) && file_exists($file['to']) && $file['from'] != $file['to']) {
-				rename($file['from'].$file['file'], $file['to'].$file['file']);
-			}
+		return self::init()->delete($filename, null);
+	}
+
+	/**
+	 * @example File::move(Path::get("xml/"), Path::getData("content/xml/"), "blog.xml");
+	 */
+	static function move($from, $to)
+	{
+		if (file_exists($from) && $from != $to) {
+			rename($from, $to);
 		}
 	}
 
 	static function create($path, $name, $content = '')
 	{
 
-		if ($path != '' && $name != '') {
+		if (file_exists($path) && $path != '' && $name != '') {
 
 			$file = fopen($path . $name, "w");
 					fwrite($file, $content);
@@ -169,18 +166,17 @@ final class File
 	public function upload($path, $file, $rename = null)
 	{
 		
-		$filename = $this->_getAttribute($file,'name');
-		$this->_filename = $filename;
+		$this->_filename = $this->_getAttribute($file,'name');
 
 		// if upload is successed
-		if (!empty($filename) && $this->_getAttribute($file,'error') == 0) {
+		if (!empty($this->_filename) && $this->_getAttribute($file,'error') == 0) {
 			
 			// Allowed size
 			if ($this->_getSize($file) <= $this->_limit) {
 				
 				// Allowed type
 				if (in_array($this->_getAttribute($file,'type'), $this->_ext)) {
-					$this->_filename = (!is_null($rename)) ? $rename . preg_replace('/^.+(\.\w{3,4})$/', '$1', $filename) : $filename;
+					$this->_filename = (!is_null($rename)) ? $rename . preg_replace('/^.+(\.\w{3,4})$/', '$1', $this->_filename) : $this->_filename;
 					
 					if (move_uploaded_file($this->_getAttribute($file,'tmp_name'), $path . $this->_filename)) {
 						$this->_success = true;
@@ -234,9 +230,12 @@ final class File
 
 	public function delete($path, $file)
 	{
-		$des = $path . $file;
-		if (file_exists($des) && $file != '') {
-			return @unlink($des);	
+
+		$filename = (!is_null($file)) ? $path . $file : $path;
+		$remove = (is_null($file)) ? false : empty($file);
+
+		if (file_exists($filename) && !$remove) {
+			return @unlink($filename);
 		}
 	}
 

@@ -67,7 +67,7 @@ class Zip
 				//cycle through each file
 				foreach ($files as $file) {
 					//make sure the file exists
-					$filename = $route . DIRECTORY_SEPARATOR . $file;
+					$filename = $route . $file;
 					$filepath = $path . $filename;
 
 					if (file_exists($filepath)) {
