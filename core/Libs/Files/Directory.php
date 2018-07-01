@@ -142,26 +142,31 @@ class Directory
 	/**
 	 * @example Directory::remove(Path::getData("tmp/"));
 	 */
-	static function remove($dir)
+	static function remove($dir, $recursive = true)
 	{
 
 		$dir_handle = false;
 		$dirname = self::_getDir($dir);
 
-		if (is_dir($dirname))
-       		$dir_handle = opendir($dirname);
-    	if (!$dir_handle)
-       		return false;
- 
-   		while($file = readdir($dir_handle)) {
-       		if ($file != "." && $file != "..") {
-          		if (!is_dir($dirname.$file))
-             	unlink($dirname.$file);
-         	else
-             	self::remove($dirname.$file);    
-       		}
-    	}
-   		closedir($dir_handle);
+		if ($recursive) {
+
+			if (is_dir($dirname))
+	       		$dir_handle = opendir($dirname);
+	    	if (!$dir_handle)
+	       		return false;
+	 
+	   		while($file = readdir($dir_handle)) {
+	       		if ($file != "." && $file != "..") {
+	          		if (!is_dir($dirname.$file))
+	             	unlink($dirname.$file);
+	         	else
+	             	self::remove($dirname.$file);    
+	       		}
+	    	}
+	   		closedir($dir_handle);
+
+		}
+
    		rmdir($dirname);
     	return true;
 	}
@@ -217,7 +222,15 @@ class Directory
 			}
 		}
 
-		self::remove($path1.$origin);
+		if (!empty($origin) && !empty($destination)) {
+			
+			list($f1, $e1) = explode(DIRECTORY_SEPARATOR, $origin);
+			list($f2, $e2) = explode(DIRECTORY_SEPARATOR, $destination);
+
+			$recursive = ($f1 != $f2);
+			self::remove($path1.$origin, $recursive);
+
+		}
 	}
 
 	/**
