@@ -113,6 +113,12 @@ class Directory
    			];
 
 	}
+
+	static function isEmpty($path)
+	{
+		$dir = self::open($path);
+		return (empty($dir['folders']) && empty($dir['files']));
+	}
 	
 	/**
 	 * @example Directory::make(Path::getData(), "foo/bar");
@@ -210,27 +216,21 @@ class Directory
 	/**
 	 *	@example Directory::move(Path::getData(), "xml/", Path::getData(), "content/xml");
 	*/
-	static function move($path1, $origin, $path2, $destination = "")
+	static function move($path1, $origin, $path2, $destination)
 	{
-		self::make($path2, $destination);
-		$tree = self::_tree($path1, $origin);
 
-		foreach ($tree as $route => $files) {
-			self::make($path2, $route);
-			foreach ($files as $file) {
-				File::move($path1.$route.$file, $path2.$destination.$file);
+		if ($origin != $destination) {
+
+			self::make($path2, $destination);
+			$tree = self::_tree($path1, $origin);
+
+			foreach ($tree as $route => $files) {
+				foreach ($files as $file) {
+					File::move($path1, $route.$file, $path2, $destination.$route.$file);
+				}
 			}
 		}
 
-		if (!empty($origin) && !empty($destination)) {
-			
-			list($f1, $e1) = explode(DIRECTORY_SEPARATOR, $origin);
-			list($f2, $e2) = explode(DIRECTORY_SEPARATOR, $destination);
-
-			$recursive = ($f1 != $f2);
-			self::remove($path1.$origin, $recursive);
-
-		}
 	}
 
 	/**

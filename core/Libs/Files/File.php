@@ -98,7 +98,7 @@ final class File
 	}
 
 	/**
-	 * @example File::move(Path::get("xml/"), Path::getData("content/xml/"), "blog.xml");
+	 * @example File::move(Path::getData(), "web/hello/cervantes.zip", Path::getData(), "web/zip/profile/rod.zip");
 	 */
 	static function move($path1, $origin, $path2, $destination)
 	{
@@ -106,35 +106,52 @@ final class File
 		$from = $path1.$origin;
 		$to = $path2.$destination;
 
-		if (file_exists($from) && $from != $to) {
+		if (file_exists($from) && $origin != $destination) {
 
-			$toPath = explode(DIRECTORY_SEPARATOR, $destination);
-			$total = count($toPath);
-			$index = ($total > 1) ? $total - 1 : 0;
-			unset($toPath[$index]);
-			$path = implode(DIRECTORY_SEPARATOR, $toPath);
-
-			if (!file_exists($path2.$path)) {
-				Directory::make($path2, $path);
+			// From path
+			$fromPath = explode(DIRECTORY_SEPARATOR, $origin);
+			$total1 = count($fromPath);
+			
+			if ($total1 > 1) {
+				$index1 =  $total1 - 1;
+				unset($fromPath[$index1]);
 			}
+			
+			$folder1 = implode(DIRECTORY_SEPARATOR, $fromPath);
+
+			// To path
+			$toPath = explode(DIRECTORY_SEPARATOR, $destination);
+			$total2 = count($toPath);
+
+			if ($total2 > 1) {
+				$index2 =  $total2 - 1;
+				unset($toPath[$index2]);
+			}
+
+			$folder2 = implode(DIRECTORY_SEPARATOR, $toPath);
+
+			if (!file_exists($path2.$folder2)) {
+				Directory::make($path2, $folder2);
+			}
+
+			$removePath = $path1.$folder1;
+			$dir = Directory::open($removePath);
+			$canRemove = (empty($dir['folders']) && count($dir['files']) == 1);
+
 			rename($from, $to);
 
-			if (!empty($from) && !empty($path)) {
+			if (!empty($origin) && !empty($destination)) {
+
+				if ($total1 > 2 && $canRemove) {
+					Directory::remove($removePath);
+				}
 				
-				list($f1, $e1) = explode(DIRECTORY_SEPARATOR, $origin);
-				list($f2, $e2) = explode(DIRECTORY_SEPARATOR, $path);
-
-				$fromPath = explode(DIRECTORY_SEPARATOR, $origin);
-				$total = count($fromPath);
-				$index = ($total > 1) ? $total - 1 : 0;
-				unset($fromPath[$index]);
-				$pathRemove = implode(DIRECTORY_SEPARATOR, $fromPath);
-
-				$recursive = ($f1 != $f2);
-				Directory::remove($path1.$pathRemove, $recursive);
+				$rootFolder = $path1.$fromPath[0];
+				if ($fromPath[0] != $toPath[0] && Directory::isEmpty($rootFolder)) {
+					Directory::remove($rootFolder);
+				}
 
 			}
-
 		}
 	}
 
