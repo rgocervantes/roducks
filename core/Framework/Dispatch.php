@@ -866,7 +866,7 @@ class Dispatch
 							$pagePath = Core::getModulesPath() . $page . "/" . $dType . "/";
 							$action = ($type == 'page' || $type == 'factory') ? 'index' : 'getData';
 							if ($type == 'xml') {
-								$action = 'output';
+								$action = 'preview';
 							}
 							break;
 						case '_block_':

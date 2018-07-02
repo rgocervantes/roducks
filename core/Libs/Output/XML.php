@@ -29,12 +29,12 @@ class XML
 |============================|
 */	
 
-	private $_DOM, $_xmlName, $_xmlContent, $_root, $_nodeRoot, $_local, $_NS, $_rootAttrs = [];
+	private $_DOM, $_xmlName, $_xmlContent, $_root, $_nodeRoot, $_local, $_rootNS, $_rootAttrs = [];
 	
 	/*
 	*	The root element has a namespace
 	*/	
-	private $_ns_root = false;	
+	private $_hasRootNS = false;	
 
 	/*
 	*	Default encoding
@@ -106,7 +106,7 @@ class XML
 	private function _addElements(array $obj = [])
 	{
 
-		$NS = (isset($obj['ns'])) ? $obj['ns'] : $this->_NS;
+		$NS = (isset($obj['ns'])) ? $obj['ns'] : $this->_rootNS;
 
 		if (isset($obj['value'])) :
 			if (self::_hasNS($obj['name'])) :
@@ -304,8 +304,8 @@ class XML
 	*/
 	public function rootNS($name)
 	{
-		$this->_NS = $name;
-		$this->_ns_root = true;
+		$this->_rootNS = $name;
+		$this->_hasRootNS = true;
 	}
 
 	/**
@@ -330,6 +330,11 @@ class XML
 	public function root($root = "root", array $attrs = [])
 	{
 
+		if (is_array($root) && isset($root[0]) && isset($root[1])) {
+			list($root, $rootNS) = $root;
+			$this->rootNS($rootNS);
+		}
+
 		$this->_nodeRoot = $root;
 		
 		// if xml does not exist
@@ -339,7 +344,7 @@ class XML
 			$this->_init();
 
 			// create an element
-			$element = ($this->_ns_root) ? $this->_DOM->createElementNS($this->_NS,$root) : $this->_DOM->createElement($root);
+			$element = ($this->_hasRootNS) ? $this->_DOM->createElementNS($this->_rootNS,$root) : $this->_DOM->createElement($root);
 			
 			// root node
 			$this->_root = $this->_DOM->appendChild($element);

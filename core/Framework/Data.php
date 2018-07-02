@@ -44,7 +44,7 @@ abstract class Data extends XML
 	private function _node($key)
 	{
 
-		$field = $this->doc->createNode([
+		$field = $this->xml->createNode([
 				'name' => $key
 		]);		
 
@@ -54,7 +54,7 @@ abstract class Data extends XML
 	private function _field($key, $value)
 	{
 		
-		$field = $this->doc->createNode([
+		$field = $this->xml->createNode([
 				'name' => $key,
 				'cdata' => $value
 		]);				
@@ -80,9 +80,9 @@ abstract class Data extends XML
 			return;
 		}
 
-		$this->doc->file($this->_xmlFile);
-		$this->doc->namespaceRootAtom();
-		$this->doc->root("data");
+		$this->xml->file($this->_xmlFile);
+		$this->xml->rootNSAtom();
+		$this->xml->root("data");
 
 		if (is_array($value)) {
 
@@ -96,8 +96,8 @@ abstract class Data extends XML
 			$field = $this->_field($key, $value);
 		}
 
-		$this->doc->appendChild($field);
-		$this->doc->save();
+		$this->xml->appendChild($field);
+		$this->xml->save();
 
 	}
 
@@ -108,9 +108,9 @@ abstract class Data extends XML
 			return [];
 		}
 		
-		$this->doc->file($this->_xmlFile);
+		$this->xml->file($this->_xmlFile);
 
-		return $this->doc->content()->children();
+		return $this->xml->content()->children();
 	}
 
 	public function get($field)

@@ -534,6 +534,7 @@ abstract class Frame
 				'filePath'		=> "",
 				'fileName' 		=> "", 
 				'urlParam'		=> "",
+				'method'		=> "",
 			];
 		}
 
@@ -545,6 +546,7 @@ abstract class Frame
 		$this->pageObj->filePath = $settings['filePath'];
 		$this->pageObj->fileName = $settings['fileName'];
 		$this->pageObj->urlParam = $settings['urlParam'];
+		$this->pageObj->method = $settings['method'];
 
 		/* ------------------------------------*/
 		/* 		DISPATCH URL
