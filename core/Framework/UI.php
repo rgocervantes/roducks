@@ -49,7 +49,7 @@ class UI
 
 			if (\App::fileExists($icon[0].$icon[2])) {
 				$src = $icon[0].$icon[2];
-				$resize = Image::getResize($src, $size);
+				$resize = Image::getResize(Path::get($src), $size);
 				$attrs['width'] = $resize[0];
 				$attrs['height'] = $resize[1];				
 			}
@@ -59,7 +59,7 @@ class UI
 			unset($attrs['square']);
 
 			if (is_integer($size)) {
-				$resize = Image::getResize($src, $size);
+				$resize = Image::getResize(Path::get($src), $size);
 				$attrs['width'] = $resize[0];
 				$attrs['height'] = $resize[1];
 
@@ -91,7 +91,7 @@ class UI
 		} else if (isset($attrs['flex-w']) && $attrs['flex-w']) {
 			unset($attrs['flex-w']);
 
-			$resize = Image::getSize($src);
+			$resize = Image::getSize(Path::get($src));
 
 			if ($size < $resize[1]) {
 
@@ -112,7 +112,7 @@ class UI
 		} else if (isset($attrs['flex-h']) && $attrs['flex-h']) {
 			unset($attrs['flex-h']);
 
-			$resize = Image::getSize($src);
+			$resize = Image::getSize(Path::get($src));
 
 			if ($size < $resize[0]) {
 

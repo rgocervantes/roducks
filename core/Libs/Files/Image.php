@@ -400,13 +400,12 @@ class Image
 	static function getSize($img)
 	{
 
-		$img = preg_replace('/^\/(.+)/', '$1', $img);
-		list($realPath, $fileExists) = \App::getRealPath($img);
+		//$img = preg_replace('/^\/(.+)/', '$1', $img);
 
-		if (!empty($img) && $fileExists) {
+		if (!empty($img) && file_exists($img)) {
 
 			// get image size
-			list($w, $h) = getimagesize($realPath);
+			list($w, $h) = getimagesize($img);
 
 			return [$w, $h];
 
@@ -426,12 +425,11 @@ class Image
 			}
 
 			$img = preg_replace('/^\/(.+)/', '$1', $img);
-			list($realPath, $fileExists) = \App::getRealPath($img);
 
-			if (!empty($img) && $fileExists) {
+			if (!empty($img) && file_exists($img)) {
 
 				// get image size
-				list($w, $h) = getimagesize($realPath);
+				list($w, $h) = getimagesize($img);
 
 				// square	
 				if ($w == $h && $rz < $w && $rz < $h) {
