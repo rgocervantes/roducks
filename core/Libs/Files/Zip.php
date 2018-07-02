@@ -43,8 +43,6 @@
 
 namespace Roducks\Libs\Files;
 
-use Helper;
-
 class Zip
 {
 
@@ -63,7 +61,8 @@ class Zip
 		//if files were passed in...
 		if (is_array($listing)) {
 
-			foreach ($listing as $route => $files) {
+			foreach ($listing as $folders => $files) {
+				$route = ($folders != '/') ? $folders : '';
 				//cycle through each file
 				foreach ($files as $file) {
 					//make sure the file exists
