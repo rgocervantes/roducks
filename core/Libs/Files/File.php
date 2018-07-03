@@ -89,6 +89,11 @@ final class File
 		return $file;
 	}
 
+	static function exists($filename)
+	{
+		return file_exists($filename);
+	}
+
 	/**
 	 * @example File::remove(Path::getData("xml/home.xml"));
 	 */

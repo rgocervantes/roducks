@@ -29,28 +29,41 @@ class XML
 |============================|
 */	
 
-	private $_DOM, $_xmlName, $_xmlContent, $_root, $_nodeRoot, $_local, $_rootNS, $_rootAttrs = [];
+	const OVERWRITE = true;
+
+	private $_DOM, $_xmlContent, $_root, $_nodeRoot, $_local, $_rootNS, $_rootAttrs = [];
 	
-	/*
-	*	The root element has a namespace
-	*/	
-	private $_hasRootNS = false;	
-
-	/*
-	*	Default encoding
-	*/	
-	private $_encode_type = 'UTF-8';
-
-	/*
-	*	W3C Standar namespace
-	*/
-	private $_atom = 'http://www.w3.org/2005/Atom';
-	private $_w3c = 'http://www.w3.org/2000/xmlns/';
+	/**
+	 *	XML name
+	 */
+	private $_xmlName = '';
 
 	/**
-	*	find if an element has a namespace
-	*	@return bool
+	 *	The root element has a namespace
+	 */	
+	private $_hasRootNS = false;	
+
+	/**
+ 	 *	Default encoding
+	 */	
+	private $_encode_type = 'UTF-8';
+
+	/**
+	 *	W3C Standar namespace
+	 */
+	private $_atom = 'http://www.w3.org/2005/Atom';
+	private $_w3c = 'http://www.w3.org/2000/xmlns';
+
+	/*
+	|============================|
+	|			STATIC 
+	|============================|
 	*/
+
+	/**
+	 *	find if an element has a namespace
+	 *	@return bool
+	 */
 	static private function _hasNS($key)
 	{
 		if (preg_match('#:#', $key)) return true;
@@ -90,20 +103,46 @@ class XML
     	return new XML();
     }
 
-    static function parse($name)
+    static function create($name, $overwrite = false)
     {
     	$xml = self::init();
 		$xml->file($name);
-		$xml->load();
+
+		if ($overwrite) {
+			$xml->overwrite();
+		}
 
 		return $xml;
     }
+
+    static function preview()
+    {
+    	return self::create(null, false);
+    }
+
+    static function parse($name, $overwrite = false)
+    {
+    	$xml = self::create($name);
+		$xml->load();
+
+		if ($overwrite) {
+			$xml->overwrite();
+		}
+
+		return $xml;
+    }
+
+   	/*
+	|============================|
+	|		    PRIVATE 
+	|============================|
+	*/
 
 	/**
 	*	Create element
 	*	@return object
 	*/
-	private function _addElements(array $obj = [])
+	private function _createNode(array $obj = [])
 	{
 
 		$NS = (isset($obj['ns'])) ? $obj['ns'] : $this->_rootNS;
@@ -195,11 +234,16 @@ class XML
     	readfile($this->_xmlName);
     }
 
-/*
-|============================|
-|		PUBLIC METHODS
-|============================|
-*/  
+    private function _cdata($value)
+    {
+    	return $this->_DOM->createCDATASection($value);
+    }
+
+	/*
+	|============================|
+	|			PUBLIC
+	|============================|
+	*/
 
 	public function load()
 	{
@@ -243,15 +287,17 @@ class XML
 	public function file($xml)
 	{
 
-		$str = substr($xml, 0, 4);
-		$this->_xmlName = self::_ext($xml);
-
 		if (empty($xml)) {
 			return;
 		}
 		
+		$str = substr($xml, 0, 4);
+		$this->_xmlName = self::_ext($xml);
+
 		if ($this->exists()) {
 			$this->_xmlContent = file_get_contents($this->_xmlName);
+		} else {
+			self::_notFound();
 		}
 
 	}
@@ -270,14 +316,10 @@ class XML
 
 	}
 
-    public function read($xml)
+    public function read()
     {
-    	if (!empty($xml)) {
-			$this->file($xml);
-			$this->_read();
-    	} else {
-    		die("Invalid XML.");
-    	}
+		$this->file($this->_xmlName);
+		$this->_read();
     }
 
 	/**
@@ -376,9 +418,7 @@ class XML
     public function getElementByQuery($query)
     {
     	$xpath = new \DOMXPath($this->_DOM);
-        $element = $xpath->query($query)->item(0);
-
-        return $element;
+        return $xpath->query($query);
     }
 
 	/**
@@ -405,16 +445,16 @@ class XML
  		return $this->getElementsByTagName($nodeName)->length;
  	}
 
-    public function getLastElementByTagName($node)
+    public function getLastElementByTagName($nodeName)
     {
-    	$total = $this->count($node);
+    	$total = $this->count($nodeName);
     	$index = ($total > 0) ? $total - 1 : 0;
-    	return $this->getElementsByTagName($node)->item($index);
+    	return $this->getElementsByTagName($nodeName)->item($index);
     }
 
     public function getElementById($id)
     {
-    	return $this->getElementByQuery("//*[@id='{$id}']");
+    	return $this->getElementByQuery("//*[@id='{$id}']")->item(0);
     }
 
     public function getChildNodes($parentNodeName)
@@ -427,17 +467,15 @@ class XML
 	*/
 	public function createNode($obj)
 	{
-		$element = $this->_addElements($obj);
-
-		return $element;
+		return $this->_createNode($obj);
 	}
 
 	/**
 	*	Append node into root node
 	*/
-	public function appendChild($element)
+	public function appendChild($node)
 	{
-		$this->_root->appendChild($element);
+		$this->_root->appendChild($node);
 	}
 
 	/**
@@ -451,7 +489,7 @@ class XML
 	/**
 	*	Prepend node in root
 	*/
-	public function prependChild($newNode)
+	public function prependChild($node)
 	{
 		$rootNodeName = $this->_root->nodeName;
 
@@ -463,9 +501,9 @@ class XML
 
 		if ($total > 0) {
 			$firstNode = $this->getChildNodes($rootNodeName)[0];
-			$this->prependChildNode($firstNode, $newNode);
+			$this->prependChildNode($firstNode, $node);
 		} else {
-			$this->appendChild($newNode);
+			$this->appendChild($node);
 		}
 
 	}
@@ -486,25 +524,20 @@ class XML
 	public function replaceNode($node, $newNode)
 	{
 		$this->prependChildNode($node, $newNode);
-		$this->removeNode($node, $newNode);
+		$this->removeNode($node);
 	}
 
 	public function replaceNodeById($id, $newNode)
 	{
 		$node = $this->getElementById($id);
 		$this->prependChildNode($node, $newNode);
-		$this->removeNode($node, $newNode);
+		$this->removeNode($node);
 	}
-
-    public function cdata($value)
-    {
-    	return $this->_DOM->createCDATASection($value);
-    }
 
     public function cdataSection($node, $value)
     {
     	$node->nodeValue = '';
-		$node->appendChild($this->cdata($value));
+		$node->appendChild($this->_cdata($value));
     }
 
 }

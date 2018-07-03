@@ -87,7 +87,7 @@ class XML extends Frame
 	public function read()
 	{
 		if ($this->readable) {
-			$this->xml->read($this->_xmlName);
+			$this->xml->read();
 		} else {
 			echo "XML is not able to be shown.";
 		}
