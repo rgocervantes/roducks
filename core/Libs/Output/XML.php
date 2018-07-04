@@ -149,14 +149,28 @@ class XML
 
 		if (isset($obj['value'])) :
 			if (self::_hasNS($obj['name'])) :
-				$element = $this->_DOM->createElementNS($NS,$obj['name'],$obj['value']);
+				
+				list($attr_ns, $attr_key) = explode(":", $obj['name']);
+
+				if (isset($this->_rootAttrs["xmlns:{$attr_ns}"])) :
+					$element = $this->_DOM->createElement($obj['name'],$obj['value']);
+				else :
+					$element = $this->_DOM->createElementNS($NS, $obj['name'],$obj['value']);
+				endif;
 			else:
 				$element = $this->_DOM->createElement($obj['name'],$obj['value']);
 			endif;	
 		else:
 
 			if (self::_hasNS($obj['name'])) :	
-				$element = $this->_DOM->createElementNS($NS, $obj['name']);	
+				list($attr_ns, $attr_key) = explode(":", $obj['name']);
+
+				if (isset($this->_rootAttrs["xmlns:{$attr_ns}"])) :
+					$element = $this->_DOM->createElement($obj['name']);
+				else :
+					$element = $this->_DOM->createElementNS($NS, $obj['name']);
+				endif;
+
 			else :
 				$element = $this->_DOM->createElement($obj['name']);
 			endif;
@@ -176,14 +190,14 @@ class XML
 					list($attr_ns, $attr_key) = explode(":", $key);
 
 					if (is_array($value)) :
-						$element->setAttribute($key,$value[0]);
+						$element->setAttributeNS($value[1],$key,$value[0]);
 					else:
 
-						if (isset($this->_rootAttrs['xmlns:'.$attr_ns])) :
-							$NS = $this->_rootAttrs['xmlns:'.$attr_ns];
+						if (isset($this->_rootAttrs["xmlns:{$attr_ns}"])) :
+							$element->setAttribute($key,$value);
+						else :
+							$element->setAttributeNS($NS,$key,$value);
 						endif;
-
-						$element->setAttributeNS($NS,$key,$value);
 					endif;	
 
 				else:
@@ -192,9 +206,9 @@ class XML
 			endforeach;	
 		endif;
 
-		//$element->namespaceURI, "\n"; // Outputs: http://base.google.com/ns/1.0
-		//$element->prefix, "\n";       // Outputs: g
-		//$element->localName, "\n";    // Outputs: item_type
+		//$element->namespaceURI
+		//$element->prefix
+		//$element->localName
 
 		return $element;
 
@@ -238,6 +252,15 @@ class XML
     {
     	return $this->_DOM->createCDATASection($value);
     }
+
+	/**
+	*	Append custom namespace into the root element
+	*/
+	private function _setRootNS($name)
+	{
+		$this->_rootNS = $name;
+		$this->_hasRootNS = true;
+	}
 
 	/*
 	|============================|
@@ -296,8 +319,6 @@ class XML
 
 		if ($this->exists()) {
 			$this->_xmlContent = file_get_contents($this->_xmlName);
-		} else {
-			self::_notFound();
 		}
 
 	}
@@ -335,46 +356,28 @@ class XML
 	/**
 	*	print xml output in browser
 	*/
-	public function output()
+	public function output($clean = false)
 	{
 		self::header();
+		if ($clean) {
+			$xml = $this->_DOM->saveXML();
+
+			$this->_init();
+			$this->_DOM->loadXML($xml, LIBXML_NSCLEAN);
+		}
+
 		echo $this->_DOM->saveXML();
-	}
-
-	/**
-	*	Append custom namespace into the root element
-	*/
-	public function rootNS($name)
-	{
-		$this->_rootNS = $name;
-		$this->_hasRootNS = true;
-	}
-
-	/**
-	*	Append xmlns atom into the root element
-	*/
-	public function rootNSAtom()
-	{
-		$this->rootNS($this->_atom);
-	}
-
-	/**
-	*	Append xmlns atom into the root element
-	*/
-	public function rootNSW3c()
-	{
-		$this->rootNS($this->_w3c);
 	}
 
 	/**
 	*	Define root node
 	*/
-	public function root($root = "root", array $attrs = [])
+	public function root($root = "xml", array $attrs = [])
 	{
 
 		if (is_array($root) && isset($root[0]) && isset($root[1])) {
 			list($root, $rootNS) = $root;
-			$this->rootNS($rootNS);
+			$this->_setRootNS($rootNS);
 		}
 
 		$this->_nodeRoot = $root;
@@ -399,15 +402,21 @@ class XML
 				foreach ($attrs as $key => $value) :
 					if (self::_hasNS($key)) :
 						list($attr_ns, $attr_key) = explode(":", $key);
-						$NS = $this->_w3c;
-						if ("xmlns" != $attr_ns) $NS = $this->_rootAttrs['xmlns:'.$attr_ns];
+
+						$NS = $this->_w3c."/";
+
+						if ("xmlns" != $attr_ns) :
+							if (isset($this->_rootAttrs["xmlns:{$attr_ns}"])) :
+								$NS = $this->_rootAttrs["xmlns:{$attr_ns}"];
+							endif;
+						endif;	
 						$element->setAttributeNS($NS, $key, $value);
 					else:
 						$element->setAttribute($key,$value);
 					endif;	
-					
-				endforeach;	
-			endif;	
+
+				endforeach;
+			endif;
 
 		else:
 			// update xml data for an existing xml
