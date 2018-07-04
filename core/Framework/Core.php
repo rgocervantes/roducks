@@ -527,6 +527,10 @@ class Core
 	{
 
 		$underscore = (Helper::regexp('/^_/', $method));
+
+		if (in_array($method, ['_lang','_email'])) {
+			$underscore = false;
+		}
 		
 		if (method_exists($class, $method) && !$underscore) {
 			call_user_func_array(array($obj,$method), $params);

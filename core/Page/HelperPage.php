@@ -33,6 +33,7 @@ class HelperPage extends Frame
 				'filePath'		=> "",
 				'fileName' 		=> "", 
 				'urlParam'		=> "",
+				'method'		=> ""
 		]);
 
 		return $obj;
