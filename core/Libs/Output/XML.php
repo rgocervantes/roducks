@@ -138,6 +138,11 @@ class XML
 	|============================|
 	*/
 
+    private function _cdata($value)
+    {
+    	return $this->_DOM->createCDATASection($value);
+    }
+
 	/**
 	*	Create element
 	*	@return object
@@ -145,38 +150,43 @@ class XML
 	private function _createNode(array $obj = [])
 	{
 
-		$NS = (isset($obj['ns'])) ? $obj['ns'] : $this->_rootNS;
+		$NS = $this->_rootNS;
+		$name = $obj['name'];
+
+		if (is_array($name)) :
+			list($name, $NS) = $obj['name'];
+		endif;
 
 		if (isset($obj['value'])) :
-			if (self::_hasNS($obj['name'])) :
+			if (self::_hasNS($name)) :
 				
-				list($attr_ns, $attr_key) = explode(":", $obj['name']);
+				list($attr_ns, $attr_key) = explode(":", $name);
 
 				if (isset($this->_rootAttrs["xmlns:{$attr_ns}"])) :
-					$element = $this->_DOM->createElement($obj['name'],$obj['value']);
+					$element = $this->_DOM->createElement($name, $obj['value']);
 				else :
-					$element = $this->_DOM->createElementNS($NS, $obj['name'],$obj['value']);
+					$element = $this->_DOM->createElementNS($NS, $name, $obj['value']);
 				endif;
 			else:
-				$element = $this->_DOM->createElement($obj['name'],$obj['value']);
+				$element = $this->_DOM->createElement($name, $obj['value']);
 			endif;	
 		else:
 
-			if (self::_hasNS($obj['name'])) :	
-				list($attr_ns, $attr_key) = explode(":", $obj['name']);
+			if (self::_hasNS($name)) :	
+				list($attr_ns, $attr_key) = explode(":", $name);
 
 				if (isset($this->_rootAttrs["xmlns:{$attr_ns}"])) :
-					$element = $this->_DOM->createElement($obj['name']);
+					$element = $this->_DOM->createElement($name);
 				else :
-					$element = $this->_DOM->createElementNS($NS, $obj['name']);
+					$element = $this->_DOM->createElementNS($NS, $name);
 				endif;
 
 			else :
-				$element = $this->_DOM->createElement($obj['name']);
+				$element = $this->_DOM->createElement($name);
 			endif;
 
 			if (isset($obj['cdata'])) :
-				$cdata = $this->_DOM->createCDATASection($obj['cdata']);
+				$cdata = $this->_cdata($obj['cdata']);
 				$element->appendChild($cdata);
 			endif;
 
@@ -246,11 +256,6 @@ class XML
 
     	self::header();
     	readfile($this->_xmlName);
-    }
-
-    private function _cdata($value)
-    {
-    	return $this->_DOM->createCDATASection($value);
     }
 
 	/**
