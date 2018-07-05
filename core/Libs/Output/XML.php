@@ -125,6 +125,12 @@ class XML
     	$xml = self::create($name);
 		$xml->load();
 
+		$ns = $xml->content()->getNamespaces(true);
+		
+		foreach ($ns as $key => $value) {
+			$xml->setRootAttrs("xmlns:{$key}", $value);
+		}
+
 		if ($overwrite) {
 			$xml->overwrite();
 		}
@@ -372,6 +378,11 @@ class XML
 		}
 
 		echo $this->_DOM->saveXML();
+	}
+
+	public function setRootAttrs($key, $value)
+	{
+		$this->_rootAttrs[$key] = $value;
 	}
 
 	/**
