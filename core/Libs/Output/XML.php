@@ -273,6 +273,92 @@ class XML
 		$this->_hasRootNS = true;
 	}
 
+    private function _getChildNodes($parentNodeName, $node = null)
+    {
+
+    	if (is_null($node)) {
+    		return $this->getElementsByTagName($parentNodeName)->item(0)->childNodes;
+    	}
+
+    	$nodes = [];
+
+    	if ($node instanceof \DOMElement) {
+    		if ($node->tagName == $parentNodeName) {
+	    		foreach ($node->childNodes as $child) {
+	    			$nodes[] = $child;
+	    		}
+    		}
+    	}
+
+    	return $nodes;
+
+    }
+
+    private function _getNode(\DOMElement $node, array $items = [], $type)
+    {	
+
+    	switch ($type) {
+    		case 1:
+    			$items[$node->tagName][] = $node;
+    			break;
+    		
+    		case 2:
+    			$items[] = $node;
+    			break;
+    	}
+
+    	return $items;
+    }
+    
+	private function _getChildNodesByPath($path, $domElement = null, array $items = [])
+	{
+
+		if (preg_match('/\//', $path)) {
+			
+			$tags = explode('/', $path);
+			$parentTag = $tags[0];
+			$child = $tags[1];
+
+			unset($tags[0]);
+			unset($tags[1]);
+
+			$route = implode('/', $tags);
+
+			foreach ($this->_getChildNodes($parentTag, $domElement) as $nodes) {
+
+				foreach ($this->_getChildNodes($child, $nodes) as $node) {
+
+					if (!empty($route)) {
+						$items = $this->_getChildNodesByPath($route, $node, $items);
+					} else {
+						if ($node instanceof \DOMElement) {
+							$items = $this->_getNode($node, $items, 1);
+						} else {
+							$items = [];
+						}
+					}
+				}
+			}
+
+		} else {
+			if ($domElement instanceof \DOMElement) {
+				
+				foreach ($this->_getChildNodes($path, $domElement) as $node) {
+					$items = $this->_getNode($node, $items, 2);
+				}
+
+			} else {
+
+				foreach ($this->_getChildNodes($path) as $node) {
+					$items[$node->tagName] = $node;
+				}
+			}
+		}
+
+		return $items;
+
+	}
+
 	/*
 	|============================|
 	|			PUBLIC
@@ -482,10 +568,10 @@ class XML
     	return $this->getElementByQuery("//*[@id='{$id}']")->item(0);
     }
 
-    public function getChildNodes($parentNodeName)
-    {
-    	return $this->getElementsByTagName($parentNodeName)->item(0)->childNodes;
-    }
+	public function getChildNodes($path)
+	{
+		return $this->_getChildNodesByPath($path);
+	}
 
 	/**
 	*	Create Node
@@ -522,10 +608,10 @@ class XML
 			list($ns, $rootNodeName) = explode(':', $rootNodeName);
 		}
 
-		$total = $this->getChildNodes($rootNodeName)->length;
+		$total = $this->_getChildNodes($rootNodeName)->length;
 
 		if ($total > 0) {
-			$firstNode = $this->getChildNodes($rootNodeName)[0];
+			$firstNode = $this->_getChildNodes($rootNodeName)[0];
 			$this->prependChildNode($firstNode, $node);
 		} else {
 			$this->appendChild($node);
