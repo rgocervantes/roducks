@@ -39,6 +39,10 @@ class Form
 	const FILTER_DATETIME = 9;
 	const FILTER_DECIMAL = 10;
 
+	private $_valid = true;
+	private $_message = 'Form is Ok!';
+	private $_field = '';
+
 	static function getKey()
 	{
 		$token = Hash::getToken();
@@ -94,46 +98,47 @@ class Form
 	*	@param $filters array	
 	*	@return bool
 	*/
-	static function validation($filters)
+	static function validation(array $filters)
+	{
+		return new Form($filters);
+	}
+
+	public function __construct(array $filters)
 	{
 
 		$alert = [];
 		$error = 0;
-		$valid = true;
 
 		foreach($filters as $value):
 
 			if (is_array($value['filter'])) {
-				
-				if (is_array($value['filter'])) {
 
-					if (isset($value['filter']['regexp'])) {
+				if (isset($value['filter']['regexp'])) {
 
-						if (!Helper::regexp($value['filter']['regexp'], $value['data'])) {
-							$error++;
-							array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
-						}
+					if (!Helper::regexp($value['filter']['regexp'], $value['data'])) {
+						$error++;
+						array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
+					}
 
-					} else if (isset($value['filter']['greater_than'])) {
+				} else if (isset($value['filter']['greater_than'])) {
 
-						if (intval($value['data']) < $value['filter']['greater_than']) {
-							$error++;
-							array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
-						}					
+					if (intval($value['data']) < $value['filter']['greater_than']) {
+						$error++;
+						array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
+					}					
 
-					} else if (isset($value['filter']['less_than'])) {
+				} else if (isset($value['filter']['less_than'])) {
 
-						if (intval($value['data']) > $value['filter']['less_than']) {
-							$error++;
-							array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
-						}
+					if (intval($value['data']) > $value['filter']['less_than']) {
+						$error++;
+						array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
+					}
 
-					} else {
+				} else {
 
-						if (!in_array($value['data'], $value['filter'])) {
-							$error++;
-							array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
-						}
+					if (!in_array($value['data'], $value['filter'])) {
+						$error++;
+						array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
 					}
 				}
 
@@ -191,20 +196,27 @@ class Form
 		endforeach;
 
 		if ($error > 0) {
-			$valid = false;
-		} else {
-			array_push($alert, ['message' => "Error", 'field' => ""]);
+			$this->_valid = false;
 		}
 
-		return ['valid' => $valid, 'error' => ['message' => $alert[0]['message'], 'field' => $alert[0]['field']]];
+		$this->_message = $alert[0]['message'];
+		$this->_field = $alert[0]['field'];
+
 	}
 
-	static function isValid($form)
+	public function success()
 	{
-		if ($form['valid'] !== FALSE) {
-			return true;
-		}
-		return false;
-	}	
+		return $this->_valid;
+	}
+
+	public function getMessage()
+	{
+		return $this->_message;
+	}
+
+	public function getField()
+	{
+		return $this->_field;
+	}
 
 }

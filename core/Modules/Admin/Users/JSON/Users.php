@@ -182,7 +182,7 @@ class Users extends JSON
 			Form::filter(Form::FILTER_INTEGER, $value)			
 		]);
 
-		if (Form::isValid($form)) {
+		if ($form->success()) {
 
 			if ($id != Login::getAdminId() || Login::isSuperAdmin()) {
 				$user = $this->_user->row($id);
@@ -219,7 +219,7 @@ class Users extends JSON
 			Form::filter(Form::FILTER_INTEGER, $active)
 		]);
 
-		if (Form::isValid($form)) {
+		if ($form->success()) {
 
 			// Make sure user ID is not the same as current adminId because you cannot disable yourself!
 			if ($id != Login::getAdminId() || Login::isSuperAdmin()) {	
@@ -256,7 +256,7 @@ class Users extends JSON
 			Form::filter(Form::FILTER_DATE_YYYY_MM_DD, $date)			
 		]);
 
-		if (Form::isValid($form)) {
+		if ($form->success()) {
 
 			if ($id != Login::getAdminId() || Login::isSuperAdmin()) {
 				$user = $this->_user->row($id);

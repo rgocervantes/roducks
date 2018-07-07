@@ -91,13 +91,13 @@ class Home extends JSON
 		}
 
 		$form = Form::validation([
-			Form::filter(Form::FILTER_STRING, $fields['email']),
-			Form::filter(Form::FILTER_STRING, $fields['first_name']),
-			Form::filter(Form::FILTER_STRING, $fields['last_name']),
-			Form::filter(Form::FILTER_STRING, $fields['password'])
+			Form::filter(Form::FILTER_EMAIL, $fields['email']),
+			Form::filter(Form::FILTER_WORDS, $fields['first_name']),
+			Form::filter(Form::FILTER_WORDS, $fields['last_name']),
+			Form::filter(Form::FILTER_WORDS, $fields['password'])
 		]);
 
-		if (Form::isValid($form)) {
+		if ($form->success()) {
 			$db = $this->db();
 			$user = UsersTable::open($db);
 			$tx = $user->create($fields);
@@ -137,7 +137,7 @@ class Home extends JSON
 			Form::filter(Form::FILTER_STRING, $password)
 		]);
 
-		if (Form::isValid($form)) {
+		if ($form->success()) {
 			$db = $this->db();
 			$user = UsersTable::open($db);
 			$user->filter(['email' => $email, 'token' => $token], ['id_user']);
