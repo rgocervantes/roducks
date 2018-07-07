@@ -81,7 +81,6 @@ abstract class Data extends XML
 		}
 
 		$this->xml->file($this->_xmlFile);
-		$this->xml->rootNSAtom();
 		$this->xml->root("data");
 
 		if (is_array($value)) {
@@ -104,7 +103,7 @@ abstract class Data extends XML
 	public function getAll()
 	{
 
-		if (!\App::fileExists($this->_xmlFile)) {
+		if (!Path::exists($this->_xmlFile)) {
 			return [];
 		}
 		
