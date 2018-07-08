@@ -84,6 +84,17 @@ class API extends Service
 		$this->output();
 	}
 
+	private function _getSecretKey()
+	{
+		$secret = $this->config('file:jwt', 'secret');
+
+		if (!is_array($secret)) {
+			return $secret;
+		}
+
+		return static::JWT_SECRET_KEY;
+	}
+
 	protected function data($key, $value = "")
 	{
 		if (is_array($key)) {
@@ -122,7 +133,7 @@ class API extends Service
 		}
 
 		JWT::$leeway = $leeway; // $leeway in seconds
-		return JWT::encode($token, static::JWT_SECRET_KEY);
+		return JWT::encode($token, $this->_getSecretKey());
 	}
 
 	protected function getToken($data = true)
@@ -144,7 +155,7 @@ class API extends Service
 		$this->_jwt['encoded'] = preg_replace('/^Bearer\s(.+)$/', '$1', Http::getAuthorizationHeader());
 
 		try {
-			$this->_jwt['decoded'] = JWT::decode($this->_jwt['encoded'], static::JWT_SECRET_KEY, array('HS256'));
+			$this->_jwt['decoded'] = JWT::decode($this->_jwt['encoded'], $this->_getSecretKey(), array('HS256'));
 		} catch ( \Firebase\JWT\ExpiredException $e ) {
 			$this->setError(401, $e->getMessage());
 			return false;

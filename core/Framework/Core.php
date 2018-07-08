@@ -790,9 +790,17 @@ class Core
 				list($name, $method) = explode(":", $name);
 			}
 
+			$ns = "App\\CLI\\";
 			$cls = $name;
+			$clsUpper = strtoupper($name);
 			$name = Helper::getCamelName($name);
-			$script = "App\\CLI\\" . $name;
+
+			$script = $ns . $name;
+			$scriptUpper = $ns . $clsUpper;
+
+			if (class_exists($scriptUpper)) {
+				$script = $scriptUpper;
+			}
 
 			if (!class_exists($script)) {
 				exit;
