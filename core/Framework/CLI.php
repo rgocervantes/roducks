@@ -45,6 +45,13 @@ class CLI extends Frame
 		$_answer = "",
 		$_badAnswer = false;
 
+	static function command($class, $method, $params)
+	{
+		$class = Helper::getClassName($class);
+		$class = Helper::getConventionName($class);
+		return "[x]php roducks {$class}:{$method} {$params}";
+	}
+
 	static function line($text, $px = 0, $break = true)
 	{
 		

@@ -180,8 +180,9 @@ class Directory
 	/**
 	 * @example Directory::clean(Path::getData("tmp/cards/"), [Directory::REMAIN_FOLDERS, Directory::REMOVE_FILES]);
 	 */
-	static function clean($dirname, array $options = [])
+	static function clean($dir, array $options = [])
 	{
+		$dirname = self::_getDir($dir);
 		$content = self::open($dirname);
 
 		if ($content !== false && is_array($options) && count($options) > 0) {
@@ -197,14 +198,14 @@ class Directory
 					case self::REMOVE_FOLDERS:
 						
 						foreach ($content['folders'] as $folder) {
-							self::remove($dirname.$folder.DIRECTORY_SEPARATOR);
+							self::remove($dirname.$folder);
 						}
 
 						break;
 					case self::REMAIN_FOLDERS:
 						
 						foreach ($content['folders'] as $folder) {
-							self::clean($dirname.$folder.DIRECTORY_SEPARATOR, [self::REMAIN_FOLDERS, self::REMOVE_FILES]);
+							self::clean($dirname.$folder, [self::REMAIN_FOLDERS, self::REMOVE_FILES]);
 						}
 
 						break;						
