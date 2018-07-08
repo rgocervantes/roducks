@@ -28,7 +28,7 @@ use Roducks\Framework\CLI;
 use Crypt\Hash;
 use Lib\File;
 
-class JWT extends CLI
+class Jwt extends CLI
 {
 	public function secret()
 	{

@@ -792,20 +792,10 @@ class Core
 
 			$ns = "App\\CLI\\";
 			$cls = $name;
-			$clsUpper = strtoupper($name);
 			$name = Helper::getCamelName($name);
 
 			$script = $ns . $name;
-			$scriptUpper = $ns . $clsUpper;
 
-			if (class_exists($scriptUpper)) {
-				$script = $scriptUpper;
-			}
-
-			if (!class_exists($script)) {
-				exit;
-			}
-			
 			$class = new $script($flags, $values);
 			$class->inLocal($dev);
 			if (method_exists($class, $method)) {
