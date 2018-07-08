@@ -37,6 +37,7 @@ $file = 'jwt.local.inc';
 $hash = Hash::getToken();
 $config = <<< EOT
 <?php
+
 return [
 	'secret' => '{$hash}'
 ];
