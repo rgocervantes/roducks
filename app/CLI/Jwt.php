@@ -35,6 +35,7 @@ class Jwt extends CLI
 
 $file = 'jwt.local.inc';
 $hash = Hash::getToken();
+$hash = substr($hash, 0, 32);
 $config = <<< EOT
 <?php
 
