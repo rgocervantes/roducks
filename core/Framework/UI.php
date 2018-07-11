@@ -52,6 +52,11 @@ class UI
 
 		if (!\App::fileExists($src) || !preg_match('/^.+\.(jpg|jpeg|png)$/i', $src)) {
 			$icon = Path::getAppIcon(self::IMAGE_UNAVAILABLE);
+
+			if (!empty($size)) {
+				$attrs['width'] = $size;
+				$attrs['height'] = $size;
+			}
 		}
 
 		if (isset($attrs['square']) && $attrs['square']) {
