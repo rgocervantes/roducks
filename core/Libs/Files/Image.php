@@ -400,19 +400,15 @@ class Image
 	static function getSize($img)
 	{
 
-		//$img = preg_replace('/^\/(.+)/', '$1', $img);
-
 		if (!empty($img) && file_exists($img)) {
 
 			// get image size
 			list($w, $h) = getimagesize($img);
 
 			return [$w, $h];
-
 		}
 
 		return ["auto","auto"];
-
 	}
 	
 	static function getResize($img, $rz = 0)
@@ -423,8 +419,6 @@ class Image
 			if ($rz == 0) {
 				return $output;
 			}
-
-			$img = preg_replace('/^\/(.+)/', '$1', $img);
 
 			if (!empty($img) && file_exists($img)) {
 

@@ -44,15 +44,14 @@ class UI
 			$src = $path[0].$path[2];
 		}
 
+		if (!empty($size) && !isset($attrs['square']) && !isset($attrs['flex-w']) && !isset($attrs['flex-h'])) {
+			$resize = Image::getResize(Path::get($src), $size);
+			$attrs['width'] = $resize[0];
+			$attrs['height'] = $resize[1];
+		}	
+
 		if (!\App::fileExists($src) || !preg_match('/^.+\.(jpg|jpeg|png)$/i', $src)) {
 			$icon = Path::getAppIcon(self::IMAGE_UNAVAILABLE);
-
-			if (\App::fileExists($icon[0].$icon[2])) {
-				$src = $icon[0].$icon[2];
-				$resize = Image::getResize(Path::get($src), $size);
-				$attrs['width'] = $resize[0];
-				$attrs['height'] = $resize[1];				
-			}
 		}
 
 		if (isset($attrs['square']) && $attrs['square']) {
@@ -69,21 +68,19 @@ class UI
 					if ($attrs['width'] > $attrs['height']) {
 						$paddingTop = ceil(($size - $attrs['height']) / 2);
 						if ($paddingTop > 0)
-							//$div['style'] .= " padding-top:{$paddingTop}px; text-align:center;";
 							$div['style'] .= " padding-top:{$paddingTop}px;";
 
 					} else if ($attrs['height'] > $attrs['width']) {
-						//$div['style'] .= " text-align:center;";
+
 					}
 				} else {
 
 					if ($attrs['width'] > $attrs['height']) {
 						$paddingTop = ceil(($size - $resize[1]) / 2);
 						if ($paddingTop > 0)
-							//$div['style'] .= " padding-top:{$paddingTop}px; text-align:center;";
 							$div['style'] .= " padding-top:{$paddingTop}px;";
 					} else if ($attrs['height'] > $attrs['width']) {
-						//$div['style'] .= " text-align:center;";
+
 					}
 				}
 			}
@@ -98,12 +95,10 @@ class UI
 				$attrs['width'] = ceil(($resize[0] * $size) / $resize[1]);
 				$attrs['height'] = $size;
 
-				//$div['style'] = "width:{$attrs['width']}px; height:{$size}px;";
 				$div['style'] = "height:{$size}px;";
 
 			} else {
 				$paddingTop = ceil(($size - $resize[1]) / 2);
-				//$div['style'] = "width:{$resize[0]}px; height:{$size}px;";
 				$div['style'] = "height:{$size}px;";
 				if ($paddingTop > 0)
 					$div['style'] .= " padding-top:{$paddingTop}px;";
@@ -121,12 +116,11 @@ class UI
 
 			}
 
-			//$div['style'] = "width:{$size}px;";
 		}
 
 		if (isset($attrs['center']) && $attrs['center']) {
 			unset($attrs['center']);
-			//$div['style'] .= " margin:0 auto; text-align:center;";
+
 			$div['style'] .= " text-align:center;";
 		}
 
