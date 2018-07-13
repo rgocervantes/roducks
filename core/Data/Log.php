@@ -27,7 +27,7 @@ use Roducks\Libs\Output\XML;
 class Log extends Data
 {
 
-	private $_dataId;
+	private $_id;
 
 	static function getFileName($id)
 	{
@@ -40,20 +40,20 @@ class Log extends Data
 		return "log/users/{$d[0]}/{$d[1]}/{$d[2]}/";
 	}
 
-	public function __construct($id)
+	public function __construct(array $settings)
 	{
 		$date = Date::getCurrentDate();
-		$this->_dataId = $id;
-		$this->_filePath = self::getFilePath($date);
-		$this->_fileName = self::getFileName($id, $date);
+		$this->_id = $settings['id'];
+		$this->path = self::getFilePath($date);
+		$this->name = self::getFileName($settings['id'], $date);
 	
-		parent::__construct();
+		parent::__construct($settings);
 	}
 
 	public function getContent($date)
 	{
 
-		$fileName = self::getFilePath($date) . self::getFileName($this->_dataId);
+		$fileName = self::getFilePath($date) . self::getFileName($this->_id);
 
 		$xml = new XML;
 		$xml->file(Path::getData($fileName));

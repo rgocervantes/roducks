@@ -25,21 +25,22 @@ use Roducks\Libs\Files\Directory;
 
 abstract class Data extends XML
 {
-
-	private $_xmlFile;
-	protected $_fileName;
-	protected $_filePath;
-	protected $_dirStorage;
 	protected $_pageType = 'DATA';
-	protected $_makeDir = true;
 
-	static function init($settings)
+	static function init(array $settings = [])
 	{
 		$class = get_called_class();
+
+		$settings['className'] = $class;
+		$settings['filePath'] = '';
+		$settings['fileName'] = '';
+		$settings['urlParam'] = '';
+		$settings['method'] = 'write';
+
 		$obj = new $class($settings);
 
 		return $obj;
-	}	
+	}
 
 	private function _node($key)
 	{
@@ -49,7 +50,7 @@ abstract class Data extends XML
 		]);		
 
 		return $field;
-	}	
+	}
 
 	private function _field($key, $value)
 	{
@@ -62,15 +63,6 @@ abstract class Data extends XML
 		return $field;
 	}
 
-	public function __construct()
-	{
-
-		if ($this->_makeDir) Directory::make(Path::getData(), $this->_filePath);
-		$this->_xmlFile = Path::getData($this->_filePath . Helper::ext($this->_fileName, "xml"));
-
-		parent::__construct();
-	}
-
 	public function add($key, $value, $rewrite = false)
 	{
 
@@ -79,9 +71,6 @@ abstract class Data extends XML
 		if (!empty($field) && !$rewrite) {
 			return;
 		}
-
-		$this->xml->file($this->_xmlFile);
-		$this->xml->root("data");
 
 		if (is_array($value)) {
 
@@ -103,11 +92,11 @@ abstract class Data extends XML
 	public function getAll()
 	{
 
-		if (!Path::exists($this->_xmlFile)) {
+		if (!Path::exists($this->name)) {
 			return [];
 		}
 		
-		$this->xml->file($this->_xmlFile);
+		$this->xml->file($this->name);
 
 		return $this->xml->content()->children();
 	}

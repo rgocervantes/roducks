@@ -49,7 +49,7 @@ class Storage extends Service
 
 	static function log($id)
 	{
-		return LogData::init($id);
+		return LogData::init(['id' => $id]);
 	}
 
 	static function issetJSON($dir, $name)
