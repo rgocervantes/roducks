@@ -83,7 +83,7 @@ class User extends CLI
 						$this->warning("[x]");
 						$this->warning("[*]If you want to reset password, run this command:");
 						$this->warning("[x]");
-						$this->warning("[x]php roducks user:reset {$flag} <EMAIL> <NEW_PASSWORD>");
+						$this->warning("[x]php roducks user:reset {$flag} [EMAIL] [NEW_PASSWORD]");
 
 					} else {
 
@@ -91,7 +91,7 @@ class User extends CLI
 
 						$data = [
 							'id_user_tree' => '0',
-							'id_role' => $this->getAnswer(),
+							'id_role' => $id_role,
 							'active' => 1,
 							'email' => $email,
 							'password' => $password,

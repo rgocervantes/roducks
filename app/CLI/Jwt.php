@@ -33,10 +33,10 @@ class Jwt extends CLI
 	public function secret()
 	{
 
-$file = 'jwt.local.inc';
-$hash = Hash::getToken();
-$hash = substr($hash, 0, 32);
-$config = <<< EOT
+		$file = 'jwt.local.inc';
+		$hash = Hash::getToken();
+		$hash = substr($hash, 0, 32);
+		$config = <<< EOT
 <?php
 
 return [

@@ -34,7 +34,7 @@ class Cache extends CLI
 
 		try {
 			
-			if ($item != "all") {
+			if ($item != "all" || $this->getFlag('--all')) {
 				$this->cache('init')->delete($iem);
 			} else {
 				$this->cache('clean');
