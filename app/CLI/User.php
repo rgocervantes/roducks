@@ -32,6 +32,7 @@ use Roducks\Framework\CLI;
 use Roducks\Framework\Helper;
 use Roducks\Libs\Utils\Date;
 use App\Models\Users\Users as UsersTable;
+use App\Models\Users\Roles as RolesTable;
 
 class User extends CLI
 {
@@ -39,70 +40,99 @@ class User extends CLI
 	public function create($email = "", $password = "")
 	{
 
-		$gender = $this->getParam('gender', "male");
+		$db = $this->db();
+		$id_role = 1; // super-admin
+		$ids_roles = [];
 
-		if (!empty($email) && !empty($password)) {
+		if ($this->getFlag('--super-admin')) {
+			array_push($ids_roles, $id_role);
+		} else {
 
-			if (strlen($password) >= 7) {
+			$roles = RolesTable::open($db)->where(['id_role:>' => 1])->all()->getData();
 
-				$db = $this->db();
-				$user = UsersTable::open($db);
-				$total = $user->getTableTotalRows();
-				$first_name = $this->getParam('firstname', "Super");
-				$last_name = $this->getParam('lastname', "Admin+Master");
+			$this->dialogInfo('Roles');
 
-				if ($total > 0 && $this->getFlag('--super-admin')) {
+			foreach ($roles as $role) {
+				array_push($ids_roles, $role['id_role']);
+			 	$this->info("[x]( {$role['id_role']} ) {$role['name']}");
+			}
 
-					$flag = ($this->getFlag('--dev')) ? '--dev' : '--pro';
-					$this->warning("[*]Super Admin was already created.");
-					$this->warning("[x]");
-					$this->warning("[*]If you want to reset password, run this command:");
-					$this->warning("[x]");
-					$this->warning("[x]php roducks user:reset {$flag} <EMAIL> <NEW_PASSWORD>");
+			parent::output();
 
-				} else {
+			$this->prompt("Type Role ID:");
 
-					$data = [
-						'id_user_tree' => '0',
-						'id_role' => 1,
-						'active' => 1,
-						'email' => $email,
-						'password' => $password,
-						'first_name' => $first_name,
-						'last_name' => $last_name,
-						'gender' => $gender,
-						'picture' => Helper::getUserIcon($gender),
-						'created_at' => UsersTable::now(),
-						'updated_at' => UsersTable::now()		
-					];
+			$id_role = $this->getAnswer();
 
-					$tx = $user->create($data);
+		}
 
-					if ($tx === false) {
-						$this->error("User could not be created.");
+		if ($id_role > 0 && in_array($id_role, $ids_roles)) {
+
+			if (!empty($email) && !empty($password)) {
+
+				if (strlen($password) >= 7) {
+
+					$user = UsersTable::open($db);
+					$total = $user->getTableTotalRows();
+					$first_name = $this->getParam('firstname', "Super");
+					$last_name = $this->getParam('lastname', "Admin+Master");
+
+					if ($total > 0 && $this->getFlag('--super-admin')) {
+
+						$flag = ($this->getFlag('--dev')) ? '--dev' : '--pro';
+						$this->warning("[*]Super Admin was already created.");
+						$this->warning("[x]");
+						$this->warning("[*]If you want to reset password, run this command:");
+						$this->warning("[x]");
+						$this->warning("[x]php roducks user:reset {$flag} <EMAIL> <NEW_PASSWORD>");
+
 					} else {
-						$this->success("User was created successfully!");
+
+						$gender = $this->getParam('gender', "male");
+
+						$data = [
+							'id_user_tree' => '0',
+							'id_role' => $this->getAnswer(),
+							'active' => 1,
+							'email' => $email,
+							'password' => $password,
+							'first_name' => $first_name,
+							'last_name' => $last_name,
+							'gender' => $gender,
+							'picture' => Helper::getUserIcon($gender),
+							'created_at' => UsersTable::now(),
+							'updated_at' => UsersTable::now()		
+						];
+
+						$tx = $user->create($data);
+
+						if ($tx === false) {
+							$this->error("User could not be created.");
+							$this->error("[x]");
+							$this->error("[*]It is very possible that it already exist.");
+						} else {
+							$this->success("User was created successfully!");
+						}
+
 					}
 
+				} else {
+					$this->error("Password length must be at least 7 chars.");
 				}
 
 			} else {
-				$this->error("Password length must be at least 7 chars.");
+				$this->warning("Email and Password are required.");
 			}
 
 		} else {
-			$this->warning("Email and Password are required.");
+			$this->error("Invalid Role ID, Try again.");
 		}
 
 		parent::output();
 
 	}
 
-	public function reset()
+	public function reset($email = "", $password = "")
 	{
-
-		$email = $this->getParam('email', "");
-		$password = $this->getParam('password', "");
 
 		if (!empty($email) && !empty($password)) {
 
@@ -114,6 +144,7 @@ class User extends CLI
 				$row = $user->fetch();
 
 				$user->changePassword($row['id_user'], $password);
+				$user->update($row['id_user'],['loggedin' => 0]);
 				$this->success("User was reset successfully!");
 			} else {
 				$this->error("User does not exist.");

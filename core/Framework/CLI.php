@@ -43,6 +43,10 @@ class CLI extends Frame
 		$_correct = [],
 		$_wrong = [],
 		$_answer = "",
+		$_titleInfo = 'Message',
+		$_titleError = 'Errors',
+		$_titleWarning = 'Warnings',
+		$_titleSuccess = 'Success',
 		$_badAnswer = false;
 
 	static function command($class, $method, $params)
@@ -135,7 +139,7 @@ class CLI extends Frame
 
 	private function _prompt($text, $yn = false)
 	{
-		$this->reset();
+		$this->_reset();
 
 		echo $text;
 		$this->_answer = rtrim( fgets( STDIN ));
@@ -208,8 +212,12 @@ class CLI extends Frame
 		return ($this->getAnswer() == $option);
 	}
 
-	protected function reset()
+	private function _reset()
 	{
+		$this->_titleInfo = 'Message';
+		$this->_titleError = 'Errors';
+		$this->_titleWarning = 'Warnings';
+		$this->_titleSuccess = 'Success';
 		$this->_warnings = [];
 		$this->_errors = [];
 		$this->_info = [];
@@ -217,6 +225,26 @@ class CLI extends Frame
 		$this->_correct = [];
 		$this->_wrong = [];
 		$this->_badAnswer = false;
+	}
+
+	protected function dialogInfo($title)
+	{
+		$this->_titleInfo = $title;
+	}
+
+	protected function dialogSuccess($title)
+	{
+		$this->_titleSuccess = $title;
+	}
+
+	protected function dialogWarning($title)
+	{
+		$this->_titleWarning = $title;
+	}
+
+	protected function dialogError($title)
+	{
+		$this->_titleError = $title;
 	}
 
 	protected function info($message = "")
@@ -252,14 +280,14 @@ class CLI extends Frame
 	protected function getParam($key, $value = "")
 	{
 
-		if (is_string($value)) {
-			$value = str_replace('+', ' ', $value);
-		}
-
 		if (isset($this->_args[$key])) {
 			if ($this->_args[$key] != 1) {
 				$value = $this->_args[$key];
 			}
+		}
+
+		if (is_string($value)) {
+			$value = str_replace('+', ' ', $value);
 		}
 
 		return $value;
@@ -316,7 +344,7 @@ class CLI extends Frame
 
 		if ($this->_badAnswer) {
 
-			$this->reset();
+			$this->_reset();
 			$this->wrong("Unreconized option: '".$this->getAnswer()."'");
 			$this->wrong("Set 'y' (yes) or 'n' (no)");
 
@@ -325,7 +353,7 @@ class CLI extends Frame
 		if (count($this->_info) > 0) {
 			echo self::LN;
 			$result = $this->_getInfo();
-			self::_dialog("Message", $result, self::NOTE);
+			self::_dialog($this->_titleInfo, $result, self::NOTE);
 		}
 
 		if (count($this->_success) > 0) {
@@ -333,7 +361,7 @@ class CLI extends Frame
 			if (count($this->_info) == 0) echo self::LN; 
 
 			$success = $this->_getSuccess();
-			self::_dialog("Success", $success, self::SUCCESS);
+			self::_dialog($this->_titleSuccess, $success, self::SUCCESS);
 		}
 
 		if (count($this->_warnings) > 0) {
@@ -341,7 +369,7 @@ class CLI extends Frame
 			if (count($this->_info) == 0 && count($this->_success) == 0) echo self::LN; 
 
 			$warnings = $this->_getWarnings();
-			self::_dialog("Warnings", $warnings, self::WARNING);
+			self::_dialog($this->_titleWarning, $warnings, self::WARNING);
 		}
 
 		if (count($this->_errors) > 0) {
@@ -349,7 +377,7 @@ class CLI extends Frame
 			if (count($this->_info) == 0 && count($this->_success) == 0 && count($this->_warnings) == 0) echo self::LN; 
 
 			$errors = $this->_getErrors();
-			self::_dialog("Errors", $errors, self::FAILURE);
+			self::_dialog($this->_titleError, $errors, self::FAILURE);
 		}
 
 		if (count($this->_correct) > 0) {
