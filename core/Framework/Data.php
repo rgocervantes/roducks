@@ -35,13 +35,10 @@ abstract class Data extends XML
 	{
 		$class = get_called_class();
 
-        $path = str_replace("\\","/", $class) . FILE_EXT;
-        $path = str_replace("Roducks/","core/", $path);
-
 		$settings = [];
 		$settings['className'] = $class;
 		$settings['filePath'] = '';
-		$settings['fileName'] = $path;
+		$settings['fileName'] = '';
 		$settings['urlParam'] = '';
 		$settings['id'] = $id;
 		$settings['method'] = 'write';
