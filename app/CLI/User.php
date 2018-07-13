@@ -143,9 +143,15 @@ class User extends CLI
 			if ($user->foundRow()) {
 				$row = $user->fetch();
 
-				$user->changePassword($row['id_user'], $password);
-				$user->update($row['id_user'],['loggedin' => 0]);
-				$this->success("User was reset successfully!");
+				$tx = $user->changePassword($row['id_user'], $password);
+
+				if ($tx) {
+					$user->logInOut($row['id_user'], 0);
+					$this->success("User was reset successfully!");
+				} else {
+					$this->error("It couldn't be reseted.");
+				}
+				
 			} else {
 				$this->error("User does not exist.");
 			}

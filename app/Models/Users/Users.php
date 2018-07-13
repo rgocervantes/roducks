@@ -88,12 +88,11 @@ class Users extends Model
 		$secret = Login::generatePassword($password);
 
 		$data = [];
-		$data['updated_date'] = Date::getCurrentDateTime();
+		$data['updated_at'] = Date::getCurrentDateTime();
 		$data['password'] = $secret['password'];
 		$data['salt'] = $secret['salt'];	
 		
 		return $this->update($id, $data);
-
 	}
 
 	/**
