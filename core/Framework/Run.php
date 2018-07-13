@@ -27,6 +27,7 @@ use Roducks\Framework\Error;
 |--------------------------------|
 */
 
+
 // Only in devel mode errors should be displayed
 App::define('RDKS_ERRORS', $environment['errors']);
 App::define('RDKS_SITE', $environment['site']);

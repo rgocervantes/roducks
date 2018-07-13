@@ -286,7 +286,7 @@ class Dispatch
 		/* ------------------------------------*/
 
 		// We are in root
-		if ($URI == URL::ROOT) {
+		if ($URI == DIRECTORY_SEPARATOR) {
 
 			// Default view controller
 			if (isset($routers[$URI])) {
@@ -301,8 +301,8 @@ class Dispatch
 			if (isset($params[0]) && !Helper::isDispatch($params[0])) {
 				
 				$subRouter = $params;
-				$mainPath = URL::ROOT.$params[0];
-				$altMainPath = $mainPath . URL::ROOT;
+				$mainPath = DIRECTORY_SEPARATOR.$params[0];
+				$altMainPath = $mainPath . DIRECTORY_SEPARATOR;
 
 				if ($altMainPath == $URI) {
 					$mainPath = $altMainPath;
@@ -318,7 +318,7 @@ class Dispatch
 					if (count($params) > 1) {
 						unset($subRouter[0]);
 						$subRouter = Helper::resetArray($subRouter);
-						$subURI = URL::ROOT . implode(URL::ROOT, $subRouter);
+						$subURI = DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $subRouter);
 
 						if (isset($routers[$mainPath]['path'])) {
 							$router = $routers[$mainPath]['path'];

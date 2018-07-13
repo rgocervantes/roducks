@@ -139,7 +139,7 @@ App::define('TEXT_METHOD_NOT_FOUND', TEXT_METHOD . " Not Found");
 */
 $appConfig = Core::getAppConfigFile();
 
-App::define('DOMAIN_NAME', $appConfig['domain_name']);
+App::define('DOMAIN_NAME', (isset($appConfig['domain_name'])) ? $appConfig['domain_name'] : '');
 App::define('PAGE_TITLE', $appConfig['page_title']);
 App::define('EMAIL_FROM', $appConfig['email_from']);
 App::define('EMAIL_TO', $appConfig['email_to']);
@@ -153,17 +153,3 @@ App::define('MULTILANGUAGE', $appConfig['multilanguage']);
 App::define('BROWSER_LANGUAGE', $appConfig['browser_language']);
 App::define('DEFAULT_LANGUAGE', $appConfig['default_language']);
 
-if (!isset($appConfig['domain_name']) || empty($appConfig['domain_name'])) {
-
-    App::define('RDKS_ERRORS', true);
-
-    if (App::fileExists(Core::getAppConfigPath('config.local'))) {
-        Error::missingDbConfig("Undefined Domain Name", __LINE__, __FILE__, Core::getAppConfigPath('config.local'), 'domain_name', '');
-    } else {
-        App::define('RDKS_SITE', 'Front');
-        App::define('RDKS_MODE', 3);
-        Core::loadAppLanguages('en');
-        Error::pageNotFound();
-    }
-
-}

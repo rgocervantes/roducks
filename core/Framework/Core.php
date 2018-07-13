@@ -796,6 +796,10 @@ class Core
 
 			$script = $ns . $name;
 
+			if (!class_exists($script)) {
+				exit;
+			}
+
 			$class = new $script($flags, $values);
 			$class->inLocal($dev);
 			if (method_exists($class, $method)) {
@@ -809,6 +813,45 @@ class Core
 			CLI::println("Please set a command", CLI::FAILURE);
 		}
 
+	}
+
+	static function getEnvironment($appConfig)
+	{
+
+		$domain_name = (isset($appConfig['domain_name'])) ? $appConfig['domain_name'] : '';
+		$environment = Environment::getConfig();
+		$environment['domain_name'] = $domain_name;
+		$environment['missing_domain_name'] = false;
+		$environment['debugger'] = false;
+
+		if (!isset($environment['domain_name']) || empty($environment['domain_name'])) {
+
+			$environment['missing_domain_name'] = true;
+
+		    if (\App::fileExists(self::getAppConfigPath('config.local'))) {
+		    	$environment['mode'] = Environment::DEV;
+		    	$environment['errors'] = true;
+		    	$environment['debugger'] = true;
+		    } else {
+		    	$environment['mode'] = Environment::PRO;
+		    	$environment['site'] = 'Front';
+		    }
+
+		}
+
+		return $environment;
+
+	}
+
+	static function checkApp($config)
+	{
+		if ($config['missing_domain_name']) {
+			if ($config['debugger']) {
+				Error::missingDbConfig("Undefined Domain Name", __LINE__, __FILE__, self::getAppConfigPath('config.local'), 'domain_name', '');
+			} else {
+				Error::pageNotFound();
+			}
+		}
 	}
 
 }

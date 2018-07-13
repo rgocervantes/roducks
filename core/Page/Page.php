@@ -116,12 +116,12 @@ class Page extends GenericPage
 
 				$relativeURL = URL::getRelativeURL();
 
-				if ($relativeURL == URL::ROOT) {
+				if ($relativeURL == DIRECTORY_SEPARATOR) {
 					$url = $relativeURL;
 				} else {
-					$split = explode(URL::ROOT, $relativeURL);
+					$split = explode(DIRECTORY_SEPARATOR, $relativeURL);
 					$split = Helper::getUrlParams($split);
-					$url = URL::ROOT . implode(URL::ROOT, $split);
+					$url = DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $split);
 				}
 				
 				Http::redirect($url);

@@ -36,8 +36,7 @@ Core::loadAppLanguages();
 |		 GET ENVIRONMENT  		 |
 |--------------------------------|
 */
-$environment = Environment::getConfig();
-
+$environment = Core::getEnvironment($appConfig);
 
 /*
 |--------------------------------|
@@ -46,6 +45,12 @@ $environment = Environment::getConfig();
 */
 require "Run" . FILE_EXT;
 
+/*
+|--------------------------------|
+|			 CHECK APP 			 |
+|--------------------------------|
+*/
+Core::checkApp($environment);
 
 /*
 |--------------------------------|

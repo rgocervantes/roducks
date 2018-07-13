@@ -24,9 +24,6 @@ use Roducks\Libs\Request\Http;
 
 class URL
 {
-
-	const ROOT = "/";
-
 	const CSRF_ATTACK_BASE_URL = '"\'\\(\) {}<>\[\]=!@$%;'; // Forbidden chars
 	const CSRF_ATTACK_GET_PARAMS = '\/\'\\(\) {}<>\[\]!@$%'; // No dots nor slashes are allowed
 	const CSRF_ATTACK_RULE_1 = '\.{2,}'; // More than 1 dot
@@ -68,7 +65,7 @@ class URL
 		$relativeURL = self::getRelativeURL();
 		$url = "/_lang/{$iso}";
 
-		if ($relativeURL != self::ROOT && $rel) {
+		if ($relativeURL != DIRECTORY_SEPARATOR && $rel) {
 			$url .= $relativeURL;
 		}
 
@@ -125,7 +122,7 @@ class URL
 		
 		$uri = self::getBaseURL();
 
-		$slashes = explode(self::ROOT, $uri);
+		$slashes = explode(DIRECTORY_SEPARATOR, $uri);
 		unset($slashes[0]);
 		$slashes = Helper::resetArray($slashes);
 
@@ -202,7 +199,7 @@ class URL
 
 	static function getAbsoluteURL($withParams = true)
 	{
-		$relativeURL = (self::getRelativeURL($withParams) != self::ROOT) ? self::getRelativeURL($withParams) : '';
+		$relativeURL = (self::getRelativeURL($withParams) != DIRECTORY_SEPARATOR) ? self::getRelativeURL($withParams) : '';
 		return self::getDomainName() . $relativeURL;
 	}
 

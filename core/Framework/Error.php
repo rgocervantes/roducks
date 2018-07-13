@@ -56,8 +56,12 @@ class Error
 
 	static function pageNotFound()
 	{
-		Core::loadPage('', Helper::PAGE_NOT_FOUND, "pageNotFound");
-		exit;
+		if (Environment::inCLI()) {
+			CLI::printError("Fatal Error.");
+		} else {
+			Core::loadPage('', Helper::PAGE_NOT_FOUND, "pageNotFound");
+			exit;
+		}
 	}
 
 	static function block($title, $line, $path, $file, $error = "")
@@ -100,25 +104,31 @@ class Error
 	static function debug($title, $line, $path, $file, $error = "")
 	{
 
-		if (RDKS_ERRORS) {
-			if (Helper::isBlock($file) && !Helper::isBlockDispatched()) {
-				echo self::block($title, $line, $path, $file, $error);
-			} else {
-				$params = URL::getGETParams();
-				
-				if (isset($params['rdks']) && $params['rdks'] == 1) {
+		if (Environment::inCLI()) {
+			CLI::printError("{$title}: {$file}", CLI::FAILURE);
+		} else {
+
+			if (RDKS_ERRORS) {
+				if (Helper::isBlock($file) && !Helper::isBlockDispatched()) {
 					echo self::block($title, $line, $path, $file, $error);
-					exit;
 				} else {
-					self::_throw($title, $line, $path, $file, $error);
+					$params = URL::getGETParams();
+					
+					if (isset($params['rdks']) && $params['rdks'] == 1) {
+						echo self::block($title, $line, $path, $file, $error);
+						exit;
+					} else {
+						self::_throw($title, $line, $path, $file, $error);
+					}
+				}
+			} else {
+				if (!Helper::isBlock($file) && !Helper::isBlockDispatched()) {
+					self::pageNotFound();
 				}
 			}
-		} else {
-			if (!Helper::isBlock($file) && !Helper::isBlockDispatched()) {
-				if (!Environment::inCLI())
-					self::pageNotFound();
-			}
+
 		}
+
 	}
 	
 	static function warning($title, $line, $path, $file, $error = "")
