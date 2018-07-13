@@ -105,12 +105,13 @@ class Http
 
 	static function getSubdomain($siteDomain, $defaultSubdomain)
 	{
+		if (!empty($siteDomain)) {
+			$url = self::getSplittedURL($siteDomain);
+			$subdomain = isset($url['SUBDOMAIN']) ? $url['SUBDOMAIN'] : "";
 
-		$url = self::getSplittedURL($siteDomain);
-		$subdomain = isset($url['SUBDOMAIN']) ? $url['SUBDOMAIN'] : "";
-
-		if (!empty($subdomain)) {
-			return substr($subdomain, 0, -1);
+			if (!empty($subdomain)) {
+				return substr($subdomain, 0, -1);
+			}
 		}
 
 		return $defaultSubdomain;

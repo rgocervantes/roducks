@@ -27,9 +27,6 @@ use Roducks\Libs\Output\XML;
 
 class Log extends Data
 {
-
-	var $id, $date;
-
 	static function getFileName($id)
 	{
 		return "user_{$id}";

@@ -59,7 +59,10 @@ abstract class Frame
 		$class = $this->pageObj->className;
 
 		// Avoid autoload for "Page Not Found"
-		if ($class == Helper::PAGE_NOT_FOUND || $this->getParentClassName() == '\Roducks\Page\HelperPage') {
+		if ($class == Helper::PAGE_NOT_FOUND 
+			|| $this->getParentClassName() == '\Roducks\Page\HelperPage' 
+			|| $this->_pageType == 'DATA'
+		) {
 			return;
 		}
 
