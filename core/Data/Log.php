@@ -21,6 +21,7 @@
 namespace Roducks\Data;
 
 use Roducks\Framework\Data;
+use Roducks\Framework\Path;
 use Roducks\Libs\Utils\Date;
 use Roducks\Libs\Output\XML;
 
@@ -48,18 +49,6 @@ class Log extends Data
 		$this->name = self::getFileName($settings['id'], $date);
 	
 		parent::__construct($settings);
-	}
-
-	public function getContent($date)
-	{
-
-		$fileName = self::getFilePath($date) . self::getFileName($this->_id);
-
-		$xml = new XML;
-		$xml->file(Path::getData($fileName));
-		$data = $xml->content()->children();
-
-		return $data;
 	}
 
 }

@@ -21,20 +21,24 @@
 namespace Roducks\Framework;
 
 use Roducks\Page\XML;
+use Roducks\Framework\Path;
+use Roducks\Libs\Output\XML as XMLDoc;
 use Roducks\Libs\Files\Directory;
 
 abstract class Data extends XML
 {
 	protected $_pageType = 'DATA';
 
-	static function init(array $settings = [])
+	static function init($id)
 	{
 		$class = get_called_class();
 
+		$settings = [];
 		$settings['className'] = $class;
 		$settings['filePath'] = '';
 		$settings['fileName'] = '';
 		$settings['urlParam'] = '';
+		$settings['id'] = $id;
 		$settings['method'] = 'write';
 
 		$obj = new $class($settings);
@@ -110,6 +114,11 @@ abstract class Data extends XML
 		}
 
 		return $content->$field->__toString();
+	}
+
+	public function getContent($date)
+	{
+		return XMLDoc::parse(Path::getData($this->_xmlName))->content()->children();
 	}
 
 }
