@@ -28,7 +28,7 @@ use Roducks\Libs\Output\XML;
 class Log extends Data
 {
 
-	private $_id;
+	var $id, $date;
 
 	static function getFileName($id)
 	{
@@ -44,7 +44,6 @@ class Log extends Data
 	public function __construct(array $settings)
 	{
 		$date = Date::getCurrentDate();
-		$this->_id = $settings['id'];
 		$this->path = self::getFilePath($date);
 		$this->name = self::getFileName($settings['id'], $date);
 	

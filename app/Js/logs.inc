@@ -1,6 +1,6 @@
 function userLogs(id, date){
 
-	$rdks.http.getHtml('/_block/_user/logs', {id: id, date: date}, function(block){
+	$rdks.http.getHtml('/_block/_user/logs', {id: id, date: date, rdks: 1}, function(block){
 
 		$rdks.modal.open({
 			title: "Logs",

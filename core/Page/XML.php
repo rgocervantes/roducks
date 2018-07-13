@@ -28,8 +28,7 @@ use Helper;
 class XML extends Frame
 {
 
-	private $_xmlName = '';
-
+	protected $fileName = '';
 	protected $xml;
 	protected $readable = true;
 	protected $overwrite = false;
@@ -56,10 +55,10 @@ class XML extends Frame
 		}
 
 		if (!empty($this->name)) {
-			$this->_xmlName = Path::getData("{$this->path}{$this->name}");
+			$this->fileName = Path::getData("{$this->path}{$this->name}");
 
 			if ($settings['method'] != 'read') {
-				$this->xml->file($this->_xmlName);
+				$this->xml->file($this->fileName);
 			}
 
 			if (!$this->overwrite && $this->xml->exists() && $settings['method'] == 'preview') {
