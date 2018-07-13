@@ -197,10 +197,9 @@ class Form
 
 		if ($error > 0) {
 			$this->_valid = false;
+			$this->_message = $alert[0]['message'];
+			$this->_field = $alert[0]['field'];
 		}
-
-		$this->_message = $alert[0]['message'];
-		$this->_field = $alert[0]['field'];
 
 	}
 
