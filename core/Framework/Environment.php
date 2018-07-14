@@ -24,15 +24,13 @@ use Roducks\Libs\Request\Http;
 
 class Environment
 {
-
 	const DEV = 1;
 	const QA = 2;
 	const PRO = 3;
-	const CLI = 4; 
+	const CLI = 4;
 
 	static function getConfig()
 	{
-
 		$subdomain = Http::getSubdomain(DOMAIN_NAME, Core::DEFAULT_SUBDOMAIN);
 		$config = Core::getEnvConfigFile();
 
@@ -46,9 +44,9 @@ class Environment
 		}
 
 		return [
-			'errors' => $errors, 
+			'errors' => $errors,
 			'subdomain' => $subdomain,
-			'site' => $site, 
+			'site' => $site,
 			'database' => $database,
 			'mode' => $mode
 		];
@@ -62,7 +60,7 @@ class Environment
 	static function inCLI()
 	{
 		return (RDKS_MODE == self::CLI);
-	}	
+	}
 
 	static function inQA()
 	{
@@ -72,6 +70,6 @@ class Environment
 	static function inPRO()
 	{
 		return (RDKS_MODE == self::PRO);
-	}	
+	}
 
 }
