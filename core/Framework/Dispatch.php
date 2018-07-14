@@ -864,7 +864,7 @@ class Dispatch
 						case '_data_':
 							$dType = ($type == 'json' || $type == 'xml') ? strtoupper($type) : ucfirst($type);
 							$pagePath = Core::getModulesPath() . $page . "/" . $dType . "/";
-							$action = ($type == 'page' || $type == 'factory') ? 'index' : 'getData';
+							$action = ($type == 'page' || $type == 'factory') ? 'index' : 'encoded';
 							if ($type == 'xml') {
 								$action = 'preview';
 							}
@@ -897,7 +897,7 @@ class Dispatch
 				} else {
 
 					list($type, $page) = $params;
-					$method = (!isset($params[2])) ? 'getData' : $params[2];
+					$method = (!isset($params[2])) ? 'rest' : $params[2];
 					$page = DIR_SERVICES . Helper::getCamelName($page);
 
 					$servicePath = Core::getServicesPath($page);

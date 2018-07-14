@@ -52,6 +52,24 @@ class JSON extends GenericPage
 		return json_decode($str, true);
 	}
 
+	static private function _httpCode($code)
+	{
+		switch ($code) {
+			case 401:
+				Http::sendHeaderAuthenticationFailed(false);
+				break;
+			case 404:
+				Http::sendHeaderNotFound(false);
+				break;
+			case 501:
+				Http::setHeaderInvalidRequest(false);
+				break;
+			default:
+				# code...
+				break;
+		}	
+	}
+
 	static function stOutput($obj)
 	{
 
@@ -85,19 +103,7 @@ class JSON extends GenericPage
 
 	static function response($message, $code = 200)
 	{
-
-		switch ($code) {
-			case 404:
-				Http::sendHeaderNotFound(false);
-				break;
-			case 501:
-				Http::setHeaderInvalidRequest(false);
-				break;
-			default:
-				# code...
-				break;
-		}
-
+		self::_httpCode($code);
 		self::stOutput(['format' => false, 'data' => ['message' => $message]]);
 	}
 
@@ -128,13 +134,6 @@ class JSON extends GenericPage
 		$this->_jsonSuccess = $value;
 	}
 
-	protected function setError($code, $msg)
-	{
-		$this->_jsonCode = $code;
-		$this->_jsonMessage = $msg;
-		$this->_jsonSuccess = false;
-	}
-
 	protected function setCode($code)
 	{
 		$this->_jsonCode = $code;
@@ -144,6 +143,14 @@ class JSON extends GenericPage
 	{
 		$this->_jsonMessage = $message;
 	}	
+
+	protected function setError($code, $msg = "Error", $httpCode = 0)
+	{
+		$this->setCode($code);
+		$this->setMessage($msg);
+		$this->setSuccess(false);
+		self::_httpCode($httpCode);
+	}
 
 	protected function data($key, $value = "")
 	{
@@ -186,11 +193,6 @@ class JSON extends GenericPage
 		}
 
 		$this->post = Post::init();
-	}
-
-	public function getData()
-	{
-		$this->output();
 	}
 
 } 

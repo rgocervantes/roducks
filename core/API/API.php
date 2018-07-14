@@ -75,10 +75,9 @@ class API extends Service
 		Router::delete($endpoint, $dispatch, $params);
 	}
 
-	protected function setError($code, $msg)
+	protected function setError($code, $msg = "Error", $httpCode = 0)
 	{
-		Http::sendHeaderAuthenticationFailed(false);
-
+		parent::setError($code, $msg, $code);
 		$this->data("code", $code);
 		$this->data("message", $msg);
 		$this->output();
