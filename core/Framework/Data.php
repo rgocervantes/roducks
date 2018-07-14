@@ -53,18 +53,18 @@ abstract class Data extends XML
 
 		$field = $this->xml->createNode([
 				'name' => $key
-		]);		
+		]);
 
 		return $field;
 	}
 
 	private function _field($key, $value)
 	{
-		
+
 		$field = $this->xml->createNode([
 				'name' => $key,
 				'cdata' => $value
-		]);				
+		]);
 
 		return $field;
 	}
@@ -101,7 +101,7 @@ abstract class Data extends XML
 		if (!Path::exists($this->name)) {
 			return [];
 		}
-		
+
 		$this->xml->file($this->name);
 
 		return $this->xml->content()->children();

@@ -27,12 +27,12 @@ class XML
 |============================|
 |		PRIVATE METHODS
 |============================|
-*/	
+*/
 
 	const OVERWRITE = true;
 
 	private $_DOM, $_xmlContent, $_root, $_nodeRoot, $_local, $_rootNS, $_rootAttrs = [];
-	
+
 	/**
 	 *	XML name
 	 */
@@ -40,12 +40,12 @@ class XML
 
 	/**
 	 *	The root element has a namespace
-	 */	
-	private $_hasRootNS = false;	
+	 */
+	private $_hasRootNS = false;
 
 	/**
  	 *	Default encoding
-	 */	
+	 */
 	private $_encode_type = 'UTF-8';
 
 	/**
@@ -56,7 +56,7 @@ class XML
 
 	/*
 	|============================|
-	|			STATIC 
+	|			STATIC
 	|============================|
 	*/
 
@@ -87,7 +87,7 @@ class XML
     static private function _notFound()
     {
     	header("HTTP/1.1 404 Not Found");
-		die("XML does not exist.");
+			die("XML does not exist.");
     }
 
 	/**
@@ -126,7 +126,7 @@ class XML
 		$xml->load();
 
 		$ns = $xml->content()->getNamespaces(true);
-		
+
 		foreach ($ns as $key => $value) {
 			$xml->setRootAttrs("xmlns:{$key}", $value);
 		}
@@ -140,7 +140,7 @@ class XML
 
    	/*
 	|============================|
-	|		    PRIVATE 
+	|		    PRIVATE
 	|============================|
 	*/
 
@@ -165,7 +165,7 @@ class XML
 
 		if (isset($obj['value'])) :
 			if (self::_hasNS($name)) :
-				
+
 				list($attr_ns, $attr_key) = explode(":", $name);
 
 				if (isset($this->_rootAttrs["xmlns:{$attr_ns}"])) :
@@ -175,10 +175,10 @@ class XML
 				endif;
 			else:
 				$element = $this->_DOM->createElement($name, $obj['value']);
-			endif;	
+			endif;
 		else:
 
-			if (self::_hasNS($name)) :	
+			if (self::_hasNS($name)) :
 				list($attr_ns, $attr_key) = explode(":", $name);
 
 				if (isset($this->_rootAttrs["xmlns:{$attr_ns}"])) :
@@ -214,12 +214,12 @@ class XML
 						else :
 							$element->setAttributeNS($NS,$key,$value);
 						endif;
-					endif;	
+					endif;
 
 				else:
 					$element->setAttribute($key,$value);
-				endif;	
-			endforeach;	
+				endif;
+			endforeach;
 		endif;
 
 		//$element->namespaceURI
@@ -255,7 +255,7 @@ class XML
      */
     private function _read()
     {
-		
+
 		if (!$this->exists()) {
 			self::_notFound();
 		}
@@ -295,13 +295,13 @@ class XML
     }
 
     private function _getNode(\DOMElement $node, array $items = [], $type)
-    {	
+    {
 
     	switch ($type) {
     		case 1:
     			$items[$node->tagName][] = $node;
     			break;
-    		
+
     		case 2:
     			$items[] = $node;
     			break;
@@ -309,12 +309,12 @@ class XML
 
     	return $items;
     }
-    
+
 	private function _getChildNodesByPath($path, $domElement = null, array $items = [])
 	{
 
 		if (preg_match('/\//', $path)) {
-			
+
 			$tags = explode('/', $path);
 			$parentTag = $tags[0];
 			$child = $tags[1];
@@ -342,7 +342,7 @@ class XML
 
 		} else {
 			if ($domElement instanceof \DOMElement) {
-				
+
 				foreach ($this->_getChildNodes($path, $domElement) as $node) {
 					$items = $this->_getNode($node, $items, 2);
 				}
@@ -410,7 +410,7 @@ class XML
 		if (empty($xml)) {
 			return;
 		}
-		
+
 		$str = substr($xml, 0, 4);
 		$this->_xmlName = self::_ext($xml);
 
@@ -428,7 +428,7 @@ class XML
 
 		if (!$this->exists()) {
 			die("Invalid XML.");
-		}		
+		}
 
 		return new \SimpleXmlElement($this->_xmlContent);
 
@@ -441,7 +441,7 @@ class XML
     }
 
 	/**
-	*	Save xml 
+	*	Save xml
 	*/
 	public function save()
 	{
@@ -483,19 +483,19 @@ class XML
 		}
 
 		$this->_nodeRoot = $root;
-		
+
 		// if xml does not exist
 		if (!$this->exists()) :
-			
+
 			// load DOMDocument
 			$this->_init();
 
 			// create an element
 			$element = ($this->_hasRootNS) ? $this->_DOM->createElementNS($this->_rootNS,$root) : $this->_DOM->createElement($root);
-			
+
 			// root node
 			$this->_root = $this->_DOM->appendChild($element);
-			
+
 			// add attributes or namespaces into the root
 			if (count($attrs) > 0) :
 
@@ -511,11 +511,11 @@ class XML
 							if (isset($this->_rootAttrs["xmlns:{$attr_ns}"])) :
 								$NS = $this->_rootAttrs["xmlns:{$attr_ns}"];
 							endif;
-						endif;	
+						endif;
 						$element->setAttributeNS($NS, $key, $value);
 					else:
 						$element->setAttribute($key,$value);
-					endif;	
+					endif;
 
 				endforeach;
 			endif;
@@ -523,7 +523,7 @@ class XML
 		else:
 			// update xml data for an existing xml
 			$this->_update();
-		endif;	
+		endif;
 	}
 
     public function getElementsByQuery($query)

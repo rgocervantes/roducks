@@ -21,9 +21,7 @@
 namespace Roducks\Data;
 
 use Roducks\Framework\Data;
-use Roducks\Framework\Path;
 use Roducks\Libs\Utils\Date;
-use Roducks\Libs\Output\XML;
 
 class Log extends Data
 {
@@ -43,7 +41,7 @@ class Log extends Data
 		$date = Date::getCurrentDate();
 		$this->path = self::getFilePath($date);
 		$this->name = self::getFileName($settings['id'], $date);
-	
+
 		parent::__construct($settings);
 	}
 

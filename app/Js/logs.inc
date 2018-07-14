@@ -13,6 +13,15 @@ function userLogs(id, date){
 
 	}, function(){
 		$rdks.modal.loader(true);
+	},function(){
+
+		$rdks.alert.notice({
+			result: false,
+			elastic: true,
+			title: "Error",
+			message: "There was an error.",
+		});
+
 	});
 
 }
