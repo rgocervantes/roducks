@@ -22,7 +22,6 @@ require "Bootstrap.php";
 
 use Roducks\Framework\Core;
 use Roducks\Framework\Dispatch;
-use Roducks\Framework\Environment;
 
 /*
 |--------------------------------|
