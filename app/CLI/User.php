@@ -20,7 +20,7 @@
  *	COMMAND LINE
  *	-----------------
  *	php roducks user:create --pro dummy@yoursite.com duke017 --super-admin
- *	php roducks user:create --pro dummy@yoursite.com duke017 gender=female firstname=Rod lastname=Cervantes+TC
+ *	php roducks user:create --pro dummy@yoursite.com duke017 gender=male firstname=Duke lastname=Cerva+Toledo
  *	php roducks user:reset --pro dummy@yoursite.com duke017
  *	php roducks user:who --pro id=1
  *	php roducks user:who --pro email=dummy@yoursite.com
