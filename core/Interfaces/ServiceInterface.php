@@ -20,9 +20,9 @@
 
 namespace Roducks\Interfaces;
 
-Interface JSONInterface
+Interface ServiceInterface
 {
 	public function __construct(array $settings);
 
-	public function encoded();
+	public function rest();
 }
