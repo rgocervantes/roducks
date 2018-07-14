@@ -40,34 +40,34 @@ class User extends CLI
 	public function create($email = "", $password = "")
 	{
 
-		$db = $this->db();
-		$id_role = 1; // super-admin
-		$ids_roles = [];
+		if (!empty($email) && !empty($password)) {
 
-		if ($this->getFlag('--super-admin')) {
-			array_push($ids_roles, $id_role);
-		} else {
+			$db = $this->db();
+			$id_role = 1; // super-admin
+			$ids_roles = [];
 
-			$roles = RolesTable::open($db)->where(['id_role:>' => 1])->all()->getData();
+			if ($this->getFlag('--super-admin')) {
+				array_push($ids_roles, $id_role);
+			} else {
 
-			$this->dialogInfo('Roles');
+				$roles = RolesTable::open($db)->where(['id_role:>' => 1])->all()->getData();
 
-			foreach ($roles as $role) {
-				array_push($ids_roles, $role['id_role']);
-			 	$this->info("[x]( {$role['id_role']} ) {$role['name']}");
+				$this->dialogInfo('Roles');
+
+				foreach ($roles as $role) {
+					array_push($ids_roles, $role['id_role']);
+				 	$this->info("[x]( {$role['id_role']} ) {$role['name']}");
+				}
+
+				parent::output();
+
+				$this->prompt("Type an option:");
+
+				$id_role = $this->getAnswer();
+
 			}
 
-			parent::output();
-
-			$this->prompt("Type Role ID:");
-
-			$id_role = $this->getAnswer();
-
-		}
-
-		if ($id_role > 0 && in_array($id_role, $ids_roles)) {
-
-			if (!empty($email) && !empty($password)) {
+			if ($id_role > 1 && in_array($id_role, $ids_roles)) {
 
 				if (strlen($password) >= 7) {
 
@@ -119,12 +119,13 @@ class User extends CLI
 					$this->error("Password length must be at least 7 chars.");
 				}
 
+
 			} else {
-				$this->warning("Email and Password are required.");
+				$this->error("Invalid Role ID, Try again.");
 			}
 
 		} else {
-			$this->error("Invalid Role ID, Try again.");
+			$this->warning("Email and Password are required.");
 		}
 
 		parent::output();
