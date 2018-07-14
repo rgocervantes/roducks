@@ -66,8 +66,8 @@ class Path
 			$name = implode(".", $img);
 		else:
 			$name = $img[0];
-			$ext = $img[1];	
-		endif;	
+			$ext = $img[1];
+		endif;
 
 		return $name . '_' . $s . '.' . $ext;
 	}
@@ -148,7 +148,7 @@ class Path
 	static function getUploadsUsers($file = "")
 	{
 		return DIR_DATA_UPLOADS_USERS . $file;
-	}	
+	}
 
 	static function getUploadedUsers($file = "")
 	{
@@ -171,7 +171,7 @@ class Path
 	static function getAppIcon($file)
 	{
 		return [DIR_APP_ICONS, DIR_ASSETS_ICONS, $file];
-	}	
+	}
 
 	static function getImage($file = "")
 	{
@@ -181,7 +181,7 @@ class Path
 	static function getIcon($file = "")
 	{
 		return DIR_ASSETS_ICONS . $file;
-	}	
+	}
 
 	static function getLogo()
 	{
@@ -195,7 +195,13 @@ class Path
 
 	static function getPublicUploadedUsers($file)
 	{
-		return URL::setAbsoluteURL(self::getUploadedUsers($file));
+		$path = self::getUploadedUsers($file);
+
+		if (preg_match('#(male|female)#', $file)) {
+			$path = self::getIcon("users/{$file}");
+		}
+
+		return URL::setAbsoluteURL($path);
 	}
 
 }

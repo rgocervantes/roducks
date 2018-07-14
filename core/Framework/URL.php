@@ -40,8 +40,8 @@ class URL
 		$baseURL = self::getBaseURL();
 		$relativeURL = self::getRelativeURL();
 		$GETParams = self::getBaseGETParams();
-		
-		if (preg_match('/['.self::CSRF_ATTACK_BASE_URL.']+/', $baseURL) 
+
+		if (preg_match('/['.self::CSRF_ATTACK_BASE_URL.']+/', $baseURL)
 		||	preg_match('/'.self::CSRF_ATTACK_RULE_1.'/', $baseURL)
 		||	preg_match('/'.self::CSRF_ATTACK_RULE_2.'/', $baseURL)
 		||	preg_match('/'.self::CSRF_ATTACK_RULE_3.'/', $baseURL)
@@ -71,7 +71,7 @@ class URL
 
 		return $url;
 	}
-	
+
 	static function getURLArguments()
 	{
 
@@ -99,7 +99,7 @@ class URL
 		$baseURL = self::getURLArguments();
 
 		return $baseURL[1];
-	}	
+	}
 
 	static function serializeGETParams($url)
 	{
@@ -108,9 +108,9 @@ class URL
 
 		if (preg_match('#^'.self::REGEXP_GET.'$#', $url)) {
 			list($qm, $p) = explode("?", $url);
-			
+
 			$params = Http::serializeParams($p);
-			
+
 		}
 
 		return $params;
@@ -119,7 +119,7 @@ class URL
 
 	static function getParams()
 	{
-		
+
 		$uri = self::getBaseURL();
 
 		$slashes = explode(DIRECTORY_SEPARATOR, $uri);
@@ -139,15 +139,22 @@ class URL
 		return $ret;
 	}
 
-	static function goToURL($inDEV, $inPro)
+	static function getPort()
 	{
-		$subdomain = (Environment::inDEV()) ? $inDEV : $inPro;
 		$serverPort = Http::getPort();
 		$port = '';
-		
+
 		if ($serverPort != 80) {
 			$port = ":{$serverPort}";
 		}
+
+		return $port;
+	}
+
+	static function goToURL($inDEV, $inPro)
+	{
+		$subdomain = (Environment::inDEV()) ? $inDEV : $inPro;
+		$port = self::getPort();
 
 		return Http::getProtocol() . $subdomain . "." . DOMAIN_NAME . $port;
 	}
@@ -235,7 +242,7 @@ class URL
 
 	static function setAbsoluteURL($path = "")
 	{
-		return self::getDomainName() . $path;
+		return self::getDomainName() . self::getPort() . $path;
 	}
 
 	static function getURL(array $params = [], $complete = true)
