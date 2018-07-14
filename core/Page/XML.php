@@ -37,9 +37,8 @@ class XML extends Frame
 	protected $NS = [];
 	protected $root = 'xml';
 
-	public function __construct(array $settings = [])
+	public function __construct(array $settings)
 	{
-
 		parent::__construct($settings);
 
 		$overwrite = ($settings['method'] == 'overwrite' || $this->overwrite);
@@ -99,7 +98,7 @@ class XML extends Frame
 			case 'overwrite':
 
 				$this->xml->save();
-				
+
 				break;
 		}
 
