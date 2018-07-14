@@ -32,21 +32,19 @@ use App\Models\Users\UsersRoles;
 
 class User extends Block
 {
-
 	var $id,
 		$date;
 
-
 	private function _picture($img, $resize)
 	{
-		
+
 		$squared = Path::getIcon("users/{$img}");
 		$original = $squared;
 
 		if (!empty($img)) {
 
 			$cropped = Path::getCropName($img, $resize);
-			
+
 			if (\App::fileExists( Path::getUploadsUsers($cropped) )) {
 				$squared = Path::getUploadedUsers($cropped);
 			} else {
@@ -55,13 +53,13 @@ class User extends Block
 
 			if (\App::fileExists( Path::getUploadsUsers($img) )) {
 				$original = Path::getUploadedUsers($img);
-			} 
+			}
 
 		}
 
 		$this->view->data('original', $original);
 		$this->view->data('squared', $squared);
-		$this->view->data('resize', $resize);		
+		$this->view->data('resize', $resize);
 	}
 
 	public function card($id = "")
@@ -76,14 +74,14 @@ class User extends Block
 		$user = $join->getUser($id)->fetch();
 
 		if ($join->rows()) {
-	
+
 			$this->_picture($user['picture'], 150);
 			$this->view->data("first_name", $user['first_name']." ".$user['last_name']);
 			$this->view->data("email", $user['email']);
 			$this->view->data("gender", $user['gender']);
 			$this->view->data("role", $user['role']);
 			$this->view->data("id_role", $user['id_role']);
-			
+
 			$this->view->load("card");
 
 			return $this->view->output();
@@ -91,7 +89,7 @@ class User extends Block
 
 		return $this->view->error(__METHOD__, "'{$id}' is not a valid user id.");
 
-	}	
+	}
 
 	public function logs()
 	{
@@ -116,7 +114,7 @@ class User extends Block
 	public function picture($img, $resize, $tpl = "cropped")
 	{
 
-		$this->_picture($img, $resize);		
+		$this->_picture($img, $resize);
 		$this->view->load($tpl);
 
 		return $this->view->output();
@@ -128,7 +126,7 @@ class User extends Block
 
 		$this->params([
 			'resize' => [$resize, 'PARAM', Dispatch::PARAM_INTEGER]
-		]);		
+		]);
 
 		$img = Login::getData($session, "picture");
 
@@ -136,4 +134,4 @@ class User extends Block
 
 	}
 
-} 
+}
