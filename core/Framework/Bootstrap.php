@@ -75,7 +75,7 @@ spl_autoload_register(function($class) {
         $isEvent = preg_match('#/Events/#', $path);
 
     } else {
-        
+
         if (isset(App::$composer[$class])) {
             $path = App::$composer[$class];
             $composer = true;
@@ -91,25 +91,25 @@ spl_autoload_register(function($class) {
 
     if ($fileExists || $isEvent) {
 
-        if (!$isEvent)
-            include_once $realPath;
+      if (!$isEvent)
+          include_once $realPath;
 
-		if (!class_exists($class) && !preg_match('#Interfaces#', $class)) {
-            if (php_sapi_name() != "cli") {
-                if (!$isEvent)
-                    Error::classNotFound(TEXT_CLASS_NOT_FOUND,__LINE__, __FILE__, $path, $class);
-            } else {
-                CLI::println("Class '{$class}' was not found.", CLI::FAILURE, -1);
-            }
-		}
-    }else{
+  		if (!class_exists($class) && !preg_match('#Interfaces#', $class)) {
+          if (php_sapi_name() != "cli") {
+              if (!$isEvent)
+                  Error::classNotFound(TEXT_CLASS_NOT_FOUND,__LINE__, __FILE__, $path, $class);
+          } else {
+              CLI::println("Class '{$class}' was not found.", CLI::FAILURE);
+          }
+  		}
+    } else {
 
         if (php_sapi_name() != "cli") {
             if (!$isEvent)
                 Error::debug(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $path);
         } else {
-            CLI::println("Script file not found: {$path}", CLI::FAILURE, -1);
-        }  
+            CLI::println("Script file not found: {$path}", CLI::FAILURE);
+        }
     }
 });
 
@@ -139,6 +139,9 @@ App::define('TEXT_METHOD_NOT_FOUND', TEXT_METHOD . " Not Found");
 */
 $appConfig = Core::getAppConfigFile();
 
+# Timezone
+date_default_timezone_set($appConfig['default_timezone']);
+
 App::define('DOMAIN_NAME', (isset($appConfig['domain_name'])) ? $appConfig['domain_name'] : '');
 App::define('PAGE_TITLE', $appConfig['page_title']);
 App::define('EMAIL_FROM', $appConfig['email_from']);
@@ -152,4 +155,3 @@ App::define('SUBSCRIBERS_EXPIRE_IN', $appConfig['subscribers_expire_in']);
 App::define('MULTILANGUAGE', $appConfig['multilanguage']);
 App::define('BROWSER_LANGUAGE', $appConfig['browser_language']);
 App::define('DEFAULT_LANGUAGE', $appConfig['default_language']);
-
