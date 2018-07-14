@@ -67,7 +67,7 @@ class User extends CLI
 
 			}
 
-			if ($id_role > 1 && in_array($id_role, $ids_roles)) {
+			if (in_array($id_role, $ids_roles)) {
 
 				if (strlen($password) >= 7) {
 
@@ -100,7 +100,7 @@ class User extends CLI
 							'gender' => $gender,
 							'picture' => Helper::getUserIcon($gender),
 							'created_at' => UsersTable::now(),
-							'updated_at' => UsersTable::now()		
+							'updated_at' => UsersTable::now()
 						];
 
 						$tx = $user->create($data);
@@ -118,7 +118,6 @@ class User extends CLI
 				} else {
 					$this->error("Password length must be at least 7 chars.");
 				}
-
 
 			} else {
 				$this->error("Invalid Role ID, Try again.");
@@ -152,7 +151,7 @@ class User extends CLI
 				} else {
 					$this->error("It couldn't be reseted.");
 				}
-				
+
 			} else {
 				$this->error("User does not exist.");
 			}
@@ -183,7 +182,7 @@ class User extends CLI
 		}
 
 		if ($usersTable->foundRow()) {
-			
+
 			if ($user['id_user'] == 1) {
 				$this->info("[*] Super Admin");
 				$this->info("[x]");
