@@ -24,7 +24,7 @@ return [
 //-------------------------------------------------------------------
 	'domain_name' 					=> '', // Example: yoursite.test
 //-------------------------------------------------------------------
-//  Timezone @url http://php.net/manual/es/timezones.america.php
+//  Timezone @url http://php.net/manual/en/timezones.php
 //-------------------------------------------------------------------
 	'default_timezone' 			=> 'America/New_York',
 //-------------------------------------------------------------------
