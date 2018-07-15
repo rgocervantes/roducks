@@ -47,7 +47,7 @@ class Directory
 				@mkdir($folder, $chmod);
 			}
 		}
-	}	
+	}
 
 	static private function _tree($path, $route, array $exclude = [], array $storage = [])
 	{
@@ -106,7 +106,7 @@ class Directory
 
 	   		closedir($dir_handle);
 		}
-		 
+
    		return [
    			'folders' => $folders,
    			'files' => $files
@@ -119,7 +119,7 @@ class Directory
 		$dir = self::open($path);
 		return (empty($dir['folders']) && empty($dir['files']));
 	}
-	
+
 	/**
 	 * @example Directory::make(Path::getData(), "foo/bar");
 	 */
@@ -142,9 +142,9 @@ class Directory
 		} else {
 			self::_folder($path, $chmod);
 		}
-	
+
 	}
-	
+
 	/**
 	 * @example Directory::remove(Path::getData("tmp/"));
 	 */
@@ -160,13 +160,13 @@ class Directory
 	       		$dir_handle = opendir($dirname);
 	    	if (!$dir_handle)
 	       		return false;
-	 
+
 	   		while($file = readdir($dir_handle)) {
 	       		if ($file != "." && $file != "..") {
 	          		if (!is_dir($dirname.$file))
 	             	unlink($dirname.$file);
 	         	else
-	             	self::remove($dirname.$file);    
+	             	self::remove($dirname.$file);
 	       		}
 	    	}
 	   		closedir($dir_handle);
@@ -189,38 +189,40 @@ class Directory
 			foreach ($options as $option) {
 				switch (strtolower($option)) {
 					case self::REMOVE_FILES:
-						
+
 						foreach ($content['files'] as $file) {
 							unlink($dirname.$file);
 						}
 
 						break;
 					case self::REMOVE_FOLDERS:
-						
+
 						foreach ($content['folders'] as $folder) {
 							self::remove($dirname.$folder);
 						}
 
 						break;
 					case self::REMAIN_FOLDERS:
-						
+
 						foreach ($content['folders'] as $folder) {
 							self::clean($dirname.$folder, [self::REMAIN_FOLDERS, self::REMOVE_FILES]);
 						}
 
-						break;						
+						break;
 				}
 			}
 		}
 	}
 
 	/**
-	 *	@example Directory::move(Path::getData(), "xml/", Path::getData(), "content/xml");
+	 *	@example Directory::move(Path::getData(), "xml", Path::getData(), "content/xml");
 	*/
 	static function move($path1, $origin, $path2, $destination)
 	{
 
 		if ($origin != $destination) {
+			$origin = self::_getDir($origin);
+			$destination = self::_getDir($destination);
 
 			self::make($path2, $destination);
 			$tree = self::_tree($path1, $origin);
@@ -235,7 +237,7 @@ class Directory
 	}
 
 	/**
-	 * @example 
+	 * @example
 	 *
 	 *	Directory::zip([
 	 * 	 'path' => Path::getData(),

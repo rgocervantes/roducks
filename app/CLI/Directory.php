@@ -21,7 +21,7 @@
  *	-----------------
  *	php roducks cache:make [dir]
  *	php roducks cache:remove [dir]
- *	php roducks cache:clean [dir] 
+ *	php roducks cache:clean [dir]
  *	php roducks cache:clean [dir] --remain-folders
  *	php roducks cache:move [dir-origin] [dir-destination]
  */
@@ -99,9 +99,9 @@ class Directory extends CLI
 			$this->_command();
 			$this->error(self::command(__CLASS__, __FUNCTION__, '[dir-origin] [dir-destination]'));
 		} else {
-			DirectoryHandler::move(Path::getData($dir));
+			DirectoryHandler::move(Path::getData(), $origin, Path::getData(), $destination);
 
-			$this->success("{$dir} was moved!");
+			$this->success("{$origin} was moved!");
 		}
 
 		parent::output();
