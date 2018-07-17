@@ -49,17 +49,17 @@ namespace Roducks\Libs\ORM;
 
 	if ($query->rows()): while($row = $query->fetch()):
 		// $row
-	endwhile; endif;	
+	endwhile; endif;
 
 	//-----------------
 	// EXAMPLE # 3
 	//-----------------
-	// PARENTHESIS 
+	// PARENTHESIS
 
 		$filter['[BEGIN_COND]'] = "(";
 			$filter['[NON]u.id_user_parent:>'] = Login::getAdminData('id_user_parent');
 			$filter['[OR]u.id_role:>'] = Login::getAdminData('id_role');
-		$filter['[END_COND]'] = ")";	
+		$filter['[END_COND]'] = ")";
 
 */
 
@@ -70,21 +70,21 @@ class Query
 	const DATA_ARRAY = "array";
 	const DATA_ASSOC = "assoc";
 
-	private $_db,	
-		$_statment, 
-		$_connection = null, 
+	private $_db,
+		$_statment,
+		$_connection = null,
 		$_totalPages = 1,
 		$_filter = [],
-		$_queryString = "";	
+		$_queryString = "";
 
 	protected $_condition = [],
 			$_fields = [],
-			$_table = "";	
+			$_table = "";
 
 /*
 //----------------------
 //		STATIC
-//----------------------	
+//----------------------
 */
 
 	static function freeResult($statment)
@@ -115,7 +115,7 @@ class Query
 	static function fetchArray($statment)
 	{
 		return \mysqli_fetch_array($statment);
-	}		
+	}
 
 	static function isInteger($value)
 	{
@@ -163,10 +163,10 @@ class Query
 						break;
 					case '%like':
 						$ret .= $match[1] . " LIKE '%".$value."' ";
-						break;	
+						break;
 					case 'like%':
 						$ret .= $match[1] . " LIKE '".$value."%' ";
-						break;												
+						break;
 					case 'ucase':
 						$ret .= "UCASE(".$match[1].") = " . self::_field($value);
 						break;
@@ -175,43 +175,43 @@ class Query
 						break;
 					case 'lower':
 						$ret .= "LOWER(".$match[1].") = " . self::_field($value);
-						break;												
+						break;
 					case 'date':
 						$ret .= "DATE(".$match[1].") = DATE(" . self::_field($value).")";
 						break;
 					case 'date:<>':
 						$ret .= "DATE(".$match[1].") != DATE(" . self::_field($value).")";
-						break;	
+						break;
 					case 'date:<':
 						$ret .= "DATE(".$match[1].") < DATE(" . self::_field($value).")";
-						break;	
+						break;
 					case 'date:>':
 						$ret .= "DATE(".$match[1].") > DATE(" . self::_field($value).")";
-						break;	
+						break;
 					case 'date:<=':
 						$ret .= "DATE(".$match[1].") <= DATE(" . self::_field($value).")";
-						break;	
+						break;
 					case 'date:>=':
 						$ret .= "DATE(".$match[1].") >= DATE(" . self::_field($value).")";
 						break;
 					case 'date:between':
 						$ret .= "DATE(".$match[1].") BETWEEN ".self::_field($value[0])." AND ".self::_field($value[1]);
-						break;							
+						break;
 					case 'date:year':
 						$ret .= "EXTRACT( YEAR FROM ".$match[1].") = " . self::_field($value);
 						break;
 					case 'date:month':
 						$ret .= "EXTRACT( MONTH FROM ".$match[1].") = " . self::_field($value);
-						break;	
+						break;
 					case 'date:day':
 						$ret .= "EXTRACT( DAY FROM ".$match[1].") = " . self::_field($value);
-						break;	
+						break;
 					case 'date:year:<':
 						$ret .= "EXTRACT( YEAR FROM ".$match[1].") < " . self::_field($value);
 						break;
 					case 'date:month:<':
 						$ret .= "EXTRACT( MONTH FROM ".$match[1].") < " . self::_field($value);
-						break;	
+						break;
 					case 'date:day:<':
 						$ret .= "EXTRACT( DAY FROM ".$match[1].") < " . self::_field($value);
 						break;
@@ -220,25 +220,25 @@ class Query
 						break;
 					case 'date:month:<=':
 						$ret .= "EXTRACT( MONTH FROM ".$match[1].") <= " . self::_field($value);
-						break;	
+						break;
 					case 'date:day:<=':
 						$ret .= "EXTRACT( DAY FROM ".$match[1].") <= " . self::_field($value);
-						break;							
+						break;
 					case 'date:year:>':
 						$ret .= "EXTRACT( YEAR FROM ".$match[1].") > " . self::_field($value);
 						break;
 					case 'date:month:>':
 						$ret .= "EXTRACT( MONTH FROM ".$match[1].") > " . self::_field($value);
-						break;	
+						break;
 					case 'date:day:>':
 						$ret .= "EXTRACT( DAY FROM ".$match[1].") > " . self::_field($value);
-						break;							
+						break;
 					case 'date:year:>=':
 						$ret .= "EXTRACT( YEAR FROM ".$match[1].") >= " . self::_field($value);
 						break;
 					case 'date:month:>=':
 						$ret .= "EXTRACT( MONTH FROM ".$match[1].") >= " . self::_field($value);
-						break;	
+						break;
 					case 'date:day:>=':
 						$ret .= "EXTRACT( DAY FROM ".$match[1].") >= " . self::_field($value);
 						break;
@@ -247,56 +247,56 @@ class Query
 						break;
 					case 'date:month:<>':
 						$ret .= "EXTRACT( MONTH FROM ".$match[1].") != " . self::_field($value);
-						break;	
+						break;
 					case 'date:day:<>':
 						$ret .= "EXTRACT( DAY FROM ".$match[1].") != " . self::_field($value);
 						break;
 					case 'datetime':
 						$ret .= "DATETIME(".$match[1].") = " . self::_field($value);
-						break;	
+						break;
 					case 'datetime:between':
 						$ret .= "DATETIME(".$match[1].") BETWEEN ".self::_field($value[0])." AND ".self::_field($value[1]);
-						break;				
+						break;
 					case 'time':
 						$ret .= "TIME(".$match[1].") = " . self::_field($value);
-						break;	
+						break;
 					case 'not':
 						$ret .= $match[1]." NOT = " . self::_field($value);
-						break;	
+						break;
 					case 'not-in':
 						$values = (is_array($value)) ? implode(",", $value) : self::_field($value);
 						$ret .= $match[1] . " NOT IN(".$values.")";
-						break;	
+						break;
 					case 'in':
 						$values = (is_array($value)) ? implode(",", $value) : self::_field($value);
 						$ret .= $match[1] ." IN(".$values.")";
-						break;					
+						break;
 					case 'between':
 						$ret .= $match[1] . " BETWEEN ".self::_field($value[0])." AND ".self::_field($value[1]);
-						break;																		
+						break;
 					case '<>':
 						$ret .= $match[1] . " != " . self::_field($value);
 						break;
 					case '<':
 						$ret .= $match[1] . " < " . self::_field($value);
-						break;	
+						break;
 					case '>':
 						$ret .= $match[1] . " > " . self::_field($value);
-						break;	
+						break;
 					case '>=':
 						$ret .= $match[1] . " >= " . self::_field($value);
-						break;	
+						break;
 					case '<=':
 						$ret .= $match[1] . " <= " . self::_field($value);
-						break;							
+						break;
 					default:
 						$ret .= $field . " = " . self::_field($value);
 						break;
-				}	
+				}
 		} else {
 			$ret = $field . " = " . self::_field($value);
 
-			switch ($field) {			
+			switch ($field) {
 				case '[BEGIN_COND]':
 					$ret = " {$value} ";
 					break;
@@ -330,7 +330,7 @@ class Query
 		if ($field == '[END_COND]' || preg_match('/^\[COND_\d+\]$/', $field)) {
 			return [" {$value} ", ""];
 		}
-		
+
 		$operator = " AND "; // default
 
 		if (preg_match('/^\[([A-Z0-9_]+)\](.+)$/i', $field, $match)) {
@@ -373,7 +373,7 @@ class Query
 		if (isset($arguments['condition']) && is_array($arguments['condition'])): foreach ($arguments['condition'] as $k => $v): $i++;
 			if (!is_array($v) && !self::isInteger($v)) {
 				$v = $db->real_escape_string($v);
-			} 
+			}
 
 			list($field, $operator) = self::_operatorCond($k,$v);
 			$ret .= ($i == 1) ? " WHERE " : $operator;
@@ -407,7 +407,7 @@ class Query
 		}
 
 		return implode(", ",$ret);
-	}	
+	}
 
 	static private function _aditionalArguments($args)
 	{
@@ -421,7 +421,7 @@ class Query
 		if (isset($args['having'])) {
 			$having = array_keys($args['having'])[0];
 			$ret .= " HAVING ". self::_dataType($having,$args['having'][$having]);
-		}			
+		}
 
 		if (isset($args['orderby'])) {
 
@@ -450,14 +450,14 @@ class Query
 
 		if (isset($args['limit'])) {
 			return " LIMIT {$start},".$args['limit'];
-		}	
+		}
 
 		return "";
 	}
 
 	static private function _prepareFields($fields)
 	{
-		
+
 		if (is_array($fields)) {
 			return implode(", ", $fields);
 		}
@@ -503,7 +503,7 @@ class Query
 
 	static function concatValues(array $fields, $char = " ")
 	{
-		return implode("", self::_concatBy($fields, $char));
+		return implode($char, $fields);
 	}
 
 	static function field($field, $alias = "")
@@ -532,7 +532,7 @@ class Query
         $perPage = intval($limit);
         $offset = intval($offset);
         $page = 1;
-        
+
         if ($offset > 0 && $offset >= $perPage) {
             $page = ($offset / $perPage) + 1;
         }
@@ -543,7 +543,7 @@ class Query
 /*
 //----------------------
 //		PRIVATE
-//----------------------	
+//----------------------
 */
 
 	private function _query($statment)
@@ -579,12 +579,12 @@ class Query
 			} else {
 				if ($c > 1) $text .= " {$join} ";
 				$text .= $value['table'] . " AS " . $key . " ";
-				
+
 				if (isset($value[$type])) {
 					$skey = array_keys($value[$type])[0];
 					$text .= "ON " . $skey . " = " . $value[$type][$skey];
-				} 			
-			}		
+				}
+			}
 			$c++;
 		}
 
@@ -621,7 +621,7 @@ class Query
 	{
 		$statment = "UPDATE {$table} SET {$values}{$condition}";
 		return $this->_query($statment);
-	}	
+	}
 
 	private function _delete($table, $condition)
 	{
@@ -634,12 +634,12 @@ class Query
 		$this->filter($arguments, ["{$operator}({$id}) AS total"]);
 		$row = $this->fetch();
 		return $row['total'];
-	}	
+	}
 
 /*
 //----------------------
 //		PROTECTED
-//----------------------	
+//----------------------
 */
 
 	protected function _where(array $condition = [])
@@ -655,7 +655,7 @@ class Query
 /*
 //----------------------
 //		PUBLIC
-//----------------------	
+//----------------------
 */
 
 	public function __construct(\mysqli $mysqli, $table = "")
@@ -699,7 +699,7 @@ class Query
 	{
 		return $this->_statment;
 	}
-	
+
 	public function records()
 	{
 		return $this->_statment->affected_rows;
@@ -708,15 +708,15 @@ class Query
 	public function insertId()
 	{
 		return $this->_db->insert_id;
-	}	
+	}
 
 	// After calling a store procedure it's good to call free()
 	public function free()
 	{
 		$this->_statment->free();
-	}	
+	}
 
-	/**	
+	/**
 	 *	@return integer
 	 */
 	public function getTotalRows()
@@ -724,7 +724,7 @@ class Query
 		return $this->_statment->num_rows;
 	}
 
-	/**	
+	/**
 	 *	@return bool
 	 */
 	public function rows()
@@ -737,12 +737,12 @@ class Query
 		return false;
 	}
 
-	/**	
+	/**
 	 *	@return resource
 	 */
 	public function fetch($type = "default")
 	{
-		
+
 		switch ($type) {
 			case self::DATA_OBJECT:
 				$ret = $this->_statment->fetch_object();
@@ -759,7 +759,7 @@ class Query
 		return $ret;
 	}
 
-	/**	
+	/**
 	 *	@return integer
 	 */
 	public function getTotalPages()
@@ -779,8 +779,8 @@ class Query
 
 	/**
 	 *	@param $table string
-	 *	@param $arguments array	
-	 *	@param $fields string		
+	 *	@param $arguments array
+	 *	@param $fields string
 	 *	@return resource
 	 */
 	public function filter(array $arguments = [], $fields = "*")
@@ -802,12 +802,12 @@ class Query
 
 		}
 
-		$cond = (!isset($arguments['condition']) 
-			&& !isset($arguments['page']) 
-			&& !isset($arguments['limit']) 
-			&& !isset($arguments['orderby'])  
-			&& !isset($arguments['groupby']) 
-			&& !isset($arguments['having'])) 
+		$cond = (!isset($arguments['condition'])
+			&& !isset($arguments['page'])
+			&& !isset($arguments['limit'])
+			&& !isset($arguments['orderby'])
+			&& !isset($arguments['groupby'])
+			&& !isset($arguments['having']))
 		? ['condition' => $arguments]
 		: $arguments;
 
@@ -826,12 +826,12 @@ class Query
 				// if page is greater than total of pages reset to 1
 				if ($page > $this->_totalPages) $page = 1;
 
-				$start = ceil($arguments['limit'] * $page) - $arguments['limit'];	
+				$start = ceil($arguments['limit'] * $page) - $arguments['limit'];
 			}
 
 		}
 
-		$args = $condition . self::_aditionalArguments($arguments) . self::_limit($start, $arguments);	
+		$args = $condition . self::_aditionalArguments($arguments) . self::_limit($start, $arguments);
 
 		$this->_select($this->_table, $args, $fields);
 
@@ -853,7 +853,7 @@ class Query
 	public function groupBy($field)
 	{
 		$this->_filter['groupby'] = $field;
-		return $this;		
+		return $this;
 	}
 
 	public function orderBy($field, $sort = "")
@@ -864,7 +864,7 @@ class Query
 		}
 
 		$this->_filter['orderby'] = $field;
-		return $this;		
+		return $this;
 	}
 
 	public function paginate($page = 1, $limit = 50)
@@ -899,7 +899,7 @@ class Query
 		$this->filter($args, $fields);
 		if ($this->rows()) {
 			return $this->fetch();
-		}	
+		}
 
 		return [];
 	}
@@ -922,7 +922,7 @@ class Query
 					$v = $this->_db->real_escape_string($v);
 				}
 				$fields[] = $k;
-				$values[] = self::_value($v);	
+				$values[] = self::_value($v);
 			}
 
 			return $this->_insert($this->_table, implode(",",$fields), implode(",",$values) );
@@ -934,18 +934,18 @@ class Query
 	/**
 	 *	@param $table string
 	 *	@param $data array
-	 *	@param $arguments array	
+	 *	@param $arguments array
 	 *	@return bool
 	 */
 	public function insertOnce(array $data = [], array $arguments = [])
 	{
 
-		if (is_array($arguments) 
-		&& count($arguments) > 0 
-		&& is_array($data) 
+		if (is_array($arguments)
+		&& count($arguments) > 0
+		&& is_array($data)
 		&& count($data) > 0
 		) {
-			
+
 			$this->filter(['condition' => $arguments]);
 			if (!$this->rows()) {
 				return $this->insert($data);
@@ -959,7 +959,7 @@ class Query
 	/**
 	 *	@param $table string
 	 *	@param $data array
-	 *	@param $arguments array	
+	 *	@param $arguments array
 	 *	@return bool
 	 */
 	public function update($args, array $data = [], array $condition = [])
@@ -969,21 +969,21 @@ class Query
 			$args = array_merge($args, $condition);
 		}
 
-		if (is_array($args) 
-		&& count($args) > 0 
-		&& is_array($data) 
+		if (is_array($args)
+		&& count($args) > 0
+		&& is_array($data)
 		&& count($data) > 0
 		) {
 			return $this->_update($this->_table, self::_values($data, $this->_db), self::_conditions(['condition' => $args], $this->_db) );
 		}
-		
+
 		return false;
 
 	}
 
 	/**
 	 *	@param $table string
-	 *	@param $arguments array	
+	 *	@param $arguments array
 	 *	@return bool
 	 */
 	public function delete($args, array $condition = [])
@@ -998,8 +998,8 @@ class Query
 
 	/**
 	 *	@param $table string
-	 *	@param $id string	
-	 *	@param $condition array	
+	 *	@param $id string
+	 *	@param $condition array
 	 *	@return integer
 	 */
 	public function avg($id, array $condition = [])
@@ -1010,8 +1010,8 @@ class Query
 
 	/**
 	 *	@param $table string
-	 *	@param $id string	
-	 *	@param $condition array	
+	 *	@param $id string
+	 *	@param $condition array
 	 *	@return integer
 	 */
 	public function max($id, array $condition = [])
@@ -1022,31 +1022,31 @@ class Query
 
 	/**
 	 *	@param $table string
-	 *	@param $id string	
-	 *	@param $condition array	
+	 *	@param $id string
+	 *	@param $condition array
 	 *	@return integer
 	 */
 	public function min($id, array $condition = [])
 	{
 		$where = $this->_where($condition);
 		return $this->_operator("MIN", $this->_table, $id, $where);
-	}	
+	}
 
 	/**
 	 *	@param $field string
-	 *	@param $condition array	
+	 *	@param $condition array
 	 *	@return integer
 	 */
 	public function lastId($field, array $condition = [])
 	{
 		$where = $this->_where($condition);
 		return $this->max($field, $where);
-	} 
+	}
 
 	/**
 	 *	@param $table string
-	 *	@param $id string	
-	 *	@param $condition array	
+	 *	@param $id string
+	 *	@param $condition array
 	 *	@return integer
 	 */
 	public function sum($id, array $condition = [])
@@ -1057,20 +1057,20 @@ class Query
 
 	/**
 	 *	@param $table string
-	 *	@param $id string	
-	 *	@param $condition array	
+	 *	@param $id string
+	 *	@param $condition array
 	 *	@return integer
 	 */
 	public function count($id = "*", array $condition = [])
 	{
 		$where = $this->_where($condition);
 		return $this->_operator("COUNT", $this->_table, $id, $where);
-	}			
+	}
 
 	/**
 	 *	@param $table string
-	 *	@param $id string	
-	 *	@param $condition array	
+	 *	@param $id string
+	 *	@param $condition array
 	 *	@return resource
 	 */
 	public function distinct($id, array $condition = [])
@@ -1086,9 +1086,9 @@ class Query
 	 */
 	public function results(array $condition = [])
 	{
-		$where = $this->_where($condition);	
+		$where = $this->_where($condition);
 		$this->filter($condition);
-		return $this->rows();	
+		return $this->rows();
 	}
 
 	/**
@@ -1102,7 +1102,7 @@ class Query
 		$values = [];
 
 		foreach ($params as $param) {
-			$values[] = self::_field($param);	
+			$values[] = self::_field($param);
 		}
 
 		$statment = "CALL {$name}(".implode(", ", $values).")";

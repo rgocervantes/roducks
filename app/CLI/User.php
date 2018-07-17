@@ -188,7 +188,7 @@ class User extends CLI
 				$this->info("[x]");
 			}
 
-			$this->info( $user['first_name'] . " " . $user['last_name'] );
+			$this->info( UsersTable::concatValues([$user['first_name'],$user['last_name']]) );
 			$this->info( $user['email'] );
 		} else {
 			$this->error($error);
