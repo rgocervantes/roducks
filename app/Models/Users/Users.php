@@ -35,12 +35,12 @@ class Users extends Model
 		'email'				 => Model::TYPE_VARCHAR,
 		'first_name'		 => Model::TYPE_VARCHAR,
 		'last_name'			 => Model::TYPE_VARCHAR,
-		'gender'			 => Model::TYPE_VARCHAR,		
-		'picture'			 => Model::TYPE_VARCHAR,		
+		'gender'			 => Model::TYPE_VARCHAR,
+		'picture'			 => Model::TYPE_VARCHAR,
 		'password'			 => Model::TYPE_VARCHAR,
 		'salt'		 		 => Model::TYPE_VARCHAR,
 		'active'			 => Model::TYPE_BOOL,
-		'trash'				 => Model::TYPE_BOOL,		
+		'trash'				 => Model::TYPE_BOOL,
 		'token'				 => Model::TYPE_VARCHAR,
 		'loggedin'			 => Model::TYPE_BOOL,
 		'location'			 => Model::TYPE_VARCHAR,
@@ -56,7 +56,7 @@ class Users extends Model
 	}
 
 	/*
-	*	if User has descendents 
+	*	if User has descendents
 	*/
 	public function isDescendent($id, $id_user_parent)
 	{
@@ -90,23 +90,23 @@ class Users extends Model
 		$data = [];
 		$data['updated_at'] = Date::getCurrentDateTime();
 		$data['password'] = $secret['password'];
-		$data['salt'] = $secret['salt'];	
-		
+		$data['salt'] = $secret['salt'];
+
 		return $this->update($id, $data);
 	}
 
 	/**
 	*	@param $data array fields
-	*/	
+	*/
 	public function create($data)
 	{
 
 		$secret = Login::generatePassword($data['password']);
 
 		$data['password'] = $secret['password'];
-		$data['salt'] = $secret['salt'];	
+		$data['salt'] = $secret['salt'];
 
-		return $this->insertOnce($data, ['email' => $data['email']]);	
+		return $this->insertOnce($data, ['email' => $data['email']]);
 
 	}
 
@@ -119,4 +119,9 @@ class Users extends Model
 		]);
 	}
 
-} 
+	public function exists($email)
+	{
+		return $this->results(['email' => $email]);
+	}
+
+}

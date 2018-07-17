@@ -45,8 +45,9 @@ class User extends CLI
 			$db = $this->db();
 			$id_role = 1; // super-admin
 			$ids_roles = [];
+			$user = UsersTable::open($db);
 
-			if ($this->getFlag('--super-admin')) {
+			if ($this->getFlag('--super-admin') || $user->exists($email)) {
 				array_push($ids_roles, $id_role);
 			} else {
 
@@ -64,7 +65,6 @@ class User extends CLI
 				$this->prompt("Type an option:");
 
 				$id_role = $this->getAnswer();
-
 			}
 
 			if (in_array($id_role, $ids_roles)) {
