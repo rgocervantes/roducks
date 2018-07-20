@@ -184,7 +184,7 @@ class User extends CLI
 				$this->info("[x]");
 			}
 
-			$this->info( concatValues([$user['first_name'],$user['last_name']]) );
+			$this->info( Query::concatValues([$user['first_name'],$user['last_name']]) );
 			$this->info( $user['email'] );
 		} else {
 			$this->error($error);
