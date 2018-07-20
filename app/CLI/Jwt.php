@@ -46,7 +46,7 @@ EOT;
 
 		File::create(DIR_APP_CONFIG, $file, $config);
 
-		$this->success(DIR_APP_CONFIG . "File: {$file} was created successfully!");
+		$this->success("File: " . DIR_APP_CONFIG . "{$file} was created successfully!");
 
 		parent::output();
 	}

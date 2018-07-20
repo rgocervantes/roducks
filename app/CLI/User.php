@@ -31,8 +31,7 @@ namespace App\CLI;
 use Roducks\Framework\CLI;
 use Roducks\Framework\Helper;
 use Roducks\Libs\Utils\Date;
-use App\Models\Users\Users as UsersTable;
-use App\Models\Users\Roles as RolesTable;
+use Query;
 
 class User extends CLI
 {
@@ -45,17 +44,17 @@ class User extends CLI
 			$db = $this->db();
 			$id_role = 1; // super-admin
 			$ids_roles = [];
-			$user = UsersTable::open($db);
+			$user = $this->model("Users\Users");
 
 			if ($this->getFlag('--super-admin') || $user->exists($email)) {
 				array_push($ids_roles, $id_role);
 			} else {
 
-				$roles = RolesTable::open($db)->where(['id_role:>' => 1])->all()->getData();
+				$roles = $this->model("Users\Roles")->getCatalog();
 
 				$this->dialogInfo('Roles');
 
-				foreach ($roles as $role) {
+				while ($role = $roles->fetch()) {
 					array_push($ids_roles, $role['id_role']);
 				 	$this->info("[x]( {$role['id_role']} ) {$role['name']}");
 				}
@@ -71,7 +70,6 @@ class User extends CLI
 
 				if (strlen($password) >= 7) {
 
-					$user = UsersTable::open($db);
 					$total = $user->getTableTotalRows();
 					$first_name = $this->getParam('firstname', "Super");
 					$last_name = $this->getParam('lastname', "Admin+Master");
@@ -99,8 +97,8 @@ class User extends CLI
 							'last_name' => $last_name,
 							'gender' => $gender,
 							'picture' => Helper::getUserIcon($gender),
-							'created_at' => UsersTable::now(),
-							'updated_at' => UsersTable::now()
+							'created_at' => Query::now(),
+							'updated_at' => Query::now()
 						];
 
 						$tx = $user->create($data);
@@ -136,8 +134,7 @@ class User extends CLI
 
 		if (!empty($email) && !empty($password)) {
 
-			$db = $this->db();
-			$user = UsersTable::open($db);
+			$user = $this->model("Users\Users");
 			$user->filter(['email' => $email]);
 
 			if ($user->foundRow()) {
@@ -166,11 +163,10 @@ class User extends CLI
 
 	public function who()
 	{
-
 		$id = $this->getParam('id', 1);
 		$email = $this->getParam('email', null);
-		$db = $this->db();
-		$usersTable = UsersTable::open($db);
+
+		$usersTable = $this->model("Users\Users");
 
 		if (!is_null($email)) {
 			$usersTable->filter(['email' => $email]);
@@ -188,7 +184,7 @@ class User extends CLI
 				$this->info("[x]");
 			}
 
-			$this->info( UsersTable::concatValues([$user['first_name'],$user['last_name']]) );
+			$this->info( concatValues([$user['first_name'],$user['last_name']]) );
 			$this->info( $user['email'] );
 		} else {
 			$this->error($error);
