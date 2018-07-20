@@ -40,7 +40,7 @@ abstract class Frame
 	*/
 	protected $pageObj;
 	protected $view;
-	protected $grantAccess;			
+	protected $grantAccess;
 	protected $_dispatchUrl = false;
 	protected $_pageType = 'FRAME'; // PAGE|BLOCK|FACTORY
 	protected $_inLocal = true;
@@ -59,8 +59,8 @@ abstract class Frame
 		$class = $this->pageObj->className;
 
 		// Avoid autoload for "Page Not Found"
-		if ($class == Helper::PAGE_NOT_FOUND 
-			|| $this->getParentClassName() == '\Roducks\Page\HelperPage' 
+		if ($class == Helper::PAGE_NOT_FOUND
+			|| $this->getParentClassName() == '\Roducks\Page\HelperPage'
 			|| $this->_pageType == 'DATA'
 		) {
 			return;
@@ -79,7 +79,7 @@ abstract class Frame
 			if (property_exists($class, $key)) {
 
 				if (!is_array($value)) {
-					$value = (Helper::isInteger($value)) ? intval($value) : $value;	
+					$value = (Helper::isInteger($value)) ? intval($value) : $value;
 				}
 
 				if (!empty($value) || $value == 0) {
@@ -88,7 +88,7 @@ abstract class Frame
 
 			}else{
 				Error::undefinedVariable("Undefined variable", $this->pageObj->className, __LINE__, __FILE__, $this->pageObj->fileName, $key, $this->getParentClassName());
-			}	
+			}
 		}
 	}
 
@@ -106,9 +106,9 @@ abstract class Frame
 		if (isset($url[0]) && isset($url[1]) && !empty($url[$total])) {
 			if (preg_match('/^_(page|api|block|json|xml|service|factory)$/', $url[0])) {
 				if (
-					(!$this->_dispatchUrl && $this->_pageType == 'FRAME' && preg_match('/^_(json|service|xml)$/', $url[0])) || 
-					(!$this->_dispatchUrl && $this->_pageType == 'PAGE' && $url[0] == '_page') || 
-					(!$this->_dispatchUrl && $this->_pageType == 'FACTORY' && $url[0] == '_factory') || 				
+					(!$this->_dispatchUrl && $this->_pageType == 'FRAME' && preg_match('/^_(json|service|xml)$/', $url[0])) ||
+					(!$this->_dispatchUrl && $this->_pageType == 'PAGE' && $url[0] == '_page') ||
+					(!$this->_dispatchUrl && $this->_pageType == 'FACTORY' && $url[0] == '_factory') ||
 					(!$this->_dispatchUrl && $this->_pageType == 'BLOCK' && $url[0] == '_block')
 				) {
 					Error::cantDispatchURL("Can't dispatch URL", $this->pageObj->className, __LINE__, __FILE__, $this->pageObj->fileName, $this->getParentClassName());
@@ -183,16 +183,22 @@ abstract class Frame
 	protected function _getParentClassName()
 	{
 		return get_parent_class($this);
-	}	
+	}
 
 	protected function db()
 	{
 		return Core::db();
-	}	
+	}
 
 	protected function openDb(array $conn = [])
 	{
 		return Core::openDb($conn);
+	}
+
+	protected function model($className)
+	{
+		$model = "App\\Models\\{$className}";
+		return $model::open($this->db());
 	}
 
 	/*
@@ -259,7 +265,7 @@ abstract class Frame
 			case 'global':
 				$config = $this->getGlobalConfig();
 				break;
-			
+
 			case 'site':
 				$config = $this->getSiteConfig($name);
 				break;
@@ -293,7 +299,7 @@ abstract class Frame
 			}
 		}
 
-		return Helper::getArrayValue($config, $var, $value);		
+		return Helper::getArrayValue($config, $var, $value);
 
 	}
 
@@ -326,7 +332,7 @@ abstract class Frame
 	{
 		$params = URL::getPairParams();
 		return (isset($params[$index])) ? $params[$index] : "";
-	}	
+	}
 
 	protected function accessAdmin()
 	{
@@ -340,7 +346,7 @@ abstract class Frame
 		if (!Login::isSubscriberLoggedIn()) {
 			Http::setHeaderInvalidRequest();
 		}
-	}	
+	}
 
 	protected function role($type, $class = "")
 	{
@@ -356,7 +362,7 @@ abstract class Frame
 		$session = Role::getSession($type);
 		$session = (empty($session)) ? $type : $session;
 		$this->grantAccess = new GrantAccess($class, $session);
-	}	
+	}
 
 	protected function params(array $values = [])
 	{
@@ -373,10 +379,10 @@ abstract class Frame
 
 		if ($this->_pageType == 'BLOCK') {
 			$alert = "warning";
-		} else {	
+		} else {
 
 			$params = URL::getSplittedURL();
-			
+
 			if (!isset($params[0])) {
 				return;
 			}
@@ -395,7 +401,7 @@ abstract class Frame
 		foreach ($values as $p => $value) {
 
 			if (isset($value[0]) && isset($value[1]) && isset($value[2])) {
-				
+
 				if ($value[1] == 'PARAM') {
 
 					if ($value[2] == Dispatch::PARAM_ARRAY) {
@@ -411,7 +417,7 @@ abstract class Frame
 					}
 
 					if ($value[2] == Dispatch::PARAM_NOT_EMPTY_ARRAY) {
-						
+
 						if (is_array($value[0]) && !empty($value[0])) {
 							continue;
 						}
@@ -448,7 +454,7 @@ abstract class Frame
 
 					case Dispatch::PARAM_INTEGER:
 						$regexp = Helper::VALID_INTEGER;
-					break;	
+					break;
 
 				}
 
@@ -473,13 +479,13 @@ abstract class Frame
 					} else {
 						$err = "Missing GET param: <b>{$key}</b>";
 					}
-					
+
 				}
-				
+
 				if (isset($value[3]) && !empty($value[0])) {
 					$regexp = $value[3];
 					$error = "Value <b>{$key}</b> does not match with this regular expression: {$regexp}";
-	
+
 					if (Helper::isConditional($value[3])) {
 						$error = "{$err}, It <b style=\"color: #e69d97;\">ONLY</b> allows the next values: " . Helper::getOptions($value[3]);
 						$regexp = '/^'.$value[3].'$/';
@@ -497,10 +503,10 @@ abstract class Frame
 
 		if ($count != $total && $this->_pageType != 'BLOCK') {
 			$error = "";
-			for ($x=$count; $x < $total; $x++) { 
+			for ($x=$count; $x < $total; $x++) {
 				$error .= "Unreconignized param <b>" . $params[$x]."</b><br>";
 			}
-			
+
 			Error::debug("Unexpected params",__LINE__, __FILE__, $this->pageObj->fileName, "Expected {$count} params, {$total} given instead:<br><br>{$error}");
 			$this->view->setError();
 		}
@@ -530,12 +536,12 @@ abstract class Frame
 	public function __construct(array $settings = [])
 	{
 
-		// Avoid warnings 
+		// Avoid warnings
 		if (count($settings) == 0) {
 			$settings = [
 				'className' 	=> "",
 				'filePath'		=> "",
-				'fileName' 		=> "", 
+				'fileName' 		=> "",
 				'urlParam'		=> "",
 				'method'		=> "",
 			];
@@ -553,7 +559,7 @@ abstract class Frame
 
 		/* ------------------------------------*/
 		/* 		DISPATCH URL
-		/* ------------------------------------*/		
+		/* ------------------------------------*/
 		$this->_urlDispatcher();
 
 		/* ------------------------------------*/
@@ -591,4 +597,4 @@ abstract class Frame
 		$this->_inLocal = $bool;
 	}
 
-} 
+}
