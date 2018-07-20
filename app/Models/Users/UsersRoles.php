@@ -24,13 +24,13 @@ use Roducks\Libs\ORM\Model;
 
 class UsersRoles extends Model
 {
-	
+
 	public function __construct(\mysqli $mysqli)
 	{
 
 		$this
 		->join('u', Users::CLASS)
-		->join('r', Roles::CLASS, ['u.id_role' => 'r.id_role']);	
+		->join('r', Roles::CLASS, ['u.id_role' => 'r.id_role']);
 
 		parent::__construct($mysqli);
 
@@ -51,8 +51,8 @@ class UsersRoles extends Model
 	}
 
 	/**
-	*	@param $type integer					
-	*	@return integer	
+	*	@param $type integer
+	*	@return integer
 	*/
 	public function inTrash($type, array $condition = [])
 	{
@@ -62,8 +62,8 @@ class UsersRoles extends Model
 
 	/**
 	*	@param $email string
-	*	@param $type integer				
-	*	@return resource	
+	*	@param $type integer
+	*	@return resource
 	*/
 	public function auth($email, $type)
 	{
@@ -75,11 +75,11 @@ class UsersRoles extends Model
 			self::alias("r.active","ractive"),
 			self::field("r.config"),
 		];
-		
+
 		return $this
 		->select($fields)
 		->filter([
-				'u.email' => $email, 
+				'u.email' => $email,
 				'r.type' => $type
 		]);
 
@@ -90,8 +90,8 @@ class UsersRoles extends Model
 	*	@param $page integer
 	*	@param $limit integer
 	*	@param $orderby string
-	*	@param $condition array					
-	*	@return resource	
+	*	@param $condition array
+	*	@return resource
 	*/
 	public function getAll($type, $page = 1, $limit = 20, $sort = "asc", array $condition = [])
 	{
@@ -116,10 +116,10 @@ class UsersRoles extends Model
 	}
 
 	/**
-	*	@param $id_user integer				
-	*	@return resource	
+	*	@param $id_user integer
+	*	@return resource
 	*/
-	public function getUser($id_user)
+	public function getUser($id)
 	{
 
 		$fields = [
@@ -130,12 +130,17 @@ class UsersRoles extends Model
 			self::field("r.config"),
 		];
 
-		return $this
+		$user = $this
 		->select($fields)
 		->filter([
-			'u.id_user' => $id_user
-		]);
+			'u.id_user' => $id
+		])
+		->fetch();
 
+		unset($user['password']);
+		unset($user['salt']);
+
+		return $user;
 	}
 
-} 
+}

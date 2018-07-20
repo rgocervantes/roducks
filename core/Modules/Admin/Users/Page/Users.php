@@ -42,7 +42,7 @@ class Users extends AdminPage
 	const DATE_RANGE_USERS = 'RDKS_DATE_RANGE_USERS';
 	const DATE_RANGE_LOGS = 'RDKS_DATE_RANGE_LOGS';
 	const ROWS_PER_PAGE = 15;
-	
+
 	protected $_type;
 	protected $_url;
 	protected $_title;
@@ -57,7 +57,7 @@ class Users extends AdminPage
 		parent::__construct($settings, $view);
 
 		$this->role(Role::TYPE_USERS, $this->_url);
-	}	
+	}
 
 	protected function _form($db)
 	{
@@ -85,11 +85,11 @@ class Users extends AdminPage
 		$search = [];
 		$isFiltered = false;
 		$start_date = Date::getFormatDMY("/");
-		$end_date = Date::getFormatDMY("/");	
+		$end_date = Date::getFormatDMY("/");
 		$filter = ['u.trash' => $this->trash];
 
 		if (!Login::isSuperAdmin()) {
-			
+
 			if ($this->grantAccess->hasAccess("descendants")) {
 				$filter['u.id_user_parent'] = Login::getAdminId();
 			}
@@ -113,7 +113,7 @@ class Users extends AdminPage
 			}
 		} else {
 			$access['tree'] = 1;
-			
+
 			if ($this->tree == 1) {
 				unset($access['tree']);
 				$filter['u.id_user_parent'] = Login::getAdminId();
@@ -137,7 +137,7 @@ class Users extends AdminPage
 
 			if ($post->sent("id_user")) {
 				$search['u.id_user'] = $post->text("id_user");
-			}	
+			}
 
 			if ($post->sent("start_date") && $post->sent("end_date")) {
 				$start_date = $post->param("start_date");
@@ -165,8 +165,8 @@ class Users extends AdminPage
 		}
 
 		$this->view->assets->scriptsInline(["pager","grid","popover","users","roles.modal"]);
-		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","grid.ready","datepicker-range.ready"]);		
-		
+		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","grid.ready","datepicker-range.ready"]);
+
 		$this->view->title($this->_title, true, "title-users");
 		$this->view->page($this->page);
 		$this->view->data("data", $users);
@@ -182,25 +182,25 @@ class Users extends AdminPage
 		$this->view->data("isTrash", $isTrash);
 		$this->view->data("isFiltered", $isFiltered);
 		$this->view->data("start_date", Date::convertToDMY($start_date, "/"));
-		$this->view->data("end_date", Date::convertToDMY($end_date, "/"));			
+		$this->view->data("end_date", Date::convertToDMY($end_date, "/"));
 		$this->view->data("urlDatepicker", "{$this->_url}/search");
-		$this->view->data("urlReset", "{$this->_url}/reset-filter{$paramTrash}");		
-		$this->view->tpl("btnCreateUrl", "{$this->_url}/add");		
+		$this->view->data("urlReset", "{$this->_url}/reset-filter{$paramTrash}");
+		$this->view->tpl("btnCreateUrl", "{$this->_url}/add");
 
 		$this->view->layout("sidebar-content",[
 			'CONTENT' => [
 				$this->view->setTemplate("go-back"),
-				$this->view->setTemplate("controllers"),				
+				$this->view->setTemplate("controllers"),
 				$this->view->setView("index")
 			],
 			'SIDEBAR' => [
 				$this->view->setTemplate("sidebar-left")
-			],				
+			],
 			'SIDEBAR-CHILD-LEFT' => [
 				$this->view->setTemplate("sidebar-dashboard"),
 				$this->view->setTemplate("sidebar-users"),
 				$this->view->setTemplate("sidebar-roles")
-			]						
+			]
 		]);
 
 		return $this->view->output();
@@ -232,10 +232,10 @@ class Users extends AdminPage
 		$id_user = $this->getUrlParam('userId', Login::getAdminId());
 
 		$db = $this->db();
-		$user = UsersTable::open($db);		
+		$user = UsersTable::open($db);
 		$row = $user->row($id_user);
 		$this->hasData( $user->rows() );
-		
+
 		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, Login::getAdminId()), "logs");
 
 		$filter = [];
@@ -271,34 +271,34 @@ class Users extends AdminPage
 		}
 
 		$this->view->assets->scriptsInline(["pager","logs"]);
-		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","datepicker-range.ready.inc"]);		
+		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","datepicker-range.ready.inc"]);
 
 		$this->view->title("Logs: " . $this->_title, true, "title-logs");
 		$this->view->page($this->page);
 		$this->view->data("data", $data['data']);
 		$this->view->data("isFiltered", $isFiltered);
 		$this->view->data("start_date", Date::convertToDMY($start_date, "/"));
-		$this->view->data("end_date", Date::convertToDMY($end_date, "/"));			
+		$this->view->data("end_date", Date::convertToDMY($end_date, "/"));
 		$this->view->data("urlDatepicker", "{$this->_url}/logs/datepicker/id/{$id_user}");
 		$this->view->data("urlReset", "{$this->_url}/reset-logs/id/{$id_user}");
 		$this->view->data("id_user", $id_user);
 		$this->view->tpl("totalPages", $data['pages']);
-		$this->view->tpl("pageRedirect", URL::setQueryString(['page' => ""]));		
+		$this->view->tpl("pageRedirect", URL::setQueryString(['page' => ""]));
 
 		$this->view->layout("sidebar-content",[
 			'CONTENT' => [
 				$this->view->setTemplate("go-back"),
-				$this->view->setTemplate("controllers"),				
+				$this->view->setTemplate("controllers"),
 				$this->view->setView("logs")
 			],
 			'SIDEBAR' => [
 				$this->view->setTemplate("sidebar-left")
-			],				
+			],
 			'SIDEBAR-CHILD-LEFT' => [
 				$this->view->setTemplate("sidebar-dashboard"),
 				$this->view->setTemplate("sidebar-users"),
 				$this->view->setTemplate("sidebar-roles")
-			]						
+			]
 		]);
 
 		return $this->view->output();
@@ -315,26 +315,26 @@ class Users extends AdminPage
 		$db = $this->db();
 		$user = UsersTable::open($db);
 		$userJoin = UsersRoles::open($db);
-		$row = $userJoin->getUser($id_user)->fetch();
+		$row = $userJoin->getUser($id_user);
 
 		$this->hasData( $userJoin->rows() );
-		
+
 		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, Login::getAdminId()), "edit");
 
 		$this->_form($db);
 
 		$row['expiration_date'] = ($row['expiration_date'] == Date::getEmptyDate()) ? "" : $row['expiration_date'];
 		$row['expiration_format'] = (!empty($row['expiration_date'])) ? Date::convertToDMY($row['expiration_date'], "/") : Date::getFormatDMY("/");
-		
+
 		$expiration_date = (!empty($row['expiration_date'])) ? $row['expiration_date'] : Date::getCurrentDate();
 		$date = explode("-", $expiration_date);
 		$year = intval($date[0]);
 		$month = intval($date[1]);
-		$day = intval($date[2]);				
+		$day = intval($date[2]);
 		$date_config = "\"year\": {$year}, \"month\": {$month}, \"day\": {$day}";
 
 		$this->view->title(TEXT_EDIT);
-		$this->view->data("date_config", $date_config);		
+		$this->view->data("date_config", $date_config);
 		$this->view->data("action", "update/{$id_user}");
 		$this->view->data("row", $row);
 		$this->view->data("edit", true);
@@ -356,7 +356,7 @@ class Users extends AdminPage
 		$this->grantAccess->create();
 		$db = $this->db();
 		$this->_form($db);
-		
+
 		$row = [
 			'first_name' => "",
 			'last_name' => "",
@@ -367,21 +367,21 @@ class Users extends AdminPage
 			'active' => 1,
 			'expires' => 0,
 			'expiration_format' => Date::getFormatDMY("/"),
-			'expiration_date' => ""	
+			'expiration_date' => ""
 		];
 
 		$expiration_date = Date::getCurrentDate();
 		$date = explode("-", $expiration_date);
 		$year = intval($date[0]);
 		$month = intval($date[1]);
-		$day = intval($date[2]);				
+		$day = intval($date[2]);
 		$date_config = "\"year\": {$year}, \"month\": {$month}, \"day\": {$day}";
 
-		$this->view->title(TEXT_NEW . " " . $this->_title);	
+		$this->view->title(TEXT_NEW . " " . $this->_title);
 		$this->view->data("action", "insert");
 		$this->view->data("date_config", $date_config);
-		$this->view->data("row", $row);	
-		$this->view->data("edit", false);	
+		$this->view->data("row", $row);
+		$this->view->data("edit", false);
 
 		$this->view->layout("form",[
 			'FORM' => $this->view->setView("form")
@@ -413,8 +413,8 @@ class Users extends AdminPage
 
 		$this->view->assets->scriptsInline(["form"]);
 		$this->view->title(TEXT_RESET_PASSWORD);
-		$this->view->data("id_user", $id_user);	
-		$this->view->data("user", $row);		
+		$this->view->data("id_user", $id_user);
+		$this->view->data("user", $row);
 
 		$this->view->layout("form",[
 			'FORM' => $this->view->setView("reset")
@@ -435,7 +435,7 @@ class Users extends AdminPage
 		$id_user = $this->getUrlParam('userId');
 
 		$this->view->assets->scriptsInline(["form"]);
-		$this->view->title(TEXT_CHANGE_PASSWORD);			
+		$this->view->title(TEXT_CHANGE_PASSWORD);
 
 		$this->view->layout("form",[
 			'FORM' => $this->view->setView("password")
@@ -451,7 +451,7 @@ class Users extends AdminPage
 		$id_user = $this->getUrlParam('userId', Login::getAdminId());
 
 		$db = $this->db();
-		$user = UsersTable::open($db);		
+		$user = UsersTable::open($db);
 		$row = $user->row($id_user);
 		$this->hasData( $user->rows() );
 
@@ -476,4 +476,4 @@ class Users extends AdminPage
 		return $this->view->output();
 	}
 
-} 
+}

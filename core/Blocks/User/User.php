@@ -71,7 +71,7 @@ class User extends Block
 
 		$db = $this->db();
 		$join = UsersRoles::open($db);
-		$user = $join->getUser($id)->fetch();
+		$user = $join->getUser($id);
 
 		if ($join->rows()) {
 
