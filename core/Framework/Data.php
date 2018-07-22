@@ -31,7 +31,7 @@ abstract class Data extends XML
 
 	protected $_pageType = 'DATA';
 
-	static function init($id)
+	static function init($id, $date = "")
 	{
 		$class = get_called_class();
 
@@ -42,6 +42,10 @@ abstract class Data extends XML
 		$settings['urlParam'] = '';
 		$settings['id'] = $id;
 		$settings['method'] = 'write';
+
+		if (!empty($date)) {
+			$settings['date'] = $date;
+		}
 
 		$obj = new $class($settings);
 
@@ -118,7 +122,7 @@ abstract class Data extends XML
 		return $content->$field->__toString();
 	}
 
-	public function getContent($date)
+	public function getContent()
 	{
 		return XMLDoc::parse($this->fileName)->content()->children();
 	}

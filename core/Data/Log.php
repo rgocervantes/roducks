@@ -38,7 +38,7 @@ class Log extends Data
 
 	public function __construct(array $settings)
 	{
-		$date = Date::getCurrentDate();
+		$date = (isset($settings['date'])) ? $settings['date'] : Date::getCurrentDate();
 		$this->path = self::getFilePath($date);
 		$this->name = self::getFileName($settings['id'], $date);
 

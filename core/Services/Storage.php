@@ -47,9 +47,9 @@ class Storage extends Service
 		return UserData::init($id);
 	}
 
-	static function log($id)
+	static function log($id, $date = "")
 	{
-		return LogData::init($id);
+		return LogData::init($id, $date);
 	}
 
 	static function issetJSON($dir, $name)
@@ -119,11 +119,11 @@ class Storage extends Service
 				if ($w >= $c) : // if crop is greather than resize
 					$image->load($dir . $full_image);
 					$image->resizeToWidth($c);
-					$image->save($dir . $preset, 95);	
+					$image->save($dir . $preset, 95);
 				endif;
-			endforeach;	
+			endforeach;
 		endif;
-	
+
 	}
 
 	// delete old image when uploading a new one.
@@ -139,18 +139,18 @@ class Storage extends Service
 			if (count($cuts) > 0) : foreach($cuts as $c) :
 				$file->delete($path, Path::getCropName($copy, $c));
 			endforeach; endif;
-		endif;			
+		endif;
 	}
 
 	private function _deleteCrops($path, array $cuts = [])
 	{
 		$this->__deleteCrops($path, $cuts);
 		parent::output();
-	}	
-	
+	}
+
 	private function _crop($fx, $dir, $dir2, $cuts)
 	{
-		
+
 		$file = $this->post->param("cropper");
 		$this->__makeCrops($fx, Path::get($dir), $file, $cuts);
 		$cuts = array_merge(array($fx), $cuts);
@@ -168,24 +168,24 @@ class Storage extends Service
 
 		parent::output();
 	}
-	
+
 	private function _upload($prefix, $dir, $dir2, array $size = [], array $types = [])
 	{
 
 		$file = File::init();
 		if (count($types) > 0) $file->type($types);
 		if (count($size) > 0) {
-			
+
 			if (strtoupper($size[1]) == 'KB') {
-				$file->kb($size[0]);	
+				$file->kb($size[0]);
 			}
-			
+
 			if (strtoupper($size[1]) == 'MB') {
-				$file->mb($size[0]);	
-			}		
-		
+				$file->mb($size[0]);
+			}
+
 		}
-		
+
 		// If upload directory does not exist, let's create it!
 		Directory::make(Path::get(), $dir);
 
@@ -200,27 +200,27 @@ class Storage extends Service
 					'dir' => $dir2,
 					'file' => $resp['file'],
 					'path' => $dir2 . $resp['file']
-				]	
+				]
 			];
-			
+
 		if ($this->_ajax) {
 			$this->data($data);
-			
-			// We don't send Http headers because of this is a post request inside of an iframe and it's parsed properly as text plain. 
+
+			// We don't send Http headers because of this is a post request inside of an iframe and it's parsed properly as text plain.
 			echo JSON::encode($this->getJsonData());
 		} else {
 			$this->_response = $data;
 		}
-	
+
 	}
-	
+
 	private function _deleteFile($dir)
 	{
 		$file = File::init();
 		$file = ($this->_ajax) ? $this->post->param("file") : $this->_input;
-		$response = $file->delete($dir, $file);		
+		$response = $file->delete($dir, $file);
 
-		if ($this->_ajax) { 
+		if ($this->_ajax) {
 			parent::output();
 		} else {
 			$this->_response = $response;
@@ -282,7 +282,7 @@ class Storage extends Service
 			default:
 				$this->setServiceError(0, TEXT_SERVICE_UNAVAILABLE);
 				if ($this->_ajax) parent::output();
-				break;												
+				break;
 		}
 
 	}
@@ -315,7 +315,7 @@ class Storage extends Service
 	{
 		$config = $this->config($name, "{$index}:size", null);
 		$json = (!is_null($config)) ? $config : [100,"KB"];
-		
+
 		return JSON::encode($json);
 
 	}

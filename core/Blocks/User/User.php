@@ -102,7 +102,7 @@ class User extends Block
 			'date' => [$date, 'PARAM', Dispatch::PARAM_STRING, Helper::VALID_DATE_YYYY_MM_DD]
 		]);
 
-		$data = Storage::log($id)->getContent($date);
+		$data = Storage::log($id, $date)->getContent();
 
 		$this->view->data("data", $data);
 		$this->view->load("logs");
