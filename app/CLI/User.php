@@ -29,8 +29,8 @@
 namespace App\CLI;
 
 use Roducks\Framework\CLI;
-use Roducks\Framework\Helper;
-use Roducks\Libs\Utils\Date;
+use Helper;
+use Date;
 use Query;
 
 class User extends CLI
