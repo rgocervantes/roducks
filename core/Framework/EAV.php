@@ -36,7 +36,7 @@ class EAV extends Frame
 		$obj = new $class($settings);
 
 		return $obj;
-	}	
+	}
 
 	public function __construct($settings = "")
 	{
@@ -51,8 +51,8 @@ class EAV extends Frame
 		$data = EAVTable::open($db)->getRow($id);
 		$data->$set($value);
 		$data->setUpdatedAt(EAVTable::now());
-		$data->where(['entity' => $this->_entity]);	
-		
+		$data->where(['entity' => $this->_entity]);
+
 		return $data->update();
 	}
 
@@ -95,8 +95,8 @@ class EAV extends Frame
 			$data->paginate($page, $limit);
 
 		} else {
-			
-			$data->get();
+
+			$data->filter();
 
 		}
 
@@ -117,7 +117,7 @@ class EAV extends Frame
 
 	public function add($key, $value, $rewrite = true)
 	{
-	
+
 		$db = $this->db();
 		$data = EAVTable::open($db)->prepare();
 		$data->setIdRel($this->_id);
@@ -125,14 +125,14 @@ class EAV extends Frame
 		$data->setField($key);
 		$data->setText($value);
 		$data->setCreatedAt(EAVTable::now());
-		$data->setUpdatedAt(EAVTable::now());		
+		$data->setUpdatedAt(EAVTable::now());
 
 		if ($rewrite) {
 			return $data->insert();
 		} else {
 			return $data->insertOnce([
-				'id_rel' => $this->_id, 
-				'entity' => $this->_entity, 
+				'id_rel' => $this->_id,
+				'entity' => $this->_entity,
 				'field' => $key
 			]);
 		}
@@ -144,9 +144,9 @@ class EAV extends Frame
 		$db = $this->db();
 		$data = EAVTable::open($db);
 		$data->filter([
-			'id_rel' => $this->_id, 
-			'entity' => $this->_entity, 
-			'field' => $key,		
+			'id_rel' => $this->_id,
+			'entity' => $this->_entity,
+			'field' => $key,
 			'text' => $value
 		]);
 
@@ -155,7 +155,7 @@ class EAV extends Frame
 		}
 
 		return false;
-	}	
+	}
 
 	public function update($id, $value)
 	{
@@ -165,7 +165,7 @@ class EAV extends Frame
 	public function active($id, $value)
 	{
 		return $this->_update($id, $value, "active");
-	}	
+	}
 
 	public function remove($id)
 	{

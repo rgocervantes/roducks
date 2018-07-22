@@ -27,13 +27,13 @@ namespace Roducks\Libs\ORM;
 //--------------------------------------------------------
 
 		$db = $this->db();
-		
+
 	|-------------------------
 	|	INSERT
 	|-------------------------
-		
+
 		$user = UsersTable::open($db)->prepare();
-		
+
 		$user->setFirstName("Rod");
 		$user->setEmail("rod@roducks.com");
 		$user->insert();
@@ -41,9 +41,9 @@ namespace Roducks\Libs\ORM;
 	|-------------------------
 	|	UPDATE
 	|-------------------------
-	
+
 		$user = UsersTable::open($db)->getRow(1); // id
-		
+
 		if ($user->rows()) {
 			$user->setFirstName("Rod");
 			$user->setEmail("rod@roducks.com");
@@ -55,7 +55,7 @@ namespace Roducks\Libs\ORM;
 	|-------------------------
 
 		$user = UsersTable::open($db)->getRow(1); // id
-		
+
 		if ($user->rows()) {
 			$name = $user->getFirstName();
 			$email = $user->getEmail();
@@ -66,10 +66,10 @@ namespace Roducks\Libs\ORM;
 	|-------------------------
 	|	FETCH ARRAY
 	|-------------------------
-	
+
 		$user = UsersTable::open($db);
 		$row = $user->row(1); // id
-		
+
 		if ($user->rows()) {
 			$name = $row['first_name'];
 			$email = $row['email'];
@@ -80,7 +80,7 @@ namespace Roducks\Libs\ORM;
 	|-------------------------
 	|	JOIN
 	|-------------------------
-	
+
 		$UsersRoles = UsersRoles::open($db);
 
 		$condition = ['u.trash' => 0, 'r.type' => $type];
@@ -96,7 +96,7 @@ namespace Roducks\Libs\ORM;
 		$UsersRoles
 		->groupby("u.id_user")
 		->having(["u.id_user:>" => 1])
-		->filter($condition, $fields); // For pagination use: ->pagination()		
+		->filter($condition, $fields); // For pagination use: ->pagination()
 
 		if ($UsersRoles->rows()) : while ($row = $UsersRoles->fetch()) :
 			print_r($row);
@@ -116,7 +116,7 @@ namespace Roducks\Libs\ORM;
 	|-------------------------------------
 
 		$db = $this->db();
-		$tx = UsersTable::open($db)->updateByCondition(['active' => 0], ['id_role' => 7]);		
+		$tx = UsersTable::open($db)->updateByCondition(['active' => 0], ['id_role' => 7]);
 
 */
 
@@ -129,11 +129,11 @@ class Model extends Query
 	const TYPE_VARCHAR = 4;
 	const TYPE_TEXT = 5;
 	const TYPE_BLOB = 6;
-	const TYPE_DATETIME = 7;	
+	const TYPE_DATETIME = 7;
 	const TYPE_DATE = 8;
 	const TYPE_TIME = 9;
-	
-	var 
+
+	var
 		$id,
 		$table = null,
 		$fields = [];
@@ -146,9 +146,9 @@ class Model extends Query
 /*
 //----------------------
 //		STATIC
-//----------------------	
+//----------------------
 */
-	
+
 	static private function _getTable($class)
 	{
 		return preg_replace('/^.+\\\([a-zA-Z_]+)$/', '$1', $class);
@@ -160,7 +160,7 @@ class Model extends Query
 		$class = get_called_class();
 		$table = self::_getTable($class);
 		$inst = new $class($mysqli, $table);
-		
+
 		return $inst;
 	}
 
@@ -198,7 +198,7 @@ class Model extends Query
 
 		$ret = '';
 
-		for ($i=0; $i < strlen($str); $i++) { 
+		for ($i=0; $i < strlen($str); $i++) {
 			$text = substr($str, $i, 1);
 			$us = ($i>0) ? $sep : '';
 			$ret .= (isset($abc[$text])) ? $us . strtolower($text) : $text;
@@ -206,18 +206,18 @@ class Model extends Query
 
 		return $ret;
 
-	}	
+	}
 
 /*
 //----------------------
 //		PRIVATE
-//----------------------	
+//----------------------
 */
- 
+
 	private function _invokeJoin($key, $table, $type, array $join = [])
 	{
 		$table = self::_getTable($table);
-		$this->_joins[$key] = ['table' => $table];	
+		$this->_joins[$key] = ['table' => $table];
 		if (count($join) > 0) {
 			$this->_joins[$key][$type] = $join;
 		}
@@ -229,7 +229,7 @@ class Model extends Query
 	{
 
 		$this->_ORM = true;
-	 
+
 	    foreach($data as $key => $value) {
 	        if (isset($this->fields[$key]) || count($this->_fields) > 0) {
 	           	$this->_data[$key] = $value;
@@ -275,14 +275,14 @@ class Model extends Query
 						} else {
 							$regexp = '/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/';
 						}
-						
+
 						break;
 					case self::TYPE_DATE:
 						$regexp = '/^\d{4}-\d{2}-\d{2}$/';
 						break;
 					case self::TYPE_TIME:
 						$regexp = '/^\d{2}:\d{2}:\d{2}$/';
-						break;					
+						break;
 				}
 
 				if (!preg_match($regexp, $value)) {
@@ -303,16 +303,16 @@ class Model extends Query
 /*
 //----------------------
 //		PUBLIC
-//----------------------	
+//----------------------
 */
 	public function __call($method, $args)
 	{
-	     
+
 	    if (preg_match('/^(get|set)(\w+)$/', $method, $fx)) {
-	 
+
 	        $first = strtolower(substr($fx[2],0,1));
 	        $property = $first . substr($fx[2],1);
-	 
+
 	        $name = self::getConventionName($property, "_");
 
 	        if (isset($this->fields[$name]) || count($this->_fields) > 0) {
@@ -320,14 +320,14 @@ class Model extends Query
 	            	$value = (isset($this->_data[$name])) ? $this->_data[$name] : "";
 	                return $value;
 	            }
-	 
+
 	            if ("set" == $fx[1]) {
 	                $this->_data[$name] = $args[0];
-	            }                
+	            }
 	        }
-	 
+
 	    }
-	 
+
 	    return "";
 	}
 
@@ -348,7 +348,7 @@ class Model extends Query
 		}
 
 		return parent::row($args, $condition, $fields);
-	}	
+	}
 
 	public function getRow($id)
 	{
@@ -376,14 +376,14 @@ class Model extends Query
 		return parent::rows();
 	}
 
-	public function all($fields = "*")
+	public function fetchAll($fields = "*")
 	{
 		return parent::filter([], $fields);
 	}
 
 	public function update($id = "", array $data = [], array $condition = [])
 	{
-		
+
 		if ($this->_ORM) {
 			$id = $this->_id;
 			$data = $this->_data;
@@ -396,18 +396,18 @@ class Model extends Query
 		$where = $this->_where($condition);
 
 		$args = [$this->id => $id];
-		
+
 		return parent::update($args, $data, $where);
-	}	
+	}
 
 	public function updateByCondition(array $data, array $condition)
 	{
 		return parent::update($condition, $data);
-	}	
+	}
 
 	public function delete($id = "", array $condition = [])
 	{
-		
+
 		if ($this->_ORM) {
 
 			if (!parent::rows()) {
@@ -433,14 +433,14 @@ class Model extends Query
 	public function deleteByCondition(array $condition)
 	{
 		return parent::delete($condition);
-	}		
+	}
 
 	public function insert(array $data = [])
 	{
 
 		if ($this->_ORM) {
 			$data = $this->_data;
-		}	
+		}
 
 		if ($this->_unexcepted($data)) {
 			return false;
@@ -464,7 +464,7 @@ class Model extends Query
 		$where = $this->_where($condition);
 
 		return parent::insertOnce($data, $where);
-	}	
+	}
 
 	public function lastId($data = "", array $condition = [])
 	{
@@ -487,11 +487,6 @@ class Model extends Query
 	public function getTableTotalRows()
 	{
 		return $this->count($this->id);
-	}
-
-	public function get()
-	{
-		return $this->filter();
 	}
 
 	public function getData()
@@ -527,11 +522,11 @@ class Model extends Query
 	protected function leftJoin($key, $table, array $join = [])
 	{
 		return $this->_invokeJoin($key, $table, 'left_join', $join);
-	}	
+	}
 
 	protected function rightJoin($key, $table, array $join = [])
 	{
 		return $this->_invokeJoin($key, $table, 'right_join', $join);
-	}	
+	}
 
 }

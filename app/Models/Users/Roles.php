@@ -99,7 +99,7 @@ class Roles extends Model
 
 	public function getCatalog()
 	{
-		return $this->where(['id_role:>' => 1])->all();
+		return $this->filter(['id_role:>' => 1]);
 	}
 
 }

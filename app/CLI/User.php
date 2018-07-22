@@ -41,7 +41,6 @@ class User extends CLI
 
 		if (!empty($email) && !empty($password)) {
 
-			$db = $this->db();
 			$id_role = 1; // super-admin
 			$ids_roles = [];
 			$user = $this->model("Users\Users");
