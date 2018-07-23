@@ -120,7 +120,7 @@ namespace Roducks\Libs\ORM;
 
 */
 
-class Model extends Query
+abstract class Model extends ORM
 {
 
 	const TYPE_INTEGER = 1;
@@ -139,7 +139,6 @@ class Model extends Query
 		$fields = [];
 
 	private $_ORM = false;
-	private $_joins = [];
 	private $_data = [];
 	private $_id;
 
@@ -148,21 +147,6 @@ class Model extends Query
 //		STATIC
 //----------------------
 */
-
-	static private function _getTable($class)
-	{
-		return preg_replace('/^.+\\\([a-zA-Z_]+)$/', '$1', $class);
-	}
-
-	static function open(\mysqli $mysqli)
-	{
-
-		$class = get_called_class();
-		$table = self::_getTable($class);
-		$inst = new $class($mysqli, $table);
-
-		return $inst;
-	}
 
 	static function getConventionName($str, $sep = "-")
 	{
@@ -213,17 +197,6 @@ class Model extends Query
 //		PRIVATE
 //----------------------
 */
-
-	private function _invokeJoin($key, $table, $type, array $join = [])
-	{
-		$table = self::_getTable($table);
-		$this->_joins[$key] = ['table' => $table];
-		if (count($join) > 0) {
-			$this->_joins[$key][$type] = $join;
-		}
-
-		return $this;
-	}
 
 	private function _autoload($data)
 	{
@@ -333,9 +306,7 @@ class Model extends Query
 
 	public function __construct(\mysqli $mysqli, $tbl = "")
 	{
-
-		$tbl = (!is_null($this->table)) ? $this->table : $tbl;
-		$table = (count($this->_joins) > 0) ? $this->_joins : $tbl;
+		$table = (!is_null($this->table)) ? $this->table : $tbl;
 		parent::__construct($mysqli, $table);
 	}
 
@@ -369,16 +340,6 @@ class Model extends Query
 		$this->_ORM = true;
 
 		return $this;
-	}
-
-	public function foundRow()
-	{
-		return parent::rows();
-	}
-
-	public function fetchAll($fields = "*")
-	{
-		return parent::filter([], $fields);
 	}
 
 	public function update($id = "", array $data = [], array $condition = [])
@@ -487,46 +448,6 @@ class Model extends Query
 	public function getTableTotalRows()
 	{
 		return $this->count($this->id);
-	}
-
-	public function getData()
-	{
-
-		$ret = [];
-
-		if ($this->rows()) : while ($row = $this->fetch()) :
-		        $ret[] = $row;
-		endwhile; endif;
-
-		return $ret;
-	}
-
-	public function filteredBy($field)
-	{
-
-		$results = parent::distinct($field);
-		$ret = [];
-		if ($results->rows()) : while ($row = $results->fetch()) :
-		        $ret[] = $row[$field];
-		endwhile; endif;
-
-		return $ret;
-
-	}
-
-	protected function join($key, $table, array $join = [])
-	{
-		return $this->_invokeJoin($key, $table, 'join', $join);
-	}
-
-	protected function leftJoin($key, $table, array $join = [])
-	{
-		return $this->_invokeJoin($key, $table, 'left_join', $join);
-	}
-
-	protected function rightJoin($key, $table, array $join = [])
-	{
-		return $this->_invokeJoin($key, $table, 'right_join', $join);
 	}
 
 }

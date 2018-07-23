@@ -20,9 +20,9 @@
 
 namespace App\Models\Users;
 
-use Roducks\Libs\ORM\Model;
+use Roducks\Libs\ORM\Join;
 
-class UsersRoles extends Model
+class UsersRoles extends Join
 {
 
 	public function __construct(\mysqli $mysqli)
