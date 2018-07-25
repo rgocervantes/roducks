@@ -38,9 +38,9 @@ class Users extends JSON
 	protected $_dispatchUrl = true;
 	protected $_authentication = true;
 	protected $_type;
-	protected $_url;	
+	protected $_url;
 	protected $_user;
-	
+
 	public function __construct(array $settings)
 	{
 		parent::__construct($settings);
@@ -73,14 +73,13 @@ class Users extends JSON
 		$this->grantAccess->create();
 		$gender = $this->post->select('gender');
 		$admin_id_user_tree = Login::getAdminData('id_user_tree');
-		
+
 		$fields = [
 			'id_user_parent' => Login::getAdminId(),
 			'email' 		 => $this->post->text('email'),
 			'password' 		 => $this->post->password('password'),
 			'gender' 		 => $gender,
 			'picture' 		 => Helper::getUserIcon($gender),
-			'created_at' 	 => Date::getCurrentDateTime(),
 		];
 
 		$fields = array_merge($this->_fields, $fields);
@@ -99,7 +98,7 @@ class Users extends JSON
 		} else {
 			$this->setError(0,"User already exists.");
 		}
-		
+
 		parent::output();
 	}
 
@@ -111,12 +110,12 @@ class Users extends JSON
 
 		$row = $this->_user->row($id_user);
 		$this->grantAccess->editDescendent($id_user, $row, $this->_user->isDescendent($id_user, Login::getAdminId()), "edit");
-		
+
 		if (Login::getAdminId() == $id_user) {
 			unset($this->_fields['id_role']);
 			unset($this->_fields['active']);
 			unset($this->_fields['expires']);
-			unset($this->_fields['expiration_date']);			
+			unset($this->_fields['expiration_date']);
 
 			// Update admin session ONLY if $id equals adminId session
 			Login::updateAdmin($id_user, $this->_fields);
@@ -139,7 +138,7 @@ class Users extends JSON
 			$this->setError(401,TEXT_AUTH_FAIL);
 		} else {
 			$this->_user->changePassword($id_user, $this->post->password('new_password'));
-		}	
+		}
 
 		parent::output();
 	}
@@ -150,8 +149,8 @@ class Users extends JSON
 		$row = $this->_user->row($id_user);
 		$this->grantAccess->editDescendent($id_user, $row, $this->_user->isDescendent($id_user, Login::getAdminId()), "reset");
 		$this->_user->changePassword($id_user, $this->post->password('new_password'));
-			
-		parent::output();	
+
+		parent::output();
 	}
 
 	public function picture($tag, $id_user)
@@ -164,14 +163,14 @@ class Users extends JSON
 		// Update admin session ONLY if $id equals adminId session
 		$this->_user->update($id_user, $data);
 		Login::updateAdmin($id_user, $data);
-		
+
 		parent::output();
 	}
 
 	public function trash()
 	{
 
-		$id = $this->post->param('id'); 
+		$id = $this->post->param('id');
 		$value = $this->post->param('value');
 
 		$row = $this->_user->row($id);
@@ -179,7 +178,7 @@ class Users extends JSON
 
 		$form = Form::validation([
 			Form::filter(Form::FILTER_INTEGER, $id),
-			Form::filter(Form::FILTER_INTEGER, $value)			
+			Form::filter(Form::FILTER_INTEGER, $value)
 		]);
 
 		if ($form->success()) {
@@ -208,7 +207,7 @@ class Users extends JSON
 	public function visibility()
 	{
 
-		$id = $this->post->param('id'); 
+		$id = $this->post->param('id');
 		$active = $this->post->param('value');
 
 		$row = $this->_user->row($id);
@@ -222,14 +221,14 @@ class Users extends JSON
 		if ($form->success()) {
 
 			// Make sure user ID is not the same as current adminId because you cannot disable yourself!
-			if ($id != Login::getAdminId() || Login::isSuperAdmin()) {	
+			if ($id != Login::getAdminId() || Login::isSuperAdmin()) {
 				$user = $this->_user->row($id);
 				if ($this->_user->rows()) {
 					$this->_user->update($id, ['loggedin' => 0,'active' => $active]);
 				} else {
 					$this->setError(2, TEXT_USER_NOT_EXIST);
 				}
-				
+
 			} else {
 				$this->setError(1, TEXT_INVALID_REQUEST);
 			}
@@ -245,7 +244,7 @@ class Users extends JSON
 	public function expiration()
 	{
 
-		$id = $this->post->param('id'); 
+		$id = $this->post->param('id');
 		$date = $this->post->param('date');
 
 		$row = $this->_user->row($id);
@@ -253,7 +252,7 @@ class Users extends JSON
 
 		$form = Form::validation([
 			Form::filter(Form::FILTER_INTEGER, $id),
-			Form::filter(Form::FILTER_DATE_YYYY_MM_DD, $date)			
+			Form::filter(Form::FILTER_DATE_YYYY_MM_DD, $date)
 		]);
 
 		if ($form->success()) {
@@ -275,4 +274,4 @@ class Users extends JSON
 		parent::output();
 	}
 
-} 
+}

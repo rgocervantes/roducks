@@ -36,7 +36,7 @@ class Home extends JSON
 {
 
 	const REDIRECT_TO_URL = "/login";
-	
+
 	public function __construct(array $settings)
 	{
 		parent::__construct($settings);
@@ -50,7 +50,7 @@ class Home extends JSON
 	public function createAccount()
 	{
 
-		Form::setKey($this->post->hidden('form-key'));		
+		Form::setKey($this->post->hidden('form-key'));
 
 		if (Login::isSubscriberLoggedIn()) {
 			Http::sendHeaderForbidden();
@@ -60,16 +60,13 @@ class Home extends JSON
 		$admin_id_user_tree = Login::getAdminData('id_user_tree');
 
 		$fields = [
-			'id_role' 		 => 7, // reserved for subscribers		
+			'id_role' 		 => 7, // reserved for subscribers
 			'email' 		 => $this->post->text('email'),
 			'first_name' 	 => $this->post->text('first_name'),
 			'last_name' 	 => $this->post->text('last_name'),
 			'gender' 		 => $gender,
 			'picture' 		 => Helper::getUserIcon($gender),
 			'password' 		 => $this->post->password('password'),
-			'created_at' 	 => Date::getCurrentDateTime(),
-			'updated_at'	 => Date::getCurrentDateTime(),
-			'active' 		 => 1
 		];
 
 		if (SUBSCRIBERS_EXPIRE) {
@@ -87,7 +84,7 @@ class Home extends JSON
 
 			$fields['expires'] = 1;
 			$fields['expiration_date'] = $expires;
-			
+
 		}
 
 		$form = Form::validation([
@@ -101,7 +98,7 @@ class Home extends JSON
 			$db = $this->db();
 			$user = UsersTable::open($db);
 			$tx = $user->create($fields);
-			
+
 			if ($tx === false) {
 				$this->setError(2, TEXT_ERROR_CREATING_USER);
 			} else {
@@ -126,7 +123,7 @@ class Home extends JSON
 
 		if (Login::isSubscriberLoggedIn()) {
 			Http::sendHeaderForbidden();
-		}		
+		}
 
 		$email = $this->post->text('email');
 		$token = $this->post->hidden('token');
@@ -158,7 +155,7 @@ class Home extends JSON
 
 		} else {
 			$this->setError(1, TEXT_FORM_ERRORS);
-		}			
+		}
 
 		parent::output();
 	}
@@ -169,8 +166,8 @@ class Home extends JSON
 		$email = $this->post->text('email');
 
 		$db = $this->db();
-		$user = UsersTable::open($db);	
-		$user->filter(['email' => $email],['id_user']);	
+		$user = UsersTable::open($db);
+		$user->filter(['email' => $email],['id_user']);
 
 		if ($user->rows()) {
 			$info = $user->fetch();
@@ -195,7 +192,7 @@ class Home extends JSON
 		  		if (!$sender) {
 		  			$this->setError(1, TEXT_ERROR_SENDING_EMAIL);
 		  		}
-			}		  		
+			}
 
 		} else {
 			$this->setError(3, TEXT_INVALID_EMAIL);
@@ -225,4 +222,4 @@ class Home extends JSON
 
 	}
 
-} 
+}

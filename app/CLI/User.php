@@ -89,15 +89,12 @@ class User extends CLI
 						$data = [
 							'id_user_tree' => '0',
 							'id_role' => $id_role,
-							'active' => 1,
 							'email' => $email,
 							'password' => $password,
 							'first_name' => $first_name,
 							'last_name' => $last_name,
 							'gender' => $gender,
 							'picture' => Helper::getUserIcon($gender),
-							'created_at' => Query::now(),
-							'updated_at' => Query::now()
 						];
 
 						$tx = $user->create($data);

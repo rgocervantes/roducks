@@ -21,7 +21,6 @@
 namespace App\Models\Users;
 
 use Roducks\Framework\Login;
-use Roducks\Libs\Utils\Date;
 use Roducks\Libs\ORM\Model;
 
 class Users extends Model
@@ -84,11 +83,10 @@ class Users extends Model
 	*/
 	public function changePassword($id, $password)
 	{
-
 		$secret = Login::generatePassword($password);
 
 		$data = [];
-		$data['updated_at'] = Date::getCurrentDateTime();
+		$data['updated_at'] = self::now();
 		$data['password'] = $secret['password'];
 		$data['salt'] = $secret['salt'];
 
@@ -100,9 +98,10 @@ class Users extends Model
 	*/
 	public function create($data)
 	{
-
 		$secret = Login::generatePassword($data['password']);
 
+		$data['created_at'] = self::now();
+		$data['updated_at'] = self::now();
 		$data['password'] = $secret['password'];
 		$data['salt'] = $secret['salt'];
 
@@ -112,7 +111,6 @@ class Users extends Model
 
 	public function getFullName()
 	{
-
 		return self::concatValues([
 			$this->getFirstName(),
 			$this->getLastName()
