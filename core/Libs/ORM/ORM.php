@@ -36,7 +36,6 @@ abstract class ORM extends Query
 
 	static function open(\mysqli $mysqli)
 	{
-
 		$class = get_called_class();
 		$table = self::_getTable($class);
 		$inst = new $class($mysqli, $table);

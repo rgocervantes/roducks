@@ -20,17 +20,16 @@
 
 namespace App\Models\Data;
 
-use Roducks\Libs\ORM\Model;
+use Roducks\Libs\ORM\Join;
 
-class UrlsUrlsLang extends Model
+class UrlsUrlsLang extends Join
 {
 
 	public function __construct(\mysqli $mysqli)
 	{
-
 		$this
 		->join('u', Urls::CLASS)
-		->join('ul', UrlsLang::CLASS, ['u.id_url' => 'ul.id_url']);	
+		->join('ul', UrlsLang::CLASS, ['u.id_url' => 'ul.id_url']);
 
 		parent::__construct($mysqli);
 

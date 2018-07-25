@@ -26,9 +26,9 @@ class Urls extends Model
 {
 
 	var $id = "id_url";
-	var $fields = [		
-		'created_date'	 => Model::TYPE_DATETIME,
-		'active'		 => Model::TYPE_BOOL				
+	var $fields = [
+		'created_at'	 => Model::TYPE_DATETIME,
+		'active'		 => Model::TYPE_BOOL
 	];
 
 }

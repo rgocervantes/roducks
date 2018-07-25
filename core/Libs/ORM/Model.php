@@ -88,8 +88,8 @@ namespace Roducks\Libs\ORM;
 		$fields = [
 			Model::field("u.*"),
 			Model::field("r.id_role"),
-			Model::alias("r.name","role"),
-			Model::alias("r.type","rtype"),
+			Model::field("r.name","role"),
+			Model::field("r.type","rtype"),
 			Model::field("r.config"),
 		];
 
@@ -304,7 +304,7 @@ abstract class Model extends ORM
 	    return "";
 	}
 
-	public function __construct(\mysqli $mysqli, $tbl = "")
+	public function __construct(\mysqli $mysqli, $tbl)
 	{
 		$table = (!is_null($this->table)) ? $this->table : $tbl;
 		parent::__construct($mysqli, $table);

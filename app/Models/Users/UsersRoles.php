@@ -71,8 +71,8 @@ class UsersRoles extends Join
 		$fields = [
 			self::field("u.*"),
 			self::field("r.id_role"),
-			self::alias("r.name","role"),
-			self::alias("r.active","ractive"),
+			self::field("r.name","role"),
+			self::field("r.active","ractive"),
 			self::field("r.config"),
 		];
 
@@ -102,8 +102,8 @@ class UsersRoles extends Join
 		$fields = [
 			self::field("u.*"),
 			self::field("r.id_role"),
-			self::alias("r.name","role"),
-			self::alias("r.type","rtype"),
+			self::field("r.name","role"),
+			self::field("r.type","rtype"),
 			self::field("r.config"),
 		];
 
@@ -125,8 +125,8 @@ class UsersRoles extends Join
 		$fields = [
 			self::field("u.*"),
 			self::field("r.id_role"),
-			self::alias("r.name","role"),
-			self::alias("r.type","rtype"),
+			self::field("r.name","role"),
+			self::field("r.type","rtype"),
 			self::field("r.config"),
 		];
 

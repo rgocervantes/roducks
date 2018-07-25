@@ -482,13 +482,14 @@ class Query
 		return $ret;
 	}
 
-	static function alias($field, $alias)
+	static private function _alias($field, $alias)
 	{
 		return "{$field} AS {$alias}";
 	}
 
-	static function convert($field) {
-		return self::alias("CONVERT({$field} using utf8)", $field);
+	static function convert($field)
+	{
+		return self::_alias("CONVERT({$field} using utf8)", $field);
 	}
 
 	static function concat($field, array $values, $char = " ")
@@ -510,7 +511,7 @@ class Query
 	{
 
 		if (!empty($alias)) {
-			return self::alias($field, $alias);
+			return self::_alias($field, $alias);
 		}
 
 		return $field;
@@ -658,7 +659,7 @@ class Query
 //----------------------
 */
 
-	public function __construct(\mysqli $mysqli, $table = "")
+	public function __construct(\mysqli $mysqli, $table)
 	{
 		$this->_db = $mysqli;
 		$this->_table = $table;
