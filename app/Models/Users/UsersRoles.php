@@ -29,7 +29,7 @@ class UsersRoles extends Join
 	{
 
 		$this
-		->join('u', Users::CLASS)
+		->table('u', Users::CLASS)
 		->join('r', Roles::CLASS, ['u.id_role' => 'r.id_role']);
 
 		parent::__construct($mysqli);

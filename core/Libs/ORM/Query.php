@@ -659,7 +659,7 @@ class Query
 //----------------------
 */
 
-	public function __construct(\mysqli $mysqli, $table)
+	public function __construct(\mysqli $mysqli, $table = "")
 	{
 		$this->_db = $mysqli;
 		$this->_table = $table;

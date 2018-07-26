@@ -51,7 +51,12 @@ abstract class Join extends ORM
 		return $this->_link($key, $table, 'right_join', $join);
 	}
 
-  public function __construct(\mysqli $mysqli, $tbl)
+	protected function table($key, $table)
+	{
+		return $this->join($key, $table);
+	}
+
+  public function __construct(\mysqli $mysqli)
 	{
 		parent::__construct($mysqli, $this->_joins);
 	}
