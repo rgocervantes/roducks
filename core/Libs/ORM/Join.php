@@ -25,7 +25,7 @@ abstract class Join extends ORM
 
 	private $_joins = [];
 
-  private function _link($key, $table, $type, array $join = [])
+  private function _link($table, $key, $type, array $join = [])
 	{
 		$table = self::_getTable($table);
 		$this->_joins[$key] = ['table' => $table];
@@ -36,24 +36,24 @@ abstract class Join extends ORM
 		return $this;
 	}
 
-  protected function join($key, $table, array $join = [])
+  protected function join($table, $key, array $join = [])
 	{
-		return $this->_link($key, $table, 'join', $join);
+		return $this->_link($table, $key, 'join', $join);
 	}
 
-	protected function leftJoin($key, $table, array $join = [])
+	protected function leftJoin($table, $key, array $join = [])
 	{
-		return $this->_link($key, $table, 'left_join', $join);
+		return $this->_link($table, $key, 'left_join', $join);
 	}
 
-	protected function rightJoin($key, $table, array $join = [])
+	protected function rightJoin($table, $key, array $join = [])
 	{
-		return $this->_link($key, $table, 'right_join', $join);
+		return $this->_link($table, $key, 'right_join', $join);
 	}
 
-	protected function table($key, $table)
+	protected function table($table, $key)
 	{
-		return $this->join($key, $table);
+		return $this->join($table, $key);
 	}
 
   public function __construct(\mysqli $mysqli)
