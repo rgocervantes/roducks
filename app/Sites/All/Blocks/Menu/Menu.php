@@ -18,7 +18,7 @@
  *
  */
 
-namespace App\Sites\_Global\Blocks\Menu;
+namespace App\Sites\All\Blocks\Menu;
 
 use Roducks\Blocks\Menu\Menu as MenuBlock;
 

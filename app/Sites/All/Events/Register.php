@@ -18,7 +18,7 @@
  *
  */
 
-namespace App\Sites\_Global\Events;
+namespace App\Sites\All\Events;
 
 use Roducks\Framework\Event;
 use Roducks\Libs\Request\Http;
@@ -43,6 +43,6 @@ class Register extends Event
 	public function onCreateAccount($id_user, $type)
 	{
 		// @TODO
-	}	
+	}
 
 }

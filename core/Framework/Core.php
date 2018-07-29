@@ -16,7 +16,7 @@
  *    You should have received a copy of the GNU General Public License
  *    along with Roducks.  If not, see <http://www.gnu.org/licenses/>.
  *
- */	
+ */
 
 namespace Roducks\Framework;
 
@@ -28,7 +28,7 @@ class Core
 
 	const DEFAULT_SUBDOMAIN = 'www';
 	const ADMIN_SUBDOMAIN = 'admin';
-	const GLOBAL_DIRECTORY = '_Global';
+	const ALL_SITES_DIRECTORY = 'All';
 
 	static function getVersion()
 	{
@@ -101,7 +101,7 @@ class Core
 
 	static function getGlobalPath()
 	{
-		return DIR_APP_SITES . self::GLOBAL_DIRECTORY . DIRECTORY_SEPARATOR;
+		return DIR_APP_SITES . self::ALL_SITES_DIRECTORY . DIRECTORY_SEPARATOR;
 	}
 
 	static function getAppConfigPath($file)
@@ -111,7 +111,7 @@ class Core
 
 	static function getSiteConfigPath($file, $site = "")
 	{
-		return self::getSitePath($site) . DIR_CONFIG . $file . FILE_INC; 		
+		return self::getSitePath($site) . DIR_CONFIG . $file . FILE_INC;
 	}
 
 	static function getSiteModuleConfigPath($site, $module)
@@ -121,7 +121,7 @@ class Core
 
 	static function getGlobalConfigPath($file)
 	{
-		return self::getGlobalPath() . DIR_CONFIG . $file . FILE_INC; 		
+		return self::getGlobalPath() . DIR_CONFIG . $file . FILE_INC;
 	}
 
 	static function getPageConfigPath($page)
@@ -259,7 +259,7 @@ class Core
 
 			if (\App::fileExists($path.$view)) {
 				$found = true;
-			}	
+			}
 		} else {
 
 			$file = Helper::removeUnderscore($file);
@@ -285,12 +285,12 @@ class Core
 
 		return \App::getRealFilePath($path.$view);
 
-	}	
+	}
 
 	static function getTemplatesPath($tpl)
 	{
 		return self::getPath(DIR_TEMPLATES, $tpl);
-	}	
+	}
 
 	static function getLayoutsPath($tpl)
 	{
@@ -300,11 +300,11 @@ class Core
 	static function getMenuPath($tpl)
 	{
 		return self::getPath(DIR_MENUS, $tpl . FILE_INC, false);
-	}			
+	}
 
 	static function getEmailsPath($tpl)
 	{
-		return self::getPath(DIR_EMAILS, $tpl . FILE_TPL, false);		
+		return self::getPath(DIR_EMAILS, $tpl . FILE_TPL, false);
 	}
 
 	static function getEventsPath()
@@ -339,7 +339,7 @@ class Core
 			return include_once $realPath2;
 		}
 
-		return [];	
+		return [];
 	}
 
 	static function getFileVar($path, $name, $required = true)
@@ -364,7 +364,7 @@ class Core
 				include $realPath;
 			} else {
 				$config = include $realPath;
-				
+
 				if (!is_array($config)) {
 					return [];
 				}
@@ -389,7 +389,7 @@ class Core
 
 		$file = ($fileExists) ? $local : $name;
 
-		return self::getFileVar(self::getAppConfigPath($file), $var, $required);		
+		return self::getFileVar(self::getAppConfigPath($file), $var, $required);
 	}
 
 	/**
@@ -397,7 +397,7 @@ class Core
 	*/
 	static function getEnvConfigFile()
 	{
-		return self::getLocalConfigFile("environments","environments");		
+		return self::getLocalConfigFile("environments","environments");
 	}
 
 	/**
@@ -413,7 +413,7 @@ class Core
 	*/
 	static function getAliasesConfigFile()
 	{
-		return self::getLocalConfigFile("aliases");		
+		return self::getLocalConfigFile("aliases");
 	}
 
 	/**
@@ -466,7 +466,7 @@ class Core
 	static function getPluginsFile()
 	{
 		return self::getLocalConfigFile("plugins", "plugins", false);
-	}	
+	}
 
 	static function getEventsFile()
 	{
@@ -492,7 +492,7 @@ class Core
 	static function getDbAppConfigFile($name, $required = true)
 	{
 		return self::getFileVar(self::getAppConfigPath($name), "database", $required);
-	}	
+	}
 
 	/**
 	*	Load file
@@ -531,7 +531,7 @@ class Core
 		if (in_array($method, ['_lang','_email'])) {
 			$underscore = false;
 		}
-		
+
 		if (method_exists($class, $method) && !$underscore) {
 			call_user_func_array(array($obj,$method), $params);
 		} else {
@@ -539,12 +539,12 @@ class Core
 			Error::methodNotFound(TEXT_METHOD_NOT_FOUND, __LINE__, __FILE__, $path['fileName'], $class, $method, $obj->getParentClassName(), $error);
 		}
 	}
-	
+
 	static function loadPage($path, $page, $action, array $urlParam = [], array $params = [], $return = false, array $url = [])
 	{
 
 		$autoload = true;
-		$isBlock = false; 
+		$isBlock = false;
 		$method = Helper::getCamelName($action, false);
 		$page = (Helper::isService($page)) ? $page : Helper::getCamelName($page);
 		$className = ($path . $page);
@@ -556,11 +556,11 @@ class Core
 
 		$pageObj = [
 				'className' 	=> $class,
-				'method' 		=> $method, 
+				'method' 		=> $method,
 				'path' 			=> $path,
 				'params' 		=> $params,
 				'filePath'		=> $filePath,
-				'fileName' 		=> $filePath . $fileName . FILE_EXT, 
+				'fileName' 		=> $filePath . $fileName . FILE_EXT,
 				'urlParam'		=> $urlParam
 		];
 
@@ -578,16 +578,16 @@ class Core
 				$assetsMap = [];
 				$assetsMap['js'] = "JS";
 				$assetsMap['css'] = "CSS";
-				$assetsMap['plugins'] = "PLUGINS";	
-				$assetsMap['scriptsInline'] = "SCRIPTS_INLINE";		
-				$assetsMap['scriptsOnReady'] = "SCRIPTS_ONREADY";		
+				$assetsMap['plugins'] = "PLUGINS";
+				$assetsMap['scriptsInline'] = "SCRIPTS_INLINE";
+				$assetsMap['scriptsOnReady'] = "SCRIPTS_ONREADY";
 
 				$view->page(1);
 				$view->meta('http-equiv','Content-Type','text/html; charset=utf-8');
 
 				// Load assets into the document html
 				$assetsFile = self::getAssetsFile();
-				
+
 				foreach ($assetsMap as $key => $value) {
 					if (isset($assetsFile[$value])) {
 						if ($key == "plugins") {
@@ -666,7 +666,7 @@ class Core
 
 		$page = Helper::getClassName($page);
 		$page = DIR_SERVICES . Helper::getCamelName($page);
-				
+
 		$servicePath = self::getServicesPath($page);
 		$pagePath = $servicePath['path'];
 
@@ -680,13 +680,13 @@ class Core
 		}
 
 		$events = self::getEventsFile();
-		
+
 		if (isset($events[$e])) {
 			$dispatch = $events[$e];
 
 			if (Helper::regexp('#::#', $dispatch)) {
 				list($page,$method) = explode("::", $dispatch);
-			
+
 				$path = self::getEventsPath();
 				$class = self::getClassNamespace($path) . $page;
 				$file = $path . $page . FILE_EXT;
@@ -699,7 +699,7 @@ class Core
 					self::loadPage($path, $page, $method, array(), $settings);
 				}
 			}
-		}		
+		}
 	}
 
 	static function CLI($arguments)
@@ -808,7 +808,7 @@ class Core
 			} else {
 				CLI::println("Unknown command: {$cls}:{$method}", CLI::FAILURE);
 			}
-			
+
 		} else {
 			CLI::println("Please set a command", CLI::FAILURE);
 		}

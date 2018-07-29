@@ -18,23 +18,40 @@
  *
  */
 
-namespace App\Sites\_Global\Blocks\Uploader;
+namespace Roducks\Modules\All\Login\Page;
 
-use Roducks\Page\Block;
+use Roducks\Framework\Role;
+use Roducks\Framework\Event;
+use Roducks\Framework\Login as LoginAuth;
+use Roducks\Page\Page;
+use App\Models\Users\Users as UsersTable;
 
-class Uploader extends Block
+class Login extends Page
 {
 
-	public function output($module = "", $config = "", $picture = "")
+	protected $_session;
+
+	public function login()
 	{
 
-		$this->view->data("module", $module);
-		$this->view->data("config", $config);
-		$this->view->data("picture", $picture);
-		$this->view->load("form");
+		$login = new LoginAuth($this->_session, static::LOGIN_URL);
+		$login->redirect(); // obligatory
 
-		return $this->view->output();
-	
+	}
+
+	public function logout()
+	{
+
+		$id_user = LoginAuth::getId($this->_session);
+		LoginAuth::logout($this->_session);
+
+		Event::dispatch('onEventLogout', [$id_user]);
+
+		$db = $this->db();
+		UsersTable::open($db)->logInOut($id_user, 0);
+		$db->close();
+
+		$this->redirect(static::LOGIN_URL);
 	}
 
 }
