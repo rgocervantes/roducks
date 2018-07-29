@@ -142,7 +142,10 @@ $appConfig = Core::getAppConfigFile();
 # Timezone
 date_default_timezone_set($appConfig['default_timezone']);
 
-App::define('DOMAIN_NAME', (isset($appConfig['domain_name'])) ? $appConfig['domain_name'] : '');
+if (isset($appConfig['domain_name']) && !empty($appConfig['domain_name']) && $appConfig['domain_name'] != '*') {
+  App::define('DOMAIN_NAME', $appConfig['domain_name']);
+}
+
 App::define('PAGE_TITLE', $appConfig['page_title']);
 App::define('EMAIL_FROM', $appConfig['email_from']);
 App::define('EMAIL_TO', $appConfig['email_to']);

@@ -36,32 +36,32 @@ class Http
 
 	static function sendHeaderMovedPermanently($die = true)
 	{
-		self::httpHeader(301, "Moved Permanently", $die);	
+		self::httpHeader(301, "Moved Permanently", $die);
 	}
 
 	static function sendHeaderAuthenticationFailed($die = true)
 	{
-		self::httpHeader(401, "Authentication failed", $die);	
+		self::httpHeader(401, "Authentication failed", $die);
 	}
 
 	static function sendHeaderForbidden($die = true)
 	{
-		self::httpHeader(403, "Forbidden Request", $die);	
-	}	
+		self::httpHeader(403, "Forbidden Request", $die);
+	}
 
 	static function sendHeaderNotFound($die = true)
 	{
-		self::httpHeader(404, "Not Found", $die);	
-	}	
+		self::httpHeader(404, "Not Found", $die);
+	}
 
 	static function sendMethodNotAllowed($die = true)
 	{
-		self::httpHeader(405, "Method Not Allowed", $die);	
-	}		
+		self::httpHeader(405, "Method Not Allowed", $die);
+	}
 
 	static function setHeaderInvalidRequest($die = true)
 	{
-		self::httpHeader(501, "Invalid Request", $die);	
+		self::httpHeader(501, "Invalid Request", $die);
 	}
 
 	static function setHeaderJSON()
@@ -72,12 +72,12 @@ class Http
 	static function setHeaderXML()
 	{
 		self::setHeader("Content-type:", "text/xml; charset=utf-8");
-	}	
+	}
 
 	static function getHeaderJSON()
 	{
 		return "application/json; charset=utf-8";
-	}	
+	}
 
 	static function redirect($urlPath)
 	{
@@ -140,7 +140,7 @@ class Http
 	static function getIPClient()
 	{
 		return $_SERVER['REMOTE_ADDR'];
-	}	
+	}
 
 	static function getOrigin()
 	{
@@ -155,7 +155,7 @@ class Http
 		}
 
 		return substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-	}	
+	}
 
 	static function getRequestMethod()
 	{
@@ -184,19 +184,19 @@ class Http
 			foreach ($args as $arg) {
 				if (preg_match('#=#', $arg)) {
 					list($key,$value) = explode("=", $arg);
-					$params[$key] = $value;	
+					$params[$key] = $value;
 				} else {
-					$params[$arg] = "";	
+					$params[$arg] = "";
 				}
 
 			}
 		} else {
 			if (preg_match('#=#', $p)) {
 				list($key,$value) = explode("=", $p);
-				$params[$key] = $value;					
+				$params[$key] = $value;
 			} else {
 				$params[$p] = "";
-			}				
+			}
 		}
 
 		return $params;
@@ -210,7 +210,7 @@ class Http
 		if (is_array($params)) {
 			$values = $params[0];
 		} else {
-			$values = $params; 
+			$values = $params;
 		}
 
 		return self::serializeParams($values);

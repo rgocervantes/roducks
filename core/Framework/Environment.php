@@ -31,8 +31,20 @@ class Environment
 
 	static function getConfig()
 	{
-		$subdomain = Http::getSubdomain(DOMAIN_NAME, Core::DEFAULT_SUBDOMAIN);
 		$config = Core::getEnvConfigFile();
+		$serverName = str_replace(['https://', 'http://'], '', Http::getServerName());
+
+		if (isset($config[$serverName])) {
+			$subdomain = $serverName;
+			\App::define('DOMAIN_NAME', $subdomain);
+		} else {
+
+			if (!defined('DOMAIN_NAME')) {
+				Http::sendHeaderNotFound();
+			}
+
+			$subdomain = Http::getSubdomain(DOMAIN_NAME, Core::DEFAULT_SUBDOMAIN);
+		}
 
 		$site = (isset($config[$subdomain]['site'])) ? $config[$subdomain]['site'] : "Front";
 		$database = (isset($config[$subdomain]['database'])) ? $config[$subdomain]['database'] : "database";

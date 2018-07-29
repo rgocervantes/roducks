@@ -17,7 +17,7 @@
  *    along with Roducks.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
- *	---------------------------------------------------- 
+ *	----------------------------------------------------
  *	Environments
  *	----------------------------------------------------
  *	** IMPORTANT **
@@ -34,12 +34,12 @@
 use Roducks\Framework\Environment;
 
 return [
-	'local' => [
+	'local.roducks.test' => [
 		'site' => 'Front',
 		'mode' => Environment::DEV
 	],
-	'admin.local' => [
+	'admin.local.roducks.test' => [
 		'site' => 'Admin',
 		'mode' => Environment::DEV
-	]
+	],
 ];
