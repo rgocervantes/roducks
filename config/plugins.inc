@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  *
  * This file is part of Roducks.
@@ -22,7 +22,7 @@ return [
 	'bootstrap' => [
 		'bootstrap-3.3.5/css/bootstrap.min.css?v=1.0',
 		'bootstrap-3.3.5/js/bootstrap.min.js?v=1.0'
-	], 
+	],
 	'jquery-jcrop' => [
 		'jquery-jcrop-0.9.12/css/jquery.jcrop.css?v=1.0',
 		'jquery-jcrop-0.9.12/js/jquery.jcrop.min.js?v=1.0'
@@ -32,4 +32,8 @@ return [
 		'roducks-1.0/css/themes/default/roducks-modal.css?v=1.0',
 		'roducks-1.0/js/roducks.min.js?v=1.0'
 	],
+	'jquery-ui' => [
+		'jquery-ui.min.css',
+		'jquery-ui.min.js'
+	]
 ];
