@@ -206,9 +206,9 @@ abstract class Frame
 	//	Get configs
 	//---------------------------------
 	*/
-	protected function getGlobalConfig()
+	protected function getGlobalConfig($name = "config")
 	{
-		return Core::getGlobalConfigFile();
+		return Core::getGlobalConfigFile($name);
 	}
 
 	protected function getSiteConfig($name = "")
@@ -263,7 +263,7 @@ abstract class Frame
 
 		switch ($tag) {
 			case 'global':
-				$config = $this->getGlobalConfig();
+				$config = (!is_null($type)) ? $this->getGlobalConfig($type) : $this->getGlobalConfig();
 				break;
 
 			case 'site':

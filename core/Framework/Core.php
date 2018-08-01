@@ -119,7 +119,7 @@ class Core
 		return self::getSitePath($site) . DIR_MODULES . $module . DIRECTORY_SEPARATOR . DIR_CONFIG . "config" . FILE_INC;
 	}
 
-	static function getGlobalConfigPath($file)
+	static function getGlobalConfigPath($file = "config")
 	{
 		return self::getGlobalPath() . DIR_CONFIG . $file . FILE_INC;
 	}
@@ -458,9 +458,9 @@ class Core
 	/**
 	*	Global configs
 	*/
-	static function getGlobalConfigFile()
+	static function getGlobalConfigFile($name = "config")
 	{
-		return self::getFileVar(self::getGlobalConfigPath("config"), "config", false);
+		return self::getFileVar(self::getGlobalConfigPath($name), $name, false);
 	}
 
 	static function getPluginsFile()
