@@ -31,7 +31,7 @@ div.rdks-loader-spinning div {
 	-webkit-border-radius: 25px;
 }
 
-div.rdks-loader-spinning div.bar1 {-webkit-transform:rotate(0deg) translate(0, -100%); -webkit-animation-delay: 0s;}    
+div.rdks-loader-spinning div.bar1 {-webkit-transform:rotate(0deg) translate(0, -100%); -webkit-animation-delay: 0s;}
 div.rdks-loader-spinning div.bar2 {-webkit-transform:rotate(30deg) translate(0, -100%); -webkit-animation-delay: -0.9167s;}
 div.rdks-loader-spinning div.bar3 {-webkit-transform:rotate(60deg) translate(0, -100%); -webkit-animation-delay: -0.833s;}
 div.rdks-loader-spinning div.bar4 {-webkit-transform:rotate(90deg) translate(0, -100%); -webkit-animation-delay: -0.75s;}
@@ -204,7 +204,7 @@ table.rdks-calendar-table td.weekend.event a{ color: #333; }
 */
 .rdks-select-autocomplete{ display: none; }
 .rdks-autocomplete-loading {
-	background: white url("img/loader_16x16.gif") right center no-repeat;
+/*	background: white url("img/loader_16x16.gif") right center no-repeat;*/
 	position: absolute;
 	top: -26px;
 	right: 8px;
@@ -226,7 +226,7 @@ table.rdks-calendar-table td.weekend.event a{ color: #333; }
 }
 
 .rdks-autocomplete-dropdown{ cursor: pointer; }
-.rdks-autocomplete-dropdown span{ 
+.rdks-autocomplete-dropdown span{
     height: 22px;
     overflow: hidden;
     display: block;
@@ -249,4 +249,3 @@ ul.rdks-autocomplete-list li.selected a b,
 ul.rdks-autocomplete-list li a b:hover{ background: #1f5a8e; }
 ul.rdks-autocomplete-list li.not-found{ display: none; }
 ul.rdks-autocomplete-list li.not-found a{ background: #eee; color: #c00; }
-
