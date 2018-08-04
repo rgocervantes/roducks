@@ -33,7 +33,7 @@ class Setup_2017_09_02_Rod extends Setup implements SetupInterface
 	{
 
 		DB::dropTable($db, 'Sample');
-		
+
 		DB::createTable($db, 'Sample', function ($table) {
 
 			$table->id('id_sample');
@@ -61,7 +61,7 @@ class Setup_2017_09_02_Rod extends Setup implements SetupInterface
 				$attrs->nullable = false;
 				$attrs->comment = "Price Tag";
 			});
-			
+
 			$table->tinyint('active', function ($attrs) {
 				$attrs->value = 1;
 				$attrs->default = 1;
@@ -75,11 +75,11 @@ class Setup_2017_09_02_Rod extends Setup implements SetupInterface
 
 	}
 
-	public function store(\mysqli $db)
+	public function data(\mysqli $db)
 	{
 
 		DB::truncateTable($db, 'Sample');
-		
+
 		Setup::fillTableFromCSV($db, 'Sample', "Fill_SampleTable");
 
 	}

@@ -21,17 +21,17 @@
 
     $dir = Path::getData("csv/");
     Directory::make($dir);
-     
+
     $csv = new CSV("sample");
     $csv->path($dir);
-     
+
     // HEADERS
     $csv->headers([
         "ID",
         "TITLE",
         "DESC"
     ]);
-     
+
     // ROWS
     for($i = 1; $i<=10; $i++) :
         $csv->row([
@@ -40,14 +40,14 @@
             "This is an example"
         ]);
     endfor;
-     
+
     // SAVE & DOWNLOAD
     $csv->save();
     $csv->download();
 
 */
 
-namespace Roducks\Libs\Output;   
+namespace Roducks\Libs\Output;
 
 class CSV
 {
@@ -63,11 +63,11 @@ class CSV
     private function _escape($fields)
     {
         $fill = [];
- 
+
         foreach ($fields as $f) :
             $fill[] = '"' . utf8_encode($f) . '"';
         endforeach;
- 
+
         return implode($this->_delimiter, $fill);
     }
 
@@ -79,7 +79,7 @@ class CSV
         return $str;
     }
 
-    static function function init($name)
+    static function init($name)
     {
         return new CSV($name);
     }
@@ -95,7 +95,7 @@ class CSV
     public function delimiter($s)
     {
         $this->_delimiter = $s;
-    }    
+    }
 
     public function path($path)
     {
@@ -105,11 +105,11 @@ class CSV
     public function row(array $rows = [])
     {
         $raw = '';
- 
+
         if (is_array($rows) && count($rows) > 0) :
             $raw .= $this->_escape($rows);
         endif;
- 
+
         $this->_rows .= $raw . "\n";
     }
 
@@ -125,7 +125,7 @@ class CSV
                     fwrite($csv_file,$this->_rows);
                     fclose($csv_file);
     }
- 
+
     /*------------ EXPORT CSV ------------*/
     public function download()
     {
@@ -139,7 +139,7 @@ class CSV
 
         $csv = new CSV("sample_table");
         $csv->path(Path::get("app/Schema/Data/"));
-        
+
         if ($csv->read()) {
 
             while (($row = $csv->fetch()) !== FALSE) {
@@ -174,12 +174,12 @@ class CSV
 
     /**
     *   Get row
-    *   @return object 
+    *   @return object
     */
     public function fetch()
     {
         return fgetcsv($this->_handle, $this->_length, $this->_delimiter);
-    } 
+    }
 
     /**
     *   Close the file
