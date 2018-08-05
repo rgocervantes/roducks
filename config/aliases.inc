@@ -32,6 +32,7 @@ return [
 	'Path' 				=> 'Roducks\\Framework\\Path',
 	'Login' 			=> 'Roducks\\Framework\\Login',
 	'Storage' 			=> 'Roducks\\Services\\Storage',
+	'JSON' 			=> 'Roducks\\Page\\JSON',
 	/*
 	|----------------------------------------------------------------------
 	|	Libs
