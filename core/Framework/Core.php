@@ -58,7 +58,7 @@ class Core
 
 			if (RDKS_ERRORS) {
 				if (!Environment::inCLI()) {
-					if ($e->getMessage() == 'user') {
+					if ($e->getMessage() == 'credentials') {
 						Error::missingDbConfig("Missing DB Credentails", __LINE__, __FILE__, $config, $e->getMessage(), '');
 					} else {
 						Error::fatal("MySQLi", __LINE__, __FILE__, $config, $e->getMessage());
@@ -580,7 +580,7 @@ class Core
 
 		list($method, $page, $className, $class, $filePath, $pageObj) = self::_getPageObj($path, $page, $action, $params, $urlParam);
 
-		if (!\App::fileExists($pageObj['fileName'])) {
+		if (!\App::fileExists($pageObj['fileName']) && !Helper::isBlock($path)) {
 			if (\App::fileExists($coreFileSite)) {
 				$path = self::NS . $corePathSite;
 				$loadCoreClass = true;

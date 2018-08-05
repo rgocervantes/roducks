@@ -31,7 +31,7 @@ class DB
     {
 
         if (empty($conn[1])) {
-            throw new \Exception("user", 1);
+            throw new \Exception("credentials", 1);
         }
 
         mysqli_report(MYSQLI_REPORT_STRICT);
@@ -96,21 +96,21 @@ class DB
     }
 
     static function truncateTables(\mysqli $db, array $tables = [])
-    {   
+    {
         $table = new Table($db);
         $table->truncate($tables);
     }
 
     static function truncateTable(\mysqli $db, $table = "")
-    {   
+    {
         self::truncateTables($db, [$table]);
     }
 
     static function insertInto(\mysqli $db, $name, $callback)
-    {   
+    {
         $table = new Table($db, $name);
         $query = new Query($db, $name);
-        
+
         $callback($table);
         $columns = $table->getColumns();
 
@@ -121,10 +121,10 @@ class DB
     }
 
     static function alterTable(\mysqli $db, $name, $callback)
-    {   
+    {
         $table = new Table($db, $name);
         $callback($table);
-        
+
         $table->alter();
     }
 
