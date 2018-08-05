@@ -113,25 +113,30 @@ CREATE TABLE IF NOT EXISTS `Categories` (
   `id_category` bigint(8) UNSIGNED AUTO_INCREMENT NOT NULL,
   `id_parent` bigint(8) UNSIGNED DEFAULT '0' NOT NULL,
   `title` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) NULL,
+  `type` enum('hierarchy', 'menu') DEFAULT 'hierarchy' NOT NULL,
+  `sort` int(11) DEFAULT '0',
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NULL,
   PRIMARY KEY (`id_category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO `Categories` (`id_category`, `title`, `name`, `type`, `created_at`) VALUES (1, 'Main Menu', 'main_menu', 'menu', NOW());
+
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `Lists` (
   `id_list` bigint(8) UNSIGNED AUTO_INCREMENT NOT NULL,
   `id_category` bigint(8) UNSIGNED NOT NULL,
-  `title` varchar(255) NOT NULL,
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NULL,
   PRIMARY KEY (`id_list`),
   CONSTRAINT `fk_id_category` FOREIGN KEY (`id_category`) REFERENCES `Categories` (`id_category`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `Lists` (`id_list`, `id_category`, `created_at`) VALUES (1, 1, NOW());
 
 -- --------------------------------------------------------
 
@@ -148,6 +153,10 @@ CREATE TABLE IF NOT EXISTS `ListsFields` (
   PRIMARY KEY (`id_field`),
   CONSTRAINT `fk_id_list` FOREIGN KEY (`id_list`) REFERENCES `Lists` (`id_list`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `ListsFields` (`id_list`, `title`, `name`, `type`, `required`, `created_at`) VALUES
+(1, 'Icon', 'icon', 'image', 1, NOW()),
+(1, 'Link', 'link', 'text', 1, NOW());
 
 -- --------------------------------------------------------
 
