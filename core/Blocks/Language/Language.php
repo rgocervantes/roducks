@@ -34,7 +34,7 @@ class Language extends Block
 		$langs = LanguageCore::getList();
 		$ret = [];
 		$urls = [];
-	
+
 		if ($id_url > 0) {
 
 			$db = $this->db();
@@ -53,18 +53,18 @@ class Language extends Block
 					if (isset($urls[ $id ])) {
 						$u = $urls[ $id ];
 						$u = array_merge($u, $lang);
-						$uri = (!empty($u['redirect'])) ? $u['redirect'] : $u['url'];
+						$uri = (!empty($u['url_redirect'])) ? $u['url_redirect'] : $u['url'];
 						$u['link'] = URL::lang($lang['iso'], false) . $uri;
-						$ret[] = $u;	
-					}	
+						$ret[] = $u;
+					}
 				}
 			}
 
 		} else {
-				
-			foreach ($langs as $lang) {		
+
+			foreach ($langs as $lang) {
 				$lang['link'] = URL::lang($lang['iso']);
-				$ret[] = $lang;	
+				$ret[] = $lang;
 			}
 		}
 
@@ -75,4 +75,4 @@ class Language extends Block
 
 	}
 
-} 
+}

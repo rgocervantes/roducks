@@ -76,7 +76,7 @@ class Dispatch
 	{
 		$class = Helper::getCamelName($class);
 		return "{$class}/Factory/{$class}::{$method}";
-	}	
+	}
 
 	static function _factory($class, $method)
 	{
@@ -135,7 +135,7 @@ class Dispatch
 
 	static function getLastParams($params)
 	{
-		
+
 		// Avoid empty params
 		$total = count($params) - 1;
 
@@ -187,14 +187,14 @@ class Dispatch
 
 	static function init()
 	{
-		
+
 		$URI = URL::getRelativeURL();
 
 		/* ------------------------------------*/
 		/* 		PREVENT POSSIBLE CSRF ATTACK
 		/* ------------------------------------*/
 		URL::preventCSRFAttack();
-		/* ------------------------------------*/			
+		/* ------------------------------------*/
 
 
 		/* ------------------------------------*/
@@ -216,7 +216,7 @@ class Dispatch
 			$isLoggedIn = Session::exists($sessionName);
 
 			if ($isLoggedIn) {
-				$id_user = Login::getId($sessionName);	
+				$id_user = Login::getId($sessionName);
 
 				$ip = Http::getIPClient();
 				$db = Core::db(RDKS_ERRORS);
@@ -234,7 +234,7 @@ class Dispatch
 
 				// Log Out when User is disabled - or - Admin forces User to log out
 				if ( $row['active'] == 0 || $row['loggedin'] == 0 ) {
-					
+
 					if ($location == $ip && Login::security(true) && $secure === TRUE) {
 						$user->update(['id_user' => $id_user],['loggedin' => 1]);
 					} else {
@@ -253,7 +253,7 @@ class Dispatch
 		$routerPath = Core::getSiteConfigPath("router");
 		$params = URL::getParams();
 		$dispatcher = ['dispatch' => Helper::PAGE_NOT_FOUND . '::pageNotFound'];
-		
+
 		$found = false;
 		$rowUrl = [];
 		$mainPath = "";
@@ -291,15 +291,15 @@ class Dispatch
 			// Default view controller
 			if (isset($routers[$URI])) {
 				$dispatcher = $routers[$URI];
-				$found = true;				
+				$found = true;
 			} else {
 				Error::defaultPageIsMissing("Undefined default page",__LINE__, __FILE__, $routerPath);
 			}
 
 		} else {
-			
+
 			if (isset($params[0]) && !Helper::isDispatch($params[0])) {
-				
+
 				$subRouter = $params;
 				$mainPath = DIRECTORY_SEPARATOR.$params[0];
 				$altMainPath = $mainPath . DIRECTORY_SEPARATOR;
@@ -323,7 +323,7 @@ class Dispatch
 						if (isset($routers[$mainPath]['path'])) {
 							$router = $routers[$mainPath]['path'];
 						}
-						
+
 					} else {
 						$router[$mainPath] = $routers[$mainPath];
 						$mainPath = "";
@@ -339,12 +339,12 @@ class Dispatch
 			foreach($router as $key => $value) {
 
 		        $key = preg_replace_callback('#{([a-zA-Z_]+):(int|str|slug)}#', function($match) {
-		           
+
 		            switch ($match[2]) {
 		                case 'int':
 		                    $type = '\d';
 		                    break;
-		                
+
 		                case 'str':
 		                    $type = '\w';
 		                    break;
@@ -354,7 +354,7 @@ class Dispatch
 		                    break;
 
 		            }
-		            
+
 		            $name = $match[1];
 
 		            return "(?P<{$name}>{$type}+)";
@@ -379,8 +379,8 @@ class Dispatch
 			$queryUrl = UrlsUrlsLang::open($db);
 			$queryUrl->filter([
 				'[BEGIN_COND]' => "(",
-					'[NON_1]ul.url' => $baseURL, 
-					'[OR]ul.redirect' => $baseURL, 
+					'[NON_1]ul.url' => $baseURL,
+					'[OR]ul.url_redirect' => $baseURL,
 				'[END_COND]' => ")",
 				'u.active' => 1
 			]);
@@ -391,19 +391,19 @@ class Dispatch
 				$rowUrl = $queryUrl->fetch();
 				$dispatcher = ['dispatch' => $rowUrl['dispatch']];
 
-				if ($rowUrl['url'] == $baseURL && !empty($rowUrl['redirect'])) {
-					
+				if ($rowUrl['url'] == $baseURL && !empty($rowUrl['url_redirect'])) {
+
 					if (!Environment::inDEV()) {
 						Http::sendHeaderMovedPermanently(false);
 					}
 
-					Http::redirect($rowUrl['redirect']);
+					Http::redirect($rowUrl['url_redirect']);
 				}
 			}
 
 		}
 
-		// Make sure we have a valid dispatcher 
+		// Make sure we have a valid dispatcher
 		if (isset($dispatcher['dispatch'])) {
 			if (Helper::regexp('#::#', $dispatcher['dispatch'])) {
 				list($page,$method) = explode("::", $dispatcher['dispatch']);
@@ -419,11 +419,11 @@ class Dispatch
 		$module = Helper::getModule($page);
 
 		// Let's see if module is enabled
-		if ( 
-			(!isset($modulesMap[$module]) || $modulesMap[$module] === FALSE) 
-		&& ($page != 'Output' && !Helper::isService($page) && !Helper::isApi($page) && $page != Helper::PAGE_NOT_FOUND) 
+		if (
+			(!isset($modulesMap[$module]) || $modulesMap[$module] === FALSE)
+		&& ($page != 'Output' && !Helper::isService($page) && !Helper::isApi($page) && $page != Helper::PAGE_NOT_FOUND)
 		) {
-			Error::moduleDisabled("Module is disabled or undefined", __LINE__, __FILE__, Core::getSiteConfigPath("modules"), $module);	
+			Error::moduleDisabled("Module is disabled or undefined", __LINE__, __FILE__, Core::getSiteConfigPath("modules"), $module);
 		} else {
 
 			if (Helper::isApi($page)) {
@@ -449,7 +449,7 @@ class Dispatch
 				foreach ($dispatcher['POST'] as $key => $value) {
 
 					$val = (is_array($value)) ? array_keys($value)[0] : $value;
-					
+
 					if (!Post::stSent($key) && !Helper::isOptionalParam($val)) {
 						$missingPOSTParams[] = "Post param <b style=\"color: #c00;\">{$key}</b> is <b>required.</b>";
 					} else {
@@ -472,7 +472,7 @@ class Dispatch
 									$err = "Param <b>{$key}</b> <b style=\"color: #c00;\">ONLY</b> allows the next values: " . Helper::getOptions($match);
 									$regexp_rule = '/^'.$match.'$/';
 								}
-								
+
 							}
 
 							switch ($value) {
@@ -495,7 +495,7 @@ class Dispatch
 								case self::PARAM_INTEGER:
 								case self::OPTIONAL_PARAM_INTEGER:
 									$regexp = Helper::VALID_INTEGER;
-								break;	
+								break;
 
 								case self::PARAM_BOOL:
 								case self::OPTIONAL_PARAM_BOOL:
@@ -506,7 +506,7 @@ class Dispatch
 								case self::OPTIONAL_PARAM_CLABE:
 									$regexp = Helper::VALID_CLABE;
 								break;
-								
+
 								case self::PARAM_PASSWORD:
 								case self::OPTIONAL_PARAM_PASSWORD:
 									$regexp = Helper::VALID_PASSWORD;
@@ -534,9 +534,9 @@ class Dispatch
 				// Send Error
 				if (count($missingPOSTParams) > 0) {
 					if ($params[0] == '_json' || preg_match('#JSON#', $page)) {
-						
+
 						$jsonData = (Environment::inDEV()) ? $missingPOSTParams : [];
-						
+
 						JSON::stOutput([
 							'code' => 501,
 							'success' => false,
@@ -554,7 +554,7 @@ class Dispatch
 			if (isset($dispatcher['GET']) && is_array($dispatcher['GET']) && $requestMethod == 'GET') {
 
 				foreach($dispatcher['GET'] as $key => $value) {
-				
+
 					// Let's validate expecting match value
 					if (is_array($value)) {
 
@@ -566,7 +566,7 @@ class Dispatch
 
 						$err = "Param <b>{$key}</b> does not match with this regular expression: {$match}";
 						$regexp = $match;
-						
+
 						if (isset($getGETParams[$key])) {
 
 							if (!Helper::regexp($regexp, $getGETParams[$key])) {
@@ -588,16 +588,16 @@ class Dispatch
 						}
 
 					}
-					
+
 					/* ----------------------------------------------*/
 					// OPTIONAL GET PARAMS
-					/* ----------------------------------------------*/	
-					if (Helper::isOptionalParam($value)) {	
-					
+					/* ----------------------------------------------*/
+					if (Helper::isOptionalParam($value)) {
+
 						if (isset($getGETParams[$key])) {
 
 							if (!empty($getGETParams[$key])) {
-								
+
 								switch ($value) {
 
 									case self::OPTIONAL_PARAM_STRING:
@@ -614,7 +614,7 @@ class Dispatch
 
 									case self::OPTIONAL_PARAM_INTEGER:
 										$regexp = Helper::VALID_INTEGER;
-									break;	
+									break;
 
 									case self::OPTIONAL_PARAM_BOOL:
 										$regexp = Helper::VALID_BOOL;
@@ -623,7 +623,7 @@ class Dispatch
 									case self::OPTIONAL_PARAM_CLABE:
 										$regexp = Helper::VALID_CLABE;
 									break;
-									
+
 									case self::OPTIONAL_PARAM_PASSWORD:
 										$regexp = Helper::VALID_PASSWORD;
 									break;
@@ -636,7 +636,7 @@ class Dispatch
 										$regexp = Helper::VALID_USERNAME;
 									break;
 
-								}	
+								}
 
 								if (!Helper::regexp($regexp, $getGETParams[$key])) {
 									$missingGETParams[] = "Param <b>{$key}</b> must be <b>" . str_replace('optional_', '', $value) . "</b>.";
@@ -646,16 +646,16 @@ class Dispatch
 							} else {
 								if (!Helper::isInteger($getGETParams[$key]))
 									$missingGETParams[] = "Param <b>{$key}</b> is empty.";
-							}											
+							}
 
-						}						
-			
+						}
+
 					} else {
-					
+
 					/* ----------------------------------------------*/
 					// OBLIGATORY GET PARAMS
 					/* ----------------------------------------------*/
-						
+
 						if (!isset($getGETParams[$key])) {
 							$missingGETParams[] = "GET Param <b>{$key}</b> is required.";
 						} else {
@@ -677,7 +677,7 @@ class Dispatch
 
 									case self::PARAM_INTEGER:
 										$regexp = Helper::VALID_INTEGER;
-									break;	
+									break;
 
 									case self::PARAM_BOOL:
 										$regexp = Helper::VALID_BOOL;
@@ -686,14 +686,14 @@ class Dispatch
 									case self::PARAM_CLABE:
 										$regexp = Helper::VALID_CLABE;
 									break;
-									
+
 									case self::PARAM_PASSWORD:
 										$regexp = Helper::VALID_PASSWORD;
 									break;
 
 									case self::PARAM_EMAIL:
 										$regexp = Helper::VALID_EMAIL;
-									break;	
+									break;
 
 									case self::PARAM_USERNAME:
 										$regexp = Helper::VALID_USERNAME;
@@ -710,7 +710,7 @@ class Dispatch
 								$missingGETParams[] = "Param <b>{$key}</b> is empty.";
 							}
 
-						}	
+						}
 
 
 					} // end else
@@ -810,7 +810,7 @@ class Dispatch
 			}
 
 			if (isset($dispatcher['cors'])) {
-				
+
 				$cors->allowDomains($dispatcher['cors']);
 
 				if (isset($dispatcher['max-age'])) {
@@ -843,7 +843,7 @@ class Dispatch
 			} else {
 				$pagePath = ($page == Helper::PAGE_NOT_FOUND) ? '' : Core::getModulesPath();
 			}
-			
+
 			if ($method == "_data_" || $method == "_block_") {
 
 				$invalidParam = self::getLastParams($params);
@@ -887,9 +887,9 @@ class Dispatch
 			} else if ($method == "_service_") {
 
 				$invalidParam = self::getLastParams($params);
-				
+
 				if ($invalidParam) {
-					
+
 					$page = Helper::PAGE_NOT_FOUND;
 					$method = "pageNotFound";
 					$pagePath = DIR_CORE_PAGE;
@@ -903,7 +903,7 @@ class Dispatch
 					$servicePath = Core::getServicesPath($page);
 					$page = $servicePath['service'];
 					$pagePath = $servicePath['path'];
-			
+
 					$params = Helper::getUrlParams($params);
 
 				}
@@ -934,4 +934,4 @@ class Dispatch
 
 	} // end init method
 
-} 
+}
