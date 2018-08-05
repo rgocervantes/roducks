@@ -29,6 +29,7 @@ class Core
 	const DEFAULT_SUBDOMAIN = 'www';
 	const ADMIN_SUBDOMAIN = 'admin';
 	const ALL_SITES_DIRECTORY = 'All';
+	const NS = 'Roducks/';
 
 	static function getVersion()
 	{
@@ -234,7 +235,7 @@ class Core
 		$view = DIR_VIEWS . $tpl;
 		$found = false;
 
-		$coreModules = "Roducks/" . DIR_MODULES;
+		$coreModules = self::NS . DIR_MODULES;
 		$coreBlocks = DIR_CORE . DIR_BLOCKS;
 		$siteBlocks = self::getSitePath() . DIR_BLOCKS;
 		$globalBlocks = self::getGlobalPath() . DIR_BLOCKS;
@@ -540,11 +541,9 @@ class Core
 		}
 	}
 
-	static function loadPage($path, $page, $action, array $urlParam = [], array $params = [], $return = false, array $url = [])
+	static private function _getPageObj($path, $page, $action, $params, $urlParam)
 	{
 
-		$autoload = true;
-		$isBlock = false;
 		$method = Helper::getCamelName($action, false);
 		$page = (Helper::isService($page)) ? $page : Helper::getCamelName($page);
 		$className = ($path . $page);
@@ -563,6 +562,44 @@ class Core
 				'fileName' 		=> $filePath . $fileName . FILE_EXT,
 				'urlParam'		=> $urlParam
 		];
+
+		return [$method, $page, $className, $class, $filePath, $pageObj];
+
+	}
+
+	static function loadPage($path, $page, $action, array $urlParam = [], array $params = [], $return = false, array $url = [])
+	{
+		$loadCoreClass = false;
+		$corePathAll = DIR_MODULES . "All/";
+		$coreFileAll = DIR_CORE ."{$corePathAll}{$page}".FILE_EXT;
+		$corePathSite = DIR_MODULES . RDKS_SITE . DIRECTORY_SEPARATOR;
+		$coreFileSite = DIR_CORE ."{$corePathSite}{$page}".FILE_EXT;
+
+		$autoload = true;
+		$isBlock = false;
+
+		list($method, $page, $className, $class, $filePath, $pageObj) = self::_getPageObj($path, $page, $action, $params, $urlParam);
+
+		if (!\App::fileExists($pageObj['fileName'])) {
+			if (\App::fileExists($coreFileSite)) {
+				$path = self::NS . $corePathSite;
+				$loadCoreClass = true;
+			} else if (\App::fileExists($coreFileAll)) {
+				$path = self::NS . $corePathAll;
+				$loadCoreClass = true;
+			}
+
+			if ($loadCoreClass) {
+				list($method, $page, $className, $class, $filePath, $pageObj) = self::_getPageObj($path, $page, $action, $params, $urlParam);
+
+				$pageObj['filePath'] = str_replace(self::NS, DIR_CORE, $pageObj['filePath']);
+				$pageObj['fileName'] = str_replace(self::NS, DIR_CORE, $pageObj['fileName']);
+				$pageObj['path'] = str_replace(self::NS, DIR_CORE, $pageObj['path']);
+
+				$filePath = $pageObj['filePath'];
+			}
+
+		}
 
 		// ONLY for Pages and Blocks pass assets and view instance
 		if (Helper::isPage($class) || Helper::isBlock($class) || Helper::isFactory($class)) {
