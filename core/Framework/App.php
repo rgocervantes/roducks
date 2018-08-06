@@ -70,7 +70,7 @@ class App
 
 		$fileExists = file_exists($path);
 
-	    return [$path, $fileExists];		
+	    return [$path, $fileExists];
 	}
 
 	static function getComposerMap()
@@ -85,4 +85,43 @@ class App
 		return [];
 	}
 
+	static function getText($var, $default = "")
+	{
+		$text = 'TEXT_' . strtoupper($var);
+
+		if (!defined($text)) {
+			return $default;
+		}
+
+		return constant($text);
+	}
+
+}
+
+/**
+ *	Translate constants
+ */
+function __($var, $default = "")
+{
+
+	$spaces = explode(" ", $var);
+	$words = [];
+
+	foreach ($spaces as $key => $value) {
+
+		$s = '';
+
+		$lastLetter = substr($value, -1);
+		if ($lastLetter == 's') {
+			$value = substr($value, 0 , -1);
+			$s = 's';
+		}
+
+		$firstLetter = substr($value, 0 , 1);
+		$text = App::getText($value, $value);
+		$word = ($firstLetter == strtoupper($firstLetter)) ? $text : strtolower($text);
+		$words[] = $word.$s;
+	}
+
+	return implode(" ", $words);
 }

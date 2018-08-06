@@ -21,6 +21,9 @@
  *	-----------------
  */
 
+App::text('TO', "To");
+App::text('For', "For");
+App::text('From', "From");
 App::text('WELCOME', "Welcome");
 App::text('WELCOME_TO', TEXT_WELCOME . " to");
 App::text('CREATED_ON', "Created on");
@@ -126,6 +129,7 @@ App::text('MALE', "Man");
 App::text('FEMALE', "Woman");
 App::text('UPLOAD', "Upload");
 App::text('CROP', "Crop");
+App::text('CONTENT', "Content");
 App::text('FIRST_NAME', "First name");
 App::text('LAST_NAME', "Last name");
 App::text('CONFIRM_PASSWORD', "Confirm password");
