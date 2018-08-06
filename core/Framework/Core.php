@@ -569,18 +569,21 @@ class Core
 
 	static function loadPage($path, $page, $action, array $urlParam = [], array $params = [], $return = false, array $url = [])
 	{
-		$loadCoreClass = false;
-		$corePathAll = DIR_MODULES . "All/";
-		$coreFileAll = DIR_CORE ."{$corePathAll}{$page}".FILE_EXT;
-		$corePathSite = DIR_MODULES . RDKS_SITE . DIRECTORY_SEPARATOR;
-		$coreFileSite = DIR_CORE ."{$corePathSite}{$page}".FILE_EXT;
 
+		$browserUrl = URL::getParams();
+		$loadCoreClass = false;
 		$autoload = true;
 		$isBlock = false;
 
+		$corePath = (Helper::isDispatch($browserUrl[0])) ? preg_replace('/^app\/Sites\/[a-zA-Z]+\/Modules\/(.+)$/', '$1', $path) : '';
+		$corePathAll =  DIR_MODULES . self::ALL_SITES_DIRECTORY . DIRECTORY_SEPARATOR . $corePath;
+		$coreFileAll = DIR_CORE ."{$corePathAll}{$page}".FILE_EXT;
+		$corePathSite =  DIR_MODULES . RDKS_SITE . DIRECTORY_SEPARATOR . $corePath;
+		$coreFileSite = DIR_CORE ."{$corePathSite}{$page}".FILE_EXT;
+
 		list($method, $page, $className, $class, $filePath, $pageObj) = self::_getPageObj($path, $page, $action, $params, $urlParam);
 
-		if (!\App::fileExists($pageObj['fileName']) && !Helper::isBlock($path)) {
+		if (!\App::fileExists($pageObj['fileName']) && !Helper::isBlock($path) && $browserUrl[0] != '_block') {
 			if (\App::fileExists($coreFileSite)) {
 				$path = self::NS . $corePathSite;
 				$loadCoreClass = true;
