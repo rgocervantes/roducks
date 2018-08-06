@@ -44,7 +44,7 @@ class XML extends Frame
 		$overwrite = ($settings['method'] == 'overwrite' || $this->overwrite);
 
 		if ($overwrite || $settings['method'] == 'write') {
-			Directory::make(Path::getData($this->path));
+			Directory::make(Path::getData(), $this->path);
 		}
 
 		$this->xml = XMLDoc::init();
