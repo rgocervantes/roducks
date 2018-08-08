@@ -197,7 +197,21 @@ abstract class Frame
 
 	protected function model($className)
 	{
-		$model = "App\\Models\\{$className}";
+		if (Helper::regexp('/\//', $className)) {
+			$slash = explode('/', $className);
+			$ret = [];
+
+			foreach ($slash as $class) {
+				$ret[] = Helper::getCamelName($class);
+			}
+
+			$path = implode('\\', $ret);
+		} else {
+			$path = $className;
+		}
+
+		$model = "App\\Models\\{$path}";
+
 		return $model::open($this->db());
 	}
 
