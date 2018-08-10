@@ -141,6 +141,7 @@ abstract class Model extends ORM
 	private $_ORM = false;
 	private $_data = [];
 	private $_id;
+	private $_action = 'none';
 
 /*
 //----------------------
@@ -323,6 +324,7 @@ abstract class Model extends ORM
 
 	public function getRow($id)
 	{
+		$this->_action = 'update';
 		$this->_id = $id;
 		$args = [$this->id => $id];
 
@@ -338,8 +340,21 @@ abstract class Model extends ORM
 	public function prepare()
 	{
 		$this->_ORM = true;
+		$this->_action = 'insert';
 
 		return $this;
+	}
+
+	public function save()
+	{
+		switch ($this->_action) {
+			case 'insert':
+				$this->insert();
+				break;
+			case 'update':
+				$this->update();
+				break;
+		}
 	}
 
 	public function update($id = "", array $data = [], array $condition = [])

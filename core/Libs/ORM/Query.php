@@ -706,7 +706,7 @@ class Query
 		return $this->_statment->affected_rows;
 	}
 
-	public function insertId()
+	public function getId()
 	{
 		return $this->_db->insert_id;
 	}

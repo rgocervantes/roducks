@@ -87,14 +87,14 @@ class Users extends JSON
 		$tx = $this->_user->create($fields);
 
 		if ($tx !== false) {
-			$insertId = $this->_user->insertId();
+			$id = $this->_user->getId();
 			$tree = (Login::isSuperAdmin()) ? '0' : Login::getAdminId();
 			$id_user_tree = ($admin_id_user_tree == '0') ? $tree : implode("_", [$admin_id_user_tree,$tree]);
 
-			$this->_user->update($insertId, ['id_user_tree' => $id_user_tree]);
+			$this->_user->update($id, ['id_user_tree' => $id_user_tree]);
 
-			Event::dispatch('onEventCreateAccount', [$insertId, Role::TYPE_USERS]);
-			$this->data('insert_id', $insertId);
+			Event::dispatch('onEventCreateAccount', [$id, Role::TYPE_USERS]);
+			$this->data('insert_id', $id);
 		} else {
 			$this->setError(0,"User already exists.");
 		}

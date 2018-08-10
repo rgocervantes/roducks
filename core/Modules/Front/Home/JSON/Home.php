@@ -103,10 +103,10 @@ class Home extends JSON
 				$this->setError(2, TEXT_ERROR_CREATING_USER);
 			} else {
 
-				$insertId = $user->insertId();
-				$user->update($insertId, ['id_user_tree' => '0']);
+				$id = $user->getId();
+				$user->update($id, ['id_user_tree' => '0']);
 
-				Event::dispatch('onEventCreateAccount', [$insertId, Role::TYPE_SUBSCRIBERS]);
+				Event::dispatch('onEventCreateAccount', [$id, Role::TYPE_SUBSCRIBERS]);
 				$auth = LoginAuth::init()->loginSubscriber(true);
 				$this->data("url_redirect", "/");
 			}
