@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `Categories` (
   `id_parent` bigint(8) UNSIGNED DEFAULT '0' NOT NULL,
   `title` varchar(255) NOT NULL,
   `name` varchar(255) NULL,
-  `type` enum('hierarchy', 'menu') DEFAULT 'hierarchy' NOT NULL,
+  `type` enum('category','hierarchy', 'menu') DEFAULT 'category' NOT NULL,
   `sort` int(11) DEFAULT '0',
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
@@ -146,6 +146,7 @@ CREATE TABLE IF NOT EXISTS `ListsFields` (
   `title` varchar(255) NOT NULL,
   `name` varchar(50) NOT NULL,
   `type` enum('text', 'textarea', 'html', 'image', 'file', 'checkbox') DEFAULT 'text' NOT NULL,
+  `sort` int(11) DEFAULT '0',
   `required` tinyint(1) DEFAULT '0',
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
@@ -160,7 +161,7 @@ INSERT INTO `ListsFields` (`id_list`, `title`, `name`, `type`, `required`, `crea
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `PageLayouts` (
+CREATE TABLE IF NOT EXISTS `Layouts` (
   `id_layout` bigint(8) UNSIGNED AUTO_INCREMENT NOT NULL,
   `title` varchar(255) NOT NULL,
   `config` varchar(255) NOT NULL,
@@ -171,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `PageLayouts` (
   PRIMARY KEY (`id_layout`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `PageLayouts` (`id_layout`, `title`, `config`, `created_at`) VALUES (1, 'Default', 'page_layout.json', NOW());
+INSERT INTO `Layouts` (`id_layout`, `title`, `config`, `created_at`) VALUES (1, 'Default', 'page_layout.json', NOW());
 
 -- --------------------------------------------------------
 
@@ -193,12 +194,13 @@ INSERT INTO `PageTypes` (`id_type`, `title`, `name`, `created_at`) VALUES
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `PageFields` (
+CREATE TABLE IF NOT EXISTS `Fields` (
   `id_field` bigint(8) UNSIGNED AUTO_INCREMENT NOT NULL,
   `id_type` bigint(8) UNSIGNED NOT NULL,
   `title` varchar(255) NOT NULL,
   `name` varchar(50) NOT NULL,
   `type` enum('text', 'textarea', 'html', 'image', 'file', 'checkbox', 'list') DEFAULT 'text' NOT NULL,
+  `sort` int(11) DEFAULT '0',
   `required` tinyint(1) DEFAULT '0',
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
@@ -207,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `PageFields` (
   CONSTRAINT `fk_id_type` FOREIGN KEY (`id_type`) REFERENCES `PageTypes` (`id_type`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `PageFields` (`id_type`, `title`, `name`, `type`, `required`, `created_at`) VALUES
+INSERT INTO `Fields` (`id_type`, `title`, `name`, `type`, `required`, `created_at`) VALUES
 (1, 'Abstract', 'abstract', 'textarea', 0, NOW()),
 (2, 'Image', 'image', 'image', 1, NOW()),
 (2, 'Thumbnail', 'thumbnail', 'image', 0, NOW()),
@@ -215,7 +217,7 @@ INSERT INTO `PageFields` (`id_type`, `title`, `name`, `type`, `required`, `creat
 
 -- --------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS `PageContent` (
+CREATE TABLE IF NOT EXISTS `Content` (
   `id_content` bigint(8) UNSIGNED AUTO_INCREMENT NOT NULL,
   `id_url` bigint(8) UNSIGNED NOT NULL,
   `id_type` bigint(8) UNSIGNED NOT NULL,
@@ -229,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `PageContent` (
   PRIMARY KEY (`id_content`),
   CONSTRAINT `fk_pc_id_url` FOREIGN KEY (`id_url`) REFERENCES `Urls` (`id_url`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_pc_id_type` FOREIGN KEY (`id_type`) REFERENCES `PageTypes` (`id_type`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_pc_id_layout` FOREIGN KEY (`id_layout`) REFERENCES `PageLayouts` (`id_layout`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_pc_id_layout` FOREIGN KEY (`id_layout`) REFERENCES `Layouts` (`id_layout`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_pc_id_user` FOREIGN KEY (`id_user`) REFERENCES `Users` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
