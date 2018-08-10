@@ -38,7 +38,7 @@ class Language
 		$langs['en'] = [
 					'id' => self::ID_ENGLISH,
 					'title' => "English",
-					'iso' => "en", 
+					'iso' => "en",
 					'iso2' => "us",
 					'img' => "lang/us.png",
 					'icon' => Path::getIcon("lang/us.png")
@@ -79,20 +79,20 @@ class Language
 
 	static function getDefault()
 	{
-		
+
 		if (MULTILANGUAGE && BROWSER_LANGUAGE) {
 			return Http::getBrowserLanguage(DEFAULT_LANGUAGE);
 		}
 
 		return DEFAULT_LANGUAGE;
-		
+
 	}
 
 	static function set($value)
 	{
 
 		$list = array_keys(self::getList());
-		
+
 		if (preg_match('/^\w{2}$/', $value) && in_array($value, $list)) {
 			Cookie::set(self::COOKIE_ID, $value, DOMAIN_NAME);
 			return true;
@@ -106,10 +106,10 @@ class Language
 		return (Cookie::exists(self::COOKIE_ID)) ? Cookie::get(self::COOKIE_ID) : self::getDefault();
 	}
 
-	static function getId()
+	static function getId($iso = null)
 	{
 		$list = self::getList();
-		$iso = self::get();
+		$iso = (is_null($iso)) ? self::get() : $iso;
 
 		return (isset($list[$iso])) ? $list[$iso]['id'] : $list[DEFAULT_LANGUAGE]['id'];
 	}
@@ -140,11 +140,11 @@ class Language
 		}
 
 		return $en;
-	}	
+	}
 
 	static function translate($en, $es)
 	{
 		return self::toSpanish($en, $es);
 	}
-	
-} 
+
+}
