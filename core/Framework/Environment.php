@@ -37,7 +37,7 @@ class Environment
 		if (isset($config[$serverName])) {
 			$subdomain = $serverName;
 
-			$args = explode(".", 'roducks.dd');
+			$args = explode(".", $serverName);
 
 			if(count($args) >= 4) {
 				unset($args[0]);
