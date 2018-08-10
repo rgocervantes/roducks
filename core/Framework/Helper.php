@@ -26,23 +26,23 @@ class Helper
 	const REGEXP_HTTP = '/^https?.+/';
 	const REGEXP_CONDITIONAL = '/^\((.+)\)$/';
 	const REGEXP_INTEGER = '/^\d+$/';
-	
+
 	const REGEXP_OPTIONAL_PARAM = '/^optional_\w+$/';
 	const REGEXP_SLASHES = '/\//';
 	const REGEXP_RELATIVE_URL = '/^\/(.+)$/';
 	const REGEXP_API = '(?P<API>[0-9\.]+)';
 	const REGEXP_STRING_ALL = '/^.+$/';
 	const REGEXP_FILE_EXT = '/\.([a-z]+)$/';
-	const REGEXP_FILE_EXT_VERSION = '/\.([a-z]+)(\?v=[0-9.]+)?$/';	
-	const REGEXP_URL_DISPATCH = '[a-z\-\_]+(\/[a-z\-_]+(\/[a-zA-Z0-9\-\+\/_]+)?)?';
+	const REGEXP_FILE_EXT_VERSION = '/\.([a-z]+)(\?v=[0-9.]+)?$/';
+	const REGEXP_URL_DISPATCH = '[a-z\-\_]+(\/[a-z\-_]+(\/[a-zA-Z0-9\-\+\/_%]+)?)?';
 	const REGEXP_GET_MODULE = '/^([a-zA-Z\-]+)\/.+$/';
 	const REGEXP_IS_URL_DISPATCH = '/^_/';
 	const REGEXP_IS_BLOCK_DISPATCHED = '/^_block/';
 	const REGEXP_IS_SERVICE = '/^Services\/[a-zA-Z_]+$/';
 	const REGEXP_IS_API = '/^API\/[a-zA-Z_]+$/';
-	const REGEXP_IS_JSON = '#JSON#';	
+	const REGEXP_IS_JSON = '#JSON#';
 	const REGEXP_IS_PAGE = '#Page#';
-	const REGEXP_IS_BLOCK = '#Blocks#';	
+	const REGEXP_IS_BLOCK = '#Blocks#';
 	const REGEXP_IS_XML = '#XML#';
 	const REGEXP_IS_FACTORY = '#Factory#';
 	const REGEXP_PATH = '/^([a-zA-Z_\/]+\/)(\w+)$/';
@@ -56,11 +56,11 @@ class Helper
 	const VALID_PASSWORD = '/^[a-zA-Z0-9#$@\.,;!]+$/';
 	const VALID_CLABE = '/^[a-zA-Z]+$/';
 	const VALID_PARAM = '/^([a-zA-Z]+_)?[a-zA-Z]+$/';
-	const VALID_WORD = '/^[a-zA-ZáéíóúñÁÉÍÓÚÑ]+$/';	
-	const VALID_WORDS = '/^[a-zA-Z\sáéíóúñÁÉÍÓÚÑ]+$/';				
+	const VALID_WORD = '/^[a-zA-ZáéíóúñÁÉÍÓÚÑ]+$/';
+	const VALID_WORDS = '/^[a-zA-Z\sáéíóúñÁÉÍÓÚÑ]+$/';
 	const VALID_INTEGER = '/^\d+$/';
-	const VALID_DECIMAL = '/^\d+\.\d{2}$/';	
-	const VALID_BOOL = '/^(0|1)$/';	
+	const VALID_DECIMAL = '/^\d+\.\d{2}$/';
+	const VALID_BOOL = '/^(0|1)$/';
 	const VALID_USERNAME = '/^[a-z]+\.[a-z]+$/';
 	const VALID_HTML = '/\.html$/';
 	const VALID_IMAGE = '/\.(jpeg|jpg|png)$/';
@@ -103,7 +103,7 @@ class Helper
 	static function isBlockDispatched()
 	{
 		$url = URL::getSplittedURL();
-		$dispatch = (isset($url[0])) ? $url[0] : "root";		
+		$dispatch = (isset($url[0])) ? $url[0] : "root";
 		return self::regexp(self::REGEXP_IS_BLOCK_DISPATCHED, $dispatch);
 	}
 
@@ -130,17 +130,17 @@ class Helper
 	static function isPage($str)
 	{
 		return self::regexp(self::REGEXP_IS_PAGE, $str);
-	}	
+	}
 
 	static function isXml($str)
 	{
 		return self::regexp(self::REGEXP_IS_XML, $str);
-	}		
+	}
 
 	static function isFactory($str)
 	{
 		return self::regexp(self::REGEXP_IS_FACTORY, $str);
-	}				
+	}
 
 	static function isInteger($str)
 	{
@@ -175,7 +175,7 @@ class Helper
 	static function getFileExtVersion($str)
 	{
 		return self::getMatches(self::REGEXP_FILE_EXT_VERSION, $str);
-	}	
+	}
 
 	static function getOptions($str)
 	{
@@ -233,7 +233,7 @@ class Helper
 	static function getTable($class)
 	{
 		return preg_replace('/^.+\\\([a-zA-Z_]+)$/', '$1', $class);
-	}	
+	}
 
 	static function replaceJsonAcents($str, $inverse = false, $esc = true)
 	{
@@ -244,8 +244,8 @@ class Helper
 	    if ($inverse) {
 	    	return str_replace($replacement, $chars, $str);
 	    }
-	                 
-		return str_replace($chars, $replacement, $str);        
+
+		return str_replace($chars, $replacement, $str);
 	}
 
 	static function replaceAcents($str, $inverse = false)
@@ -257,7 +257,7 @@ class Helper
 	    	return str_replace($replacement, $chars, $str);
 	    }
 
-		return str_replace($chars, $replacement, $str);        
+		return str_replace($chars, $replacement, $str);
 	}
 
 	static function removeSpecialChars($str)
@@ -266,7 +266,7 @@ class Helper
 		$str = self::replaceAcents($str);
 		$str = str_replace(array("#","@","$","%","&","/","(",")","=","?","¿","¡","!","'",'"',"*","+",",",".","-"), "", $str);
 		$str = str_replace(" ", "-", $str);
-		
+
 		return $str;
 	}
 
@@ -341,7 +341,7 @@ class Helper
 	*	@var $message string
 	*/
 	/*
-		-----------------------------------------------------------	
+		-----------------------------------------------------------
 		EXAMPLE:
 		-----------------------------------------------------------
 			$email_settings = [
@@ -353,7 +353,7 @@ class Helper
 
 			Helper::mailHTML($email_settings, $msg);
 		-----------------------------------------------------------
-	*/		
+	*/
 	static function mailHTML($params, $message)
 	{
 
@@ -367,8 +367,8 @@ class Helper
 
 		$headers = 'From: '.$params['company'].'<'.$params['from'].'>'.$eol;
 		$headers .= 'Reply-To: '.$params['company'].'<'.$params['from'].'>'.$eol;
-		$headers .= "Content-Type: text/html; charset=utf-8".$eol; 
-		$headers .= "X-Mailer: PHP v".phpversion().$eol;           // These two to help avoid spam-filters 
+		$headers .= "Content-Type: text/html; charset=utf-8".$eol;
+		$headers .= "X-Mailer: PHP v".phpversion().$eol;           // These two to help avoid spam-filters
 
 		return mail($params['to'], $params['subject'], $message, $headers);
 
@@ -412,7 +412,7 @@ class Helper
 		$coreClassName = preg_replace('/^App\/Sites\/([a-zA-Z]+)\/Modules\/(.+)$/', 'Roducks\\Modules\\\$1\\\$2', $classPath);
 		$coreClassName = str_replace("/", "\\", $coreClassName);
 
-		return $coreClassName;		
+		return $coreClassName;
 	}
 
 	static function getCamelName($url, $ret = true, $sep = "-")
@@ -436,7 +436,7 @@ class Helper
 		}
 
 		return $urlCamel;
-	}	
+	}
 
 	static function getClassName($class, $index = '$2')
 	{
@@ -462,7 +462,7 @@ class Helper
 			"J" => 1,
 			"K" => 1,
 			"L" => 1,
-			"M" => 1,			
+			"M" => 1,
 			"N" => 1,
 			"O" => 1,
 			"P" => 1,
@@ -480,7 +480,7 @@ class Helper
 
 		$ret = '';
 
-		for ($i=0; $i < strlen($str); $i++) { 
+		for ($i=0; $i < strlen($str); $i++) {
 			$text = substr($str, $i, 1);
 			$us = ($i>0) ? $sep : '';
 			$ret .= (isset($abc[$text])) ? $us . strtolower($text) : $text;
@@ -520,7 +520,7 @@ class Helper
 
 	static function getUrlParams(array $params = [])
 	{
-		
+
 		unset($params[0]);
 		unset($params[1]);
 		unset($params[2]);
@@ -544,6 +544,7 @@ class Helper
 				$value = (isset($params[$i+1])) ? $params[$i+1] : "";
 				$value = self::replaceJsonAcents($value, true, false);
 				$value = str_replace("+", " ", $value);
+				$value = urldecode($value);
 				$ret[$param] = self::dataType($value);
 			}
 
@@ -606,9 +607,9 @@ class Helper
 
 		foreach ($arr as $key => $value):
 			$clean[$key] = strip_tags(trim($value));
-		endforeach;	
+		endforeach;
 
 		return $clean;
-	}		
+	}
 
 }
