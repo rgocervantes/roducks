@@ -36,7 +36,19 @@ class Environment
 
 		if (isset($config[$serverName])) {
 			$subdomain = $serverName;
-			\App::define('DOMAIN_NAME', $subdomain);
+
+			$args = explode(".", $serverName);
+
+			if(count($args) >= 4) {
+				unset($args[0]);
+				unset($args[1]);
+			} else {
+				unset($args[0]);
+			}
+
+			$domainName = implode(".", $args);
+
+			\App::define('DOMAIN_NAME', $domainName);
 		} else {
 
 			if (!defined('DOMAIN_NAME')) {
