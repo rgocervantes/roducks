@@ -21,11 +21,103 @@
  *	-----------------
  */
 
+App::text('AND', "Y");
+App::text('OR', "Ó");
+
+App::text('YOU', "Tú");
+App::text('YOUR', "Su");
+App::text('THEY', "Ellos");
+App::text('IT', "Lo");
+App::text('THEM', "Los");
+App::text('IT_WAS', "Fue");
+App::text('IT_WAS_NOT', "No fue");
+App::text('IT_WILL_BE', "Será");
+App::text('IT_DID_NOT', "No");
+App::text('WILL_BE', "Será");
+App::text('YOU_ARE', "Estás");
+App::text('YOU_ARE_NOT', "No estás");
+App::text('SURE_YOU_WANT', "Seguro que quiere");
+App::text('SURE_YOU_DONT_WANT', "Seguro que no quiere");
+App::text('YOU_WANT', "Que quiere");
+App::text('THIS_ITEM', "Este artículo");
+App::text('THESE_ITEMS', "Estos artículos");
+App::text('ITEM', "Artículo");
+App::text('THANK_YOU', "Gracias");
+
+App::text('ITS', "Esta");
+App::text('THIS', "Esta");
+App::text('AVAILABLE', "Disponible");
+App::text('AT_THE_MOMENT', "Por el momento");
+
+App::text('THE_OPTION', "La opción");
+App::text('IS_AVAILABLE', "Está disponible");
+App::text('IS_NOT_AVAILABLE', "No está disponible");
+App::text('OPTION', "Opción");
+
+App::text('WILL', "");
+App::text('HAVE', "Ha");
+App::text('HAS', "Ha");
+
+App::text('TO_CREATE', "Crear");
+App::text('TO_DELETE', "Eliminar");
+App::text('TO_ACTIVE', "Activar");
+App::text('BEEN', "Sido");
+App::text('FOUND', "Encontrado");
+App::text('CREATED', "Creado");
+App::text('ACTIVED', "Activado");
+App::text('SENT', "Enviado");
+App::text('ALLOWED', "Autorizado");
+App::text('CATEGORY', "Categoría");
+App::text('CATEGORIES', "Categorias");
+App::text('AUTHORIZED', "Autorizado");
+
+App::text('HAVE_BEEN', "Ha sido");
+App::text('HAS_BEEN', "Ha sido");
+
+App::text('HAVE_NOT_BEEN', "No han sido");
+App::text('HAS_NOT_BEEN', "No ha sido");
+App::text('THEY_HAVE_BEEN', "Han sido");
+App::text('IT_HAS_BEEN', "Ha sido");
+
+App::text('DO', "Has");
+App::text('DID', "");
+App::text('NOT', "No");
+
+App::text('IS', "Es");
+App::text('ITS_NOT', "No esta");
+App::text('IT_DOES_NOT', "No");
+App::text('IS_NOT', "No es");
+App::text('WAS_NOT', "No fue");
+App::text('DOES_NOT', "No");
+App::text('IS', "Es");
+App::text('ARE', "Son");
+App::text('ARE_NOT', "No son");
+App::text('WERE_NOT', "No fueron");
+App::text('WERE', "Fueron");
+App::text('ARE_YOU', "¿Está");
+
+App::text('BE', "ser");
+App::text('GO', "Ir");
+App::text('EXIST', "Existe");
+App::text('PLEASE', "Por favor");
+App::text('SUCCESSFULLY', "Exitosamente");
+
+App::text('CREATE', "Crea");
+App::text('WORK', "Funciona");
+App::text('WORKED', "Funcionó");
+App::text('WORKING', "Funcionando");
+
+App::text('SORRY', "Lo siento");
+App::text('YET', "Todavía");
+App::text('THE', "La");
 App::text('TO', "A");
-App::text('For', "Para");
-App::text('From', "De");
+App::text('FOR', "Por");
+App::text('FROM', "De");
+
+App::text('PAGE', "Página");
 App::text('WELCOME', "Bienvenido");
-App::text('WELCOME_TO', TEXT_WELCOME . " a");
+App::text('HOME', "Casa");
+App::text('WELCOME_TO', TEXT_WELCOME . " to");
 App::text('CREATED_ON', "Creado el");
 App::text('PARENT', "Padre");
 App::text('ROLE', "Rol");
@@ -68,7 +160,7 @@ App::text('ALL', "Todos");
 App::text('NAME', "Nombre");
 App::text('EXAMPLE', "Ejemplo");
 App::text('TRASH', "Papelera");
-App::text('SURE', "¿Está seguro?");
+App::text('SURE', "Seguro");
 App::text('YES', "Si");
 App::text('COMMENT', "Comentario");
 App::text('CONTACT_US', "Contacto");
@@ -118,7 +210,6 @@ App::text('SUPPLIERS', "Proveedores");
 App::text('PICTURE', "Foto");
 App::text('NO_RESULTS', "No hay resultados.");
 App::text('PAGE', "Página");
-App::text('CREATE', "Crear");
 App::text('NEW', "Nuevo");
 App::text('EDIT', "Editar");
 App::text('SAVE', "Guardar");
