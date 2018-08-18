@@ -64,21 +64,36 @@ class Error
 		}
 	}
 
-	static function block($title, $line, $path, $file, $error = "")
+	static function block($title, $line, $path, $file, $error = "", $debug = false)
 	{
 
 		$markup = '<div style="font-family:Arial; text-align:left; padding:20px; background:#13a9a8; border:solid 2px #009688; margin-bottom:5px; color: #fcf7d2;">';
 		$markup .= '<h1 style="margin:0">'. $title .'</h1>';
-		$markup .= '<div style="font-family:monospace;font-size:16px;"><b>File: </b>' . $file . '</div><br>';
+
+		if (!$debug) {
+			$markup .= '<div style="font-family:monospace;font-size:16px;"><b>File: </b>' . $file . '</div>';
+		}
+
+		$markup .= '<br>';
 
 		if (!empty($error)) {
 			$markup .= '<h2 style="margin:0">Error Message:</h2>';
-			$markup .= '<div style="background:#24272e; font-family:monospace; font-size:16px; padding:10px; color: #c0dfdf; margin: 10px 0; ">';
+			$markup .= '<div style="background:#24272e; font-family:monospace; font-size:16px; padding:10px; color: #c0dfdf; margin: 10px 0; "><pre style="
+    background: none;
+    color: #fff;
+    border: none;
+">';
 			$markup .= $error;
-			$markup .= '</div>';
+			$markup .= '</pre></div>';
 		}
-		$markup .= '<div style="font-family:monospace;font-size:16px;"><b>Line: </b>' . $line . '</div>';
-		$markup .= '<div style="font-family:monospace;font-size:16px;"><b>Executed in: </b>' . $path . '</div>';
+		if ($debug) {
+			$markup .= '<div style="font-family:monospace;font-size:16px;"><b>File: </b>' . $file . '</div>';
+			$markup .= '<div style="font-family:monospace;font-size:16px;"><b>Line: </b>' . $line . '</div>';
+		} else {
+			$markup .= '<div style="font-family:monospace;font-size:16px;"><b>Line: </b>' . $line . '</div>';
+			$markup .= '<div style="font-family:monospace;font-size:16px;"><b>Thrown in: </b>' . $path . '</div>';
+		}
+
 		$markup .= '</div>';
 
 		return $markup;
@@ -374,6 +389,14 @@ class Error
 
 		echo $error;
 
+	}
+
+	static function phpError($errno, $errstr)
+	{
+		$debug = debug_backtrace();
+		$file = (isset($debug[0]['file'])) ? $debug[0]['file'] : '';
+		$line = (isset($debug[0]['line'])) ? $debug[0]['line'] : 0;
+		echo self::block("PHP Error", $line, __FILE__, $file, $errstr, true);
 	}
 
 }

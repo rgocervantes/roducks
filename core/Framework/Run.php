@@ -79,3 +79,10 @@ App::define('DB_PASSWORD', $dbConfig['password']);
 */
 // display errors in development mode
 Error::display();
+
+/*
+|--------------------------------|
+|         ERROR HANDLER          |
+|--------------------------------|
+*/
+set_error_handler('handler');

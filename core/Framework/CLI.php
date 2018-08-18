@@ -33,7 +33,7 @@ class CLI extends Frame
 	const SPACE = "                                                                                                       ";
 	const LN = "\n";
 
-	private 
+	private
 		$_args = [],
 		$_flags = [],
 		$_warnings = [],
@@ -58,7 +58,7 @@ class CLI extends Frame
 
 	static function line($text, $px = 0, $break = true)
 	{
-		
+
 		$space = self::SPACE;
 		$long1 = strlen($space);
 		$long2 = strlen($text);
@@ -117,7 +117,7 @@ class CLI extends Frame
 		echo self::_colorize($output, $color);
 		echo self::_colorize(self::SPACE, $color) . self::LN;
 
-		echo "\033[0m".self::LN;		
+		echo "\033[0m".self::LN;
 	}
 
 	static function println($text, $color = "NOTE", $px = 0)
@@ -137,6 +137,20 @@ class CLI extends Frame
 		exit;
 	}
 
+	static function phpError($errno, $errstr)
+	{
+		$debug = debug_backtrace();
+		$error = [];
+
+		$error[] = self::line('[x]'.$errstr, 4);
+		$error[] = self::line('[x]', 4);
+		if (isset($debug[0]['line'])) $error[] = self::line('[x]Line: '.$debug[0]['line'], 4);
+		if (isset($debug[0]['line'])) $error[] = self::line('[x]File: '.$debug[0]['file'], 4);
+
+		self::_dialog("[PHP Error]", self::_getOutput($error, "  - "), self::FAILURE);
+		exit;
+	}
+
 	private function _prompt($text, $yn = false)
 	{
 		$this->_reset();
@@ -149,7 +163,7 @@ class CLI extends Frame
 		}
 	}
 
-	private function _getOutput(array $arr = [], $bullet = "")
+	static private function _getOutput(array $arr = [], $bullet = "")
 	{
 
 		$lines = "";
@@ -175,12 +189,12 @@ class CLI extends Frame
 
 	private function _getList(array $arr = [])
 	{
-		return $this->_getOutput($arr, "  - ");
+		return self::_getOutput($arr, "  - ");
 	}
 
 	private function _getLines(array $arr = [])
 	{
-		return $this->_getOutput($arr, "  ");
+		return self::_getOutput($arr, "  ");
 	}
 
 	private function _color($text, $code)
@@ -358,7 +372,7 @@ class CLI extends Frame
 
 		if (count($this->_success) > 0) {
 
-			if (count($this->_info) == 0) echo self::LN; 
+			if (count($this->_info) == 0) echo self::LN;
 
 			$success = $this->_getSuccess();
 			self::_dialog($this->_titleSuccess, $success, self::SUCCESS);
@@ -366,7 +380,7 @@ class CLI extends Frame
 
 		if (count($this->_warnings) > 0) {
 
-			if (count($this->_info) == 0 && count($this->_success) == 0) echo self::LN; 
+			if (count($this->_info) == 0 && count($this->_success) == 0) echo self::LN;
 
 			$warnings = $this->_getWarnings();
 			self::_dialog($this->_titleWarning, $warnings, self::WARNING);
@@ -374,7 +388,7 @@ class CLI extends Frame
 
 		if (count($this->_errors) > 0) {
 
-			if (count($this->_info) == 0 && count($this->_success) == 0 && count($this->_warnings) == 0) echo self::LN; 
+			if (count($this->_info) == 0 && count($this->_success) == 0 && count($this->_warnings) == 0) echo self::LN;
 
 			$errors = $this->_getErrors();
 			self::_dialog($this->_titleError, $errors, self::FAILURE);
@@ -382,7 +396,7 @@ class CLI extends Frame
 
 		if (count($this->_correct) > 0) {
 
-			echo self::LN; 
+			echo self::LN;
 			$output = $this->_getLines($this->_correct);
 			self::_dialog(null, $output, self::SUCCESS);
 		}
@@ -393,7 +407,7 @@ class CLI extends Frame
 			$output = $this->_getLines($this->_wrong);
 			self::_dialog(null, $output, self::FAILURE);
 		}
-	
+
 	}
 
 	public function __construct(array $flags = [], array $args = [])
@@ -411,4 +425,4 @@ class CLI extends Frame
 		}
 	}
 
-} 
+}

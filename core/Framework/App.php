@@ -98,6 +98,17 @@ class App
 
 }
 
+function handler($errno, $errstr, $errfile, $errline)
+{
+
+	if (php_sapi_name() == 'cli') {
+		\Roducks\Framework\CLI::phpError($errno, $errstr, $errfile, $errline);
+	} else {
+		\Roducks\Framework\Error::phpError($errno, $errstr, $errfile, $errline);
+	}
+
+}
+
 function _text($var, $default = "")
 {
 	return App::getText($var, $default);

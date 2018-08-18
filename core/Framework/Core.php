@@ -806,6 +806,10 @@ class Core
 			$db_name = $db . '.local';
 		}
 
+		if (isset($flags['--debug'])) {
+			$dev = true;
+		}
+
 		$environment = [
 			'errors' => $dev,
 			'subdomain' => self::DEFAULT_SUBDOMAIN,
