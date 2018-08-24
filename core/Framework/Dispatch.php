@@ -133,7 +133,7 @@ class Dispatch
 		return "(".implode("|", $arr).")";
 	}
 
-	static function getLastParams($params)
+	static private function _getLastParams($params)
 	{
 
 		// Avoid empty params
@@ -148,7 +148,7 @@ class Dispatch
 		return $last;
 	}
 
-	static function httpRequestMethods($dispatcher)
+	static private function _httpRequestMethods($dispatcher)
 	{
 
 		$methods = self::$httpMethods;
@@ -168,7 +168,7 @@ class Dispatch
 
 	}
 
-	static function getRequestBody(array $values = [])
+	static private function _getRequestBody(array $values = [])
 	{
 
 		$obj = Request::obj();
@@ -177,7 +177,6 @@ class Dispatch
 			foreach ($values as $key => $value) {
 				$value = (Helper::isInteger($value)) ? intval($value) : $value;
 				$obj->$key = $value;
-				$obj->setBody($key, $value);
 			}
 		}
 
@@ -431,7 +430,7 @@ class Dispatch
 		} else {
 
 			if (Helper::isApi($page)) {
-				$allowedMethods = self::httpRequestMethods($dispatcher);
+				$allowedMethods = self::_httpRequestMethods($dispatcher);
 			}
 
 			// Let's take a look if there's POST Params
@@ -748,10 +747,8 @@ class Dispatch
 			/* ----------------------------------------------*/
 			// Cross Domain
 			/* ----------------------------------------------*/
-			$cors = new CORS;
-
 			if (count($allowedMethods) > 0) {
-				$cors->methods($allowedMethods);
+				CORS::methods($allowedMethods);
 
 				$params = [];
 				$urlParams = 0;
@@ -785,7 +782,7 @@ class Dispatch
 						$request = Post::stData();
 					}
 
-					$params['request'] = self::getRequestBody($request);
+					$params['request'] = self::_getRequestBody($request);
 
 				}
 
@@ -810,17 +807,17 @@ class Dispatch
 			}
 
 			if (isset($dispatcher['headers'])) {
-				$cors->headers($dispatcher['headers']);
+				CORS::headers($dispatcher['headers']);
 			}
 
 			if (isset($dispatcher['cors'])) {
 
-				$cors->allowDomains($dispatcher['cors']);
+				CORS::allowDomains($dispatcher['cors']);
 
 				if (isset($dispatcher['max-age'])) {
-					$cors->maxAge($dispatcher['max-age']);
+					CORS::maxAge($dispatcher['max-age']);
 				} else {
-					$cors->maxAge();
+					CORS::maxAge();
 				}
 
 			}
@@ -850,7 +847,7 @@ class Dispatch
 
 			if ($method == "_data_" || $method == "_block_") {
 
-				$invalidParam = self::getLastParams($params);
+				$invalidParam = self::_getLastParams($params);
 
 				if ($invalidParam) {
 
@@ -890,7 +887,7 @@ class Dispatch
 
 			} else if ($method == "_service_") {
 
-				$invalidParam = self::getLastParams($params);
+				$invalidParam = self::_getLastParams($params);
 
 				if ($invalidParam) {
 

@@ -23,7 +23,6 @@ namespace Roducks\API;
 use Roducks\Framework\Login;
 use Roducks\Framework\Role;
 use Roducks\Libs\Request\Request;
-use App\Models\Users\UsersRoles;
 
 class Auth extends API
 {
@@ -33,12 +32,10 @@ class Auth extends API
 	*/
 	private function _authenticate($type, $email, $password)
 	{
-
-		$db = $this->db();
 		$valid = false;
 		$data = [];
 
-		$users = UsersRoles::open($db);
+		$users = $this->model('users/users-roles');
 		$users->auth($email, $type);
 
 		// Is authentication Ok?
@@ -55,8 +52,6 @@ class Auth extends API
 			}
 
 		}
-
-		$db->close();
 
 		return ['valid' => $valid, 'data' => $data];
 	}

@@ -34,14 +34,14 @@ final class View
 {
 
 	const DEFAULT_TEMPLATE = 'default';
-	
+
 	/* ------------------------------------*/
 	/* 		VARS
 	/* ------------------------------------*/
 	private $_template = "";
 	private $_layout = "";
 	private $_view = "";
-	private $_body = "";		
+	private $_body = "";
 	private $_meta = "";
 	private $_data = [];
 	private $_tpl = [];
@@ -53,15 +53,15 @@ final class View
 
 	/* ------------------------------------*/
 	/* 		VIEW GLOBAL VARS
-	/* ------------------------------------*/		
+	/* ------------------------------------*/
 	private $_TITLE;
 	private $_CSS = [];
 	private $_JS = [];
 	private $_SCRIPTS = [];
-	
+
 	/* ------------------------------------*/
 	/* 		Public Asset instance
-	/* ------------------------------------*/	
+	/* ------------------------------------*/
 	public $assets;
 
 	private function _urlData()
@@ -84,10 +84,10 @@ final class View
 
 	/* ------------------------------------*/
 	/* 		PUBLIC METHODS
-	/* ------------------------------------*/	
+	/* ------------------------------------*/
 	public function __construct(Asset $assets, $filePath, $url)
 	{
-		
+
 		$this->_filePath = $filePath;
 
 		$this->assets = $assets;
@@ -100,7 +100,7 @@ final class View
 			$this->data('_PAGE_TITLE', PAGE_TITLE);
 			$this->data('_VIEW_TITLE', "title");
 		}
-		
+
 		$this->data('_URL_ID', $idUrl);
 		$this->data('_LANG', Language::get());
 	}
@@ -111,8 +111,8 @@ final class View
 			$this->_data = array_merge($this->_data, $key);
 		} else {
 			$this->_data[$key] = $value;
-		}	
-		
+		}
+
 	}
 
 	public function tpl($key, $value = "")
@@ -166,12 +166,12 @@ final class View
 			$this->_layout = $layout;
 			Layout::$data = $mapping;
 		}
-	}	
+	}
 
 	public function title($str, $overwrite = false, $tpl = null)
 	{
 		$title = $str;
-		
+
 		if (!$overwrite) {
 			$title = $str . " - " . PAGE_TITLE;
 		}
@@ -204,7 +204,7 @@ final class View
 		} else {
 			return ['VIEW',$name];
 		}
-		
+
 	}
 
 	public function setTemplate($name, array $data = [], $merge = false)
@@ -233,7 +233,7 @@ final class View
 			$file = str_replace("/", "", Helper::getClassName($this->_filePath, '$2'));
 			$class = ($file == 'page') ? $page : $file;
 			$filePath = $this->_filePath . $class . FILE_EXT;
-			$extend = "\\" . $this->_parentPage;	
+			$extend = "\\" . $this->_parentPage;
 
 			if (Helper::regexp('#::#', $method)) {
 				list($cls, $mt) = explode("::", $method);
@@ -241,12 +241,12 @@ final class View
 			}
 
 		} else {
-		
+
 			$filePath = Helper::getClassName($this->_parentPage, '$1');
 			$class = Helper::getClassName($this->_parentPage);
 			$filePath = $filePath . "/" . $class . FILE_EXT;
 			$extend = '\Roducks\Page\Block';
-		
+
 		}
 
 		Error::view("View Error", __LINE__, __FILE__ , $filePath, $visibility, $extend, $method, $alert);
@@ -297,21 +297,21 @@ final class View
 
 		// Get data passed from page
 		extract($this->_data);
-		
+
 		// Include Header
 		if ($header_footer) {
-			$header = $dir_templates . "header" . FILE_TPL;
+			$header = $dir_templates . "header" . FILE_PHTML;
 			if (file_exists($header)) {
 				include $header;
-				$top = $dir_templates . "top" . FILE_TPL;
-				
+				$top = $dir_templates . "top" . FILE_PHTML;
+
 				if (file_exists($top) && $this->_blocks['top']) {
 					include $top;
 				}
 				if (Session::exists(Login::SESSION_SECURITY)) {
 					Error::security();
 					Login::security(false);
-				} 
+				}
 			} else {
 				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $header);
 			}
@@ -327,7 +327,7 @@ final class View
 		if (file_exists($dir_layouts)) {
 			include $dir_layouts;
 		} else if (file_exists($dir_view) && !empty($this->_view)) {
-			
+
 			if (Helper::isPage($dir_view)) {
 				Layout::view(null);
 			} else {
@@ -337,8 +337,8 @@ final class View
 
 		// Load body *ONLY* for 404 templates
 		if (!empty($this->_body)) {
-			//Core::loadFile($dir_templates,$this->_body.FILE_TPL);
-			$body = $dir_templates.$this->_body.FILE_TPL;
+			//Core::loadFile($dir_templates,$this->_body.FILE_PHTML);
+			$body = $dir_templates.$this->_body.FILE_PHTML;
 
 			if (file_exists($body)) {
 				include $body;
@@ -350,9 +350,9 @@ final class View
 		// Include Bottom & Footer
 		if ($header_footer) {
 
-				$bottom = $dir_templates . "bottom" . FILE_TPL;
-				$footer = $dir_templates . "footer" . FILE_TPL;
-				
+				$bottom = $dir_templates . "bottom" . FILE_PHTML;
+				$footer = $dir_templates . "footer" . FILE_PHTML;
+
 				if (file_exists($bottom) && $this->_blocks['bottom']) {
 					include $bottom;
 				}
@@ -370,7 +370,7 @@ final class View
 					Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $footer);
 				}
 
-		} 
+		}
 
 		return true;
 	}

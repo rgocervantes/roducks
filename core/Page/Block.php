@@ -29,13 +29,13 @@ class Block extends Frame
 	var $rdks = 0;
 
 	protected $_pageType = 'BLOCK';
-	
+
 	public function __construct($settings, View $view)
 	{
 		parent::__construct($settings);
 
 		$this->view = $view;
-		$this->view->parentPage($this->_getParentClassName());		
+		$this->view->parentPage($this->_getParentClassName());
 
 	}
 
@@ -53,11 +53,11 @@ class Block extends Frame
 
 			$block = $slashes[0];
 			unset($slashes[0]);
-			
+
 			if (isset($slashes[1])) {
 				$method = (!empty($slashes[1])) ? $slashes[1] : $default;
 				unset($slashes[1]);
-			} 
+			}
 
 			$params = Helper::resetArray($slashes);
 
@@ -71,7 +71,7 @@ class Block extends Frame
 	*	Block::load("Home");
 	*	Block::load("Home/output");
 	*	Block::load("Home/output/bar/12345");
-	*	Block::load("Home", ["foo" => "bar", 'id' => 12345] );	
+	*	Block::load("Home", ["foo" => "bar", 'id' => 12345] );
 	*/
 	static function load($path, array $extraParams = [], array $queryString = [])
 	{
@@ -97,7 +97,7 @@ class Block extends Frame
 		$block = Helper::getCamelName($block);
 
 		return Core::loadPage(Core::getBlocksPath($block), $block, "output", array(), array(), true);
-		
+
 	}
 
-} 
+}

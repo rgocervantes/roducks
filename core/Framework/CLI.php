@@ -137,15 +137,13 @@ class CLI extends Frame
 		exit;
 	}
 
-	static function phpError($errno, $errstr)
+	static function phpError($num, $message, $line, $file)
 	{
-		$debug = debug_backtrace();
 		$error = [];
-
-		$error[] = self::line('[x]'.$errstr, 4);
+		$error[] = self::line('[x]'.$message, 4);
 		$error[] = self::line('[x]', 4);
-		if (isset($debug[0]['line'])) $error[] = self::line('[x]Line: '.$debug[0]['line'], 4);
-		if (isset($debug[0]['line'])) $error[] = self::line('[x]File: '.$debug[0]['file'], 4);
+		if (!empty($line)) $error[] = self::line('[x]Line: '.$line, 4);
+		if (!empty($file)) $error[] = self::line('[x]File: '.$file, 4);
 
 		self::_dialog("[PHP Error]", self::_getOutput($error, "  - "), self::FAILURE);
 		exit;

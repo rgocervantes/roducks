@@ -27,41 +27,41 @@ class CORS
 	{
 		Http::setHeader("Access-Control-{$key}", $value);
 	}
-	
+
 	/**
 	*	GET, POST, OPTIONS, PUT, DELETE
 	*/
-	public function methods(array $arr = [])
+	static function methods(array $arr = [])
 	{
 		if (is_array($arr) && count($arr) > 0) {
-			self::accessControl("Allow-Methods:",implode(", ",$arr));	
+			self::accessControl("Allow-Methods:",implode(", ",$arr));
 		}
 	}
 
-	public function allowDomains($domains = "*")
+	static function allowDomains($domains = "*")
 	{
 		$domains = (is_array($domains)) ? implode(" ", $domains) : $domains;
 		self::accessControl("Allow-Origin:", $domains);
 	}
 
-	public function headers(array $arr)
+	static function headers(array $arr)
 	{
 		$headers = (is_array($arr)) ? implode(", ", $arr) : $arr;
 		self::accessControl("Allow-Headers:", $headers);
 	}
 
-	public function exposeHeaders(array $arr)
+	static function exposeHeaders(array $arr)
 	{
 		$headers = (is_array($arr)) ? implode(" ", $arr) : $arr;
 		self::accessControl("Expose-Headers:", $headers);
 	}
 
-	public function credentails()
+	static function credentails()
 	{
 		self::accessControl("Allow-Credentials:", "true");
-	}	
+	}
 
-	public function maxAge($value = 1728000)
+	static function maxAge($value = 1728000)
 	{
 		self::accessControl("Max-Age:", $value);
 	}

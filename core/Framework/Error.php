@@ -391,12 +391,9 @@ class Error
 
 	}
 
-	static function phpError($errno, $errstr)
+	static function phpError($num, $message, $file, $line)
 	{
-		$debug = debug_backtrace();
-		$file = (isset($debug[0]['file'])) ? $debug[0]['file'] : '';
-		$line = (isset($debug[0]['line'])) ? $debug[0]['line'] : 0;
-		echo self::block("PHP Error", $line, __FILE__, $file, $errstr, true);
+		echo self::block("PHP Error", $line, __FILE__, $file, $message, true);
 	}
 
 }

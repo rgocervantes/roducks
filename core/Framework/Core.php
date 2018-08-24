@@ -225,7 +225,7 @@ class Core
 
 	}
 
-	static function getViewsPath($parentPage, $path, $tpl)
+	static function getViewsPath($parentPage, $path, $tpl, $parser = true)
 	{
 
 		if ($path == Helper::PAGE_NOT_FOUND) {
@@ -244,7 +244,7 @@ class Core
 		$pathCore = $parentPath . DIRECTORY_SEPARATOR;
 		$file = Helper::getClassName($path);
 
-		// Remove underscore for block name, example: app/sites/admin/blocks/_Roles/
+		// Remove underscore for block name, example: app/Sites/Admin/Blocks/_Roles/
 		if (Helper::regexp(Helper::REGEXP_IS_URL_DISPATCH, $file)) {
 			$path = Helper::getBlockName($path);
 		}
@@ -281,7 +281,11 @@ class Core
 		}
 
 		if (!$found) {
-			Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $path.$view);
+			if ($parser) {
+				return self::getViewsPath($parentPage, $path, str_replace(FILE_PHTML, FILE_TPL, $tpl), false);
+			} else {
+				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $path.$view);
+			}
 		}
 
 		return \App::getRealFilePath($path.$view);
@@ -295,7 +299,7 @@ class Core
 
 	static function getLayoutsPath($tpl)
 	{
-		return self::getPath(DIR_LAYOUTS, $tpl . FILE_TPL, false);
+		return self::getPath(DIR_LAYOUTS, $tpl . FILE_PHTML, false);
 	}
 
 	static function getMenuPath($tpl)
@@ -305,7 +309,7 @@ class Core
 
 	static function getEmailsPath($tpl)
 	{
-		return self::getPath(DIR_EMAILS, $tpl . FILE_TPL, false);
+		return self::getPath(DIR_EMAILS, $tpl . FILE_PHTML, false);
 	}
 
 	static function getEventsPath()

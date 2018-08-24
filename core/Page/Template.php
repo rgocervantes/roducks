@@ -25,15 +25,15 @@ use Roducks\Framework\Error;
 
 class Template
 {
-	
+
 	static $path = null;
 	static $data = [];
-	
+
 	static function view($file, array $data = [], $merge = false)
 	{
 
 		if (!is_null(self::$path) && !empty($file)) {
-			$dir_template = self::$path.$file.FILE_TPL;
+			$dir_template = self::$path.$file.FILE_PHTML;
 			if (file_exists($dir_template)) {
 				$content = self::$data;
 
@@ -44,7 +44,7 @@ class Template
 						$content = $data;
 					}
 				}
-				
+
 				extract($content);
 				include $dir_template;
 			} else {
@@ -62,22 +62,22 @@ class Template
 
 	static function displayBlock($bool)
 	{
-		return ($bool) ? 'display="block"; ' : ''; 
-	}	
+		return ($bool) ? 'display="block"; ' : '';
+	}
 
 	static function displayNone($bool)
 	{
-		return ($bool) ? 'display="none"; ' : ''; 
-	}		
+		return ($bool) ? 'display="none"; ' : '';
+	}
 
 	static function checked($bool)
 	{
-		return ($bool) ? ' checked="checked"' : ''; 
+		return ($bool) ? ' checked="checked"' : '';
 	}
 
 	static function selected($bool)
 	{
-		return ($bool) ? ' selected="selected"' : ''; 
+		return ($bool) ? ' selected="selected"' : '';
 	}
 
 	static function conditional($bool, $onTrue = "", $onFalse = "")
@@ -88,7 +88,7 @@ class Template
 	static function equals($a1, $a2, $onTrue = "", $onFalse = "")
 	{
 		return self::conditional(($a1 == $a2), $onTrue, $onFalse);
-	}	
+	}
 
 	static function notEmpty($value, $onTrue = "", $onFalse = "")
 	{

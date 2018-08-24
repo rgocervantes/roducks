@@ -49,11 +49,11 @@ Result
 	if ($request->json()) {
 		$response = $request->getOutput(true);
 	}
-	
+
 	if ($request->success()) {
 
 	} else {
-		
+
 	}
 
 */
@@ -69,11 +69,11 @@ class Request extends stdClass
 	private $_url;
 	private $_type;
 	private $_result = null;
+	private $_headers = [];
 	private $_contentType = 'undefined';
 	private $_httpCode = 404;
-	private $_redirect = false; 
+	private $_redirect = false;
 	private $_effectiveURL = '';
-	private $_params;
 
 	static function getContent($url = "")
 	{
@@ -81,55 +81,52 @@ class Request extends stdClass
 		return file_get_contents($url);
 	}
 
-	static function init($type,$url)
+	static function init($type, $url)
 	{
-		return new Request($type,$url);
+		return new Request($type, $url);
 	}
 
 	static function get($url)
 	{
-		return self::init('GET', $url);
+		return self::init(__FUNCTION__, $url);
 	}
 
 	static function post($url)
 	{
-		return self::init('POST', $url);
+		return self::init(__FUNCTION__, $url);
+	}
+
+	static function put($url)
+	{
+		return self::init(__FUNCTION__, $url);
+	}
+
+	static function delete($url)
+	{
+		return self::init(__FUNCTION__, $url);
+	}
+
+	static function patch($url)
+	{
+		return self::init(__FUNCTION__, $url);
 	}
 
 	static function obj()
 	{
-		return self::get('/stdClass');
+		return self::init('_OBJECT_', null);
 	}
 
-	/**
-	*	$name = "XGET"
-	*/
-	private function _customRequest()
+	public function __construct($type, $url)
 	{
-		curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, $this->_type);
-	}
+		if ($type != '_OBJECT_') {
+			$this->_ch = curl_init();
+			$this->_url = $url;
+			$this->_type = strtoupper($type);
 
-	public function setBody($k, $v)
-	{
-		$this->_params->$k = $v;
-	}
-
-	public function getBody()
-	{
-		return $this->_params;
-	}
-
-	public function __construct($type,$url)
-	{
-		$this->_params = new stdClass;
-		$this->_ch = curl_init();
-		$this->_url = $url;
-		$this->_type = strtoupper($type);
-
-		if ($this->_type != 'POST' && $this->_type != 'GET') {
-			$this->_customRequest();
+			if (!in_array($this->_type, ['GET','POST','PUT','DELETE','PATCH','OPTIONS'])) {
+				curl_setopt($this->_ch, CURLOPT_CUSTOMREQUEST, $this->_type);
+			}
 		}
-
 	}
 
 	public function body($values)
@@ -139,7 +136,7 @@ class Request extends stdClass
 			case 'GET':
 				$this->_url .= (is_array($values) && count($values) > 0) ? '?' . http_build_query($values) : '';
 				break;
-			
+
 			case 'POST':
 				$count = (is_array($values)) ? count($values) : 1;
 				$body = (is_array($values)) ? http_build_query($values) : $values;
@@ -150,6 +147,49 @@ class Request extends stdClass
 
 		return $this;
 
+	}
+
+	/*
+		$headers = [
+			'Content-Type' => "application/json; charset=utf-8",
+			'Content-Length' => strlen(json_encode(['data' => "roducks.framework"]))
+		];
+	*/
+	public function headers(array $values = [])
+	{
+		if (count($values) > 0) {
+			foreach ($values as $key => $value) {
+				array_push($this->_headers, "{$key}: {$value}");
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 *	@param $user string
+	 *	@param $pswd string
+	 */
+	public function basicAuth($user, $pswd)
+	{
+		curl_setopt($this->_ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+		curl_setopt($this->_ch, CURLOPT_USERPWD, "{$user}:{$pswd}");
+
+		return $this;
+	}
+
+	/**
+	 *	@param $accessToken string
+	 */
+	public function bearerToken($accessToken)
+	{
+		if (!empty($accessToken)) {
+			$this->headers([
+				'Authorization' => "Bearer {$accessToken}"
+			]);
+		}
+
+		return $this;
 	}
 
 	/**
@@ -163,22 +203,22 @@ class Request extends stdClass
 		}
 
 		curl_setopt($this->_ch, CURLOPT_PROXY, $proxy);     // PROXY details with port
-		
+
 		if (!is_null($proxyauth)) {
 			curl_setopt($this->_ch, CURLOPT_PROXYUSERPWD, $proxyauth);   // Use if proxy have username and password
 		}
 
 		if ($type) {
-			curl_setopt($this->_ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5); // If expected to call with specific PROXY type	
+			curl_setopt($this->_ch, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5); // If expected to call with specific PROXY type
 		}
-		
-		return $this;	
+
+		return $this;
 	}
 
 	public function verbose()
 	{
 		curl_setopt($this->_ch, CURLOPT_VERBOSE, true);
-		return $this;		
+		return $this;
 	}
 
 	public function ssl($option = true)
@@ -229,48 +269,24 @@ class Request extends stdClass
 	}
 
 	/**
-	 *	$cookie = 'fb_cookie';
-	 *
+	 *	@param $cookie string @example: 'fb_cookie';
 	 */
 	public function cookieFile($cookie)
 	{
  		curl_setopt($this->_ch, CURLOPT_COOKIEJAR, $cookie);
-    	curl_setopt($this->_ch, CURLOPT_COOKIEFILE, $cookie);
-    	return $this;
+    curl_setopt($this->_ch, CURLOPT_COOKIEFILE, $cookie);
+
+    return $this;
 	}
 
 	public function persistSession()
 	{
-		// if we want to request has an active session
-
 		// current SESSION
 		$strCookie = 'PHPSESSID=' . $_COOKIE['PHPSESSID'] . '; path=/';
 		// we close the current session to lock it out.
 		session_write_close();
 
-		curl_setopt($this->_ch, CURLOPT_COOKIE, $strCookie ); 
-
-		return $this;
-
-	}
-
-	/*
-		$headers = [
-			'Content-Type' => "application/json; charset=utf-8",
-			'Content-Length' => strlen(json_encode(['data' => "roducks.framework"]))
-		];
-	*/
-	public function headers(array $values = [])
-	{
-
-		$headers = [];
-
-		if (count($values) > 0) {
-			foreach ($values as $key => $value) {
-				array_push($headers, "{$key}: {$value}");
-			}
-			curl_setopt($this->_ch, CURLOPT_HTTPHEADER, $headers);
-		}
+		curl_setopt($this->_ch, CURLOPT_COOKIE, $strCookie);
 
 		return $this;
 	}
@@ -279,15 +295,19 @@ class Request extends stdClass
 	{
 
 		curl_setopt($this->_ch, CURLOPT_URL, $this->_url);
-		curl_setopt($this->_ch, CURLOPT_RETURNTRANSFER, 1); 
-		curl_setopt($this->_ch, CURLINFO_HEADER_OUT, 1); 
+		curl_setopt($this->_ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($this->_ch, CURLINFO_HEADER_OUT, 1);
 		curl_setopt($this->_ch, CURLOPT_HEADER, 0);
 
-		if ($this->_redirect)
-			$this->_effectiveURL = curl_getinfo($this->_ch, CURLINFO_EFFECTIVE_URL);	
+		if (count($this->_headers) > 0) {
+			curl_setopt($this->_ch, CURLOPT_HTTPHEADER, $this->_headers);
+		}
 
-		$this->_result = curl_exec($this->_ch); 
-		$this->_contentType = curl_getinfo($this->_ch, CURLINFO_CONTENT_TYPE);	
+		if ($this->_redirect)
+			$this->_effectiveURL = curl_getinfo($this->_ch, CURLINFO_EFFECTIVE_URL);
+
+		$this->_result = curl_exec($this->_ch);
+		$this->_contentType = curl_getinfo($this->_ch, CURLINFO_CONTENT_TYPE);
 		$this->_httpCode = curl_getinfo($this->_ch, CURLINFO_HTTP_CODE);
 
 		curl_close($this->_ch);
@@ -305,11 +325,10 @@ class Request extends stdClass
 
 	public function getOutput($inJSON = false)
 	{
-
 		$result = ($this->json() && $inJSON) ? json_decode($this->_result, true) : $this->_result;
 
 		return $result;
-	} 
+	}
 
 	public function getError()
 	{
@@ -319,7 +338,7 @@ class Request extends stdClass
 	public function getContentType()
 	{
 		return $this->_contentType;
-	}	
+	}
 
 	public function getHttpCode()
 	{

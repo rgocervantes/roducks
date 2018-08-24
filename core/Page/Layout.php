@@ -31,9 +31,9 @@ class Layout
 
 	static function view($name)
 	{
-		
+
 		$include = false;
-		$view = (!is_null($name)) ? $name . FILE_TPL : "";
+		$view = (!is_null($name)) ? $name . FILE_PHTML : "";
 		$dir_view = self::$path . $view;
 		$dir_view_core = Core::getCoreModulesPathFrom($dir_view);
 
@@ -46,13 +46,18 @@ class Layout
 			$include = true;
 			$file = $dir_view_core;
 		}
-	
-		if ($include) {
-			extract(Template::$data);
-			include $file;
+
+		if (preg_match('/\.tpl$/', $file)) {
+			echo Parser::get($file, Template::$data);
 		} else {
-			Error::warning(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $file);
+			if ($include) {
+				extract(Template::$data);
+				include $file;
+			} else {
+				Error::warning(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $file);
+			}
 		}
+
 	}
 
 	static private function _include($data)
@@ -93,9 +98,29 @@ class Layout
 				}
 			} else {
 				self::_include($data);
-			}			
+			}
 		}
 
+	}
+
+	static function getColum($container, $index)
+	{
+
+		$width = 'col-md-12';
+
+		switch ($container) {
+			case 'col-2':
+				$width = 'col-md-6';
+				break;
+			case 'col-3':
+				$width = 'col-md-4';
+				break;
+			case 'col-4':
+				$width = 'col-md-3';
+				break;
+		}
+
+		return $width;
 	}
 
 }

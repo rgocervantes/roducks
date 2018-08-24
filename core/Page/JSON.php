@@ -37,11 +37,11 @@ class JSON extends GenericPage
 
 	/* ------------------------------------*/
 	/* 		JSON OUTPUT
-	/* ------------------------------------*/	
+	/* ------------------------------------*/
 	private $_jsonCode = 200;
 	private $_jsonMessage = "OK!";
 	private $_jsonSuccess = true;
-	
+
 	static function encode($str)
 	{
 		return json_encode($str);
@@ -67,7 +67,7 @@ class JSON extends GenericPage
 			default:
 				# code...
 				break;
-		}	
+		}
 	}
 
 	static function stOutput($obj)
@@ -120,7 +120,7 @@ class JSON extends GenericPage
 
 		self::stOutput($obj);
 
-	}	
+	}
 
 	protected function setStatus($obj)
 	{
@@ -142,7 +142,7 @@ class JSON extends GenericPage
 	protected function setMessage($message)
 	{
 		$this->_jsonMessage = $message;
-	}	
+	}
 
 	protected function setError($code, $msg = "Error", $httpCode = 0)
 	{
@@ -165,10 +165,9 @@ class JSON extends GenericPage
 	{
 
 		if ($this->_crossDomain) {
-			$cors = new CORS;
-			$cors->allowDomains($this->_domains);
-			$cors->methods($this->_methods);
-			$cors->maxAge();
+			CORS::allowDomains($this->_domains);
+			CORS::methods($this->_methods);
+			CORS::maxAge();
 		}
 
 		$this->_jsonOutput($format);
@@ -187,7 +186,7 @@ class JSON extends GenericPage
 	public function __construct($settings)
 	{
 		parent::__construct($settings);
-		
+
 		if ($this->_authentication) {
 			$this->accessAdmin();
 		}
@@ -195,4 +194,4 @@ class JSON extends GenericPage
 		$this->post = Post::init();
 	}
 
-} 
+}

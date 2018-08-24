@@ -24,7 +24,8 @@ require "App.php";
 # Default file extentions
 App::define('FILE_EXT', ".php");
 App::define('FILE_INC', ".inc");
-App::define('FILE_TPL', ".phtml");
+App::define('FILE_PHTML', ".phtml");
+App::define('FILE_TPL', ".tpl");
 
 # Paths
 include_once "Directories" . FILE_EXT;
