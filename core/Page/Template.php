@@ -29,6 +29,31 @@ class Template
 	static $path = null;
 	static $data = [];
 
+	static function tpl($file, array $data = [], $merge = false)
+	{
+		if (!is_null(self::$path) && !empty($file)) {
+			$dir_template = self::$path.$file.FILE_TPL;
+			if (file_exists($dir_template)) {
+				$content = self::$data;
+
+				if (count($data) > 0) {
+					if ($merge) {
+						$content = array_merge(self::$data, $data);
+					} else {
+						$content = $data;
+					}
+				}
+
+				return Parser::get($dir_template, $content);
+			} else {
+				Error::warning(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $dir_template);
+			}
+		} else {
+			Error::warning("Invalid template name",__LINE__, __FILE__, $dir_template);
+		}
+
+	}
+
 	static function view($file, array $data = [], $merge = false)
 	{
 
@@ -48,7 +73,7 @@ class Template
 				extract($content);
 				include $dir_template;
 			} else {
-				Error::warning(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $dir_template);
+				return self::tpl($file, $data, $merge);
 			}
 		} else {
 			Error::warning("Invalid template name",__LINE__, __FILE__, $dir_template);

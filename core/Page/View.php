@@ -301,6 +301,7 @@ final class View
 		// Include Header
 		if ($header_footer) {
 			$header = $dir_templates . "header" . FILE_PHTML;
+			$header_alt = $dir_templates . "header" . FILE_TPL;
 			if (file_exists($header)) {
 				include $header;
 				$top = $dir_templates . "top" . FILE_PHTML;
@@ -308,14 +309,30 @@ final class View
 				if (file_exists($top) && $this->_blocks['top']) {
 					include $top;
 				}
+
 				if (Session::exists(Login::SESSION_SECURITY)) {
 					Error::security();
 					Login::security(false);
 				}
+			} else if(file_exists($header_alt)) {
+				echo Parser::get($header_alt, $this->_data);
+
+				$top = $dir_templates . "top" . FILE_TPL;
+
+				if (file_exists($top) && $this->_blocks['top']) {
+					echo Parser::get($top, $this->_data);
+				}
+
+				if (Session::exists(Login::SESSION_SECURITY)) {
+					Error::security();
+					Login::security(false);
+				}
+
 			} else {
 				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $header);
 			}
 		}
+
 		// Set template data
 		if (!Helper::isBlock($this->_filePath)) {
 			Template::$data = array_merge(Template::$data,$this->_data);
@@ -339,9 +356,12 @@ final class View
 		if (!empty($this->_body)) {
 			//Core::loadFile($dir_templates,$this->_body.FILE_PHTML);
 			$body = $dir_templates.$this->_body.FILE_PHTML;
+			$body_alt = $dir_templates.$this->_body.FILE_TPL;
 
 			if (file_exists($body)) {
 				include $body;
+			} else if(file_exists($body_alt)) {
+				echo Parser::get($body_alt, []);
 			} else {
 				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $body);
 			}
@@ -351,10 +371,14 @@ final class View
 		if ($header_footer) {
 
 				$bottom = $dir_templates . "bottom" . FILE_PHTML;
+				$bottom_alt = $dir_templates . "bottom" . FILE_TPL;
 				$footer = $dir_templates . "footer" . FILE_PHTML;
+				$footer_alt = $dir_templates . "footer" . FILE_TPL;
 
 				if (file_exists($bottom) && $this->_blocks['bottom']) {
 					include $bottom;
+				} else if(file_exists($bottom_alt) && $this->_blocks['bottom']) {
+					echo Parser::get($bottom_alt, $this->_data);
 				}
 
 				if ($scripts) {
@@ -366,6 +390,8 @@ final class View
 
 				if (file_exists($footer)) {
 					include $footer;
+				} else if(file_exists($footer_alt)) {
+					echo Parser::get($footer_alt, []);
 				} else {
 					Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $footer);
 				}

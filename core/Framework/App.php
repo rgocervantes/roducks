@@ -120,6 +120,10 @@ function _text($var, $default = "")
 function __($var, $default = "")
 {
 
+	if (!isset($_COOKIE['RDKS_LANG']) || $_COOKIE['RDKS_LANG'] == 'en') {
+		return $var;
+	}
+
 	$var = preg_replace('/it\'s not/i', 'ITS_NOT', $var);
 	$var = preg_replace('/it does(\snot|n\'t)/i', 'IT_DOES_NOT', $var);
 	$var = preg_replace('/it did(\snot|n\'t)/i', 'IT_DID_NOT', $var);
@@ -149,6 +153,8 @@ function __($var, $default = "")
 	$var = preg_replace('/this item/i', 'THIS_ITEM', $var);
 	$var = preg_replace('/these items/i', 'THESE_ITEMS', $var);
 	$var = preg_replace('/at the moment/i', 'AT_THE_MOMENT', $var);
+	$var = preg_replace('/development mode/i', 'DEVELOPMENT_MODE', $var);
+	$var = preg_replace('/app is/i', 'APP_IS', $var);
 	$var = preg_replace('/thank you/i', 'THANK_YOU', $var);
 	$var = preg_replace('/to delete/i', 'TO_DELETE', $var);
 	$var = preg_replace('/to create/i', 'TO_CREATE', $var);

@@ -28,6 +28,7 @@ App::text('YOU', "You");
 App::text('YOUR', "Your");
 App::text('THEY', "They");
 App::text('IT', "It");
+App::text('IN', "In");
 App::text('THEM', "Them");
 App::text('IT_WAS', "It was");
 App::text('IT_WAS_NOT', "It was not");
@@ -55,6 +56,8 @@ App::text('IS_AVAILABLE', "Is available");
 App::text('IS_NOT_AVAILABLE', "Is not available");
 App::text('AVAILABLE', "Available");
 App::text('AT_THE_MOMENT', "At the moment");
+App::text('DEVELOPMENT_MODE', "Development mode");
+App::text('APP_IS', "App is");
 
 App::text('WILL', "Will");
 App::text('HAVE', "Have");

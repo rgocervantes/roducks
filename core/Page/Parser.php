@@ -20,8 +20,12 @@
 
 namespace Roducks\Page;
 
+use Roducks\Framework\UI;
+use Roducks\Framework\Error;
+use Roducks\Framework\Environment;
 use Request;
 use Helper;
+use Path;
 
 class Parser
 {
@@ -30,7 +34,7 @@ class Parser
   {
     switch ($type) {
       case 'format':
-        $regexp = '/{{% ([a-z_|]+[|])?\$'.$args[0].'(->[a-zA-Z_]+)?(\[[a-zA-Z0-9_\']+\])?([a-zA-Z0-9_\-\/,|\':*\s]+)? %}}/sm';
+        $regexp = '/{{% ([a-z_|]+[|])?\$'.$args[0].'(->[a-zA-Z_]+)?(\[[a-zA-Z0-9_\']+\])?(,\s?[a-zA-Z0-9_\-\/,|\':*\s]+)? %}}/sm';
         break;
     }
 
@@ -69,6 +73,51 @@ class Parser
     }
 
     return $var;
+  }
+
+  private static function _php($func, $var, $commas = "")
+  {
+    $params = [];
+
+    if (preg_match('/^\d+$/', $var)) {
+      $var = intval($var);
+    }
+
+    array_push($params, $var);
+
+    if (!empty($commas)) {
+      $extra = (substr($commas, 0, 1) == ',') ? substr($commas, 1) : $commas;
+      $args = explode(',', $extra);
+
+      if (preg_match('#[*]#', $extra)) {
+        $params = [];
+
+        foreach ($args as $arg) {
+          if (trim($arg) == '*') {
+            array_push($params, $var);
+          } else {
+            if (preg_match('/^\d+$/', $arg)) {
+              $arg = intval($arg);
+            }
+            array_push($params, $arg);
+          }
+        }
+      } else {
+        foreach ($args as $arg) {
+          if (preg_match('/^\d+$/', $arg)) {
+            $arg = intval($arg);
+          }
+          array_push($params, $arg);
+        }
+      }
+
+    }
+
+    if (function_exists($func)) {
+      return call_user_func_array($func, $params);
+    }
+
+    return ($func == 'hide') ? '' : $var;
   }
 
   private static function _format($matches2, $value)
@@ -123,7 +172,10 @@ class Parser
       $condition = false;
 
       switch ($functions[2]) {
-        case 'user_logged_in':
+        case 'super_admin':
+          $condition = true;
+          break;
+        case 'logged_in':
           $condition = true;
           break;
       }
@@ -138,51 +190,6 @@ class Parser
 
     return $tpl;
 
-  }
-
-  private static function _php($func, $var, $commas = "")
-  {
-    $params = [];
-
-    if (preg_match('/^\d+$/', $var)) {
-      $var = intval($var);
-    }
-
-    array_push($params, $var);
-
-    if (!empty($commas)) {
-      $extra = (substr($commas, 0, 1) == ',') ? substr($commas, 1) : $commas;
-      $args = explode(',', $extra);
-
-      if (preg_match('#[*]#', $extra)) {
-        $params = [];
-
-        foreach ($args as $arg) {
-          if (trim($arg) == '*') {
-            array_push($params, $var);
-          } else {
-            if (preg_match('/^\d+$/', $arg)) {
-              $arg = intval($arg);
-            }
-            array_push($params, $arg);
-          }
-        }
-      } else {
-        foreach ($args as $arg) {
-          if (preg_match('/^\d+$/', $arg)) {
-            $arg = intval($arg);
-          }
-          array_push($params, $arg);
-        }
-      }
-
-    }
-
-    if (function_exists($func)) {
-      return call_user_func_array($func, $params);
-    }
-
-    return ($func == 'hide') ? '' : $var;
   }
 
   private static function _aggregator($tpl, $key, $value)
@@ -345,25 +352,38 @@ class Parser
     return $k;
   }
 
-  private static function _block($block, $data)
+  private static function _blocks($tpl, $key, $value)
+  {
+    $tpl = preg_replace_callback('/{{% @block\((\$'.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])?(,[a-zA-Z0-9:\s\'",\$\[\]{}]+)?\) %}}/sm', function($block) use ($key, $value) {
+      $b2 = (isset($block[2])) ? $block[2] : '';
+      $b3 = (isset($block[3])) ? $block[3] : '';
+      $var = Parser::_var([null, null, $b2, $b3], $value);
+      $params = (isset($block[4])) ? $block[4] : '';
+      return '{{% @block('.$var.$params.') %}}';
+    }, $tpl);
+
+    return $tpl;
+  }
+
+  private static function _getParams($json, $data)
   {
     $ret = [];
 
-    if (isset($block[2])) {
-      $m = preg_replace('/\$([a-zA-Z_]+)/', '"$1"', $block[2]);
-      $m = preg_replace('/,\s?(\[[a-zA-Z0-9_:{}\s\'",\$\[\]]+\])/', '$1', $m);
-      $m = json_decode($m, true);
+    $m = preg_replace('/\$([a-zA-Z_]+)/', '"$1"', $json);
+    $m = preg_replace('/,\s?([a-zA-Z0-9_:{}\s\'",\$\[\]]+)/', '$1', $m);
+    $m = json_decode($m, true);
 
-      if (count($m) == 1) {
-        $m = $m[0];
-      }
-
-      foreach ($m as $x => $y) {
-        $v = (!is_array($y) && isset($data[$y])) ? $data[$y] : $y;
-        $ret[$x] = $v;
-      }
+    foreach ($m as $x => $y) {
+      $v = (!is_array($y) && isset($data[$y])) ? $data[$y] : $y;
+      $ret[$x] = $v;
     }
 
+    return $ret;
+  }
+
+  private static function _block($block, $data)
+  {
+    $ret = (isset($block[2])) ? self::_getParams($block[2], $data) : [];
     $name = str_replace("'", '', $block[1]);
 
     ob_start();
@@ -373,6 +393,16 @@ class Parser
 
     return $content;
 
+  }
+
+  public static function formatter($tpl, $key, $value)
+  {
+
+    $tpl = preg_replace_callback(self::_rules('format', [$key]), function($matches) use ($key, $value){
+      return Parser::_format($matches, $value);
+    }, $tpl);
+
+    return $tpl;
   }
 
   public static function get($file, array $data)
@@ -387,19 +417,15 @@ class Parser
   	|----------------------------------------------------------------------
   	*/
 		foreach ($data as $key => $value) {
-
-      $tpl = preg_replace_callback(self::_rules('format', [$key]), function($matches2) use ($value){
-        return Parser::_format($matches2, $value);
-			}, $tpl);
+      $tpl = Parser::_blocks($tpl, $key, $value);
+      $tpl = Parser::formatter($tpl, $key, $value);
 
 			if (is_array($value)) {
 				$ret['dimensional'][$key] = $value;
-
       } else if($value instanceof \Roducks\Libs\ORM\ORM) {
         $tpl = Parser::_query($tpl, $key, $value);
 			} else {
         $tpl = Parser::_aggregator($tpl, $key, $value);
-
 				$ret['lineal'][$key] = $value;
 			}
 		}
@@ -448,10 +474,6 @@ class Parser
   	*/
 		foreach ($ret['lineal'] as $key => $value) {
 
-			$tpl = preg_replace_callback(self::_rules('format', [$key]), function($matches) use ($value){
-        return Parser::_format($matches, $value);
-			}, $tpl);
-
 			$tpl = preg_replace_callback('/{{% @if\((!)?(isset|empty)\(\$('.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])?\)\) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm', function($functions) use ($value) {
         return Parser::_issetEmpty($functions, $value);
 			}, $tpl);
@@ -462,8 +484,108 @@ class Parser
 
 		}
 
-    $tpl = preg_replace_callback('/{{% @block\(([a-z\-\/\']+)(,[a-zA-Z0-9:\s\'",\$\[\]{}]+)?\) %}}/sm', function($block) use ($data) {
+    /*
+  	|----------------------------------------------------------------------
+  	|	Block
+  	|----------------------------------------------------------------------
+  	*/
+    $tpl = preg_replace_callback('/{{% @block\(([a-z0-9_\-\/\']+)(,[a-zA-Z0-9:\s\'",\$\[\]{}]+)?\) %}}/sm', function($block) use ($data) {
       return Parser::_block($block, $data);
+    }, $tpl);
+
+    /*
+  	|----------------------------------------------------------------------
+  	|	Asset
+  	|----------------------------------------------------------------------
+  	*/
+    $tpl = preg_replace_callback('/{{% @asset:([a-z]+)\(([a-zA-Z0-9_\.\-\'\"\/]+)([0-9,\s]+)?\) %}}/', function($asset) {
+      $src = str_replace(['"',"'"], '', $asset[2]);
+      $size = (isset($asset[3])) ? intval(trim(str_replace(',','', $asset[3]))) : '';
+
+      switch ($asset[1]) {
+        case 'image':
+          $resource = UI::getImage($src, $size);
+          break;
+        case 'icon':
+          $resource = UI::getIcon($src, $size);
+          break;
+      }
+
+      return $resource;
+
+    }, $tpl);
+
+    /*
+  	|----------------------------------------------------------------------
+  	|	Template
+  	|----------------------------------------------------------------------
+  	*/
+    //{{% @template('title', {"rod": "developer"}) %}}
+    $tpl = preg_replace_callback('/{{% @template\(([a-zA-Z0-9_\.\-\'\"]+)(,[a-zA-Z0-9\s\'",:\$\[\]{}]+)?\) %}}/', function($template) use($data) {
+
+      $file = str_replace(['"',"'"], '', $template[1]);
+      $vars = [];
+
+      if (isset($template[2])) {
+        $vars = self::_getParams($template[2], $data);
+      }
+
+      $merge = (count($vars) > 0);
+
+      return Template::tpl($file, $vars, $merge);
+    }, $tpl);
+
+    /*
+  	|----------------------------------------------------------------------
+  	|	Translations
+  	|----------------------------------------------------------------------
+  	*/
+    $tpl = preg_replace_callback('/{{% __\((.+)\) %}}/sm', function($str) {
+      $text = str_replace(['"',"'"], '', $str[1]);
+      return __($text);
+    }, $tpl);
+
+    /*
+  	|----------------------------------------------------------------------
+  	|	Menu
+  	|----------------------------------------------------------------------
+  	*/
+    $tpl = preg_replace_callback('/{{% @menu:([a-z]+)\(([a-z\-\']+),\s?([a-z\-\']+)\) %}}/sm', function($menu) {
+
+      $config = str_replace(['"',"'"], '', $menu[2]);
+      $name = str_replace(['"',"'"], '', $menu[3]);
+
+      ob_start();
+      \Roducks\Page\Block::load("menu/{$menu[1]}", ['items' => Template::menu($config), 'tpl' => $name]);
+      $content = ob_get_contents();
+      ob_end_clean();
+
+      return $content;
+    }, $tpl);
+
+    /*
+  	|----------------------------------------------------------------------
+  	|	Environment
+  	|----------------------------------------------------------------------
+  	*/
+    $tpl = preg_replace_callback('/{{% @env\(([a-z\']+)\) %}}(.*?){{% @endenv %}}/sm', function($env) {
+
+      $display = false;
+      $type = str_replace(['"',"'"], '', $env[1]);
+
+      switch ($type) {
+        case 'dev':
+          $display = Environment::inDEV();
+          break;
+        case 'qa':
+          $display = Environment::inQA();
+          break;
+        case 'pro':
+          $display = Environment::inPRO();
+          break;
+      }
+
+      return ($display) ? $env[2] : '';
     }, $tpl);
 
     /*
