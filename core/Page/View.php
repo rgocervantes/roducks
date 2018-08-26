@@ -315,12 +315,12 @@ final class View
 					Login::security(false);
 				}
 			} else if(file_exists($header_alt)) {
-				echo Parser::get($header_alt, $this->_data);
+				echo Duckling::parser($header_alt, $this->_data);
 
 				$top = $dir_templates . "top" . FILE_TPL;
 
 				if (file_exists($top) && $this->_blocks['top']) {
-					echo Parser::get($top, $this->_data);
+					echo Duckling::parser($top, $this->_data);
 				}
 
 				if (Session::exists(Login::SESSION_SECURITY)) {
@@ -361,7 +361,7 @@ final class View
 			if (file_exists($body)) {
 				include $body;
 			} else if(file_exists($body_alt)) {
-				echo Parser::get($body_alt, []);
+				echo Duckling::parser($body_alt, []);
 			} else {
 				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $body);
 			}
@@ -378,7 +378,7 @@ final class View
 				if (file_exists($bottom) && $this->_blocks['bottom']) {
 					include $bottom;
 				} else if(file_exists($bottom_alt) && $this->_blocks['bottom']) {
-					echo Parser::get($bottom_alt, $this->_data);
+					echo Duckling::parser($bottom_alt, $this->_data);
 				}
 
 				if ($scripts) {
@@ -391,7 +391,7 @@ final class View
 				if (file_exists($footer)) {
 					include $footer;
 				} else if(file_exists($footer_alt)) {
-					echo Parser::get($footer_alt, []);
+					echo Duckling::parser($footer_alt, []);
 				} else {
 					Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $footer);
 				}

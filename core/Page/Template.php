@@ -44,7 +44,7 @@ class Template
 					}
 				}
 
-				return Parser::get($dir_template, $content);
+				return Duckling::parser($dir_template, $content);
 			} else {
 				Error::warning(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $dir_template);
 			}

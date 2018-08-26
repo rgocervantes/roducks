@@ -48,7 +48,7 @@ class Layout
 		}
 
 		if (preg_match('/\.tpl$/', $file)) {
-			echo Parser::get($file, Template::$data);
+			echo Duckling::parser($file, Template::$data);
 		} else {
 			if ($include) {
 				extract(Template::$data);

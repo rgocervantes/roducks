@@ -27,7 +27,7 @@ use Request;
 use Helper;
 use Path;
 
-class Parser
+class Duckling
 {
 
   private static function _rules($type, $args)
@@ -156,8 +156,8 @@ class Parser
       $type = (!empty($matches[2])) ? str_replace("'", '', $matches[2]) : 'default';
 
       while($row = $query->fetch($type)):
-        $loop .= preg_replace_callback(Parser::_rules('format', [$matches[3]]), function ($m) use($row) {
-          return Parser::_format($m, $row);
+        $loop .= preg_replace_callback(Duckling::_rules('format', [$matches[3]]), function ($m) use($row) {
+          return Duckling::_format($m, $row);
         }, $content);
       endwhile;
 
@@ -199,7 +199,7 @@ class Parser
   {
 
     $tpl = preg_replace_callback('/{{% (\$i [+\-]) \$'.$key.'(->[a-zA-Z_]+)?(\[[a-zA-Z0-9_\']+\])? %}}/', function($dis) use ($value){
-      $var = Parser::_var($dis, $value);
+      $var = Duckling::_var($dis, $value);
       if (!is_integer($var)) {
         $var = 0;
       }
@@ -360,7 +360,7 @@ class Parser
     $tpl = preg_replace_callback('/{{% @block\((\$'.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])?(,[a-zA-Z0-9:\s\'",\$\[\]{}]+)?\) %}}/sm', function($block) use ($key, $value) {
       $b2 = (isset($block[2])) ? $block[2] : '';
       $b3 = (isset($block[3])) ? $block[3] : '';
-      $var = Parser::_var([null, null, $b2, $b3], $value);
+      $var = Duckling::_var([null, null, $b2, $b3], $value);
       $params = (isset($block[4])) ? $block[4] : '';
       return '{{% @block('.$var.$params.') %}}';
     }, $tpl);
@@ -402,13 +402,13 @@ class Parser
   {
 
     $tpl = preg_replace_callback(self::_rules('format', [$key]), function($matches) use ($key, $value){
-      return Parser::_format($matches, $value);
+      return Duckling::_format($matches, $value);
     }, $tpl);
 
     return $tpl;
   }
 
-  public static function get($file, array $data)
+  public static function parser($file, array $data)
   {
 
     $tpl = Request::getContent($file);
@@ -420,19 +420,19 @@ class Parser
   	|----------------------------------------------------------------------
   	*/
 		foreach ($data as $key => $value) {
-      $tpl = Parser::_blocks($tpl, $key, $value);
-      $tpl = Parser::formatter($tpl, $key, $value);
+      $tpl = Duckling::_blocks($tpl, $key, $value);
+      $tpl = Duckling::formatter($tpl, $key, $value);
 
       $tpl = preg_replace_callback(self::_rules('isset_empty', [$key]), function($functions) use ($value) {
-        return Parser::_issetEmpty($functions, $value);
+        return Duckling::_issetEmpty($functions, $value);
 			}, $tpl);
 
 			if (is_array($value)) {
 				$ret['dimensional'][$key] = $value;
       } else if($value instanceof \Roducks\Libs\ORM\ORM) {
-        $tpl = Parser::_query($tpl, $key, $value);
+        $tpl = Duckling::_query($tpl, $key, $value);
 			} else {
-        $tpl = Parser::_aggregator($tpl, $key, $value);
+        $tpl = Duckling::_aggregator($tpl, $key, $value);
 				$ret['lineal'][$key] = $value;
 			}
 		}
@@ -445,7 +445,7 @@ class Parser
 		foreach ($ret['dimensional'] as $key => $value) {
 
 			$tpl = preg_replace_callback('/{{% @if \$('.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z0-9_\']+\])? ([=<>!]+) ([a-zA-Z0-9_\']+) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm', function($condition) use ($value) {
-        return Parser::_condition($condition, null, $value);
+        return Duckling::_condition($condition, null, $value);
 			}, $tpl);
 
 			$tpl = preg_replace_callback('/{{% @each \$'.$key.' in \$([a-z]+) %}}(.*?){{% @endeach %}}/sm', function($matches) use (&$ret, $key, $value){
@@ -455,15 +455,15 @@ class Parser
 				foreach ($value as $k => $v) {
 
 					$row = preg_replace_callback('/{{% \$i( (?P<SIGN>[+\-]) (?P<COUNTER>[0-9]+))? %}}/', function($indexes) use ($k){
-            return Parser::_counter($indexes, $k);
+            return Duckling::_counter($indexes, $k);
 					}, $content);
 
 					$row = preg_replace_callback('/{{% @if \$([a-zA-z_]+)(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])? ([=<>!]+) ([a-zA-Z0-9_\']+) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm', function($condition) use ($k, $v) {
-            return Parser::_condition($condition, $k, $v);
+            return Duckling::_condition($condition, $k, $v);
 					}, $row);
 
 					$loop .= preg_replace_callback(self::_rules('format', [$matches[1]]), function($matches2) use ($v){
-            return Parser::_format($matches2, $v);
+            return Duckling::_format($matches2, $v);
 					}, $row);
 
 				}
@@ -482,7 +482,7 @@ class Parser
 		foreach ($ret['lineal'] as $key => $value) {
 
 			$tpl = preg_replace_callback('/{{% @if \$('.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])? ([=<>!]+) ([a-zA-Z0-9_\']+) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm', function($condition) use ($value) {
-        return Parser::_condition($condition, null, $value);
+        return Duckling::_condition($condition, null, $value);
 			}, $tpl);
 
 		}
@@ -493,7 +493,7 @@ class Parser
   	|----------------------------------------------------------------------
   	*/
     $tpl = preg_replace_callback('/{{% @block\(([a-z0-9_\-\/\']+)(,[a-zA-Z0-9:\s\'",\$\[\]{}]+)?\) %}}/sm', function($block) use ($data) {
-      return Parser::_block($block, $data);
+      return Duckling::_block($block, $data);
     }, $tpl);
 
     /*
