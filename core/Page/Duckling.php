@@ -414,6 +414,10 @@ class Duckling
     $tpl = Request::getContent($file);
     $ret = [];
 
+    if (empty($data)) {
+      return $tpl;
+    }
+
     /*
   	|----------------------------------------------------------------------
   	|	Group variables in "Dimensional" or "Lineal"
@@ -442,7 +446,9 @@ class Duckling
   	|	Dimensional
   	|----------------------------------------------------------------------
   	*/
-		foreach ($ret['dimensional'] as $key => $value) {
+    if (isset($ret['dimensional'])) {
+
+		  foreach ($ret['dimensional'] as $key => $value) {
 
 			$tpl = preg_replace_callback('/{{% @if \$('.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z0-9_\']+\])? ([=<>!]+) ([a-zA-Z0-9_\']+) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm', function($condition) use ($value) {
         return Duckling::_condition($condition, null, $value);
@@ -474,19 +480,22 @@ class Duckling
 
 		}
 
+    }
     /*
   	|----------------------------------------------------------------------
   	|	Lineal
   	|----------------------------------------------------------------------
   	*/
-		foreach ($ret['lineal'] as $key => $value) {
+    if (isset($ret['lineal'])) {
 
-			$tpl = preg_replace_callback('/{{% @if \$('.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])? ([=<>!]+) ([a-zA-Z0-9_\']+) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm', function($condition) use ($value) {
-        return Duckling::_condition($condition, null, $value);
-			}, $tpl);
+		  foreach ($ret['lineal'] as $key => $value) {
 
-		}
+  			$tpl = preg_replace_callback('/{{% @if \$('.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])? ([=<>!]+) ([a-zA-Z0-9_\']+) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm', function($condition) use ($value) {
+          return Duckling::_condition($condition, null, $value);
+  			}, $tpl);
 
+		  }
+    }
     /*
   	|----------------------------------------------------------------------
   	|	Block

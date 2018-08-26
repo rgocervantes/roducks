@@ -44,6 +44,7 @@ final class View
 	private $_body = "";
 	private $_meta = "";
 	private $_data = [];
+	private $_globals = [];
 	private $_tpl = [];
 	private $_url = [];
 	private $_error = false;
@@ -82,6 +83,16 @@ final class View
 		return "<{$name} {$attrs} />\n";
 	}
 
+	private function _setGlobals($key, $value = "")
+	{
+		$this->_globals[$key] = $value;
+	}
+
+	private function _getGlobals()
+	{
+		return $this->_globals;
+	}
+
 	/* ------------------------------------*/
 	/* 		PUBLIC METHODS
 	/* ------------------------------------*/
@@ -96,13 +107,13 @@ final class View
 		$idUrl = (isset($this->_url['id_url'])) ? $this->_url['id_url'] : 0;
 
 		if (!Helper::isBlock($filePath)) {
-			$this->data('_TITLE', PAGE_TITLE);
+			$this->_setGlobals('_TITLE', PAGE_TITLE);
 			$this->data('_PAGE_TITLE', PAGE_TITLE);
-			$this->data('_VIEW_TITLE', "title");
+			$this->data('_VIEW_TITLE', 'title');
 		}
 
-		$this->data('_URL_ID', $idUrl);
-		$this->data('_LANG', Language::get());
+		$this->_setGlobals('_URL_ID', $idUrl);
+		$this->_setGlobals('_LANG', Language::get());
 	}
 
 	public function data($key, $value = "")
@@ -286,17 +297,19 @@ final class View
 		$this->data("tpl", $this->_tpl);
 
 		// Get Stylesheets & javascripts
-		$this->data('_CSS', $this->assets->getCss());
-		$this->data('_JS', $this->assets->getJs());
+		$this->_setGlobals('_CSS', $this->assets->getCss());
+		$this->_setGlobals('_JS', $this->assets->getJs());
 
 		// Get meta tags
-		$this->data('_META', $this->_meta);
+		$this->_setGlobals('_META', $this->_meta);
 
 		// Favicon
-		$this->data('_FAVICON', $this->_htmlTag('link',['rel' => "shortcut icon", 'type' => "image/png", 'href' => Path::getIcon("favicon.png")]));
+		$this->_setGlobals('_FAVICON', $this->_htmlTag('link',['rel' => "shortcut icon", 'type' => "image/png", 'href' => Path::getIcon("favicon.png")]));
+
+		$data = array_merge($this->getData(), $this->_getGlobals());
 
 		// Get data passed from page
-		extract($this->_data);
+		extract($data);
 
 		// Include Header
 		if ($header_footer) {
@@ -315,12 +328,19 @@ final class View
 					Login::security(false);
 				}
 			} else if(file_exists($header_alt)) {
-				echo Duckling::parser($header_alt, $this->_data);
+
+				echo Duckling::parser($header_alt, $this->_getGlobals());
 
 				$top = $dir_templates . "top" . FILE_TPL;
 
 				if (file_exists($top) && $this->_blocks['top']) {
-					echo Duckling::parser($top, $this->_data);
+					$topData = $this->_getGlobals();
+					unset($topData['_CSS']);
+					unset($topData['_JS']);
+					unset($topData['_META']);
+					unset($topData['_FAVICON']);
+
+					echo Duckling::parser($top, $topData);
 				}
 
 				if (Session::exists(Login::SESSION_SECURITY)) {
@@ -335,7 +355,7 @@ final class View
 
 		// Set template data
 		if (!Helper::isBlock($this->_filePath)) {
-			Template::$data = array_merge(Template::$data,$this->_data);
+			Template::$data = array_merge(Template::$data, $this->getData());
 		}
 
 		Template::$path = $dir_templates;
@@ -378,13 +398,13 @@ final class View
 				if (file_exists($bottom) && $this->_blocks['bottom']) {
 					include $bottom;
 				} else if(file_exists($bottom_alt) && $this->_blocks['bottom']) {
-					echo Duckling::parser($bottom_alt, $this->_data);
+					echo Duckling::parser($bottom_alt, ['_JS' => $this->assets->getJs()]);
 				}
 
 				if ($scripts) {
 					echo "<script type=\"text/javascript\">\n";
-					Asset::includeInLine($this->assets->getScriptsInline(),$this->_data);
-					Asset::includeOnReady($this->assets->getScriptsOnReady(),$this->_data);
+					Asset::includeInLine($this->assets->getScriptsInline(), $this->getData());
+					Asset::includeOnReady($this->assets->getScriptsOnReady(), $this->getData());
 					echo "</script>\n";
 				}
 
