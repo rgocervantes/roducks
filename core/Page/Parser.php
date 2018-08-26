@@ -36,6 +36,9 @@ class Parser
       case 'format':
         $regexp = '/{{% ([a-z_|]+[|])?\$'.$args[0].'(->[a-zA-Z_]+)?(\[[a-zA-Z0-9_\']+\])?(,\s?[a-zA-Z0-9_\-\/,|\':*\s]+)? %}}/sm';
         break;
+      case 'isset_empty':
+        $regexp = '/{{% @if (!)?(isset|empty)\(\$('.$args[0].')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])?\) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm';
+        break;
     }
 
     return $regexp;
@@ -301,7 +304,7 @@ class Parser
         }
       }
 
-      $var = $value[$i];
+      $var = (!empty($functions[5])) ? $value[$i] : $value;
     } else if (is_object($value)) {
       $i = str_replace(['->'], '', $functions[4]);
 
@@ -315,7 +318,7 @@ class Parser
         }
       }
 
-      $var = $value->$i;
+      $var = (!empty($functions[4])) ? $value->$i : $value;
     } else {
       $var = $value;
     }
@@ -420,6 +423,10 @@ class Parser
       $tpl = Parser::_blocks($tpl, $key, $value);
       $tpl = Parser::formatter($tpl, $key, $value);
 
+      $tpl = preg_replace_callback(self::_rules('isset_empty', [$key]), function($functions) use ($value) {
+        return Parser::_issetEmpty($functions, $value);
+			}, $tpl);
+
 			if (is_array($value)) {
 				$ret['dimensional'][$key] = $value;
       } else if($value instanceof \Roducks\Libs\ORM\ORM) {
@@ -473,10 +480,6 @@ class Parser
   	|----------------------------------------------------------------------
   	*/
 		foreach ($ret['lineal'] as $key => $value) {
-
-			$tpl = preg_replace_callback('/{{% @if\((!)?(isset|empty)\(\$('.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])?\)\) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm', function($functions) use ($value) {
-        return Parser::_issetEmpty($functions, $value);
-			}, $tpl);
 
 			$tpl = preg_replace_callback('/{{% @if \$('.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])? ([=<>!]+) ([a-zA-Z0-9_\']+) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm', function($condition) use ($value) {
         return Parser::_condition($condition, null, $value);
