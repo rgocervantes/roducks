@@ -37,7 +37,7 @@ class Duckling
         $regexp = '/{{% ([a-z_|]+[|])?\$'.$args[0].'(->[a-zA-Z_]+)?(\[[a-zA-Z0-9_\']+\])?(,\s?[a-zA-Z0-9_\-\/,|\':*\s]+)? %}}/sm';
         break;
       case 'isset_empty':
-        $regexp = '/{{% @if (!)?(isset|empty)\(\$('.$args[0].')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])?\) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm';
+        $regexp = '/{{% @if (!)?(isset|empty) \$('.$args[0].')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])? %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm';
         break;
     }
 
