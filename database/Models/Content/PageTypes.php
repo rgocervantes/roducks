@@ -18,25 +18,30 @@
  *
  */
 
-namespace App\Models\Data;
+namespace DB\Models\Content;
 
-use Roducks\Libs\ORM\Model;
+use Model;
 
-class UrlsLang extends Model
+class PageTypes extends Model
 {
+  var $id = 'id_type';
+  var $fields = [
+    'title' => Model::TYPE_INTEGER,
+    'name' => Model::TYPE_VARCHAR,
+    'active' => Model::TYPE_INTEGER,
+    'created_at' => Model::TYPE_DATETIME,
+    'updated_at' => Model::TYPE_DATETIME
+  ];
 
-	var $id = "id_url_lang";
-	var $fields = [	
-		'id_url'		 => Model::TYPE_INTEGER,
-		'id_lang'		 => Model::TYPE_INTEGER,
-		'url'			 => Model::TYPE_BLOB,
-		'redirect'		 => Model::TYPE_BLOB,
-		'dispatch' 		 => Model::TYPE_VARCHAR,
-		'title'	 		 => Model::TYPE_BLOB,
-		'layout'		 => Model::TYPE_VARCHAR,
-		'template'		 => Model::TYPE_VARCHAR,
-		'tpl'	 		 => Model::TYPE_VARCHAR,	
-		'updated_at'	 => Model::TYPE_DATETIME				
-	];
+  public function getByName($name)
+  {
+    return $this
+    ->select([
+      self::field('id_type', 'id'),
+      self::field('title')
+    ])
+    ->filter(['name' => $name])
+    ->fetch('object');
 
+  }
 }

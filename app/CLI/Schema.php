@@ -41,7 +41,7 @@ class Schema extends Setup
 
 	static function _getFiles($folder)
 	{
-		$dir = Directory::open(\App::getRealFilePath("app/Schema/{$folder}/"));
+		$dir = Directory::open(\App::getRealFilePath("/{$folder}/"));
 		$files = $dir['files'];
 
 		return $files;
@@ -113,7 +113,7 @@ class Schema extends Setup
 				}
 			} else {
 				$prompt = false;
-				$this->error("[*]File: 'app/Schema/Setup/{$setup}' does not exist.");
+				$this->error("[*]File: '/Setup/{$setup}' does not exist.");
 			}
 
 		} else {
@@ -189,7 +189,7 @@ class Schema extends Setup
 			$total = 1;
 			$count = 0;
 			$script = Helper::ext($script, 'sql');
-			$sql = "app/Schema/Sql/{$script}";
+			$sql = "/Sql/{$script}";
 
 			if (in_array($script, $files)) {
 

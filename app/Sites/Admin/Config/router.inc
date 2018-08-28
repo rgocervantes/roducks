@@ -64,7 +64,7 @@ Router::init(function() {
 			return [
 				'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
 				'type' => [Dispatch::PARAM_INTEGER => Dispatch::values(Roles::getIds())]
-			];		
+			];
 		});
 		Router::get([$path => '/add'], Dispatch::page("roles", "add"));
 		Router::get([$path => '/edit/id/(?P<roleId>\d+)'], Dispatch::page("roles", "edit"));
@@ -89,15 +89,15 @@ Router::init(function() {
 				'GET' => [
 					'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'trash' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])]
-				],		
+				],
 				'POST' => [
 					'email' => Dispatch::OPTIONAL_PARAM_STRING,
 					'id_user' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'start_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					':empty' => Dispatch::page("users", "reset-filter")						
+					':empty' => Dispatch::page("users", "reset-filter")
 				]
-			];		
+			];
 		});
 
 		Router::get([$path => '/picture(/id/(?P<userId>\d+))?'], Dispatch::page("users", "picture"));
@@ -124,13 +124,13 @@ Router::init(function() {
 			return [
 				'GET' => [
 					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
-				],				
+				],
 				'POST' => [
 					'start_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					':empty' => Dispatch::page("users", "reset-filter")
 				]
-			];		
+			];
 		});
 
 	});
@@ -154,15 +154,15 @@ Router::init(function() {
 				'GET' => [
 					'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'trash' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])]
-				],		
+				],
 				'POST' => [
 					'email' => Dispatch::OPTIONAL_PARAM_STRING,
 					'id_user' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'start_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					':empty' => Dispatch::page("subscribers", "reset-filter")						
+					':empty' => Dispatch::page("subscribers", "reset-filter")
 				]
-			];		
+			];
 		});
 
 		Router::get([$path => '/picture(/id/(?P<userId>\d+))?'], Dispatch::page("subscribers", "picture"));
@@ -189,13 +189,13 @@ Router::init(function() {
 			return [
 				'GET' => [
 					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
-				],				
+				],
 				'POST' => [
 					'start_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					':empty' => Dispatch::page("subscribers", "reset-filter")
 				]
-			];		
+			];
 		});
 
 	});
@@ -219,15 +219,15 @@ Router::init(function() {
 				'GET' => [
 					'page' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'trash' => [Dispatch::OPTIONAL_PARAM_INTEGER => Dispatch::values([1])]
-				],		
+				],
 				'POST' => [
 					'email' => Dispatch::OPTIONAL_PARAM_STRING,
 					'id_user' => Dispatch::OPTIONAL_PARAM_INTEGER,
 					'start_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::OPTIONAL_PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
-					':empty' => Dispatch::page("clients", "reset-filter")						
+					':empty' => Dispatch::page("clients", "reset-filter")
 				]
-			];		
+			];
 		});
 
 		Router::get([$path => '/picture(/id/(?P<userId>\d+))?'], Dispatch::page("clients", "picture"));
@@ -254,16 +254,28 @@ Router::init(function() {
 			return [
 				'GET' => [
 					'page' => Dispatch::OPTIONAL_PARAM_INTEGER
-				],				
+				],
 				'POST' => [
 					'start_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					'end_date' => [Dispatch::PARAM_STRING => Helper::VALID_DATE_YYYY_MM_DD],
 					':empty' => Dispatch::page("clients", "reset-filter")
 				]
-			];		
+			];
 		});
 
 	});
 
-});
+	/*
+	|---------------------------------
+	|				CONTENT
+	|---------------------------------
+	*/
+	Router::get('/layout.html', Dispatch::page('content'), function () {
+		return [
+			'preview' => Dispatch::OPTIONAL_PARAM_INTEGER
+		];
+	});
 
+	Router::get('/content/new/{name:str}', Dispatch::page("content", "add"));
+
+});

@@ -23,7 +23,7 @@ namespace Roducks\Blocks\LatestUsers;
 use Roducks\Page\Block;
 use Roducks\Framework\Login;
 use Roducks\Framework\Role;
-use App\Models\Users\UsersRoles;
+use DB\Models\Users\UsersRoles;
 use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 
 class LatestUsers extends Block

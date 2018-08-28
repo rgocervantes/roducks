@@ -25,21 +25,25 @@ use Roducks\Page\Template;
 		</button>
 		<a class="navbar-brand" href="/" style="position:relative; top:-4px;"><img src="<?php echo Path::getImage("rdks_logo_color_mini.png"); ?>" /></a>
 	</div>
-<?php endif; ?> 
+<?php endif; ?>
 	<!-- Collect the nav links, forms, and other content for toggling -->
 	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	
+
 	<ul class="nav navbar-nav">
 		<li><a href="<?php echo URL::getFrontURL(); ?>"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> <span class="sr-only">(current)</span></a></li>
-		<?php if(Login::isAdminLoggedIn()): ?>	
+		<?php if(Login::isAdminLoggedIn()): ?>
 		<li><a href="/"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Dashboard</a></li>
 		<li class="dropdown">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Menu <span class="caret"></span></a>
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo __('Users'); ?> <span class="caret"></span></a>
 			<?php Block::load("menu/access", ['type' => Role::TYPE_USERS, 'items' => Template::menu("top-admin"), 'tpl' => "top"]); ?>
 		</li>
-		<?php endif; ?> 
+		<li class="dropdown">
+		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo __('Content'); ?> <span class="caret"></span></a>
+			<?php Block::load("menu/access", ['type' => Role::TYPE_USERS, 'items' => Template::menu("top-content"), 'tpl' => "top"]); ?>
+		</li>
+		<?php endif; ?>
 	</ul>
-	
+
 	<?php Block::load("language/output/{$_URL_ID}/nav"); ?>
 
 	<?php if(Login::isAdminLoggedIn()): ?>
@@ -50,8 +54,8 @@ use Roducks\Page\Template;
 			</a>
 				<?php Block::load("menu/access", ['type' => Role::TYPE_USERS, 'items' => Template::menu("top-account"), 'tpl' => "top", 'permission' => "users"]); ?>
 			</li>
-		</ul> 
-	<?php endif; ?> 
+		</ul>
+	<?php endif; ?>
 	</div><!-- /.navbar-collapse -->
 </div><!-- /.container-fluid -->
 </nav>
@@ -61,4 +65,4 @@ use Roducks\Page\Template;
 	<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 	<span class="alert-text"><?php echo TEXT_APP_IN_DEV_MODE; ?></span>
 </div>
-<?php endif; ?> 
+<?php endif; ?>

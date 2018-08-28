@@ -25,7 +25,7 @@ use Roducks\Page\View;
 use Roducks\Framework\Login;
 use Roducks\Framework\Role;
 use Roducks\Libs\Utils\Date;
-use App\Models\Users\Users as UsersTable;
+use DB\Models\Users\Users as UsersTable;
 
 class Account extends JSON
 {

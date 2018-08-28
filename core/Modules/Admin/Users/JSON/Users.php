@@ -28,7 +28,7 @@ use Roducks\Framework\Event;
 use Roducks\Page\JSON;
 use Roducks\Page\View;
 use Roducks\Libs\Utils\Date;
-use App\Models\Users\Users as UsersTable;
+use DB\Models\Users\Users as UsersTable;
 
 class Users extends JSON
 {

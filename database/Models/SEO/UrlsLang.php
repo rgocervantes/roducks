@@ -18,22 +18,25 @@
  *
  */
 
-namespace App\Models\Data;
+namespace DB\Models\SEO;
 
-use Roducks\Libs\ORM\Model;
+use Model;
 
-class EAV extends Model
+class UrlsLang extends Model
 {
 
-	var $id = "id_index";
-	var $fields = [
-		'id_rel' 		 => Model::TYPE_INTEGER,
-		'entity' 		 => Model::TYPE_VARCHAR,
-		'field'			 => Model::TYPE_VARCHAR,
-		'text'		 	 => Model::TYPE_VARCHAR,
-		'active'		 => Model::TYPE_BOOL,		
-		'created_at'	 => Model::TYPE_DATETIME,
-		'updated_at'	 => Model::TYPE_DATETIME		
+	var $id = "id_url_lang";
+	var $fields = [	
+		'id_url'		 => Model::TYPE_INTEGER,
+		'id_lang'		 => Model::TYPE_INTEGER,
+		'url'			 => Model::TYPE_BLOB,
+		'redirect'		 => Model::TYPE_BLOB,
+		'dispatch' 		 => Model::TYPE_VARCHAR,
+		'title'	 		 => Model::TYPE_BLOB,
+		'layout'		 => Model::TYPE_VARCHAR,
+		'template'		 => Model::TYPE_VARCHAR,
+		'tpl'	 		 => Model::TYPE_VARCHAR,	
+		'updated_at'	 => Model::TYPE_DATETIME				
 	];
 
 }

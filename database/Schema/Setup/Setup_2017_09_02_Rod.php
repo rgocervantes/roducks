@@ -18,11 +18,11 @@
  *
  */
 
-namespace App\Schema\Setup;
+namespace DB\Schema\Setup;
 
 use Roducks\Framework\Setup;
 use Roducks\Interfaces\SetupInterface;
-use Roducks\Libs\ORM\DB;
+use DB;
 
 class Setup_2017_09_02_Rod extends Setup implements SetupInterface
 {

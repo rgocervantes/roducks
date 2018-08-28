@@ -29,7 +29,7 @@ use Roducks\Framework\Event;
 use Roducks\Page\JSON;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Utils\Date;
-use App\Models\Users\Users as UsersTable;
+use DB\Models\Users\Users as UsersTable;
 use Roducks\Services\Auth as LoginAuth;
 
 class Home extends JSON

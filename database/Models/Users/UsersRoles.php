@@ -18,9 +18,9 @@
  *
  */
 
-namespace App\Models\Users;
+namespace DB\Models\Users;
 
-use Roducks\Libs\ORM\Join;
+use Join;
 
 class UsersRoles extends Join
 {

@@ -26,8 +26,8 @@ use Roducks\Libs\Utils\Date;
 use Roducks\Libs\Request\Request;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Request\CORS;
-use App\Models\Data\UrlsUrlsLang;
-use App\Models\Users\Users as UsersTable;
+use DB\Models\SEO\UrlsUrlsLang;
+use DB\Models\Users\Users as UsersTable;
 
 class Dispatch
 {

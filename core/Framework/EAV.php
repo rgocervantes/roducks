@@ -21,7 +21,7 @@
 namespace Roducks\Framework;
 
 use Roducks\Page\Frame;
-use App\Models\Data\EAV as EAVTable;
+use DB\Models\SEO\EAV as EAVTable;
 
 class EAV extends Frame
 {

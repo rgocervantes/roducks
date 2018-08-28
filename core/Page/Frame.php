@@ -210,7 +210,7 @@ abstract class Frame
 			$path = $className;
 		}
 
-		$model = "App\\Models\\{$path}";
+		$model = "DB\\Models\\{$path}";
 
 		return $model::open($this->db());
 	}

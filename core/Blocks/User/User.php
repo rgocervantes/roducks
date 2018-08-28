@@ -28,7 +28,7 @@ use Roducks\Framework\Login;
 use Roducks\Framework\Path;
 use Roducks\Libs\Utils\Date;
 use Roducks\Services\Storage;
-use App\Models\Users\UsersRoles;
+use DB\Models\Users\UsersRoles;
 
 class User extends Block
 {

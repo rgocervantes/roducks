@@ -138,7 +138,7 @@ class CSV
         # READ CSV
 
         $csv = new CSV("sample_table");
-        $csv->path(Path::get("app/Schema/Data/"));
+        $csv->path(Path::get("/Data/"));
 
         if ($csv->read()) {
 

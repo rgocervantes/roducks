@@ -27,8 +27,8 @@ use Roducks\Page\Service;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Data\Session;
 use Roducks\Libs\Utils\Date;
-use App\Models\Users\Users as UsersTable;
-use App\Models\Users\UsersRoles;
+use DB\Models\Users\Users as UsersTable;
+use DB\Models\Users\UsersRoles;
 
 class Auth extends Service
 {

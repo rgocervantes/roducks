@@ -26,5 +26,6 @@ return [
 	'Subscribers' 	=> true,
 	'Users' 		=> true,
 	'Clients' 		=> true,
-	'Posts'			=> true
+	'Content'	 => true,
+	//'Posts'			=> true
 ];

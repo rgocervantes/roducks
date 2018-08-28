@@ -18,9 +18,9 @@
  *
  */
 
-namespace App\Models\Data;
+namespace DB\Models\SEO;
 
-use Roducks\Libs\ORM\Join;
+use Join;
 
 class UrlsUrlsLang extends Join
 {

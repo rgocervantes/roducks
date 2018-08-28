@@ -27,7 +27,7 @@ use Roducks\Framework\URL;
 use Roducks\Framework\Login;
 use Roducks\Framework\Role;
 use Roducks\Libs\Data\Session;
-use App\Models\Users\Roles as RolesTable;
+use DB\Models\Users\Roles as RolesTable;
 use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 
 class Roles extends AdminPage

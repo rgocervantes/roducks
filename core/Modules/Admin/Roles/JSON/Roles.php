@@ -29,7 +29,7 @@ use Roducks\Libs\Utils\Date;
 use Roducks\Libs\Files\Directory;
 use Roducks\Libs\Files\File;
 use Roducks\Libs\Data\Session;
-use App\Models\Users\Roles as RolesTable;
+use DB\Models\Users\Roles as RolesTable;
 
 class Roles extends JSON
 {

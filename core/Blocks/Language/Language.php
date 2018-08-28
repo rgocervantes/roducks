@@ -23,7 +23,7 @@ namespace Roducks\Blocks\Language;
 use Roducks\Framework\URL;
 use Roducks\Framework\Language as LanguageCore;
 use Roducks\Page\Block;
-use App\Models\Data\UrlsLang;
+use DB\Models\SEO\UrlsLang;
 
 class Language extends Block
 {

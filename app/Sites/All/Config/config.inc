@@ -21,13 +21,17 @@
 use Roducks\Framework\Path;
 
 return [
+	//-------------------------------------------------------------------
+	//  User upload profile picture
+	//-------------------------------------------------------------------
 	'user' => [
 		'prefix' => "user_",
-		'clipping' => "full",	
+		'clipping' => "full",
 		'dir_upload' => Path::getUploadsUsers(),
 		'dir_uploaded' => Path::getUploadedUsers(),
 		'squared_clippings' => [150,90,20],
 		'size' => [400,"KB"],
 		'types' => ['image/jpg','image/png','image/jpeg']
-	]
+	],
+
 ];

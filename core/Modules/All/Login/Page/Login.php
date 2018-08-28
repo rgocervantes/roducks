@@ -24,7 +24,7 @@ use Roducks\Framework\Role;
 use Roducks\Framework\Event;
 use Roducks\Framework\Login as LoginAuth;
 use Roducks\Page\Page;
-use App\Models\Users\Users as UsersTable;
+use DB\Models\Users\Users as UsersTable;
 
 class Login extends Page
 {

@@ -21,7 +21,7 @@
 namespace Roducks\Services;
 
 use Roducks\Page\Service;
-use App\Models\Users\Users as UsersTable;
+use DB\Models\Users\Users as UsersTable;
 
 class Account extends Service
 {

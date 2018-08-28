@@ -18,21 +18,33 @@
  *
  */
 
-namespace Roducks\Data;
+namespace DB\Models\Content;
 
-use Roducks\Framework\EAV;
-use DB\Models\Users\Users;
+use Join;
 
-class User extends EAV
+class PageTypeFields extends Join
 {
 
-	public function __construct($id)
-	{
-			
-		$this->_id = $id;
-		$this->_entity = Users::CLASS;
-		
-		parent::__construct();
-	}
+  public function __construct(\mysqli $mysqli)
+  {
+
+    $this
+    ->table(PageTypes::CLASS, 'pt')
+    ->join('PageFields', 'pf', ['pt.id_type' => 'pf.id_type']);
+
+    parent::__construct($mysqli);
+  }
+
+  public function getFields($type)
+  {
+
+    return $this
+    ->select([
+      self::field('pf.*')
+    ])
+    ->orderBy(['pf.sort','pf.id_field'], 'asc')
+    ->filter(['pt.name' => $type]);
+    
+  }
 
 }

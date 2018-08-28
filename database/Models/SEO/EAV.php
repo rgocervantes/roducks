@@ -18,21 +18,22 @@
  *
  */
 
-namespace Roducks\Data;
+namespace DB\Models\SEO;
 
-use Roducks\Framework\EAV;
-use DB\Models\Users\Users;
+use Model;
 
-class User extends EAV
+class EAV extends Model
 {
 
-	public function __construct($id)
-	{
-			
-		$this->_id = $id;
-		$this->_entity = Users::CLASS;
-		
-		parent::__construct();
-	}
+	var $id = "id_index";
+	var $fields = [
+		'id_rel' 		 => Model::TYPE_INTEGER,
+		'entity' 		 => Model::TYPE_VARCHAR,
+		'field'			 => Model::TYPE_VARCHAR,
+		'text'		 	 => Model::TYPE_VARCHAR,
+		'active'		 => Model::TYPE_BOOL,		
+		'created_at'	 => Model::TYPE_DATETIME,
+		'updated_at'	 => Model::TYPE_DATETIME		
+	];
 
 }

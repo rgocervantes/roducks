@@ -24,7 +24,7 @@ use Roducks\Page\View;
 use Roducks\Page\FrontPage;
 use Roducks\Framework\Login;
 use Roducks\Framework\Role;
-use App\Models\Users\Users as UsersTable;
+use DB\Models\Users\Users as UsersTable;
 
 class Account extends FrontPage
 {

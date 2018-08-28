@@ -18,10 +18,10 @@
  *
  */
 
-namespace App\Models\Users;
+namespace DB\Models\Users;
 
-use Roducks\Framework\Login;
-use Roducks\Libs\ORM\Model;
+use Model;
+use Login;
 
 class Users extends Model
 {

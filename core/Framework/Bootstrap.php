@@ -60,33 +60,31 @@ spl_autoload_register(function($class) {
     $isEvent = false;
 
     if (isset(App::$aliases[$class])) {
-        class_alias(App::$aliases[$class], $class);
-        $class = App::$aliases[$class];
+      class_alias(App::$aliases[$class], $class);
+      $class = App::$aliases[$class];
     }
 
+    $path = str_replace("\\","/", $class) . FILE_EXT;
+
     if (preg_match('/^Roducks\\\/', $class)) {
-
-        $path = str_replace("\\","/", $class) . FILE_EXT;
-        $path = str_replace("Roducks/","core/", $path);
-        $isEvent = preg_match('#/Events/#', $path);
-
+      $path = str_replace("Roducks/","core/", $path);
     } else if (preg_match('/^App\\\/', $class)) {
-
-        $path = str_replace("App\\","app\\",$class);
-        $path = str_replace("\\","/", $path) . FILE_EXT;
-        $isEvent = preg_match('#/Events/#', $path);
-
+      $path = str_replace("App/","app/", $path);
+    } else if (preg_match('/^DB\\\/', $class)) {
+      $path = str_replace("DB/","database/", $path);
     } else {
 
-        if (isset(App::$composer[$class])) {
-            $path = App::$composer[$class];
-            $composer = true;
-        } else {
-            $path = str_replace("\\","/", $class) . FILE_EXT;
-            $isEvent = preg_match('#/Events/#', $path);
-            $path = "app/Libs/{$path}";
-        }
+      if (isset(App::$composer[$class])) {
+        $path = App::$composer[$class];
+        $composer = true;
+      } else {
+        $path = "app/Libs/{$path}";
+      }
 
+    }
+
+    if (!$composer) {
+      $isEvent = preg_match('#/Events/#', $path);
     }
 
     list($realPath, $fileExists) = ($composer) ? App::getComposerPath($path) : App::getRealPath($path);
