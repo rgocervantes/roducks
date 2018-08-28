@@ -42,7 +42,7 @@ class Url extends Service
   public function set(array $urls)
   {
 
-    $urlsTable = $this->model('data/urls')->prepare();
+    $urlsTable = $this->model('seo/urls')->prepare();
     $urlsTable->setCreatedAt('NOW()');
     $urlsTable->save();
     $urlId = $urlsTable->getId();
@@ -50,7 +50,7 @@ class Url extends Service
     foreach ($urls as $iso => $url) {
       $langId = Language::getId($iso);
 
-      $urlLangTable = $this->model('data/urls-lang')->prepare();
+      $urlLangTable = $this->model('seo/urls-lang')->prepare();
       $urlLangTable->setIdUrl($urlId);
       $urlLangTable->setidLang($langId);
       $urlLangTable->setUrl($url['url']);
