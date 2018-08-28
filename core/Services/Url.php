@@ -52,7 +52,7 @@ class Url extends Service
 
       $urlLangTable = $this->model('seo/urls-lang')->prepare();
       $urlLangTable->setIdUrl($urlId);
-      $urlLangTable->setidLang($langId);
+      $urlLangTable->setIdLang($langId);
       $urlLangTable->setUrl($url['url']);
       $urlLangTable->setDispatch($url['dispatch']);
 
