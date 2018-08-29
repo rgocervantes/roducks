@@ -25,7 +25,7 @@ use Roducks\Framework\Router;
 use Roducks\Page\Service;
 use Firebase\JWT\JWT;
 
-class API extends Service 
+class API extends Service
 {
 
 	const JWT_SECRET_KEY = "R0duck5";
@@ -103,6 +103,11 @@ class API extends Service
 		}
 	}
 
+	protected function _data($value)
+	{
+		parent::data($value);
+	}
+
 	protected function output($format = true)
 	{
 		parent::output(false);
@@ -143,7 +148,7 @@ class API extends Service
 			return [];
 		}
 
-		$token = $this->_jwt['decoded']; 
+		$token = $this->_jwt['decoded'];
 
 		return ($data) ? $token->data : $token;
 	}

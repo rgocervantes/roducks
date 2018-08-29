@@ -67,7 +67,7 @@ class Auth extends API
 			$data = $auth['data'];
 
 			$token = [
-				'id_user' => intval($data['id_user']),
+				'id' => intval($data['id_user']),
 				'email' => $data['email'],
 				'first_name' => $data['first_name'],
 				'last_name' => $data['last_name'],
@@ -90,7 +90,7 @@ class Auth extends API
 	public function catalog(Request $request)
 	{
 		$token = $this->getToken();
-		$this->data('me', $token);
+		$this->_data(get_object_vars($token));
 		$this->output(false);
 	}
 
