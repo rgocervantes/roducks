@@ -25,7 +25,7 @@ use Roducks\Libs\Request\Http;
 class URL
 {
 	const CSRF_ATTACK_BASE_URL = '"\'\\\(\)\s{}<>\[\]=!@$&*:;,'; // Forbidden chars
-	const CSRF_ATTACK_GET_PARAMS = '\/\'\\\(\)\s{}<>\[\]!@$&*%#:;,'; // Forbidden chars
+	const CSRF_ATTACK_GET_PARAMS = '\/\'\\\(\)\s{}<>\[\]!@$*%#:;,'; // Forbidden chars
 	const CSRF_ATTACK_RULE_1 = '\.{2,}'; // More than 1 dot
 	const CSRF_ATTACK_RULE_2 = '\.(exe|ini|inc|doc|docx|xls|xlsx|php|phtml|sql|yml)$'; // Forbidden extensions
 	const CSRF_ATTACK_RULE_3 = '-[\-]+'; // more than 1 dashes
