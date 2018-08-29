@@ -218,7 +218,7 @@ class Dispatch
 				$id_user = Login::getId($sessionName);
 
 				$ip = Http::getIPClient();
-				$db = Core::db(RDKS_ERRORS);
+				$db = Core::db();
 
 				$user = UsersTable::open($db);
 				$row = $user->row($id_user);
@@ -376,7 +376,7 @@ class Dispatch
 		// Let's search URL in database
 		if (!$found && FIND_URL_IN_DB) {
 
-			$db = Core::db(RDKS_ERRORS);
+			$db = Core::db();
 			$baseURL = URL::getBaseURL();
 
 			$queryUrl = UrlsUrlsLang::open($db);
