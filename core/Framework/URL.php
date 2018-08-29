@@ -166,7 +166,8 @@ class URL
 	*/
 	static function getDomainName()
 	{
-		return Http::getServerName();
+		$port = self::getPort();
+		return Http::getServerName() . $port;
 	}
 
 	static function getSplittedURL()
@@ -210,14 +211,14 @@ class URL
 		return self::getDomainName() . $relativeURL;
 	}
 
-	static function getFrontURL($path = "")
+	static function getFrontURL($path = "", array $params = [], $complete = true)
 	{
-		return self::goToURL("local", Core::DEFAULT_SUBDOMAIN) . $path;
+		return self::goToURL("local", Core::DEFAULT_SUBDOMAIN) . $path . self::setQueryString($params, $complete);
 	}
 
-	static function getAdminURL($path = "")
+	static function getAdminURL($path = "", array $params = [], $complete = true)
 	{
-		return self::goToURL("admin.local", Core::ADMIN_SUBDOMAIN) . $path;
+		return self::goToURL("admin.local", Core::ADMIN_SUBDOMAIN) . $path . self::setQueryString($params, $complete);
 	}
 
 	static function setURL($url = "/", array $params = [], $complete = true)
@@ -240,9 +241,9 @@ class URL
 
 	}
 
-	static function setAbsoluteURL($path = "")
+	static function setAbsoluteURL($path = "", array $params = [], $complete = true)
 	{
-		return self::getDomainName() . self::getPort() . $path;
+		return self::getDomainName() . $path . self::setQueryString($params, $complete);
 	}
 
 	static function getURL(array $params = [], $complete = true)

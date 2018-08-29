@@ -26,6 +26,7 @@ use Roducks\Framework\Environment;
 use Request;
 use Helper;
 use Path;
+use URL;
 
 class Duckling
 {
@@ -598,6 +599,54 @@ class Duckling
       }
 
       return ($display) ? $env[2] : '';
+    }, $tpl);
+
+    $tpl = preg_replace_callback('/{{% @url:([a-z]+)\(([a-zA-Z0-9_\-\/\.\'\"]+)?(,\s?\{[a-zA-Z0-9:,\[\]\s\'\"]+\})?(,\s?false)?\) %}}/', function($url){
+      $type = $url[1];
+      $param = (isset($url[2])) ? str_replace(['"',"'"], '', $url[2]) : '';
+      $query = (isset($url[3])) ? json_decode(trim(substr($url[3], 1)), true) : [];
+      $override = (isset($url[4])) ? trim(substr($url[4],1)) : 'true';
+      $merge = ($override == 'true');
+
+      switch ($type) {
+        case 'host';
+          return URL::getDomainName();
+          break;
+        case 'absolute':
+          if (!empty($param) && $param != 'false') {
+            return URL::setAbsoluteURL($param, $query, $merge);
+          }
+          return (!empty($param) && $param == 'false') ? URL::getAbsoluteURL(false) : URL::getAbsoluteURL();
+          break;
+        case 'relative':
+          return (!empty($param) && $param == 'false') ? URL::getRelativeURL(false) : URL::getRelativeURL();
+          break;
+        case 'admin':
+          return (!empty($param)) ? URL::getAdminURL($param, $query, $merge) : URL::getAdminURL();
+          break;
+        case 'front':
+          return (!empty($param)) ? URL::getFrontURL($param, $query, $merge) : URL::getFrontURL();
+          break;
+        case 'set':
+          return (!empty($param) && isset($url[3])) ? URL::setURL($param, $query, $merge) : URL::setURL($param);
+          break;
+      }
+    }, $tpl);
+
+    $tpl = preg_replace_callback('/{{% @url:([a-z]+)\((\{[a-zA-Z0-9:,\[\]\s\'\"]+\})(,\s?false)?\) %}}/', function($url){
+      $type = $url[1];
+      $query = (isset($url[2])) ? json_decode(trim($url[2]), true) : '';
+      $override = (isset($url[3])) ? trim(substr($url[3],1)) : 'true';
+      $merge = ($override == 'true');
+
+      switch ($type) {
+        case 'get':
+          return URL::getURL($query, $merge);
+          break;
+        case 'query':
+          return URL::setQueryString($query, $merge);
+          break;
+      }
     }, $tpl);
 
     /*
