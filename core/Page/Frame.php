@@ -57,11 +57,14 @@ abstract class Frame
 	{
 
 		$class = $this->pageObj->className;
+		$url = URL::getParams();
 
 		// Avoid autoload for "Page Not Found"
 		if ($class == Helper::PAGE_NOT_FOUND
 			|| $this->getParentClassName() == '\Roducks\Page\HelperPage'
+			|| $this->getParentClassName() == '\Roducks\Page\FrontPage'
 			|| $this->_pageType == 'DATA'
+			|| ($this->_pageType == 'BLOCK' && $url[0] == '_page')
 		) {
 			return;
 		}
