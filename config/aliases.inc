@@ -24,14 +24,17 @@ return [
 	|	Framework
 	|----------------------------------------------------------------------
 	*/
-	'Helper' 			=> 'Roducks\\Framework\\Helper',
-	'URL' 				=> 'Roducks\\Framework\\URL',
-	'Language' 		=> 'Roducks\\Framework\\Language',
-	'Dispatch' 		=> 'Roducks\\Framework\\Dispatch',
-	'Form' 				=> 'Roducks\\Framework\\Form',
-	'Post' 				=> 'Roducks\\Framework\\Post',
-	'Path' 				=> 'Roducks\\Framework\\Path',
-	'Login' 			=> 'Roducks\\Framework\\Login',
+	'Helper' 					=> 'Roducks\\Framework\\Helper',
+	'URL' 						=> 'Roducks\\Framework\\URL',
+	'Language' 				=> 'Roducks\\Framework\\Language',
+	'Dispatch' 				=> 'Roducks\\Framework\\Dispatch',
+	'Form' 						=> 'Roducks\\Framework\\Form',
+	'Post' 						=> 'Roducks\\Framework\\Post',
+	'Path' 						=> 'Roducks\\Framework\\Path',
+	'Login' 					=> 'Roducks\\Framework\\Login',
+	'Router' 					=> 'Roducks\\Framework\\Router',
+	'Crypt\\Hash' 		=> 'Roducks\\Framework\\Hash',
+	'API' 						=> 'Roducks\\API\\API',
 	/*
 	|----------------------------------------------------------------------
 	|	Services
@@ -66,5 +69,4 @@ return [
 	'Lib\\PDF' 				=> 'Roducks\\Libs\\Files\\PDF',
 	'Lib\\CSV' 				=> 'Roducks\\Libs\\Output\\CSV',
 	'Lib\\XML' 				=> 'Roducks\\Libs\\Output\\XML',
-	'Crypt\\Hash' 		=> 'Roducks\\Framework\\Hash',
 ];
