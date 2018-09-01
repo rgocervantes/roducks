@@ -649,6 +649,15 @@ class Duckling
       }
     }, $tpl);
 
+    $tpl = preg_replace_callback('/{{% @template\(([a-zA-Z0-9_\-\/\.\'\"]+)?(,\s?\{[a-zA-Z0-9:,\[\]\s\'\"]+\})?(,\s?false)?\) %}}/', function($url){
+      $param = (isset($url[1])) ? str_replace(['"',"'"], '', $url[1]) : '';
+      $query = (isset($url[2])) ? json_decode(trim(substr($url[2], 1)), true) : [];
+      $override = (isset($url[3])) ? trim(substr($url[3],1)) : 'true';
+      $merge = ($override == 'true');
+
+      return template::view($param, $query, $merge);
+    }, $tpl);
+
     /*
   	|----------------------------------------------------------------------
   	|	End
