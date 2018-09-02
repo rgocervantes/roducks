@@ -44,7 +44,7 @@ use Roducks\Page\Template;
 		<?php endif; ?>
 	</ul>
 
-	<?php Block::load("language/output/{$_URL_ID}/nav"); ?>
+	<?php Block::load("language/output/{$_PAGE_ID}/nav"); ?>
 
 	<?php if(Login::isAdminLoggedIn()): ?>
 		<ul class="nav navbar-nav navbar-right">

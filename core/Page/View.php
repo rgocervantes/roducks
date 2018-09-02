@@ -112,7 +112,7 @@ final class View
 			$this->data('_VIEW_TITLE', 'title');
 		}
 
-		$this->_setGlobals('_URL_ID', $idUrl);
+		$this->_setGlobals('_PAGE_ID', $idUrl);
 		$this->_setGlobals('_LANG', Language::get());
 	}
 
