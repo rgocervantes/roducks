@@ -1,4 +1,4 @@
-<img src="http://roducks.possible-development.com/wp-content/uploads/2017/10/roducks_logo_home.png" />
+<img src="http://www.possible-development.com/img/roducks.png" />
 
 # Requisites:
 
@@ -116,4 +116,3 @@ ln -s <PATH>/app/Data/uploads <PATH>/public/static
 14. Type in a Web Browser `http://www.<YOUR_DOMAIN_NAME>` to see the Front-End.
 
 Congratulations! You just deployed `Roducks` successfully.
-
