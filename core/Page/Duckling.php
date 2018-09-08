@@ -578,6 +578,21 @@ class Duckling
 
     /*
   	|----------------------------------------------------------------------
+  	|	Languages
+  	|----------------------------------------------------------------------
+  	*/
+    $tpl = preg_replace_callback('/{{% @lang\(\) %}}/sm', function($lang) use($data) {
+
+      ob_start();
+      \Roducks\Page\Block::load("language", ['id' => $data['_PAGE_ID'], 'tpl' => "nav"]);
+      $content = ob_get_contents();
+      ob_end_clean();
+
+      return $content;
+    }, $tpl);
+
+    /*
+  	|----------------------------------------------------------------------
   	|	Environment
   	|----------------------------------------------------------------------
   	*/
