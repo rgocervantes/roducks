@@ -45,7 +45,7 @@ abstract class Frame
 	protected $_pageType = 'FRAME'; // PAGE|BLOCK|FACTORY
 	protected $_inLocal = true;
 
-	private $_lang;
+	private $_langIso;
 	private $_cache = null;
 
 /*
@@ -173,7 +173,7 @@ abstract class Frame
 
 	protected function getLang()
 	{
-		return $this->_lang;
+		return $this->_langIso;
 	}
 
 	protected function disableUrlDispatcher()
@@ -600,7 +600,7 @@ abstract class Frame
 
 	public function setLang($iso)
 	{
-		$this->_lang = $iso;
+		$this->_langIso = $iso;
 	}
 
 	public function getParentClassName()

@@ -117,8 +117,14 @@ function _text($var, $default = "")
 /**
  *	Translate constants
  */
-function __($var, $default = "")
+function __($var, $default = "true")
 {
+
+	if ($default == "true" && !preg_match('/\s/', $var)) {
+		preg_match('/^([a-zA-Z]+)([\.!\?]+)?$/', $var, $char);
+		$schar = (isset($char[2])) ? $char[2] : '';
+		return _text($char[1]) . $schar;
+	}
 
 	if (!isset($_COOKIE['RDKS_LANG']) || $_COOKIE['RDKS_LANG'] == 'en') {
 		return $var;

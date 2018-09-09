@@ -32,7 +32,7 @@ use Roducks\Libs\Data\Session;
 
 class Page extends GenericPage
 {
-	
+
 	const LOGIN_URL = "/login";
 
 	protected $_pageType = 'PAGE';
@@ -73,7 +73,7 @@ class Page extends GenericPage
 		if (Login::isSubscriberLoggedIn() || !ALLOW_SUBSCRIBERS_REGISTER) {
 			$this->redirect($url);
 		}
-	}	
+	}
 
 /*
 //---------------------------------
@@ -107,11 +107,11 @@ class Page extends GenericPage
 		$set = true;
 
 		if (\App::fileExists($dir_languages)) {
-			
+
 			if (Language::isMultilanguage()) {
 				$set = Language::set($lang);
 			}
-				
+
 			if ($set) {
 
 				$relativeURL = URL::getRelativeURL();
@@ -123,10 +123,10 @@ class Page extends GenericPage
 					$split = Helper::getUrlParams($split);
 					$url = DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $split);
 				}
-				
+
 				Http::redirect($url);
 			}
-	
+
 		} else {
 			Error::debug(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $dir_languages, "Make sure file exists with translations.");
 		}
@@ -157,9 +157,9 @@ class Page extends GenericPage
 
 			include $emailPath;
 
-		else:	
+		else:
 			JSON::stOutput(['data' => ['error' => true]]);
-		endif;	
+		endif;
 
 	}
 

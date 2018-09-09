@@ -43,6 +43,7 @@ App::text('YOU_WANT', "Que quiere");
 App::text('THIS_ITEM', "Este artículo");
 App::text('THESE_ITEMS', "Estos artículos");
 App::text('ITEM', "Artículo");
+App::text('ARTICLE', "Artículo");
 App::text('THANK_YOU', "Gracias");
 
 App::text('ITS', "Esta");
@@ -117,6 +118,9 @@ App::text('TO', "A");
 App::text('FOR', "Por");
 App::text('FROM', "De");
 
+App::text('TITLE', "Título");
+App::text('ABSTRACT', "Resumen");
+App::text('DESCRIPTION', "Descripción");
 App::text('PAGE', "Página");
 App::text('WELCOME', "Bienvenido");
 App::text('HOME', "Casa");

@@ -43,6 +43,7 @@ App::text('YOU_WANT', "You want");
 App::text('THIS_ITEM', "This item");
 App::text('THESE_ITEMS', "These items");
 App::text('ITEM', "Item");
+App::text('ARTICLE', "Article");
 App::text('CATEGORY', "Category");
 App::text('CATEGORIES', "Categories");
 App::text('THANK_YOU', "Thank You");
@@ -117,6 +118,9 @@ App::text('TO', "To");
 App::text('FOR', "For");
 App::text('FROM', "From");
 
+App::text('TITLE', "Title");
+App::text('ABSTRACT', "Abstract");
+App::text('DESCRIPTION', "Description");
 App::text('PAGE', "Page");
 App::text('WELCOME', "Welcome");
 App::text('HOME', "Home");
