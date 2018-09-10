@@ -35,7 +35,7 @@ class Duckling
   {
     switch ($type) {
       case 'format':
-        $regexp = '/{{% ([a-z_|]+[|])?\$'.$args[0].'(->[a-zA-Z_]+)?(\[[a-zA-Z0-9_\']+\])?(,\s?[a-zA-Z0-9_\-\/,|\':*\s]+)? %}}/sm';
+        $regexp = '/{{% ([a-z_|]+[|])?\$'.$args[0].'(->[a-zA-Z_]+)?(\[[a-zA-Z0-9_\']+\])?([,|]\s?[a-zA-Z0-9_\-\/,|\':*\s]+)? %}}/sm';
         break;
       case 'isset_empty':
         $regexp = '/{{% @if (!)?(isset|empty) \$('.$args[0].')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])? %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm';
@@ -106,6 +106,7 @@ class Duckling
             array_push($params, $arg);
           }
         }
+
       } else {
         foreach ($args as $arg) {
           if (preg_match('/^\d+$/', $arg)) {

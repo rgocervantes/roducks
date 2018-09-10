@@ -1,0 +1,21 @@
+<?php
+use Roducks\Page\Layout;
+use Roducks\Page\Block;
+?>
+
+<div class="container">
+  <div class="box-white">
+  <?php foreach ($regions as $region): ?>
+    <div class="row">
+      <?php foreach ($region['blocks'] as $index => $block): ?>
+      <div style="text-align: center;" class="<?php echo Layout::getColum($region['name'], $index); ?>">
+        <?php foreach ($block['container'] as $container): ?>
+          <?php echo Block::load($container['name'], $container['data']); ?>
+        <?php endforeach; ?>
+      </div>
+      <?php endforeach; ?>
+      <div class="clearfix"></div>
+    </div>
+  <?php endforeach; ?>
+  </div>
+</div>

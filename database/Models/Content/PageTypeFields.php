@@ -30,7 +30,7 @@ class PageTypeFields extends Join
 
     $this
     ->table(PageTypes::CLASS, 'pt')
-    ->join('PageFields', 'pf', ['pt.id_type' => 'pf.id_type']);
+    ->join('Fields', 'pf', ['pt.id_type' => 'pf.id_type']);
 
     parent::__construct($mysqli);
   }
@@ -44,7 +44,7 @@ class PageTypeFields extends Join
     ])
     ->orderBy(['pf.sort','pf.id_field'], 'asc')
     ->filter(['pt.name' => $type]);
-    
+
   }
 
 }

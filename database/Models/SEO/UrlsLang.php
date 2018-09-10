@@ -26,17 +26,17 @@ class UrlsLang extends Model
 {
 
 	var $id = "id_url_lang";
-	var $fields = [	
+	var $fields = [
 		'id_url'		 => Model::TYPE_INTEGER,
 		'id_lang'		 => Model::TYPE_INTEGER,
-		'url'			 => Model::TYPE_BLOB,
-		'redirect'		 => Model::TYPE_BLOB,
+		'url'			 => Model::TYPE_VARCHAR,
+		'redirect'		 => Model::TYPE_VARCHAR,
 		'dispatch' 		 => Model::TYPE_VARCHAR,
 		'title'	 		 => Model::TYPE_BLOB,
 		'layout'		 => Model::TYPE_VARCHAR,
 		'template'		 => Model::TYPE_VARCHAR,
-		'tpl'	 		 => Model::TYPE_VARCHAR,	
-		'updated_at'	 => Model::TYPE_DATETIME				
+		'tpl'	 		 => Model::TYPE_VARCHAR,
+		'updated_at'	 => Model::TYPE_DATETIME
 	];
 
 }

@@ -1,0 +1,56 @@
+<div class="container">
+ <h1>Layout</h1>
+
+ <button type="button" name="get_config" class="btn btn-success" onclick="$rdks.layout.getConfig(false);">Get Config</button> |
+ <button type="button" name="toggle_blocks" class="btn btn-primary btn-rdks-layout-sortable" onclick="$rdks.layout.sortable(this);">Sort Regions</button>
+
+ <hr />
+
+ <pre id="rdks-layout-config"></pre>
+
+ <form rel="rdks-form" action="/" method="post">
+   <div class="row">
+     <div class="col-md-4">
+       <select name="region" class="form-control"
+          rel="rdks-select-autocomplete"
+          data-callback="cbRegion"
+       >
+         <option value="col-1">1 Column</option>
+         <option value="col-2">2 Columns</option>
+         <option value="col-3">3 Columns</option>
+         <option value="col-4">4 Columns</option>
+         <option value="sidebar-content">Sidebar (34%) / Content (66%)</option>
+         <option value="content-sidebar">Content (66%) / Sidebar (34%)</option>
+         <option value="sidebar-content-small">Sidebar (25%) / Content (75%)</option>
+         <option value="content-sidebar-small">Content (75%) / Sidebar (25%)</option>
+       </select>
+     </div>
+   </div>
+ </form>
+
+ <div class="rdks-layout">
+   <ul id="rdks-layout"></ul>
+ </div><!-- .rdks-layout -->
+
+ <div id="block-selector-tpl" class="display-none">
+   <label>Select a block from this list:</label>
+   <select id="{{ID}}" name="block" class="form-control"
+   data-formatter="cbBlockFormatter">
+     <option value="1" data-params='{"name": "break-line"}'>Break Line</option>
+     <option value="1" data-params='{"name": "content"}'>Content</option>
+     <option value="2" data-params='{"name": "header"}'>Header</option>
+     <option value="3" data-params='{"name": "social-network"}'>Social Network</option>
+     <option value="4" data-params='{"name": "poll"}'>Poll</option>
+     <option value="5" data-params='{"name": "facebook-graph", "view": true}'>Facebook Graph</option>
+     <option value="6" data-params='{"name": "latest-articles"}'>Latest Articles</option>
+   </select>
+   <div style="height:231px;"></div>
+ </div>
+
+ <div id="block-config-tpl" class="display-none">
+   <div id="{{ID}}">
+     <div style="height:231px;"></div>
+   </div>
+ </div>
+
+</div>

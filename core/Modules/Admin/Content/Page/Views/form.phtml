@@ -1,0 +1,56 @@
+<?php use Roducks\Page\Template; ?>
+<div class="container">
+  <div class="box-white">
+    <?php Template::view('title'); ?>
+
+    <form name="foovar" method="post" action="/_json/content/save"
+    rel="rdks-form"
+    data-notification="true"
+    data-reset="true"
+    data-ajax="true"
+    data-json="true"
+    data-focus="true"
+    data-callback-success="cbFormSuccess"
+    data-callback-loading="cbFormLoading"
+    data-callback-error="cbFormError"
+    data-alert-warning="Please fill out the required fields *"
+    data-alert-error="Oops! Form has errors."
+    data-alert-failed="Server does not respond. Please Try again later."
+    >
+
+      <input type="hidden" name="id" data-reset="false" value="<?php echo $id; ?>">
+      <input type="hidden" name="tpl" data-reset="false" value="<?php echo $type; ?>">
+
+      <div class="form-group has-feedback">
+          <label class="control-label"><?php echo __('Title'); ?>:</label>
+          <input type="text" name="title" class="form-control" data-required="true" />
+          <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+          <span class="help-block"></span>
+      </div>
+
+      <div class="form-group has-feedback">
+          <label class="control-label">URL:</label>
+          <input type="text" name="url" class="form-control" />
+          <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+          <span class="help-block"></span>
+      </div>
+
+      <div class="form-group has-feedback">
+          <label class="control-label"><?php echo __('Description'); ?>:</label>
+          <textarea name="description" class="form-control" data-required="true" ></textarea>
+          <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+          <span class="help-block"></span>
+      </div>
+
+      <?php if ($fields->rows()): while ($field = $fields->fetch('object')): ?>
+        <div class="form-group has-feedback">
+            <label class="control-label"><?php echo $field->title; ?>:</label>
+            <?php Template::view('layout-fields', ['field' => $field]); ?>
+        </div>
+      <?php endwhile; endif; ?>
+
+        <button type="submit" class="btn btn-lg btn-primary">Submit</button>
+    </form>
+
+  </div>
+</div>

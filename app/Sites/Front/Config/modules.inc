@@ -22,5 +22,6 @@ return [
 	'Account' 	=> true,
 	'Home' 		=> true,
 	'Login' 	=> true,
-	'Users'		=> true
+	'Users'		=> true,
+	'ContentViewer' => true
 ];

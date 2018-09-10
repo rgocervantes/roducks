@@ -267,7 +267,7 @@ final class View
 	public function output($header_footer = true, $scripts = true)
 	{
 
-		if ($this->_error) {
+		if ($this->_error && empty($this->_body)) {
 			return false;
 		}
 
@@ -366,7 +366,7 @@ final class View
 		} else if (file_exists($dir_view) && !empty($this->_view)) {
 
 			if (Helper::isPage($dir_view)) {
-				Layout::view(null);
+				Layout::view(null, $this->_error);
 			} else {
 				include $dir_view;
 			}

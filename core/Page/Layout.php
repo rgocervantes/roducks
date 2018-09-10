@@ -29,8 +29,12 @@ class Layout
 	static $data;
 	static $path;
 
-	static function view($name)
+	static function view($name, $error = false)
 	{
+
+		if ($error) {
+			return false;
+		}
 
 		$include = false;
 		$view = (!is_null($name)) ? $name . FILE_PHTML : "";

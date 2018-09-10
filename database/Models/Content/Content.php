@@ -18,27 +18,28 @@
  *
  */
 
-namespace Roducks\Page;
+namespace DB\Models\Content;
 
-use Roducks\Framework\Core;
-use Roducks\Framework\Error;
+use Model;
 
-class Service extends JSON
+class Content extends Model
 {
+  var $id = 'id_content';
+  var $fields = [
+    'id_url' => Model::TYPE_INTEGER,
+    'id_type' => Model::TYPE_INTEGER,
+    'id_layout' => Model::TYPE_INTEGER,
+    'id_user' => Model::TYPE_INTEGER,
+    'title' => Model::TYPE_VARCHAR,
+    'description' => Model::TYPE_VARCHAR,
+    'active' => Model::TYPE_INTEGER,
+    'created_at' => Model::TYPE_DATETIME,
+    'updated_at' => Model::TYPE_DATETIME
+  ];
 
-	protected $_pageType = 'SERVICE';
-	var $rdks = 1;
-
-	static function init()
-	{
-		$page = get_called_class();
-		return Core::loadService($page);
-	}
-
-	public function _disableServiceUrl($method)
-	{
-		$error = "Methods that starts with \"<b style=\"color:#e69d97\">get</b>\" aren't allowed to be dispatched because they're supposed to \"<b style=\"color:#e69d97\">return</b>\" data.";
-		Error::methodNotFound("Can't dispatch URL", __LINE__, __FILE__, $this->pageObj->fileName, $this->pageObj->className, $method, $this->getParentClassName(),$error);
-	}
+  public function getList()
+  {
+    return $this->filter(['active' => 1]);
+  }
 
 }

@@ -106,10 +106,11 @@ abstract class Frame
 		$url = URL::getParams();
 		$total = count($url) - 1;
 		if (isset($url[0]) && isset($url[1]) && !empty($url[$total])) {
-			if (preg_match('/^_(page|api|block|json|xml|service|factory)$/', $url[0])) {
+			if (preg_match('/^_(page|block|json|xml|service|factory)$/', $url[0])) {
 				if (
-					(!$this->_dispatchUrl && $this->_pageType == 'FRAME' && preg_match('/^_(json|service|xml)$/', $url[0])) ||
+					(!$this->_dispatchUrl && $this->_pageType == 'FRAME' && preg_match('/^_(json|xml)$/', $url[0])) ||
 					(!$this->_dispatchUrl && $this->_pageType == 'PAGE' && $url[0] == '_page') ||
+					(!$this->_dispatchUrl && $this->_pageType == 'SERVICE' && $url[0] == '_service') ||
 					(!$this->_dispatchUrl && $this->_pageType == 'FACTORY' && $url[0] == '_factory') ||
 					(!$this->_dispatchUrl && $this->_pageType == 'BLOCK' && $url[0] == '_block')
 				) {

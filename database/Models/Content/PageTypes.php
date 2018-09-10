@@ -33,6 +33,11 @@ class PageTypes extends Model
     'updated_at' => Model::TYPE_DATETIME
   ];
 
+  public function getList()
+  {
+    return $this->filter(['active' => 1]);
+  }
+
   public function getByName($name)
   {
     return $this

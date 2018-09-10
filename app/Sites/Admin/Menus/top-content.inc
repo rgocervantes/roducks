@@ -18,27 +18,6 @@
  *
  */
 
-namespace Roducks\Page;
+use App\Sites\Admin\Services\Menu as MenuContent;
 
-use Roducks\Framework\Core;
-use Roducks\Framework\Error;
-
-class Service extends JSON
-{
-
-	protected $_pageType = 'SERVICE';
-	var $rdks = 1;
-
-	static function init()
-	{
-		$page = get_called_class();
-		return Core::loadService($page);
-	}
-
-	public function _disableServiceUrl($method)
-	{
-		$error = "Methods that starts with \"<b style=\"color:#e69d97\">get</b>\" aren't allowed to be dispatched because they're supposed to \"<b style=\"color:#e69d97\">return</b>\" data.";
-		Error::methodNotFound("Can't dispatch URL", __LINE__, __FILE__, $this->pageObj->fileName, $this->pageObj->className, $method, $this->getParentClassName(),$error);
-	}
-
-}
+return MenuContent::init()->getMenu();

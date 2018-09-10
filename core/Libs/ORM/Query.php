@@ -131,6 +131,9 @@ class Query
 		if (preg_match('/^([a-zA-Z0-9_\.]+):(.+)$/i', $field, $match)) {
 
 			switch ($match[2]) {
+					case 'regexp':
+						$ret .= $match[1] . " REGEXP '".$value."' ";
+						break;
 					case 'string':
 						$ret .= $match[1] . " = '{$value}'";
 						break;

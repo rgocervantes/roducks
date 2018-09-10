@@ -42,7 +42,7 @@ class Url extends Service
   public function set(array $urls)
   {
 
-    $urlsTable = $this->model('seo/urls')->prepare();
+    $urlsTable = $this->model('SEO/urls')->prepare();
     $urlsTable->setCreatedAt('NOW()');
     $urlsTable->save();
     $urlId = $urlsTable->getId();
@@ -50,31 +50,33 @@ class Url extends Service
     foreach ($urls as $iso => $url) {
       $langId = Language::getId($iso);
 
-      $urlLangTable = $this->model('seo/urls-lang')->prepare();
+      $urlLangTable = $this->model('SEO/urls-lang')->prepare();
       $urlLangTable->setIdUrl($urlId);
       $urlLangTable->setIdLang($langId);
       $urlLangTable->setUrl($url['url']);
       $urlLangTable->setDispatch($url['dispatch']);
 
       if (isset($url['title'])) {
-        $urlLangTable->setDispatch($url['title']);
+        $urlLangTable->setTitle($url['title']);
       }
 
       if (isset($url['layout'])) {
-        $urlLangTable->setDispatch($url['layout']);
+        $urlLangTable->setLayout($url['layout']);
       }
 
       if (isset($url['template'])) {
-        $urlLangTable->setDispatch($url['template']);
+        $urlLangTable->setTemplate($url['template']);
       }
 
       if (isset($url['tpl'])) {
-        $urlLangTable->setDispatch($url['tpl']);
+        $urlLangTable->setTpl($url['tpl']);
       }
 
       $urlLangTable->save();
 
     }
+
+    return $urlId;
 
   }
 
