@@ -33,6 +33,7 @@ return [
 	'Path' 						=> 'Roducks\\Framework\\Path',
 	'Login' 					=> 'Roducks\\Framework\\Login',
 	'Router' 					=> 'Roducks\\Framework\\Router',
+	'Setup' 					=> 'Roducks\\Framework\\Setup',
 	'Crypt\\Hash' 		=> 'Roducks\\Framework\\Hash',
 	'API' 						=> 'Roducks\\API\\API',
 	/*
