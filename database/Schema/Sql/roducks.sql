@@ -100,7 +100,6 @@ CREATE TABLE IF NOT EXISTS `UrlsLang` (
   `url` blob NOT NULL,
   `url_redirect` blob,
   `dispatch` varchar(255) NOT NULL,
-  `title` blob NOT NULL,
   `layout` varchar(255) NULL,
   `template` varchar(255) NULL,
   `tpl` varchar(255) NOT NULL,

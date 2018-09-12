@@ -61,8 +61,7 @@ class Content extends JSON
       'en' => [
         'url' => $url,
         'dispatch' => 'ContentViewer/Page/ContentViewer::index',
-        'tpl' => $this->post->hidden('tpl'),
-        'title' => $title
+        'tpl' => $this->post->hidden('tpl')
       ],
     ]);
 

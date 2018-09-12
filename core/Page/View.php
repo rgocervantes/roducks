@@ -40,7 +40,7 @@ final class View
 	/* ------------------------------------*/
 	private $_template = "";
 	private $_layout = "";
-	private $_view = "";
+	private $_view = "view";
 	private $_body = "";
 	private $_meta = "";
 	private $_data = [];
@@ -67,11 +67,14 @@ final class View
 
 	private function _urlData()
 	{
-		if (count($this->_url) > 0) {
-			$this->title($this->_url['title']);
-			$this->load($this->_url['tpl']);
+		if (count($this->_url) > 0)
+
+			if (!empty($this->_url['tpl']))
+				$this->load($this->_url['tpl']);
+
 			if (!empty($this->_url['template']))
 				$this->template($this->_url['template']);
+
 			if (!empty($this->_layout))
 				$this->_layout = $this->_url['layout'];
 		}

@@ -56,10 +56,6 @@ class Url extends Service
       $urlLangTable->setUrl($url['url']);
       $urlLangTable->setDispatch($url['dispatch']);
 
-      if (isset($url['title'])) {
-        $urlLangTable->setTitle($url['title']);
-      }
-
       if (isset($url['layout'])) {
         $urlLangTable->setLayout($url['layout']);
       }
