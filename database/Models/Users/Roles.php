@@ -35,7 +35,8 @@ class Roles extends Model
 		'created_by'	 => Model::TYPE_INTEGER,
 		'updated_by'	 => Model::TYPE_INTEGER,
 		'created_at'	 => Model::TYPE_DATETIME,
-		'updated_at'	 => Model::TYPE_DATETIME
+		'updated_at'	 => Model::TYPE_DATETIME,
+    'deleted_at' => Model::TYPE_DATETIME,
 	];
 
 	/**

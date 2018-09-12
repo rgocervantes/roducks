@@ -597,19 +597,20 @@ class Duckling
   	|	Environment
   	|----------------------------------------------------------------------
   	*/
-    $tpl = preg_replace_callback('/{{% @env\(([a-z\']+)\) %}}(.*?){{% @endenv %}}/sm', function($env) {
+    $tpl = preg_replace_callback('/{{% @env\(([a-zA-Z\']+)\) %}}(.*?){{% @endenv %}}/sm', function($env) {
 
       $display = false;
       $type = str_replace(['"',"'"], '', $env[1]);
+      $type = strtoupper($type);
 
       switch ($type) {
-        case 'dev':
+        case 'DEV':
           $display = Environment::inDEV();
           break;
-        case 'qa':
+        case 'QA':
           $display = Environment::inQA();
           break;
-        case 'pro':
+        case 'PRO':
           $display = Environment::inPRO();
           break;
       }

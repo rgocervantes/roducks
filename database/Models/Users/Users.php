@@ -46,7 +46,8 @@ class Users extends Model
 		'expires'			 => Model::TYPE_BOOL,
 		'expiration_date'	 => Model::TYPE_DATE,
 		'created_at'		 => Model::TYPE_DATETIME,
-		'updated_at'		 => Model::TYPE_DATETIME
+		'updated_at'		 => Model::TYPE_DATETIME,
+    'deleted_at' => Model::TYPE_DATETIME,
 	];
 
 	public function logInOut($id, $option)

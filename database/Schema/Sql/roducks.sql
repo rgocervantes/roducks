@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `EAV` (
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NULL,
+  `deleted_at` datetime NULL,
   PRIMARY KEY (`id_index`),
   INDEX `idx_rel` (`id_rel`),
   INDEX `idx_text` (`text`)
@@ -38,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `Roles` (
   `updated_by` bigint(8) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NULL,
+  `deleted_at` datetime NULL,
   PRIMARY KEY (`id_role`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
@@ -103,6 +105,7 @@ CREATE TABLE IF NOT EXISTS `UrlsLang` (
   `template` varchar(255) NULL,
   `tpl` varchar(255) NOT NULL,
   `updated_at` datetime NULL,
+  `deleted_at` datetime NULL,
   PRIMARY KEY (`id_url_lang`),
   CONSTRAINT `fk_id_url` FOREIGN KEY (`id_url`) REFERENCES `Urls` (`id_url`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -119,6 +122,7 @@ CREATE TABLE IF NOT EXISTS `Categories` (
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NULL,
+  `deleted_at` datetime NULL,
   PRIMARY KEY (`id_category`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -132,6 +136,7 @@ CREATE TABLE IF NOT EXISTS `Lists` (
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NULL,
+  `deleted_at` datetime NULL,
   PRIMARY KEY (`id_list`),
   CONSTRAINT `fk_id_category` FOREIGN KEY (`id_category`) REFERENCES `Categories` (`id_category`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -151,6 +156,7 @@ CREATE TABLE IF NOT EXISTS `ListsFields` (
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NULL,
+  `deleted_at` datetime NULL,
   PRIMARY KEY (`id_field`),
   CONSTRAINT `fk_id_list` FOREIGN KEY (`id_list`) REFERENCES `Lists` (`id_list`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -169,6 +175,7 @@ CREATE TABLE IF NOT EXISTS `Layouts` (
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NULL,
+  `deleted_at` datetime NULL,
   PRIMARY KEY (`id_layout`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -183,6 +190,7 @@ CREATE TABLE IF NOT EXISTS `PageTypes` (
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NULL,
+  `deleted_at` datetime NULL,
   PRIMARY KEY (`id_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -205,6 +213,7 @@ CREATE TABLE IF NOT EXISTS `Fields` (
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NULL,
+  `deleted_at` datetime NULL,
   PRIMARY KEY (`id_field`),
   CONSTRAINT `fk_id_type` FOREIGN KEY (`id_type`) REFERENCES `PageTypes` (`id_type`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -228,6 +237,7 @@ CREATE TABLE IF NOT EXISTS `Content` (
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NULL,
+  `deleted_at` datetime NULL,
   PRIMARY KEY (`id_content`),
   CONSTRAINT `fk_pc_id_url` FOREIGN KEY (`id_url`) REFERENCES `Urls` (`id_url`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_pc_id_type` FOREIGN KEY (`id_type`) REFERENCES `PageTypes` (`id_type`) ON DELETE CASCADE ON UPDATE CASCADE,

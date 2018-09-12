@@ -34,7 +34,8 @@ class Content extends Model
     'description' => Model::TYPE_VARCHAR,
     'active' => Model::TYPE_INTEGER,
     'created_at' => Model::TYPE_DATETIME,
-    'updated_at' => Model::TYPE_DATETIME
+    'updated_at' => Model::TYPE_DATETIME,
+    'deleted_at' => Model::TYPE_DATETIME,
   ];
 
   public function getList()
