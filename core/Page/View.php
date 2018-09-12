@@ -67,7 +67,7 @@ final class View
 
 	private function _urlData()
 	{
-		if (count($this->_url) > 0)
+		if (count($this->_url) > 0) {
 
 			if (!empty($this->_url['tpl']))
 				$this->load($this->_url['tpl']);
