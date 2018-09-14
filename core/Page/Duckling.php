@@ -261,7 +261,7 @@ class Duckling
               }
             }
           break;
-        case 'and':
+        case 'or':
             if ($total > 0) {
               return $condition[4];
             } else {
