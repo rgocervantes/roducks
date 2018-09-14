@@ -215,7 +215,70 @@ class Duckling
     return $tpl;
   }
 
-  private static function _condition($condition, $k, $v)
+  private static function _return($content, $return)
+  {
+    if ($return) {
+      return true;
+    }
+
+    return $content;
+  }
+
+  private static function _multipleCondition($row, $k, $v)
+  {
+
+    return preg_replace_callback('/{{% @if ([a-zA-Z_0-9\-$=<>!\s\']+)(([&|]+[a-zA-Z_0-9\-$=<>!\s\']+)+) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm', function($condition) use ($k, $v) {
+      $type = 'none';
+      $total = 0;
+      $conds = [];
+      $statment = $condition[1]." ".$condition[2];
+
+      if (preg_match('/&&/', $statment) && !preg_match('/[|]+/', $statment)) {
+        $conds = explode(" && ", $statment);
+        $type = 'and';
+      } else if(preg_match('/[|]+/', $statment) && !preg_match('/&&/', $statment)) {
+        $conds = explode(" || ", $statment);
+        $type = 'or';
+      }
+
+      foreach ($conds as $cond) {
+        preg_replace_callback('/\$([a-zA-z_]+)(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])? ([=<>!]+) ([a-zA-Z0-9_\']+)/', function($cnd) use (&$total, $condition, $k, $v) {
+          array_push($cnd, "empty");
+          $return = Duckling::_condition($cnd, $k, $v, true);
+          if ($return) {
+            $total++;
+          }
+        }, $cond);
+      }
+
+      switch ($type) {
+        case 'and':
+            if (count($conds) == $total) {
+              return $condition[4];
+            } else {
+              if (isset($condition[6])) {
+                return $condition[6];
+              }
+            }
+          break;
+        case 'and':
+            if ($total > 0) {
+              return $condition[4];
+            } else {
+              if (isset($condition[6])) {
+                return $condition[6];
+              }
+            }
+          break;
+      }
+
+      return "";
+
+    }, $row);
+
+  }
+
+  private static function _condition($condition, $k, $v, $return = false)
   {
 
     if ($condition[1] == 'i') {
@@ -235,45 +298,45 @@ class Duckling
           }
 
           if ($var == $_value) {
-            return $condition[6];
+            return self::_return($condition[6], $return);
           } else {
-            return (isset($condition[8])) ? $condition[8] : '';
+            return (isset($condition[8])) ? self::_return($condition[8], $return) : '';
           }
 
         break;
       case '>':
 
           if ($var > $_value) {
-            return $condition[6];
+            return self::_return($condition[6], $return);
           } else {
-            return (isset($condition[8])) ? $condition[8] : '';
+            return (isset($condition[8])) ? self::_return($condition[8], $return) : '';
           }
 
         break;
       case '>=':
 
           if ($var >= $_value) {
-            return $condition[6];
+            return self::_return($condition[6], $return);
           } else {
-            return (isset($condition[8])) ? $condition[8] : '';
+            return (isset($condition[8])) ? self::_return($condition[8], $return) : '';
           }
 
         break;
       case '<':
 
           if ($var < $_value) {
-            return $condition[6];
+            return self::_return($condition[6], $return);
           } else {
-            return (isset($condition[8])) ? $condition[8] : '';
+            return (isset($condition[8])) ? self::_return($condition[8], $return) : '';
           }
 
         break;
       case '<=':
 
           if ($var <= $_value) {
-            return $condition[6];
+            return self::_return($condition[6], $return);
           } else {
-            return (isset($condition[8])) ? $condition[8] : '';
+            return (isset($condition[8])) ? self::_return($condition[8], $return) : '';
           }
 
         break;
@@ -281,9 +344,9 @@ class Duckling
       case '<>':
 
           if ($var != $_value) {
-            return $condition[6];
+            return self::_return($condition[6], $return);
           } else {
-            return (isset($condition[8])) ? $condition[8] : '';
+            return (isset($condition[8])) ? self::_return($condition[8], $return) : '';
           }
 
         break;
@@ -460,7 +523,7 @@ class Duckling
         return Duckling::_condition($condition, null, $value);
 			}, $tpl);
 
-			$tpl = preg_replace_callback('/{{% @each \$'.$key.' in \$([a-z]+) %}}(.*?){{% @endeach %}}/sm', function($matches) use (&$ret, $key, $value){
+			$tpl = preg_replace_callback('/{{% @each \$'.$key.' in \$([a-z]+) %}}(.*?){{% @endeach %}}/sm', function($matches) use ($key, $value){
 				$content = $matches[2];
 				$loop = "";
 
@@ -469,6 +532,8 @@ class Duckling
 					$row = preg_replace_callback('/{{% \$i( (?P<SIGN>[+\-]) (?P<COUNTER>[0-9]+))? %}}/', function($indexes) use ($k){
             return Duckling::_counter($indexes, $k);
 					}, $content);
+
+          $row = Duckling::_multipleCondition($row, $k, $v);
 
 					$row = preg_replace_callback('/{{% @if \$([a-zA-z_]+)(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])? ([=<>!]+) ([a-zA-Z0-9_\']+) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm', function($condition) use ($k, $v) {
             return Duckling::_condition($condition, $k, $v);
@@ -499,6 +564,8 @@ class Duckling
   			$tpl = preg_replace_callback('/{{% @if \$('.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])? ([=<>!]+) ([a-zA-Z0-9_\']+) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm', function($condition) use ($value) {
           return Duckling::_condition($condition, null, $value);
   			}, $tpl);
+
+        $tpl = Duckling::_multipleCondition($tpl, $key, $value);
 
 		  }
     }
