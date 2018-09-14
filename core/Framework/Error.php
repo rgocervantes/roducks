@@ -65,7 +65,7 @@ class Error
 
 	static function logger($title, $error, $file)
 	{
-		self::log("{$title}:\n[file] {$file}\n\n{$error}");
+		self::log("{$title}\n[file] {$file}\n\n{$error}");
 	}
 
 	static function block($title, $line, $path, $file, $error = "", $debug = false)

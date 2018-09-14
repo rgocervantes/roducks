@@ -694,7 +694,8 @@ class Duckling
   	*/
     if (preg_match('/{{% (.+?) %}}/sm', $tpl, $errors)) {
       if (Environment::inDev()) {
-        return Error::block('Uncaught expression', 0, '', $file, $errors[0], true);
+        $url = \Roducks\Framework\URL::getAbsoluteURL();
+        return Error::block("Uncaught expression\n[URL] {$url}", 0, '', $file, $errors[0], true);
       }
 
       return '';
