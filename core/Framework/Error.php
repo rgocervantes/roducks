@@ -20,7 +20,6 @@
 
 namespace Roducks\Framework;
 
-use Roducks\Libs\Utils\Date;
 use Roducks\Libs\Request\Http;
 
 class Error
@@ -29,7 +28,7 @@ class Error
 	static function log($message, $file = "")
 	{
 		$code = (!empty($file)) ? 3 : 0;
-		error_log(Date::getCurrentDateTime() . " - " . $message);
+		error_log($message, $code, $file);
 	}
 
 	static function on()
@@ -64,8 +63,15 @@ class Error
 		}
 	}
 
+	static function logger($title, $error, $file)
+	{
+		self::log("{$title}:\n[file] {$file}\n\n{$error}");
+	}
+
 	static function block($title, $line, $path, $file, $error = "", $debug = false)
 	{
+
+		self::logger($title, $error, $file);
 
 		$markup = '<div style="font-family:Arial; text-align:left; padding:20px; background:#13a9a8; border:solid 2px #009688; margin-bottom:5px; color: #fcf7d2;">';
 		$markup .= '<h1 style="margin:0">'. $title .'</h1>';
@@ -88,9 +94,13 @@ class Error
 		}
 		if ($debug) {
 			$markup .= '<div style="font-family:monospace;font-size:16px;"><b>File: </b>' . $file . '</div>';
-			$markup .= '<div style="font-family:monospace;font-size:16px;"><b>Line: </b>' . $line . '</div>';
+			if ($line > 0) {
+				$markup .= '<div style="font-family:monospace;font-size:16px;"><b>Line: </b>' . $line . '</div>';
+			}
 		} else {
-			$markup .= '<div style="font-family:monospace;font-size:16px;"><b>Line: </b>' . $line . '</div>';
+			if ($line > 0) {
+				$markup .= '<div style="font-family:monospace;font-size:16px;"><b>Line: </b>' . $line . '</div>';
+			}
 			$markup .= '<div style="font-family:monospace;font-size:16px;"><b>Thrown in: </b>' . $path . '</div>';
 		}
 
@@ -138,6 +148,7 @@ class Error
 				}
 			} else {
 				if (!Helper::isBlock($file) && !Helper::isBlockDispatched()) {
+					self::logger($title, $error, $file);
 					self::pageNotFound();
 				}
 			}

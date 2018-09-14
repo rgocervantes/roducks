@@ -151,14 +151,13 @@ class Duckling
 
   private static function _query($tpl, $key, $query)
   {
-    $tpl = preg_replace_callback('/{{% @while \$('.$key.')->fetch\(([a-z\']+)?\) in \$([a-zA-Z_]+) %}}(.*?){{% @endwhile %}}/sm', function ($matches) use($query) {
+    $tpl = preg_replace_callback('/{{% @while \$('.$key.')->fetch\(\) in \$([a-zA-Z_]+) %}}(.*?){{% @endwhile %}}/sm', function ($matches) use($query) {
 
       $loop = "";
-      $content = $matches[4];
-      $type = (!empty($matches[2])) ? str_replace("'", '', $matches[2]) : 'default';
+      $content = $matches[3];
 
-      while($row = $query->fetch($type)):
-        $loop .= preg_replace_callback(Duckling::_rules('format', [$matches[3]]), function ($m) use($row) {
+      while($row = $query->fetch('object')):
+        $loop .= preg_replace_callback(Duckling::_rules('format', [$matches[2]]), function ($m) use($row) {
           return Duckling::_format($m, $row);
         }, $content);
       endwhile;
@@ -206,6 +205,11 @@ class Duckling
         $var = 0;
       }
       return '{{% '.$dis[1].' '.$var.' %}}';
+    }, $tpl);
+
+    $tpl = preg_replace_callback('/([=<>!]+) \$('.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z0-9_\']+\])?/', function($dis) use ($value){
+      $var = Duckling::_var($dis, $value);
+      return $dis[1]." ".$var;
     }, $tpl);
 
     return $tpl;
@@ -682,6 +686,19 @@ class Duckling
   	*/
     $tpl = self::_functions($tpl);
 		$tpl = self::_clean($tpl);
+
+    /*
+  	|----------------------------------------------------------------------
+  	|	Detects uncaught expression
+  	|----------------------------------------------------------------------
+  	*/
+    if (preg_match('/{{% (.+?) %}}/sm', $tpl, $errors)) {
+      if (Environment::inDev()) {
+        return Error::block('Uncaught expression', 0, '', $file, $errors[0], true);
+      }
+
+      return '';
+    }
 
     return $tpl;
 
