@@ -71,7 +71,7 @@ class Error
 	static function block($title, $line, $path, $file, $error = "", $debug = false)
 	{
 
-		self::logger($title, $error, $file);
+		self::logger("{$title}\n[URL] {$path}", $error, $file);
 
 		$markup = '<div style="font-family:Arial; text-align:left; padding:20px; background:#13a9a8; border:solid 2px #009688; margin-bottom:5px; color: #fcf7d2;">';
 		$markup .= '<h1 style="margin:0">'. $title .'</h1>';

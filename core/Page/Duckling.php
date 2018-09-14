@@ -692,10 +692,13 @@ class Duckling
   	|	Detects uncaught expression
   	|----------------------------------------------------------------------
   	*/
-    if (preg_match('/{{% (.+?) %}}/sm', $tpl, $errors)) {
+    if (
+      preg_match('/{{% (endif|endforeach|else|enwhile) %}}/sm', $tpl, $errors) ||
+      preg_match('/{{% ([a-zA-Z0-9_!=<>$\s@|+]+) %}}/sm', $tpl, $errors)
+    ) {
       if (Environment::inDev()) {
         $url = \Roducks\Framework\URL::getAbsoluteURL();
-        return Error::block("Uncaught expression\n[URL] {$url}", 0, '', $file, $errors[0], true);
+        return Error::block("Uncaught expression", 0, $url, $file, $errors[0], true);
       }
 
       return '';
