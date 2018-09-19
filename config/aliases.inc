@@ -27,6 +27,7 @@ return [
 	'Helper' 					=> 'Roducks\\Framework\\Helper',
 	'URL' 						=> 'Roducks\\Framework\\URL',
 	'Language' 				=> 'Roducks\\Framework\\Language',
+	'Env' 						=> 'Roducks\\Framework\\Environment',
 	'Dispatch' 				=> 'Roducks\\Framework\\Dispatch',
 	'Form' 						=> 'Roducks\\Framework\\Form',
 	'Post' 						=> 'Roducks\\Framework\\Post',
