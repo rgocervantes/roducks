@@ -523,7 +523,7 @@ class Duckling
         return Duckling::_condition($condition, null, $value);
 			}, $tpl);
 
-			$tpl = preg_replace_callback('/{{% @each \$'.$key.' in \$([a-z]+) %}}(.*?){{% @endeach %}}/sm', function($matches) use ($key, $value){
+			$tpl = preg_replace_callback('/{{% @each \$([a-z]+) in \$'.$key.' %}}(.*?){{% @endeach %}}/sm', function($matches) use ($key, $value){
 				$content = $matches[2];
 				$loop = "";
 
