@@ -47,6 +47,15 @@ class Core
 		return str_replace('/', '\\', $class);
 	}
 
+	static function duckling()
+	{
+		$file = Path::get(DIR_APP_CONFIG.'duckling.inc');
+
+		if (file_exists($file)) {
+			include_once $file;
+		}
+	}
+
 	static function db()
 	{
 		try {

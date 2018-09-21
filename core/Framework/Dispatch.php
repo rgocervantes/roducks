@@ -929,6 +929,8 @@ class Dispatch
 			}
 		}
 
+		Core::duckling();
+
 		// Load page
 		Core::loadPage($pagePath, $page, $method, $urlPattern, $params, false, $rowUrl);
 
