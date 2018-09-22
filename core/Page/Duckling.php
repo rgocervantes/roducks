@@ -151,7 +151,7 @@ class Duckling
 
   private static function _query($tpl, $key, $query)
   {
-    $tpl = preg_replace_callback('/{{% @while \$([a-zA-Z_]+) in \$('.$key.')->fetch\(\) %}}(.*?){{% @endwhile %}}/sm', function ($matches) use($query) {
+    $tpl = preg_replace_callback('/{{% @while \$([a-zA-Z_]+) => \$('.$key.')->fetch\(\) %}}(.*?){{% @endwhile %}}/sm', function ($matches) use($query) {
 
       $k = 0;
       $loop = "";
