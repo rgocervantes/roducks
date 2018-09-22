@@ -151,15 +151,30 @@ class Duckling
 
   private static function _query($tpl, $key, $query)
   {
-    $tpl = preg_replace_callback('/{{% @while \$('.$key.')->fetch\(\) in \$([a-zA-Z_]+) %}}(.*?){{% @endwhile %}}/sm', function ($matches) use($query) {
+    $tpl = preg_replace_callback('/{{% @while \$([a-zA-Z_]+) in \$('.$key.')->fetch\(\) %}}(.*?){{% @endwhile %}}/sm', function ($matches) use($query) {
 
+      $k = 0;
       $loop = "";
       $content = $matches[3];
 
       while($row = $query->fetch('object')):
-        $loop .= preg_replace_callback(Duckling::_rules('format', [$matches[2]]), function ($m) use($row) {
+
+        $loop .= preg_replace_callback(Duckling::_rules('format', [$matches[1]]), function ($m) use($row) {
           return Duckling::_format($m, $row);
         }, $content);
+
+        $loop = preg_replace_callback('/{{% @if \$([a-zA-z_]+)(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])? ([=<>!]+) ([a-zA-Z0-9_\']+) %}}(.*?)({{% @else %}}(?P<ELSE>.*?))?{{% @endif %}}/sm', function($condition) use ($k, $row) {
+          return Duckling::_condition($condition, $k, $row);
+        }, $loop);
+
+        $loop = preg_replace_callback('/{{% \$i(\s\+\s(?P<INC>\d+))? %}}/', function ($i) use (&$k) {
+          if (isset($i['INC'])) {
+            return $k + intval($i['INC']);
+          }
+          return $k;
+        }, $loop);
+
+        $k++;
       endwhile;
 
       return $loop;
