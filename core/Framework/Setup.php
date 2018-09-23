@@ -1,22 +1,22 @@
 <?php
 /**
- *
- * This file is part of Roducks.
- *
- *    Roducks is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
- *
- *    Roducks is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
- *
- *    You should have received a copy of the GNU General Public License
- *    along with Roducks.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
+*
+* This file is part of Roducks.
+*
+*    Roducks is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    Roducks is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with Roducks.  If not, see <http://www.gnu.org/licenses/>.
+*
+*/
 
 namespace Roducks\Framework;
 
@@ -33,45 +33,45 @@ abstract class Setup extends CLI
 	static private function _getCSV($file)
 	{
 		$csv = new CSV($file);
-        $csv->path(Path::get(DIR_SCHEMA_DATA));
+		$csv->path(Path::get(DIR_SCHEMA_DATA));
 
-        return $csv;
+		return $csv;
 	}
 
 	static function fillTableFromCSV($db, $tbl, $file)
 	{
 
-        $csv = self::_getCSV($file);
+		$csv = self::_getCSV($file);
 
-        if ($csv->read()) {
+		if ($csv->read()) {
 
 			DB::insertInto($db, $tbl, function ($table) use ($csv) {
 
-	            $c = 0;
-	            $headers = [];
+				$c = 0;
+				$headers = [];
 
-	            while (($data = $csv->fetch()) !== FALSE) {
+				while (($data = $csv->fetch()) !== FALSE) {
 
-	                if ($c == 0) {
-	                    $headers = $data;
-	                } else {
+					if ($c == 0) {
+						$headers = $data;
+					} else {
 
 						$table->values(function () use ($table, $headers, $data) {
-		                    for ($i=0; $i < count($headers); $i++) { 
-		                        $table->column($headers[$i], $data[$i]);
-		                    }
+							for ($i=0; $i < count($headers); $i++) {
+								$table->column($headers[$i], $data[$i]);
+							}
 						});
 
-	                }
+					}
 
-	                $c++;
-	            }
+					$c++;
+				}
 
-	            $csv->stop();
+				$csv->stop();
 
 			});
 
-        }
+		}
 
 	}
 
@@ -82,37 +82,36 @@ abstract class Setup extends CLI
 		$csv = self::_getCSV($file);
 		$headers = [];
 
-        if ($csv->read()) {
+		if ($csv->read()) {
 
-        	$c = 0;
+			$c = 0;
 
-            while (($data = $csv->fetch()) !== FALSE) {
+			while (($data = $csv->fetch()) !== FALSE) {
 
-                if ($c == 0) {
-                    $headers = $data;
-                } else {
+				if ($c == 0) {
+					$headers = $data;
+				} else {
+					$row = [];
+					$key = $headers[0];
+					$value = $data[0];
 
-	        		$row = [];
-	            	$key = $headers[0];
-	            	$value = $data[0];
+					for ($i=0; $i < count($headers); $i++) {
+						if ($i > 0) {
+							$row[$headers[$i]] = $data[$i];
+						}
+					}
 
-                    for ($i=0; $i < count($headers); $i++) { 
-                    	if ($i > 0) {
-                    		$row[$headers[$i]] = $data[$i];
-                    	}
-                    }
+					$tx = $query->update([$key => $value], $row);
+					DB::transaction($tx);
+				}
 
-	                $tx = $query->update([$key => $value], $row);
-	                DB::transaction($tx);
-	        	}
+				$c++;
 
-	        	$c++;
-            }
+			}
 
-            $csv->stop();
+			$csv->stop();
 
-        }
-
+		}
 	}
 
 	static function deleteTableFromCSV($db, $tbl, $file)
@@ -122,29 +121,29 @@ abstract class Setup extends CLI
 		$csv = self::_getCSV($file);
 		$headers = [];
 
-        if ($csv->read()) {
+		if ($csv->read()) {
 
-        	$c = 0;
+			$c = 0;
 
-            while (($data = $csv->fetch()) !== FALSE) {
+			while (($data = $csv->fetch()) !== FALSE) {
 
-                if ($c == 0) {
-                    $headers = $data;
-                } else {
+				if ($c == 0) {
+					$headers = $data;
+				} else {
 
-	            	$key = $headers[0];
-	            	$value = $data[0];
-	            	
-	                $tx = $query->delete([$key => $value]);
-	                DB::transaction($tx);
+					$key = $headers[0];
+					$value = $data[0];
+
+					$tx = $query->delete([$key => $value]);
+					DB::transaction($tx);
 				}
 
 				$c++;
-            }
+			}
 
-            $csv->stop();
+			$csv->stop();
 
-        }
+		}
 
 	}
 
@@ -152,9 +151,9 @@ abstract class Setup extends CLI
 	{
 
 		parent::__construct($args);
-		
+
 		$db = $this->db();
-		$this->_query = new Query($db, 'Setup');	
+		$this->_query = new Query($db, 'Setup');
 	}
 
 	protected function isUnsaved($file, $type)
@@ -188,12 +187,12 @@ abstract class Setup extends CLI
 			DB::reset();
 			$error = "{$script} failed!";
 		}
-		
+
 		return [
 			'success' => $success,
 			'error' => $error
 		];
-		
+
 	}
 
 }

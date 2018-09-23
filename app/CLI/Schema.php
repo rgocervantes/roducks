@@ -33,6 +33,7 @@ use Roducks\Framework\Setup;
 use Roducks\Libs\Files\Directory;
 use Roducks\Libs\ORM\Query;
 use Helper;
+use Path;
 
 class Schema extends Setup
 {
@@ -41,7 +42,7 @@ class Schema extends Setup
 
 	static function _getFiles($folder)
 	{
-		$dir = Directory::open(\App::getRealFilePath("/{$folder}/"));
+		$dir = Directory::open(Path::get(DIR_SCHEMA.$folder));
 		$files = $dir['files'];
 
 		return $files;
@@ -50,17 +51,17 @@ class Schema extends Setup
 	private function _run($script, $run)
 	{
 
-		$class = "App\\Schema\\Setup\\" . $script;
+		$class = "DB\\Schema\\Setup\\" . $script;
 		$dialog = ($run) ? 'success' : 'info';
 
 		if (class_exists($class)) {
 			$obj = new $class();
-			
+
 			if (method_exists($obj, 'schema')) {
-				if ($run) $obj->schema($this->db());	
+				if ($run) $obj->schema($this->db());
 			}
 
-			if (method_exists($obj, 'data')) { 
+			if (method_exists($obj, 'data')) {
 				if ($run) $obj->data($this->db());
 			}
 
@@ -96,7 +97,7 @@ class Schema extends Setup
 		$files = self::_getFiles("Setup");
 		$setup = Helper::ext($script, 'php');
 		$run = $this->getFlag('--run');
-		$message = "these scripts"; 
+		$message = "these scripts";
 
 		if (!is_null($script)) {
 			if (in_array($setup, $files)) {
@@ -127,7 +128,7 @@ class Schema extends Setup
 
 			if ($total == $this->_count) {
 				$prompt = false;
-				$this->info("There are no scripts to set up.");
+				$this->warning("There are no scripts to set up.");
 			}
 
 		}

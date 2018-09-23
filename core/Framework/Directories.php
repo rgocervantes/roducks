@@ -21,7 +21,7 @@
 App::define('APP_NS', "App");
 App::define('CORE_NS', "Roducks");
 
-App::define('DIR_CONFIG', "Config/"); 
+App::define('DIR_CONFIG', "Config/");
 App::define('DIR_EMAILS', "Emails/");
 App::define('DIR_MODULES', "Modules/");
 App::define('DIR_BLOCKS', "Blocks/");
@@ -29,7 +29,7 @@ App::define('DIR_SERVICES', "Services/");
 App::define('DIR_EVENTS', "Events/");
 App::define('DIR_MENUS', "Menus/");
 App::define('DIR_XMLS', "Xmls/");
-App::define('DIR_MODELS', "Models/");		
+App::define('DIR_MODELS', "Models/");
 App::define('DIR_VIEWS', "Views/");
 App::define('DIR_TEMPLATES', "Templates/");
 App::define('DIR_LAYOUTS', "Layouts/");
@@ -45,19 +45,19 @@ App::define('DIR_APP', "app/");
 
 # STORAGE
 App::define('DIR_DATA_STORAGE', DIR_APP_DATA . "storage/");
-	App::define('DIR_DATA_STORAGE_CSV', DIR_DATA_STORAGE . "csv/");					
-	App::define('DIR_DATA_STORAGE_IMAGES', DIR_DATA_STORAGE . DIR_IMAGES);	
-	App::define('DIR_DATA_STORAGE_PDF', DIR_DATA_STORAGE . "pdf/");	
+	App::define('DIR_DATA_STORAGE_CSV', DIR_DATA_STORAGE . "csv/");
+	App::define('DIR_DATA_STORAGE_IMAGES', DIR_DATA_STORAGE . DIR_IMAGES);
+	App::define('DIR_DATA_STORAGE_PDF', DIR_DATA_STORAGE . "pdf/");
 	App::define('DIR_DATA_STORAGE_ZIP', DIR_DATA_STORAGE . "zip/");
 	App::define('DIR_DATA_STORAGE_JSON', DIR_DATA_STORAGE . "json/");
 	App::define('DIR_DATA_STORAGE_XML', DIR_DATA_STORAGE . "xml/");
-		
-# TMP 		
+
+# TMP
 App::define('DIR_DATA_TMP', DIR_APP_DATA . "tmp/");
-	App::define('DIR_DATA_TMP_CSV', DIR_DATA_TMP . "csv/");					
-	App::define('DIR_DATA_TMP_IMAGES', DIR_DATA_TMP . DIR_IMAGES);	
-	App::define('DIR_DATA_TMP_PDF', DIR_DATA_TMP . "pdf/");	
-	App::define('DIR_DATA_TMP_ZIP', DIR_DATA_TMP . "zip/");	
+	App::define('DIR_DATA_TMP_CSV', DIR_DATA_TMP . "csv/");
+	App::define('DIR_DATA_TMP_IMAGES', DIR_DATA_TMP . DIR_IMAGES);
+	App::define('DIR_DATA_TMP_PDF', DIR_DATA_TMP . "pdf/");
+	App::define('DIR_DATA_TMP_ZIP', DIR_DATA_TMP . "zip/");
 	App::define('DIR_DATA_TMP_JSON', DIR_DATA_TMP . "json/");
 	App::define('DIR_DATA_TMP_XML', DIR_DATA_TMP . "xml/");
 
@@ -78,7 +78,9 @@ App::define('DIR_DATA_UPLOADED_PDF', DIR_DATA_UPLOADED . "pdf/");
 App::define('DIR_DATA_UPLOADED_ZIP', DIR_DATA_UPLOADED . "zip/");
 
 App::define('DIR_ROLES', DIR_APP_DATA . "roles/");
-App::define('DIR_SCHEMA_DATA', DIR_APP . "Schema/Data/");
+App::define('DIR_DATABASE', "database/");
+App::define('DIR_SCHEMA', DIR_DATABASE . "Schema/");
+App::define('DIR_SCHEMA_DATA', DIR_SCHEMA . "Data/");
 
 App::define('DIR_ASSETS', "assets/");
 App::define('DIR_PUBLIC', "public/");
@@ -95,5 +97,3 @@ App::define('DIR_PUBLIC', "public/");
 App::define('DIR_CORE', "core/");
 	App::define('DIR_CORE_CONFIG', DIR_CORE . DIR_CONFIG);
 	App::define('DIR_CORE_PAGE', DIR_CORE . "Page/");
-
-
