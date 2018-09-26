@@ -25,36 +25,42 @@ use Roducks\Framework\Dispatch;
 
 /*
 |--------------------------------|
-|		  LANGUAGE FILE  		 |
+|		       LANGUAGE FILE
 |--------------------------------|
 */
 Core::loadAppLanguages();
 
 /*
 |--------------------------------|
-|		 GET ENVIRONMENT  		 |
+|		      GET ENVIRONMENT
 |--------------------------------|
 */
 $environment = Core::getEnvironment($appConfig);
 
 /*
 |--------------------------------|
-|			 RUN APP 			 |
+|			       RUN APP
 |--------------------------------|
 */
 require "Run" . FILE_EXT;
 
 /*
 |--------------------------------|
-|			 CHECK APP 			 |
+|			       CHECK APP
 |--------------------------------|
 */
 Core::checkApp($environment);
 
 /*
 |--------------------------------|
-|		     DISPATCH  	 		 |
+|		    SYSTEM REQUIREMENT
+|--------------------------------|
+*/
+Core::requirements();
+
+/*
+|--------------------------------|
+|		         DISPATCH
 |--------------------------------|
 */
 Dispatch::init();
-

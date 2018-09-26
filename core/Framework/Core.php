@@ -31,6 +31,54 @@ class Core
 	const ALL_SITES_DIRECTORY = 'All';
 	const NS = 'Roducks/';
 
+	static function requirements()
+	{
+
+		if (version_compare(PHP_VERSION, '5.4.0') <= 0) {
+			$text = "requires version 7.0.0 or later.";
+			Error::requirements('PHP VERSION '.PHP_VERSION, 0, '', '', ['Roducks '.$text], "<b>Roducks</b> {$text}");
+		}
+
+		if (function_exists('extension_loaded')) {
+			$error = 0;
+			$items = [];
+			$exts = [
+				'date',
+				'libxml',
+				'SimpleXML',
+				'curl',
+				'gd',
+				'json',
+				'mbstring',
+				'mysqlnd',
+				'mysqli',
+				'PDO',
+				'pdo_mysql',
+				'xml',
+				'xmlreader',
+				'xmlrpc',
+				'xmlwriter',
+				'zip'
+			];
+			$message = '<ul>';
+
+			foreach ($exts as $ext) {
+				if (!extension_loaded($ext)) {
+					$error++;
+					array_push($items, $ext);
+					$message .= '<li>'.$ext.'</li>';
+				}
+			}
+			$message .= '</ul>';
+
+			if ($error > 0) {
+				Error::requirements('PHP Extentions', 0, '', '', $items, $message);
+			}
+
+		}
+
+	}
+
 	static function getVersion()
 	{
 		return RDKS_VERSION;
@@ -833,10 +881,17 @@ class Core
 
 		/*
 		|--------------------------------|
-		|			RUN SCRIPT  		 |
+		|						RUN SCRIPT
 		|--------------------------------|
 		*/
 		require "./core/Framework/Run" . FILE_EXT;
+
+		/*
+		|--------------------------------|
+		|		    SYSTEM REQUIREMENT
+		|--------------------------------|
+		*/
+		self::requirements();
 
 		if (isset($params[0])) {
 

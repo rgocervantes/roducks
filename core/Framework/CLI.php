@@ -30,7 +30,7 @@ class CLI extends Frame
 	const FAILURE = 2;
 	const WARNING = 3;
 	const NOTE = 4;
-	const SPACE = "                                                                                                       ";
+	const SPACE = "                                                                                          ";
 	const LN = "\n";
 
 	private
@@ -131,9 +131,18 @@ class CLI extends Frame
 
 	}
 
-	static function printError($text, $color = "NOTE", $px = 0)
+	static function printError($text, $color = "NOTE", array $items = [])
 	{
-		self::println($text, $color, $px);
+		if (!empty($items) && is_array($items)) {
+			$error = [];
+			foreach ($items as $item) {
+				$error[] = self::line($item, 4);
+			}
+			self::_dialog($text, self::_getOutput($error, "  - "), self::FAILURE);
+		} else {
+			self::println($text, $color, 0);
+		}
+
 		exit;
 	}
 
