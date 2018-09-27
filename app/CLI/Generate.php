@@ -99,12 +99,21 @@ class Generate extends CLI
   private function _fileModule($path, $site, $module, $type, $page, $method)
   {
 
-    $ns = Helper::getInvertedSlash("App/Sites/{$site}Modules/{$module}/{$type}");
-    $use = Helper::getInvertedSlash("Roducks/Page/{$type}");
+    $ns = Helper::getInvertedSlash("App/Sites/{$site}Modules/{$module}/{$page}");
+
+    $use = Helper::getInvertedSlash("Roducks/Page/{$page}");
     $uses = '';
     $construct = '';
     $implements = '';
     $param = '';
+    $var = '';
+
+    if ($site == 'Admin/' && $type == 'JSON') {
+$var = <<< EOT
+protected \$_authentication = true;
+
+EOT;
+    }
 
     if (in_array($type, ['Page','JSON'])) {
       $implements = " implements {$type}Interface";
@@ -138,9 +147,9 @@ namespace {$ns};
 
 use {$use};
 {$uses}
-class {$module} extends {$type}{$implements}
+class {$module} extends {$page}{$implements}
 {
-  {$construct}
+  {$var}{$construct}
 	public function {$method}()
 	{
 
@@ -433,8 +442,8 @@ EOT;
 
     $this->_fileModule($pathPage, $site, $module, 'Page', $page, 'index');
     $this->_title = false;
-    $this->_fileModule($pathHelper, $site, $module, 'HelperPage', $page, 'getData');
-    $this->_fileModule($pathJSON, $site, $module, 'JSON', $page, 'encoded');
+    $this->_fileModule($pathHelper, $site, $module, 'HelperPage', 'HelperPage', 'getData');
+    $this->_fileModule($pathJSON, $site, $module, 'JSON', 'JSON', 'encoded');
 
   }
 
