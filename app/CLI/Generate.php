@@ -25,6 +25,22 @@
  *	php roducks generate:block
  *	php roducks generate:block [SITE]
  *	php roducks generate:block [SITE] [BLOCK]
+ *  php roducks generate:service
+ *  php roducks generate:service [SITE]
+ *  php roducks generate:service [SITE] [SERVICE]
+ *  php roducks generate:api
+ *  php roducks generate:api [SITE]
+ *  php roducks generate:api [SITE] [API]
+ *  php roducks generate:cli
+ *  php roducks generate:cli [NAME]
+ *  php roducks generate:setup
+ *  php roducks generate:setup [NAME]
+ *  php roducks generate:model
+ *  php roducks generate:model [FOLDER]
+ *  php roducks generate:model [FOLDER] [MODEL]
+ *  php roducks generate:join
+ *  php roducks generate:join [FOLDER]
+ *  php roducks generate:join [FOLDER] [MODEL]
  */
 
 namespace App\CLI;
@@ -38,11 +54,46 @@ use Helper;
 class Generate extends CLI
 {
   private $_sitesFolder = "app/Sites/",
-          $_type;
+          $_type,
+          $_title = true;
 
   static private function _getFolderName($folder)
   {
     return str_replace("/", "", $folder);
+  }
+
+  private function _create($path, $name, $content, $type)
+  {
+    File::create($path, "{$name}.php", $content);
+
+    if ($this->_title) {
+      $this->success("{$type} '{$name}' was created:");
+      $this->success("[x]");
+    }
+
+    $this->success("[x]{$path}{$name}.php");
+
+  }
+
+  private function _file($path, $name, $content, $type = "")
+  {
+    $ext = $name.".php";
+    $file = $path.$ext;
+
+    if (Path::exists($file)) {
+      $this->warning("This file already exists:");
+      $this->warning("[x]");
+      $this->warning("[x]{$file}");
+      parent::output();
+      $this->promptYN("Do you want to overwrite it?");
+
+      if ($this->yes()) {
+        $this->_create($path, $name, $content, $type);
+      }
+    } else {
+      $this->_create($path, $name, $content, $type);
+    }
+
   }
 
   private function _fileModule($path, $site, $module, $type, $page, $method)
@@ -97,7 +148,7 @@ class {$module} extends {$type}{$implements}
 }
 EOT;
 
-    File::create($path, "{$module}.php", $file);
+    $this->_file($path, $module, $file, 'Module');
 
   }
 
@@ -131,7 +182,7 @@ class {$block} extends Block implements BlockInterface
 }
 EOT;
 
-    File::create($path, "{$block}.php", $file);
+    $this->_file($path, $block, $file, 'Block');
 
   }
 
@@ -164,7 +215,7 @@ class {$service} extends Service implements ServiceInterface
 }
 EOT;
 
-    File::create($path, "{$service}.php", $file);
+    $this->_file($path, $service, $file, 'Service');
 
   }
 
@@ -192,13 +243,13 @@ class {$name} extends CLI implements CLIInterface
 }
 EOT;
 
-    File::create($path, "{$name}.php", $file);
+    $this->_file($path, $name, $file, 'CLI');
 
   }
 
-  private function _fileApi($path, $name)
+  private function _fileApi($path, $site, $name)
   {
-    $ns = Helper::getInvertedSlash("App/API");
+    $ns = Helper::getInvertedSlash("App/Sites/{$site}API");
     $use = Helper::getInvertedSlash("Roducks/Framework/API");
     $uses = '';
     $construct = '';
@@ -213,14 +264,136 @@ use Roducks\\Interfaces\\APIInterface;
 
 class {$name} extends API implements APIInterface
 {
-  public function run()
+  /**
+	 * @type GET
+	 */
+	public function row(\$id)
   {
 
   }
+
+	/**
+	 * @type GET
+	 */
+	public function catalog(Request \$request)
+  {
+
+  }
+
+	/**
+	 * @type POST
+	 */
+	public function store(Request \$request)
+  {
+
+  }
+
+	/**
+	 * @type PUT
+	 */
+	public function update(Request \$request, \$id)
+  {
+
+  }
+
+	/**
+	 * @type DELETE
+	 */
+	public function remove(Request \$request, \$id)
+  {
+
+  }
+
 }
 EOT;
 
-    File::create($path, "{$name}.php", $file);
+    $this->_file($path, $name, $file, 'API');
+
+  }
+
+  private function _fileSetup($path, $name)
+  {
+    $ns = Helper::getInvertedSlash("DB/Schema/Setup");
+    $use = Helper::getInvertedSlash("Roducks/Framework/Setup");
+    $uses = '';
+    $construct = '';
+
+$file = <<< EOT
+<?php
+
+namespace {$ns};
+
+use {$use};
+use Roducks\\Interfaces\\SetupInterface;
+use DB;
+
+class {$name} extends Setup implements SetupInterface
+{
+
+	public function schema(\mysqli \$db)
+  {
+
+  }
+
+	public function data(\mysqli \$db)
+  {
+
+  }
+
+}
+EOT;
+
+    $this->_file($path, $name, $file, 'Setup');
+
+  }
+
+  private function _fileModel($path, $folder, $name, $type)
+  {
+    $ns = Helper::getInvertedSlash("DB/Models/{$folder}");
+
+switch ($type) {
+  case 'Model':
+
+$body = <<< EOT
+
+  var \$id = "id";
+  var \$fields = [
+
+  ];
+EOT;
+
+    break;
+  case 'Join':
+$body = <<< EOT
+
+  public function __construct(\mysqli \$mysqli)
+  {
+    \$this
+    ->table('TABLE_1', 'a')
+    ->join('TABLE_2', 'b', ['a.id' => 'b.id']);
+
+    parent::__construct(\$mysqli);
+
+  }
+EOT;
+    break;
+}
+
+$file = <<< EOT
+<?php
+
+namespace {$ns};
+
+use $type;
+
+class {$name} extends {$type}
+{
+  {$body}
+
+}
+EOT;
+
+    $this->_file($path, $name, $file, 'Model');
 
   }
 
@@ -234,19 +407,15 @@ EOT;
 
     $module = Helper::getCamelName($module);
     $path = "{$this->_sitesFolder}{$site}Modules/{$module}/";
-    $pathPage = "{$path}/Page/";
-    $pathPageViews = "{$path}/Page/Views/";
-    $pathHelper = "{$path}/Helper/";
-    $pathJSON = "{$path}/JSON/";
+    $pathPage = "{$path}Page/";
+    $pathPageViews = "{$path}Page/Views/";
+    $pathHelper = "{$path}Helper/";
+    $pathJSON = "{$path}JSON/";
 
     DirectoryHandler::make(Path::get(), $pathPage);
     DirectoryHandler::make(Path::get(), $pathPageViews);
     DirectoryHandler::make(Path::get(), $pathHelper);
     DirectoryHandler::make(Path::get(), $pathJSON);
-
-    $this->success("Module '{$module}' was created:");
-    $this->success("[x]");
-    $this->success("[x]{$path}");
 
     $siteName = self::_getFolderName($site);
 
@@ -263,6 +432,7 @@ EOT;
     }
 
     $this->_fileModule($pathPage, $site, $module, 'Page', $page, 'index');
+    $this->_title = false;
     $this->_fileModule($pathHelper, $site, $module, 'HelperPage', $page, 'getData');
     $this->_fileModule($pathJSON, $site, $module, 'JSON', $page, 'encoded');
 
@@ -284,12 +454,6 @@ EOT;
     DirectoryHandler::make(Path::get(), $pathBlock);
     DirectoryHandler::make(Path::get(), $pathBlockViews);
 
-    $this->success("Block '{$block}' was created:");
-    $this->success("[x]");
-    $this->success("[x]{$pathBlock}{$block}.php");
-
-    $siteName = self::_getFolderName($site);
-
     $this->_fileBlock($pathBlock, $site, $block);
 
   }
@@ -306,12 +470,6 @@ EOT;
     $pathService = "{$this->_sitesFolder}{$site}Services/";
 
     DirectoryHandler::make(Path::get(), $pathService);
-
-    $this->success("Service '{$service}' was created:");
-    $this->success("[x]");
-    $this->success("[x]{$pathService}{$service}.php");
-
-    $siteName = self::_getFolderName($site);
 
     $this->_fileService($pathService, $site, $service);
 
@@ -330,13 +488,7 @@ EOT;
 
     DirectoryHandler::make(Path::get(), $pathService);
 
-    $this->success("API '{$name}' was created:");
-    $this->success("[x]");
-    $this->success("[x]{$pathService}{$name}.php");
-
-    $siteName = self::_getFolderName($site);
-
-    $this->_fileApi($pathService, $name);
+    $this->_fileApi($pathService, $site, $name);
 
   }
 
@@ -351,17 +503,49 @@ EOT;
     $name = Helper::getCamelName($name);
     $pathCLI = "app/CLI/";
 
-    $this->success("API '{$name}' was created:");
-    $this->success("[x]");
-    $this->success("[x]{$pathCLI}{$name}.php");
-
-    parent::output();
-
     $this->_fileCli($pathCLI, $name);
 
   }
 
-  private function _create($site, $name)
+  private function _setup($name)
+  {
+
+    if (empty($name)) {
+      $this->prompt("Type your name:");
+      $name = $this->getAnswer();
+      $name = "Setup_".date('Y_m_d')."_{$name}";
+    }
+
+    $name = Helper::getCamelName($name);
+    $pathSetup = "database/Schema/Setup/";
+
+    $this->_fileSetup($pathSetup, $name);
+
+  }
+
+  private function _model($folder, $name, $type)
+  {
+    if (empty($folder)) {
+      $this->prompt("Type folder name:");
+      $folder = $this->getAnswer();
+    }
+
+    $folder = Helper::getCamelName($folder);
+    $path = "database/Models/{$folder}/";
+
+    DirectoryHandler::make(Path::get(), $path);
+
+    if (empty($name)) {
+      $this->prompt("{$type} name:");
+      $name = $this->getAnswer();
+    }
+
+    $name = Helper::getCamelName($name);
+
+    $this->_fileModel($path, $folder, $name, $type);
+  }
+
+  private function _run($site, $name)
   {
     switch ($this->_type) {
       case 'module':
@@ -423,7 +607,7 @@ EOT;
     $sitePath = $this->_sitesFolder.$site;
 
     if (Path::exists($sitePath)) {
-      $this->_create($site, $module);
+      $this->_run($site, $module);
     } else {
       $this->warning("This Site folder does not exist:");
       $this->warning("[x]");
@@ -434,13 +618,15 @@ EOT;
 
       if ($this->yes()) {
         DirectoryHandler::make(Path::get(), $sitePath);
-        $this->_create($site, $module);
+        $this->_run($site, $module);
       }
     }
 
     $this->warning('Run this command:');
 		$this->warning('[x]');
     $this->warning("[x]chown -R bitnami:root ".Path::get().$sitePath);
+
+    $this->_title = true;
 
     parent::output();
   }
@@ -472,6 +658,25 @@ EOT;
   public function cli($name = "")
   {
     $this->_cli($name);
+    parent::output();
+  }
+
+  public function setup($name = "")
+  {
+    $this->_setup($name);
+    parent::output();
+  }
+
+  public function model($folder = "", $model = "")
+  {
+    $this->_model($folder, $model, 'Model');
+    parent::output();
+  }
+
+  public function join($folder = "", $join = "")
+  {
+    $this->_model($folder, $join, 'Join');
+    parent::output();
   }
 
 }
