@@ -900,6 +900,7 @@ class Core
 
 			if (preg_match('#:#', $name)) {
 				list($name, $method) = explode(":", $name);
+				$method = Helper::getCamelName($method, false);
 			}
 
 			$ns = "App\\CLI\\";

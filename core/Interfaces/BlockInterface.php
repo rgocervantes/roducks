@@ -16,45 +16,13 @@
  *    You should have received a copy of the GNU General Public License
  *    along with Roducks.  If not, see <http://www.gnu.org/licenses/>.
  *
- *	-----------------
- *	COMMAND LINE
- *	-----------------
- *	php roducks jwt:secret
  */
 
-namespace App\CLI;
+namespace Roducks\Interfaces;
 
-use Roducks\Framework\CLI;
-use Crypt\Hash;
-use Lib\File;
-
-class Jwt extends CLI
+Interface BlockInterface
 {
-	public function secret()
-	{
+	public function __construct(array $settings, \Roducks\Page\View $view);
 
-		$file = 'jwt.local.inc';
-		$hash = Hash::getToken();
-		$hash = substr($hash, 0, 32);
-		$config = <<< EOT
-<?php
-
-return [
-	'secret' => '{$hash}'
-];
-EOT;
-
-		File::create(DIR_APP_CONFIG, $file, $config);
-
-		$this->success("File: " . DIR_APP_CONFIG . "{$file} was created successfully!");
-
-		parent::output();
-	}
-
-	public function moduleTest($title)
-	{
-		$this->success($title);
-		parent::output();
-	}
-
+	public function output();
 }

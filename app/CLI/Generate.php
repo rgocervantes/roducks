@@ -114,9 +114,16 @@ $file = <<< EOT
 namespace {$ns};
 
 use {$use};
+use Roducks\\Page\\View;
+use Roducks\\Interfaces\\BlockInterface;
 
-class {$block} extends Block
+class {$block} extends Block implements BlockInterface
 {
+  public function __construct(array \$settings, View \$view)
+  {
+    parent::__construct(\$settings, \$view);
+  }
+
   public function output()
   {
 
@@ -125,6 +132,95 @@ class {$block} extends Block
 EOT;
 
     File::create($path, "{$block}.php", $file);
+
+  }
+
+  private function _fileService($path, $site, $service)
+  {
+    $ns = Helper::getInvertedSlash("App/Sites/{$site}Services");
+    $use = Helper::getInvertedSlash("Roducks/Page/Service");
+    $uses = '';
+    $construct = '';
+
+$file = <<< EOT
+<?php
+
+namespace {$ns};
+
+use {$use};
+use Roducks\\Interfaces\\ServiceInterface;
+
+class {$service} extends Service implements ServiceInterface
+{
+  public function __construct(array \$settings)
+  {
+    parent::__construct(\$settings);
+  }
+
+  public function rest()
+  {
+
+  }
+}
+EOT;
+
+    File::create($path, "{$service}.php", $file);
+
+  }
+
+  private function _fileCli($path, $name)
+  {
+    $ns = Helper::getInvertedSlash("App/CLI");
+    $use = Helper::getInvertedSlash("Roducks/Framework/CLI");
+    $uses = '';
+    $construct = '';
+
+$file = <<< EOT
+<?php
+
+namespace {$ns};
+
+use {$use};
+use Roducks\\Interfaces\\CLIInterface;
+
+class {$name} extends CLI implements CLIInterface
+{
+  public function run()
+  {
+
+  }
+}
+EOT;
+
+    File::create($path, "{$name}.php", $file);
+
+  }
+
+  private function _fileApi($path, $name)
+  {
+    $ns = Helper::getInvertedSlash("App/API");
+    $use = Helper::getInvertedSlash("Roducks/Framework/API");
+    $uses = '';
+    $construct = '';
+
+$file = <<< EOT
+<?php
+
+namespace {$ns};
+
+use {$use};
+use Roducks\\Interfaces\\APIInterface;
+
+class {$name} extends API implements APIInterface
+{
+  public function run()
+  {
+
+  }
+}
+EOT;
+
+    File::create($path, "{$name}.php", $file);
 
   }
 
@@ -198,14 +294,87 @@ EOT;
 
   }
 
-  private function _create($site, $module)
+  private function _service($site, $service)
+  {
+
+    if (empty($service)) {
+      $this->prompt("Service name:");
+      $service = $this->getAnswer();
+    }
+
+    $service = Helper::getCamelName($service);
+    $pathService = "{$this->_sitesFolder}{$site}Services/";
+
+    DirectoryHandler::make(Path::get(), $pathService);
+
+    $this->success("Service '{$service}' was created:");
+    $this->success("[x]");
+    $this->success("[x]{$pathService}{$service}.php");
+
+    $siteName = self::_getFolderName($site);
+
+    $this->_fileService($pathService, $site, $service);
+
+  }
+
+  private function _api($site, $name)
+  {
+
+    if (empty($name)) {
+      $this->prompt("API name:");
+      $name = $this->getAnswer();
+    }
+
+    $name = Helper::getCamelName($name);
+    $pathService = "{$this->_sitesFolder}{$site}API/";
+
+    DirectoryHandler::make(Path::get(), $pathService);
+
+    $this->success("API '{$name}' was created:");
+    $this->success("[x]");
+    $this->success("[x]{$pathService}{$name}.php");
+
+    $siteName = self::_getFolderName($site);
+
+    $this->_fileApi($pathService, $name);
+
+  }
+
+  private function _cli($name)
+  {
+
+    if (empty($name)) {
+      $this->prompt("CLI name:");
+      $name = $this->getAnswer();
+    }
+
+    $name = Helper::getCamelName($name);
+    $pathCLI = "app/CLI/";
+
+    $this->success("API '{$name}' was created:");
+    $this->success("[x]");
+    $this->success("[x]{$pathCLI}{$name}.php");
+
+    parent::output();
+
+    $this->_fileCli($pathCLI, $name);
+
+  }
+
+  private function _create($site, $name)
   {
     switch ($this->_type) {
       case 'module':
-        $this->_module($site, $module);
+        $this->_module($site, $name);
         break;
       case 'block':
-        $this->_block($site, $module);
+        $this->_block($site, $name);
+        break;
+      case 'service':
+        $this->_service($site, $name);
+        break;
+      case 'api':
+        $this->_api($site, $name);
         break;
     }
   }
@@ -281,6 +450,23 @@ EOT;
   {
     $this->_type = 'block';
     $this->_generate($site, $module);
+  }
+
+  public function service($site = "", $service = "")
+  {
+    $this->_type = 'service';
+    $this->_generate($site, $service);
+  }
+
+  public function api($site = "", $service = "")
+  {
+    $this->_type = 'api';
+    $this->_generate($site, $service);
+  }
+
+  public function cli($name = "")
+  {
+    $this->_cli($name);
   }
 
 }
