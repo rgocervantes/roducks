@@ -389,6 +389,9 @@ EOT;
         $this->dialogInfo("Sites");
         $this->info("[x][{$index}] " . self::_getFolderName($folder));
       }
+      $this->info("[x]");
+      $this->info("[x][X] Cancel");
+
       parent::output();
 
       $this->prompt("Type number:");
@@ -405,8 +408,10 @@ EOT;
         }
 
       } else {
-        $this->error("Please enter a integer value.");
-        parent::output();
+        if (strtolower($opt) != 'x') {
+          $this->error("Please enter a integer value.");
+          parent::output();
+        }
         exit;
       }
 
