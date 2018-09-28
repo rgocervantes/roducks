@@ -63,6 +63,18 @@ class Generate extends CLI
     return str_replace("/", "", $folder);
   }
 
+  static private function _make($path)
+  {
+    DirectoryHandler::make(Path::get(), $path);
+  }
+
+  private function _requiredValue($message)
+  {
+    $this->error("{$message} must not be blank.");
+    parent::output();
+    exit;
+  }
+
   private function _create($path, $name, $content, $type)
   {
     File::create($path, "{$name}.php", $content);
@@ -250,6 +262,7 @@ class {$service} extends Service implements ServiceInterface
   public function rest()
   {
 
+    parent::output();
   }
 }
 EOT;
@@ -278,6 +291,7 @@ class {$name} extends CLI implements CLIInterface
   public function run()
   {
 
+    parent::output();
   }
 }
 EOT;
@@ -309,6 +323,7 @@ class {$name} extends API implements APIInterface
 	public function row(\$id)
   {
 
+    parent::output();
   }
 
 	/**
@@ -317,6 +332,7 @@ class {$name} extends API implements APIInterface
 	public function catalog(Request \$request)
   {
 
+    parent::output();
   }
 
 	/**
@@ -325,6 +341,7 @@ class {$name} extends API implements APIInterface
 	public function store(Request \$request)
   {
 
+    parent::output();
   }
 
 	/**
@@ -333,6 +350,7 @@ class {$name} extends API implements APIInterface
 	public function update(Request \$request, \$id)
   {
 
+    parent::output();
   }
 
 	/**
@@ -341,6 +359,7 @@ class {$name} extends API implements APIInterface
 	public function remove(Request \$request, \$id)
   {
 
+    parent::output();
   }
 
 }
@@ -442,6 +461,9 @@ EOT;
     if (empty($module)) {
       $this->prompt("Module name:");
       $module = $this->getAnswer();
+      if (empty($module)) {
+        $this->_requiredValue('Module name');
+      }
     }
 
     $module = Helper::getCamelName($module);
@@ -452,9 +474,9 @@ EOT;
     $pathHelper = "{$path}Helper/";
     $pathJSON = "{$path}JSON/";
 
-    DirectoryHandler::make(Path::get(), $pathPageViews);
-    DirectoryHandler::make(Path::get(), $pathHelper);
-    DirectoryHandler::make(Path::get(), $pathJSON);
+    self::_make($pathPageViews);
+    self::_make($pathHelper);
+    self::_make($pathJSON);
 
     $siteName = self::_getFolderName($site);
 
@@ -492,6 +514,9 @@ EOT;
     if (empty($block)) {
       $this->prompt("Block name:");
       $block = $this->getAnswer();
+      if (empty($block)) {
+        $this->_requiredValue('Block name');
+      }
     }
 
     $block = Helper::getCamelName($block);
@@ -499,7 +524,7 @@ EOT;
     $pathBlock = "{$path}{$block}/";
     $pathBlockViews = "{$pathBlock}/Views/";
 
-    DirectoryHandler::make(Path::get(), $pathBlockViews);
+    self::_make($pathBlockViews);
     File::create($pathBlockViews, "default.tpl", '<h1>{{% $_PAGE_TITLE %}}</h1>');
 
     $this->_fileBlock($pathBlock, $site, $block);
@@ -512,12 +537,15 @@ EOT;
     if (empty($service)) {
       $this->prompt("Service name:");
       $service = $this->getAnswer();
+      if (empty($service)) {
+        $this->_requiredValue('Service name');
+      }
     }
 
     $service = Helper::getCamelName($service);
     $pathService = "{$this->_sitesFolder}{$site}Services/";
 
-    DirectoryHandler::make(Path::get(), $pathService);
+    self::_make($pathService);
 
     $this->_fileService($pathService, $site, $service);
 
@@ -529,12 +557,15 @@ EOT;
     if (empty($name)) {
       $this->prompt("API name:");
       $name = $this->getAnswer();
+      if (empty($name)) {
+        $this->_requiredValue('API name');
+      }
     }
 
     $name = Helper::getCamelName($name);
     $pathService = "{$this->_sitesFolder}{$site}API/";
 
-    DirectoryHandler::make(Path::get(), $pathService);
+    self::_make($pathService);
 
     $this->_fileApi($pathService, $site, $name);
 
@@ -546,6 +577,9 @@ EOT;
     if (empty($name)) {
       $this->prompt("CLI name:");
       $name = $this->getAnswer();
+      if (empty($name)) {
+        $this->_requiredValue('CLI name');
+      }
     }
 
     $name = Helper::getCamelName($name);
@@ -561,6 +595,9 @@ EOT;
     if (empty($name)) {
       $this->prompt("Type your name:");
       $name = $this->getAnswer();
+      if (empty($name)) {
+        $this->_requiredValue('Name');
+      }
       $name = "Setup_".date('Y_m_d')."_{$name}";
     }
 
@@ -576,16 +613,22 @@ EOT;
     if (empty($folder)) {
       $this->prompt("Type folder name:");
       $folder = $this->getAnswer();
+      if (empty($folder)) {
+        $this->_requiredValue('Name');
+      }
     }
 
     $folder = Helper::getCamelName($folder);
     $path = "database/Models/{$folder}/";
 
-    DirectoryHandler::make(Path::get(), $path);
+    self::_make($path);
 
     if (empty($name)) {
       $this->prompt("{$type} name:");
       $name = $this->getAnswer();
+      if (empty($name)) {
+        $this->_requiredValue('Name');
+      }
     }
 
     $name = Helper::getCamelName($name);
@@ -666,7 +709,7 @@ EOT;
 
       if ($this->yes()) {
         $configPath = "{$sitePath}Config/";
-        DirectoryHandler::make(Path::get(), $configPath);
+        self::_make($configPath);
         $this->_config($configPath);
         $this->_run($site, $module);
       }
