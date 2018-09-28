@@ -477,7 +477,7 @@ EOT;
     }, $config);
 
     File::create($pathConfig, "modules.inc", $cnf);
-    File::create($pathPageViews, "index.tpl", '<h1>{{% $title %}}</h1>');
+    File::create($pathPageViews, "index.tpl", '<h1>{{% $_PAGE_TITLE %}}</h1>');
 
     $this->_fileModule($pathPage, $site, $module, 'Page', $page, 'index');
     $this->_title = false;
@@ -500,7 +500,7 @@ EOT;
     $pathBlockViews = "{$pathBlock}/Views/";
 
     DirectoryHandler::make(Path::get(), $pathBlockViews);
-    File::create($pathBlockViews, "default.tpl", '<h1>{{% $title %}}</h1>');
+    File::create($pathBlockViews, "default.tpl", '<h1>{{% $_PAGE_TITLE %}}</h1>');
 
     $this->_fileBlock($pathBlock, $site, $block);
 
