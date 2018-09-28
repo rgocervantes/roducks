@@ -470,7 +470,7 @@ EOT;
     $path = "{$this->_sitesFolder}{$site}Modules/{$module}/";
     $pathConfig = "{$this->_sitesFolder}{$site}Config/";
     $pathPage = "{$path}Page/";
-    $pathPageViews = "{$path}Page/Views/";
+    $pathPageViews = "{$pathPage}Views/";
     $pathHelper = "{$path}Helper/";
     $pathJSON = "{$path}JSON/";
 
