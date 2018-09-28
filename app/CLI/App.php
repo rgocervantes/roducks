@@ -7,7 +7,7 @@ use Roducks\Interfaces\CLIInterface;
 
 class App extends CLI implements CLIInterface
 {
-  public function config()
+  public function run()
   {
     $this->info(PAGE_TITLE);
     parent::output();
