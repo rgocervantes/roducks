@@ -26,7 +26,7 @@
  *	php roducks cache:move [dir-origin] [dir-destination]
  */
 
-namespace App\CLI;
+namespace Roducks\CLI;
 
 use Roducks\Framework\CLI;
 

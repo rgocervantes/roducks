@@ -43,7 +43,7 @@
  *  php roducks generate:join [FOLDER] [MODEL]
  */
 
-namespace App\CLI;
+namespace Roducks\CLI;
 
 use Roducks\Framework\CLI;
 use Lib\Directory as DirectoryHandler;

@@ -27,7 +27,7 @@
  *	php roducks schema:sql --pro test.sql --save
  */
 
-namespace App\CLI;
+namespace Roducks\CLI;
 
 use Roducks\Framework\Setup;
 use Roducks\Libs\Files\Directory;

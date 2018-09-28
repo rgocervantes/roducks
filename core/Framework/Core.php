@@ -903,14 +903,16 @@ class Core
 				$method = Helper::getCamelName($method, false);
 			}
 
-			$ns = "App\\CLI\\";
 			$cls = $name;
 			$name = Helper::getCamelName($name);
 
-			$script = $ns . $name;
+			$script = "Roducks\\CLI\\{$name}";
+			$appScript = "App\\CLI\\{$name}";
 
-			if (!class_exists($script)) {
-				exit;
+			if (Path::exists("app/CLI/{$name}".FILE_EXT)) {
+				$script = $appScript;
+			} else if (!Path::exists("core/CLI/{$name}".FILE_EXT)) {
+				CLI::printError("Unknown command: {$cls}:{$method}", CLI::FAILURE);
 			}
 
 			$class = new $script($flags, $values);

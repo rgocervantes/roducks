@@ -19,33 +19,41 @@
  *	-----------------
  *	COMMAND LINE
  *	-----------------
- *	php roducks cache:clean --pro
+ *	php roducks jwt:secret
  */
 
-namespace App\CLI;
+namespace Roducks\CLI;
 
 use Roducks\Framework\CLI;
+use Crypt\Hash;
+use Lib\File;
 
-class Cache extends CLI
+class Jwt extends CLI
 {
-
-	public function clean($item = "all")
+	public function secret()
 	{
 
-		try {
-			
-			if ($item != "all" || $this->getFlag('--all')) {
-				$this->cache('init')->delete($iem);
-			} else {
-				$this->cache('clean');
-			}
+		$file = 'jwt.local.inc';
+		$hash = Hash::getToken();
+		$hash = substr($hash, 0, 32);
+		$config = <<< EOT
+<?php
 
-			$this->success("Cache memory was cleaned.");
+return [
+	'secret' => '{$hash}'
+];
+EOT;
 
-		} catch (\Exception $e) {
-			$this->error($e->getMessage());			
-		}
+		File::create(DIR_APP_CONFIG, $file, $config);
 
+		$this->success("File: " . DIR_APP_CONFIG . "{$file} was created successfully!");
+
+		parent::output();
+	}
+
+	public function moduleTest($title)
+	{
+		$this->success($title);
 		parent::output();
 	}
 

@@ -26,7 +26,7 @@
  *	php roducks user:who --pro email=dummy@yoursite.com
  */
 
-namespace App\CLI;
+namespace Roducks\CLI;
 
 use Roducks\Framework\CLI;
 use Helper;
