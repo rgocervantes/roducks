@@ -121,6 +121,7 @@ EOT;
     $implements = '';
     $param = '';
     $var = '';
+    $ret = '';
 
     if ($site == 'Admin/' && $type == 'JSON') {
 $var = <<< EOT
@@ -133,7 +134,20 @@ EOT;
       $implements = " implements {$type}Interface";
       $parent = 'parent::__construct($settings);';
 
+      if ($type == 'JSON') {
+$ret = <<< EOT
+
+    parent::output();
+EOT;
+
+      }
+
       if ($type == 'Page') {
+$ret = <<< EOT
+\$this->view->load('index');
+
+    return \$this->view->output();
+EOT;
         $param = ', View $view';
         $parent = 'parent::__construct($settings, $view);';
 
@@ -166,7 +180,7 @@ class {$module} extends {$page}{$implements}
   {$var}{$construct}
 	public function {$method}()
 	{
-
+    {$ret}
 	}
 }
 EOT;
@@ -200,7 +214,9 @@ class {$block} extends Block implements BlockInterface
 
   public function output()
   {
+    \$this->view->load('default');
 
+    return \$this->view->output();
   }
 }
 EOT;
@@ -436,7 +452,6 @@ EOT;
     $pathHelper = "{$path}Helper/";
     $pathJSON = "{$path}JSON/";
 
-    DirectoryHandler::make(Path::get(), $pathPage);
     DirectoryHandler::make(Path::get(), $pathPageViews);
     DirectoryHandler::make(Path::get(), $pathHelper);
     DirectoryHandler::make(Path::get(), $pathJSON);
@@ -462,6 +477,7 @@ EOT;
     }, $config);
 
     File::create($pathConfig, "modules.inc", $cnf);
+    File::create($pathPageViews, "index.tpl", '<h1>{{% $title %}}</h1>');
 
     $this->_fileModule($pathPage, $site, $module, 'Page', $page, 'index');
     $this->_title = false;
@@ -483,8 +499,8 @@ EOT;
     $pathBlock = "{$path}{$block}/";
     $pathBlockViews = "{$pathBlock}/Views/";
 
-    DirectoryHandler::make(Path::get(), $pathBlock);
     DirectoryHandler::make(Path::get(), $pathBlockViews);
+    File::create($pathBlockViews, "default.tpl", '<h1>{{% $title %}}</h1>');
 
     $this->_fileBlock($pathBlock, $site, $block);
 
