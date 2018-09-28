@@ -50,6 +50,7 @@ use Lib\Directory as DirectoryHandler;
 use Lib\File;
 use Path;
 use Helper;
+use Request;
 
 class Generate extends CLI
 {
@@ -73,6 +74,19 @@ class Generate extends CLI
 
     $this->success("[x]{$path}{$name}.php");
 
+  }
+
+  private function _config($path)
+  {
+
+$content = <<< EOT
+<?php
+
+return [
+];
+EOT;
+
+    File::create($path, "modules.inc", $content);
   }
 
   private function _file($path, $name, $content, $type = "")
@@ -416,6 +430,7 @@ EOT;
 
     $module = Helper::getCamelName($module);
     $path = "{$this->_sitesFolder}{$site}Modules/{$module}/";
+    $pathConfig = "{$this->_sitesFolder}{$site}Config/";
     $pathPage = "{$path}Page/";
     $pathPageViews = "{$path}Page/Views/";
     $pathHelper = "{$path}Helper/";
@@ -439,6 +454,14 @@ EOT;
         $page = 'Page';
         break;
     }
+
+    $conf = "{$pathConfig}modules.inc";
+    $config = Request::getContent($conf);
+    $cnf = preg_replace_callback('/return \[(.*?)\];/sm', function($ret) use($module) {
+      return "return [{$ret[1]}'{$module}' => true,\n];";
+    }, $config);
+
+    File::create($pathConfig, "modules.inc", $cnf);
 
     $this->_fileModule($pathPage, $site, $module, 'Page', $page, 'index');
     $this->_title = false;
@@ -626,7 +649,9 @@ EOT;
       $this->promptYN("Do you want to create it?");
 
       if ($this->yes()) {
-        DirectoryHandler::make(Path::get(), $sitePath);
+        $configPath = "{$sitePath}Config/";
+        DirectoryHandler::make(Path::get(), $configPath);
+        $this->_config($configPath);
         $this->_run($site, $module);
       }
     }
