@@ -33,10 +33,16 @@ class Core
 
 	static function requirements()
 	{
+		$version = '7.0.0';
 
-		if (version_compare(PHP_VERSION, '5.4.0') <= 0) {
-			$text = "requires version 7.0.0 or later.";
-			Error::requirements('PHP VERSION '.PHP_VERSION, 0, '', '', ['Roducks '.$text], "<b>Roducks</b> {$text}");
+		if (version_compare(PHP_VERSION, $version) <= 0) {
+			$text = "requires version {$version} or later.";
+			if (Environment::inDEV()) {
+				Error::requirements('PHP VERSION '.PHP_VERSION, 0, '', '', ['Roducks '.$text], "<b>Roducks</b> {$text}");
+			} else {
+				Error::pageNotFound();
+			}
+
 		}
 
 		if (function_exists('extension_loaded')) {
@@ -72,7 +78,11 @@ class Core
 			$message .= '</ul>';
 
 			if ($error > 0) {
-				Error::requirements('PHP Extentions', 0, '', '', $items, $message);
+				if (Environment::inDEV()) {
+					Error::requirements('PHP Required Extentions', 0, '', '', $items, $message);
+				} else {
+					Error::pageNotFound();
+				}
 			}
 
 		}
@@ -97,7 +107,7 @@ class Core
 
 	static function duckling()
 	{
-		$file = Path::get(DIR_APP_CONFIG.'duckling.inc');
+		$file = Path::get(DIR_APP_CONFIG.'duckling'.FILE_INC);
 
 		if (file_exists($file)) {
 			include_once $file;
