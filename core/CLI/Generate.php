@@ -143,6 +143,13 @@ protected \$_authentication = true;
 EOT;
     }
 
+    if ($type == 'JSON') {
+$var .= <<< EOT
+protected \$_dispatchUrl = true;
+
+EOT;
+    }
+
     if (in_array($type, ['Page','JSON'])) {
       $implements = " implements {$type}Interface";
       $parent = 'parent::__construct($settings);';
