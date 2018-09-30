@@ -41,6 +41,7 @@
  *  php roducks generate:join
  *  php roducks generate:join [FOLDER]
  *  php roducks generate:join [FOLDER] [MODEL]
+ *  php roducks version
  */
 
 namespace Roducks\CLI;
@@ -124,8 +125,8 @@ EOT;
 
   private function _fileModule($path, $site, $module, $type, $page, $method)
   {
-
-    $ns = Helper::getInvertedSlash("App/Sites/{$site}Modules/{$module}/{$page}");
+    $folder = ($page == 'HelperPage') ? 'Helper' : $page;
+    $ns = Helper::getInvertedSlash("App/Sites/{$site}Modules/{$module}/{$folder}");
 
     $use = Helper::getInvertedSlash("Roducks/Page/{$page}");
     $uses = '';
