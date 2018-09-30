@@ -94,7 +94,7 @@ class Dispatch
 		return "/_json/{$class}/{$method}";
 	}
 
-	static function xml($class, $method)
+	static function xml($class, $method = "preview")
 	{
 		$class = Helper::getCamelName($class);
 		return "{$class}/XML/{$class}::{$method}";

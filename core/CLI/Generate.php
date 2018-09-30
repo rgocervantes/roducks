@@ -22,6 +22,9 @@
  *	php roducks generate:module
  *	php roducks generate:module [SITE]
  *	php roducks generate:module [SITE] [MODULE]
+ *	php roducks generate:module-xml
+ *	php roducks generate:module-xml [SITE]
+ *	php roducks generate:module-xml [SITE] [XML]
  *	php roducks generate:block
  *	php roducks generate:block [SITE]
  *	php roducks generate:block [SITE] [BLOCK]
@@ -143,14 +146,14 @@ protected \$_authentication = true;
 EOT;
     }
 
-    if ($type == 'JSON') {
+    if ($type == 'JSON' || $type == 'XML') {
 $var .= <<< EOT
 protected \$_dispatchUrl = true;
 
 EOT;
     }
 
-    if (in_array($type, ['Page','JSON'])) {
+    if (in_array($type, ['Page','JSON','XML'])) {
       $implements = " implements {$type}Interface";
       $parent = 'parent::__construct($settings);';
 
@@ -158,6 +161,14 @@ EOT;
 $ret = <<< EOT
 
     parent::output();
+EOT;
+
+      }
+
+      if ($type == 'XML') {
+$ret = <<< EOT
+
+    \$this->output();
 EOT;
 
       }
@@ -521,6 +532,27 @@ EOT;
 
   }
 
+  private function _xml($site, $module)
+  {
+
+    if (empty($module)) {
+      $this->prompt("Module name:");
+      $module = $this->getAnswer();
+      if (empty($module)) {
+        $this->_requiredValue('Module name');
+      }
+    }
+
+    $module = Helper::getCamelName($module);
+    $path = "{$this->_sitesFolder}{$site}Modules/{$module}/";
+    $pathXml = "{$path}XML/";
+
+    self::_make($pathXml);
+
+    $this->_fileModule($pathXml, $site, $module, 'XML', 'XML', 'preview');
+
+  }
+
   private function _block($site, $block)
   {
 
@@ -655,6 +687,9 @@ EOT;
       case 'module':
         $this->_module($site, $name);
         break;
+      case 'module:xml':
+        $this->_xml($site, $name);
+        break;
       case 'block':
         $this->_block($site, $name);
         break;
@@ -741,6 +776,12 @@ EOT;
   {
     $this->_type = 'module';
     $this->_generate($site, $module);
+  }
+
+  public function moduleXml($site = "", $xml = "")
+  {
+    $this->_type = 'module:xml';
+    $this->_generate($site, $xml);
   }
 
   public function block($site = "", $module = "")
