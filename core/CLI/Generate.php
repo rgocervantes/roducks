@@ -169,6 +169,11 @@ use Roducks\\Page\\View;
 EOT;
       }
 
+$uses .= <<< EOT
+use Roducks\\Interfaces\\{$type}Interface;
+
+EOT;
+
 $construct = <<< EOT
 
   public function __construct(array \$settings{$param})
