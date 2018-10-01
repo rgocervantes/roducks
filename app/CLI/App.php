@@ -9,7 +9,7 @@ class App extends CLI implements CLIInterface
 {
   public function run()
   {
-    $this->info(PAGE_TITLE);
+    echo $this->colorGreen("- " . PAGE_TITLE) . "\n";
     parent::output();
   }
 }
