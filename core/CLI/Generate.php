@@ -224,7 +224,7 @@ EOT;
 
     }
 
-    if ($type == 'Page' || $type == 'Factory') {
+    if ($type != 'HelperPage') {
 $uses .= <<< EOT
 use Roducks\\Interfaces\\{$type}Interface;
 
@@ -531,10 +531,6 @@ EOT;
     $pathHelper = "{$path}Helper/";
     $pathJSON = "{$path}JSON/";
 
-    self::_make($pathPageViews);
-    self::_make($pathHelper);
-    self::_make($pathJSON);
-
     $siteName = self::_getFolderName($site);
 
     switch ($siteName) {
@@ -551,11 +547,18 @@ EOT;
 
     $conf = "{$pathConfig}modules.inc";
     $config = Request::getContent($conf);
-    $cnf = preg_replace_callback('/return \[(.*?)\];/sm', function($ret) use($module) {
-      return "return [{$ret[1]}'{$module}' => true,\n];";
-    }, $config);
+    if (!preg_match('#\''.$module.'\' => true,#', $config)) {
+      $cnf = preg_replace_callback('/return \[(.*?)\];/sm', function($ret) use($module) {
+        return "return [{$ret[1]}\t\t'{$module}' => true,\n];";
+      }, $config);
 
-    File::create($pathConfig, "modules.inc", $cnf);
+      File::create($pathConfig, "modules.inc", $cnf);
+    }
+
+    self::_make($pathPageViews);
+    self::_make($pathHelper);
+    self::_make($pathJSON);
+
     File::create($pathPageViews, "index.tpl", '<h1>{{% $_PAGE_TITLE %}}</h1>');
 
     $this->_fileModule($pathPage, $site, $module, 'Page', $page, 'index');
