@@ -587,6 +587,7 @@ EOT;
 
     self::_make($pathXml);
 
+    $this->_cmd = true;
     $this->_fileModule($pathXml, $site, $module, 'XML', 'XML', 'preview');
 
   }
@@ -608,6 +609,7 @@ EOT;
 
     self::_make($pathXml);
 
+    $this->_cmd = true;
     $this->_fileModule($pathXml, $site, $module, 'Factory', 'Factory', 'index');
 
   }
@@ -631,6 +633,7 @@ EOT;
     self::_make($pathBlockViews);
     File::create($pathBlockViews, "default.tpl", '<h1>{{% $_PAGE_TITLE %}}</h1>');
 
+    $this->_cmd = true;
     $this->_fileBlock($pathBlock, $site, $block);
 
   }
@@ -651,6 +654,7 @@ EOT;
 
     self::_make($pathService);
 
+    $this->_cmd = true;
     $this->_fileService($pathService, $site, $service);
 
   }
@@ -671,6 +675,7 @@ EOT;
 
     self::_make($pathService);
 
+    $this->_cmd = true;
     $this->_fileApi($pathService, $site, $name);
 
   }
@@ -689,6 +694,7 @@ EOT;
     $name = Helper::getCamelName($name);
     $pathCLI = "app/CLI/";
 
+    $this->_cmd = true;
     $this->_fileCli($pathCLI, $name);
 
   }
@@ -708,6 +714,7 @@ EOT;
     $name = Helper::getCamelName($name);
     $pathSetup = "database/Schema/Setup/";
 
+    $this->_cmd = true;
     $this->_fileSetup($pathSetup, $name);
 
   }
@@ -737,6 +744,7 @@ EOT;
 
     $name = Helper::getCamelName($name);
 
+    $this->_cmd = true;
     $this->_fileModel($path, $folder, $name, $type);
   }
 
