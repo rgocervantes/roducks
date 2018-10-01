@@ -134,6 +134,7 @@ EOT;
     $use = Helper::getInvertedSlash("Roducks/Page/{$page}");
     $uses = '';
     $construct = '';
+    $function = '';
     $implements = '';
     $param = '';
     $var = '';
@@ -153,7 +154,7 @@ protected \$_dispatchUrl = true;
 EOT;
     }
 
-    if (in_array($type, ['Page','JSON','XML'])) {
+    if (in_array($type, ['Page','JSON','XML','Factory'])) {
       $implements = " implements {$type}Interface";
       $parent = 'parent::__construct($settings);';
 
@@ -173,25 +174,38 @@ EOT;
 
       }
 
-      if ($type == 'Page') {
+      if ($type == 'Page' || $type == 'Factory') {
+
+        $param = ', View $view';
+
+        if ($type == 'Page') {
+
 $ret = <<< EOT
 \$this->view->load('index');
 
     return \$this->view->output();
 EOT;
-        $param = ', View $view';
-        $parent = 'parent::__construct($settings, $view);';
 
-$uses = <<< EOT
+          $parent = 'parent::__construct($settings, $view);';
+
+        }
+
+$uses .= <<< EOT
 use Roducks\\Page\\View;
 
 EOT;
-      }
 
-$uses .= <<< EOT
-use Roducks\\Interfaces\\{$type}Interface;
-
+        if ($type == 'Factory') {
+$parent = <<< EOT
+\$page = new {$module}Page(\$settings, \$view);
+    parent::__construct(\$settings, \$page);
 EOT;
+
+$uses .= 'use ' . Helper::getInvertedSlash("App/Sites/{$site}Modules/{$module}/Page/{$module} as {$module}Page;");
+$uses .= "\n";
+        }
+
+      }
 
 $construct = <<< EOT
 
@@ -204,6 +218,23 @@ EOT;
 
     }
 
+    if ($type == 'Page' || $type == 'Factory') {
+$uses .= <<< EOT
+use Roducks\\Interfaces\\{$type}Interface;
+
+EOT;
+    }
+
+    if ($type != 'Factory') {
+$function = <<< EOT
+
+  public function {$method}()
+  {
+    {$ret}
+  }
+EOT;
+    }
+
     $file = <<< EOT
 <?php
 
@@ -213,11 +244,7 @@ use {$use};
 {$uses}
 class {$module} extends {$page}{$implements}
 {
-  {$var}{$construct}
-	public function {$method}()
-	{
-    {$ret}
-	}
+  {$var}{$construct}{$function}
 }
 EOT;
 
@@ -553,6 +580,27 @@ EOT;
 
   }
 
+  private function _factory($site, $module)
+  {
+
+    if (empty($module)) {
+      $this->prompt("Module name:");
+      $module = $this->getAnswer();
+      if (empty($module)) {
+        $this->_requiredValue('Module name');
+      }
+    }
+
+    $module = Helper::getCamelName($module);
+    $path = "{$this->_sitesFolder}{$site}Modules/{$module}/";
+    $pathXml = "{$path}Factory/";
+
+    self::_make($pathXml);
+
+    $this->_fileModule($pathXml, $site, $module, 'Factory', 'Factory', 'index');
+
+  }
+
   private function _block($site, $block)
   {
 
@@ -690,6 +738,9 @@ EOT;
       case 'module:xml':
         $this->_xml($site, $name);
         break;
+      case 'module:factory':
+        $this->_factory($site, $name);
+        break;
       case 'block':
         $this->_block($site, $name);
         break;
@@ -787,6 +838,12 @@ EOT;
   {
     $this->_type = 'module:xml';
     $this->_generate($site, $xml);
+  }
+
+  public function moduleFactory($site = "", $factory = "")
+  {
+    $this->_type = 'module:factory';
+    $this->_generate($site, $factory);
   }
 
   public function block($site = "", $module = "")
