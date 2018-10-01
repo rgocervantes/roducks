@@ -38,7 +38,7 @@ class Auth extends Service
 	/**
 	*
 	*/
-	private function _authenticate($session, $type, $email, $password)
+	private function _login($session, $type, $email, $password)
 	{
 
 		$db = $this->db();
@@ -60,7 +60,7 @@ class Auth extends Service
 
 				// User account expires?
 				if ($auth['expires'] == 1 && Date::getCurrentDate() >= Date::parseDate($auth['expiration_date'])) {
-					
+
 					$user = UsersTable::open($db);
 					$user->update($auth['id_user'],['loggedin' => 0, 'active' => 0]);
 
@@ -75,7 +75,7 @@ class Auth extends Service
 
 						$success = true;
 						$message = TEXT_AUTH_OK;
-						$code = 200;						
+						$code = 200;
 
 						// Unset these values for security
 						unset($auth['password']);
@@ -125,15 +125,15 @@ class Auth extends Service
 
 	/**
 	*	@return json
-	*/	
-	private function _login($session, $type, $return = false)
+	*/
+	private function _response($session, $type, $return = false)
 	{
-		
+
 		$this->post->required();
 		$email = $this->post->text('email');
 		$password = $this->post->password('password');
 
-		$auth = $this->_authenticate($session, $type, $email, $password);
+		$auth = $this->_login($session, $type, $email, $password);
 
 		if ($return) {
 			return $auth;
@@ -151,13 +151,13 @@ class Auth extends Service
 		$password = $this->post->param('password');
 		$db = $this->db();
 		$users = UsersTable::open($db);
-		
+
 		if (!$users->paywall($id, $password)) {
 			$this->setError(401, TEXT_INCORRECT_PASSWORD);
 		}
 
-		parent::output(); 		
-	}	
+		parent::output();
+	}
 
 	private function _emailExists()
 	{
@@ -166,40 +166,40 @@ class Auth extends Service
 		$db = $this->db();
 		$users = UsersTable::open($db);
 
-		return $users->results(['email' => $email]);		
+		return $users->results(['email' => $email]);
 	}
 
 	/**
 	*	@return json
-	*/	
+	*/
 	public function loginAdmin($return = false)
 	{
 		if ($return) {
-			return $this->_login(Login::SESSION_ADMIN, Role::TYPE_USERS, $return);
+			return $this->_response(Login::SESSION_ADMIN, Role::TYPE_USERS, $return);
 		}
 
-		$this->_login(Login::SESSION_ADMIN, Role::TYPE_USERS, $return);
-	}	
+		$this->_response(Login::SESSION_ADMIN, Role::TYPE_USERS, $return);
+	}
 
 	public function paywallAdmin() {
 		$id = Login::getAdminId();
-		$this->_paywall($id);		
+		$this->_paywall($id);
 	}
 
 	public function loginSubscriber($return = false)
 	{
 		if ($return) {
-			return $this->_login(Login::SESSION_FRONT, Role::TYPE_SUBSCRIBERS, $return);
+			return $this->_response(Login::SESSION_FRONT, Role::TYPE_SUBSCRIBERS, $return);
 		}
 
-		$this->_login(Login::SESSION_FRONT, Role::TYPE_SUBSCRIBERS, $return);
+		$this->_response(Login::SESSION_FRONT, Role::TYPE_SUBSCRIBERS, $return);
 	}
 
 	public function paywallSubscriber()
 	{
 		$id = Login::getSubscriberId();
-		$this->_paywall($id);		
-	}		
+		$this->_paywall($id);
+	}
 
 	public function logout()
 	{
@@ -209,9 +209,54 @@ class Auth extends Service
 
 		if ($tx === false) {
 			$this->setError(0, "Something went wrong!");
-		} 
+		}
 
 		parent::output();
 	}
 
-} 
+	/**
+	 * @return bool
+	 */
+	public function auth($type, $email, $password)
+ 	{
+ 		$valid = false;
+ 		$data = [];
+
+ 		$users = $this->model('users/users-roles');
+ 		$users->auth($email, $type);
+
+ 		// Is authentication Ok?
+ 		if ($users->rows()) {
+
+ 			$auth = $users->fetch();
+
+ 			// Is user active and nor in trash?
+ 			if ($auth['active'] == 1 && $auth['trash'] == 0) {
+
+ 				// Password matches and role is active
+ 				$valid = (Login::paywall($auth['password'], $auth['salt'], $password) && $auth['ractive'] == 1);
+ 				$data = $auth;
+ 			}
+
+ 		}
+
+ 		return ['valid' => $valid, 'data' => $data];
+ 	}
+
+	/**
+	 * @return bool
+	 */
+	public function authAdmin($email, $password)
+	{
+		return $this->auth(Role::TYPE_USERS, $email, $password);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function authSubscriber($email, $password)
+	{
+		return $this->auth(Role::TYPE_SUBSCRIBERS, $email, $password);
+	}
+
+}

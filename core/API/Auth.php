@@ -23,44 +23,17 @@ namespace Roducks\API;
 use Roducks\Framework\Login;
 use Roducks\Framework\Role;
 use Roducks\Libs\Request\Request;
+use Roducks\Services\Auth as AuthService;
 
 class Auth extends API
 {
-
-	/**
-	*	Authentication
-	*/
-	private function _authenticate($type, $email, $password)
-	{
-		$valid = false;
-		$data = [];
-
-		$users = $this->model('users/users-roles');
-		$users->auth($email, $type);
-
-		// Is authentication Ok?
-		if ($users->rows()) {
-
-			$auth = $users->fetch();
-
-			// Is user active and nor in trash?
-			if ($auth['active'] == 1 && $auth['trash'] == 0) {
-
-				// Password matches and role is active
-				$valid = (Login::paywall($auth['password'], $auth['salt'], $password) && $auth['ractive'] == 1);
-				$data = $auth;
-			}
-
-		}
-
-		return ['valid' => $valid, 'data' => $data];
-	}
 
 	public function credentials()
 	{
 		$email = $this->post->param('email');
 		$password = $this->post->param('password');
-		$auth = $this->_authenticate(Role::TYPE_USERS, $email, $password);
+		$type = $this->post->param('type');
+		$auth = AuthService::init()->auth($type, $email, $password);
 
 		if ($auth['valid']) {
 
