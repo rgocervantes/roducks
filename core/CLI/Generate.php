@@ -66,6 +66,7 @@ class Generate extends CLI
 {
   private $_sitesFolder = "app/Sites/",
           $_type,
+          $_cmd = false,
           $_title = true;
 
   static private function _getFolderName($folder)
@@ -124,6 +125,7 @@ EOT;
       $this->promptYN("Do you want to overwrite it?");
 
       if ($this->yes()) {
+        $this->_cmd = true;
         $this->_create($path, $name, $content, $type);
       }
     } else {
@@ -804,7 +806,6 @@ EOT;
     }
 
     $sitePath = $this->_sitesFolder.$site;
-    $run = true;
 
     if (Path::exists($sitePath)) {
       $this->_run($site, $module);
@@ -821,12 +822,11 @@ EOT;
         self::_make($configPath);
         $this->_config($configPath);
         $this->_run($site, $module);
-      } else {
-        $run = false;
+        $this->_cmd = true;
       }
     }
 
-    if ($run) {
+    if ($this->_cmd) {
       $this->warning('Run this command:');
   		$this->warning('[x]');
       $this->warning("[x]chown -R bitnami:root ".Path::get().$sitePath);
