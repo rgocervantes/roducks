@@ -744,6 +744,7 @@ EOT;
     }
 
     $sitePath = $this->_sitesFolder.$site;
+    $run = true;
 
     if (Path::exists($sitePath)) {
       $this->_run($site, $module);
@@ -760,12 +761,16 @@ EOT;
         self::_make($configPath);
         $this->_config($configPath);
         $this->_run($site, $module);
+      } else {
+        $run = false;
       }
     }
 
-    $this->warning('Run this command:');
-		$this->warning('[x]');
-    $this->warning("[x]chown -R bitnami:root ".Path::get().$sitePath);
+    if ($run) {
+      $this->warning('Run this command:');
+  		$this->warning('[x]');
+      $this->warning("[x]chown -R bitnami:root ".Path::get().$sitePath);
+    }
 
     $this->_title = true;
 
