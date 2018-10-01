@@ -41,6 +41,12 @@
  *  php roducks generate:model
  *  php roducks generate:model [FOLDER]
  *  php roducks generate:model [FOLDER] [MODEL]
+ *  php roducks generate:model-xml
+ *  php roducks generate:model-xml [FOLDER]
+ *  php roducks generate:model-xml [FOLDER] [MODEL]
+ *  php roducks generate:model-factory
+ *  php roducks generate:model-factory [FOLDER]
+ *  php roducks generate:model-factory [FOLDER] [MODEL]
  *  php roducks generate:join
  *  php roducks generate:join [FOLDER]
  *  php roducks generate:join [FOLDER] [MODEL]
