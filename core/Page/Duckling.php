@@ -644,6 +644,19 @@ class Duckling
       $text = str_replace(['"',"'"], '', $str[1]);
       return __($text);
     }, $tpl);
+    $tpl = preg_replace_callback('/{{% _text\((.+)\) %}}/sm', function($str) {
+      $text = str_replace(['"',"'"], '', $str[1]);
+      return _text($text);
+    }, $tpl);
+
+    /*
+  	|----------------------------------------------------------------------
+  	|	Form
+  	|----------------------------------------------------------------------
+  	*/
+    $tpl = preg_replace_callback('/{{% @form:key %}}/sm', function($str) {
+      return \Roducks\Framework\Form::getKey();
+    }, $tpl);
 
     /*
   	|----------------------------------------------------------------------
