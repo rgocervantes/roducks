@@ -20,10 +20,8 @@
 
 namespace Roducks\API;
 
-use Roducks\Framework\Login;
-use Roducks\Framework\Role;
-use Roducks\Libs\Request\Request;
 use Roducks\Services\Auth as AuthService;
+use Request;
 
 class Auth extends API
 {
