@@ -161,7 +161,8 @@ class Dispatch
 		}
 
 		if (!in_array(Http::getRequestMethod(), $allowedMethods)) {
-			Http::sendMethodNotAllowed();
+			Http::sendMethodNotAllowed(false);
+			JSON::stOutput(['data' => ['code' => 405, 'message' => "Method Not Allowed"]]);
 		}
 
 		return $allowedMethods;
