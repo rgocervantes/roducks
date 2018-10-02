@@ -605,12 +605,17 @@ EOT;
 
     $module = Helper::getCamelName($module);
     $path = "{$this->_sitesFolder}{$site}Modules/{$module}/";
-    $pathXml = "{$path}Factory/";
+    $pathPage = "{$path}Page/";
+    $pathFactory = "{$path}Factory/";
 
-    self::_make($pathXml);
+    if (!Path::exists($pathPage)) {
+      $this->_module($site, $module);
+    }
+
+    self::_make($pathFactory);
 
     $this->_cmd = true;
-    $this->_fileModule($pathXml, $site, $module, 'Factory', 'Factory', 'index');
+    $this->_fileModule($pathFactory, $site, $module, 'Factory', 'Factory', 'index');
 
   }
 
