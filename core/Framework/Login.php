@@ -71,7 +71,7 @@ class Login
 		}
 
 		return [];
-	}	
+	}
 
 	static function getData($session, $index)
 	{
@@ -96,7 +96,7 @@ class Login
 	{
 		Session::reset(self::SESSION_SECURITY);
 		Session::reset($session);
-	}	
+	}
 
 	/*
 	| --------------------------------------------------------
@@ -118,7 +118,7 @@ class Login
 	static function getAdmin()
 	{
 		return self::getSession(self::SESSION_ADMIN);
-	}	
+	}
 
 	static function getAdminData($index)
 	{
@@ -129,31 +129,31 @@ class Login
 	{
 		return self::getAdminData('id_user');
 	}
-	 
+
 	static function getAdminName()
 	{
 		return self::getAdminData('first_name');
-	} 
+	}
 
 	static function getAdminLastName()
 	{
 		return self::getAdminData('last_name');
-	} 	
+	}
 
 	static function getAdminFullName()
 	{
 		return self::getAdminData('first_name') . " " . self::getAdminData('last_name');
-	} 		
+	}
 
 	static function getAdminPicture()
 	{
 		return self::getAdminData('picture');
-	} 
+	}
 
 	static function getAdminEmail()
 	{
 		return self::getAdminData('email');
-	} 		
+	}
 
 	static function getSuperAdminId()
 	{
@@ -184,7 +184,7 @@ class Login
 	/**
 	*	@param $id integer USER ID
 	*	@param $obj array Session data
-	*/	
+	*/
 	static function updateAdmin($id, $obj)
 	{
 		if ($id == self::getAdminId()) {
@@ -196,7 +196,7 @@ class Login
 	{
 		Session::reset(self::SESSION_SECURITY);
 		Session::reset(self::SESSION_ADMIN);
-	}	
+	}
 
 	static function roleSuperAdminMaster()
 	{
@@ -233,7 +233,7 @@ class Login
 	static function getSubscriber()
 	{
 		return self::getSession(self::SESSION_FRONT);
-	}		
+	}
 
 	static function getSubscriberData($index)
 	{
@@ -243,32 +243,32 @@ class Login
 	static function getSubscriberId()
 	{
 		return self::getSubscriberData('id_user');
-	}	
+	}
 
 	static function getSubscriberName()
 	{
 		return self::getSubscriberData('first_name');
-	} 
+	}
 
 	static function getSubscriberLastName()
 	{
 		return self::getSubscriberData('last_name');
-	} 	
+	}
 
 	static function getSubscriberFullName()
 	{
 		return self::getSubscriberData('first_name') . " " . self::getSubscriberData('last_name');
-	} 
+	}
 
 	static function getSubscriberPicture()
 	{
 		return self::getSubscriberData('picture');
-	} 
+	}
 
 	static function getSubscriberEmail()
 	{
 		return self::getSubscriberData('email');
-	} 	
+	}
 
 	/**
 	*	@param $obj array
@@ -282,20 +282,20 @@ class Login
 		if (count($data) > 0) {
 			$obj = array_merge($data, $obj);
 		}
-		
+
 		Session::set(self::SESSION_FRONT, $obj);
-	}	
+	}
 
 	/**
 	*	@param $id integer USER ID
 	*	@param $obj array Session data
-	*/	
+	*/
 	static function updateSubscriber($id, $obj)
 	{
 		if ($id == self::getSubscriberId()) {
 			self::setSubscriber($obj);
 		}
-	}	
+	}
 
 	static function logoutSubscriber()
 	{
@@ -338,27 +338,27 @@ class Login
 	static function getClientName()
 	{
 		return self::getClientData('first_name');
-	} 
+	}
 
 	static function getClientLastName()
 	{
 		return self::getClientData('last_name');
-	} 	
+	}
 
 	static function getClientFullName()
 	{
 		return self::getClientData('first_name') . " " . self::getClientData('last_name');
-	} 
+	}
 
 	static function getClientPicture()
 	{
 		return self::getClientData('picture');
-	} 
+	}
 
 	static function getClientEmail()
 	{
 		return self::getClientData('email');
-	} 	
+	}
 
 	/**
 	*	@param $obj array
@@ -372,26 +372,26 @@ class Login
 		if (count($data) > 0) {
 			$obj = array_merge($data, $obj);
 		}
-		
+
 		Session::set(self::SESSION_CLIENT, $obj);
-	}	
+	}
 
 	/**
 	*	@param $id integer USER ID
 	*	@param $obj array Session data
-	*/	
+	*/
 	static function updateClient($id, $obj)
 	{
 		if ($id == self::getClientId()) {
 			self::setClient($obj);
 		}
-	}	
+	}
 
 	static function logoutClient()
 	{
 		Session::reset(self::SESSION_SECURITY);
 		Session::reset(self::SESSION_CLIENT);
-	}	
+	}
 
 /*
 |-----------------------------
@@ -399,7 +399,7 @@ class Login
 |-----------------------------
 |*/
 	/**
-	 *	@example 
+	 *	@example
 	 *	@var $session = Login::SESSION_ADMIN
 	 */
 	public function __construct($session, $url)
@@ -417,7 +417,7 @@ class Login
 
 	/**
 	*	@var $url string URL
-	*/	
+	*/
 	public function redirect($url = "/")
 	{
 		if ($this->_session) {
