@@ -59,7 +59,7 @@ class Comments extends Service
 
     Directory::make(Path::getData(self::FOLDER));
     $file = self::_getPath($id);
-    $xml = XML::create($file, true);
+    $xml = XML::create($file);
     $xml->root('comments');
     $comment = $this->post->textarea('comment');
     $data = ['comment' => $comment];
