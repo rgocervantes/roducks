@@ -67,9 +67,11 @@ class Account extends JSON
 
 		// Update admin session ONLY if $id equals adminId session
 		Login::updateSubscriber($this->_id, $this->_fields);
-		
+
 		$this->_user->update($this->_id, $this->_fields);
 
+		$this->data('url_redirect', '/account');
+		
 		parent::output();
 	}
 
@@ -83,7 +85,7 @@ class Account extends JSON
 			$this->setError(401,TEXT_AUTH_FAIL);
 		} else {
 			$this->_user->changePassword($this->_id, $this->post->password('new_password'));
-		}	
+		}
 
 		parent::output();
 	}
@@ -97,8 +99,8 @@ class Account extends JSON
 		// Update admin session ONLY if $id equals adminId session
 		$this->_user->update($this->_id, $data);
 		Login::updateSubscriber($this->_id, $data);
-		
+
 		parent::output();
 	}
 
-} 
+}

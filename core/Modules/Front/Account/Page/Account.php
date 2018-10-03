@@ -32,7 +32,7 @@ class Account extends FrontPage
 	public function __construct(array $settings, View $view)
 	{
 		parent::__construct($settings, $view);
-		
+
 		$this->login->required();
 		$this->role(Role::TYPE_SUBSCRIBERS);
 	}
@@ -44,9 +44,9 @@ class Account extends FrontPage
 
 		$this->view->title(TEXT_WELCOME);
 		$this->view->data("picture", Login::getSubscriberPicture());
-		$this->view->data("gender", Login::getSubscriberData('gender'));		
+		$this->view->data("gender", Login::getSubscriberData('gender'));
 		$this->view->load("index");
-		
+
 		return $this->view->output();
 
 	}
@@ -56,6 +56,7 @@ class Account extends FrontPage
 
 		$this->grantAccess->edit();
 
+		$this->view->assets->scriptsInline(['form']);
 		$this->view->data("first_name", Login::getSubscriberName());
 		$this->view->data("last_name", Login::getSubscriberLastName());
 		$this->view->load("edit");
@@ -68,7 +69,7 @@ class Account extends FrontPage
 	{
 
 		$this->grantAccess->password();
-		
+
 		$this->view->load("change-password");
 
 		return $this->view->output();
