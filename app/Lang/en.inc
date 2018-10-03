@@ -118,6 +118,7 @@ App::text('TO', "To");
 App::text('FOR', "For");
 App::text('FROM', "From");
 
+App::text('COMMENTS', "Comments");
 App::text('TITLE', "Title");
 App::text('ABSTRACT', "Abstract");
 App::text('DESCRIPTION', "Description");

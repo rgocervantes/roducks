@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  *
  * This file is part of Roducks.
@@ -33,9 +33,10 @@ return [
 		'bootstrap',
 		'roducks'
 	],
-	'SCRIPTS_INLINE' => [],
+	'SCRIPTS_INLINE' => [
+		'comments'
+	],
 	'SCRIPTS_ONREADY' => [
 		'rdks.ready'
 	]
 ];
-

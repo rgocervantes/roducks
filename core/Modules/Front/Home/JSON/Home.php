@@ -91,7 +91,7 @@ class Home extends JSON
 			Form::filter(Form::FILTER_EMAIL, $fields['email']),
 			Form::filter(Form::FILTER_WORDS, $fields['first_name']),
 			Form::filter(Form::FILTER_WORDS, $fields['last_name']),
-			Form::filter(Form::FILTER_WORDS, $fields['password'])
+			Form::filter(Form::FILTER_STRING, $fields['password'])
 		]);
 
 		if ($form->success()) {

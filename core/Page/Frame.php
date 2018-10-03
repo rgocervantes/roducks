@@ -45,7 +45,7 @@ abstract class Frame
 	protected $_pageType = 'FRAME'; // PAGE|BLOCK|FACTORY
 	protected $_inLocal = true;
 
-	private $_langIso;
+	private $_langIso = 'en';
 	private $_cache = null;
 
 /*

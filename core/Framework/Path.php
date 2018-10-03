@@ -193,12 +193,16 @@ class Path
 		return URL::setAbsoluteURL(self::getImage($file));
 	}
 
-	static function getPublicUploadedUsers($file)
+	static function getPublicUploadedUsers($file, $crop = 0)
 	{
 		$path = self::getUploadedUsers($file);
 
 		if (preg_match('#(male|female)#', $file)) {
 			$path = self::getIcon("users/{$file}");
+		} else {
+			if ($crop > 0) {
+				$path = self::getCropName($path, $crop);
+			}
 		}
 
 		return URL::setAbsoluteURL($path);

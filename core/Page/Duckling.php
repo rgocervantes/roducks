@@ -640,11 +640,11 @@ class Duckling
   	|	Translations
   	|----------------------------------------------------------------------
   	*/
-    $tpl = preg_replace_callback('/{{% __\((.+)\) %}}/sm', function($str) {
+    $tpl = preg_replace_callback('/{{% __\(([a-zA-Z_\'"\s\.,:¡!?¿&]+)\) %}}/sm', function($str) {
       $text = str_replace(['"',"'"], '', $str[1]);
       return __($text);
     }, $tpl);
-    $tpl = preg_replace_callback('/{{% _text\((.+)\) %}}/sm', function($str) {
+    $tpl = preg_replace_callback('/{{% _text\(([a-zA-Z_\'"\s\.,:¡!?¿&]+)\) %}}/sm', function($str) {
       $text = str_replace(['"',"'"], '', $str[1]);
       return _text($text);
     }, $tpl);

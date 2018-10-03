@@ -1,4 +1,4 @@
-.footer{ 
+.footer{
   padding: 20px;
   display: none;
   width: 100%;
@@ -9,3 +9,7 @@
 ul.dropdown-menu li a.active{ background: #d5f5f9; }
 
 .bg-home{ background: #e5ece5; display: block; height: 372px; }
+
+.comment-box { border: solid 1px #ccc; margin-bottom: 10px; }
+.comment-box img { border-radius: 100%; float: left; margin: 0 10px 10px 0; }
+.comment-box .comment-inner { padding: 15px; }
