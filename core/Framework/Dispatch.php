@@ -23,7 +23,7 @@ namespace Roducks\Framework;
 use Roducks\Page\JSON;
 use Roducks\Libs\Data\Session;
 use Roducks\Libs\Utils\Date;
-use Roducks\Libs\Request\Request;
+use Request;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Request\CORS;
 use DB\Models\SEO\UrlsUrlsLang;
