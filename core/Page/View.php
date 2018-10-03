@@ -144,6 +144,11 @@ final class View
 		return $this->_url;
 	}
 
+	public function getPageId()
+	{
+		return $this->_globals['_PAGE_ID'];
+	}
+
 	public function page($n)
 	{
 		$this->data('_PAGED', $n);

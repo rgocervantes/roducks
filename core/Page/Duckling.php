@@ -441,7 +441,7 @@ class Duckling
 
   private static function _blocks($tpl, $key, $value)
   {
-    $tpl = preg_replace_callback('/{{% @block\((\$'.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])?(,[a-zA-Z0-9:\s\'",\$\[\]{}]+)?\) %}}/sm', function($block) use ($key, $value) {
+    $tpl = preg_replace_callback('/{{% @block\((\$'.$key.')(->[a-zA-Z_]+)?(\[[a-zA-Z_]+\])?(,[a-zA-Z0-9_:\s\'",\$\[\]{}]+)?\) %}}/sm', function($block) use ($key, $value) {
       $b2 = (isset($block[2])) ? $block[2] : '';
       $b3 = (isset($block[3])) ? $block[3] : '';
       $var = Duckling::_var([null, null, $b2, $b3], $value);
