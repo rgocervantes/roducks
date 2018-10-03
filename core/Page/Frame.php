@@ -27,6 +27,7 @@ use Roducks\Framework\Login;
 use Roducks\Framework\Role;
 use Roducks\Framework\Error;
 use Roducks\Framework\Helper;
+use Roducks\Framework\Language;
 use Roducks\Framework\Environment;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Data\Cache;
@@ -45,7 +46,6 @@ abstract class Frame
 	protected $_pageType = 'FRAME'; // PAGE|BLOCK|FACTORY
 	protected $_inLocal = true;
 
-	private $_langIso = 'en';
 	private $_cache = null;
 
 /*
@@ -174,7 +174,7 @@ abstract class Frame
 
 	protected function getLang()
 	{
-		return $this->_langIso;
+		return Language::get();
 	}
 
 	protected function disableUrlDispatcher()
@@ -597,11 +597,6 @@ abstract class Frame
 		}
 
 		$this->_autoLoad($params);
-	}
-
-	public function setLang($iso)
-	{
-		$this->_langIso = $iso;
 	}
 
 	public function getParentClassName()
