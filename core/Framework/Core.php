@@ -239,7 +239,7 @@ class Core
 		} else if (\App::fileExists($global)) {
 			$path = $path2;
 		} else if (\App::fileExists($core)) {
-			$path = "Roducks\\";
+			$path = $path3;
 		}
 
 		return ['path' => $path, 'service' => $service];
@@ -616,8 +616,8 @@ class Core
 	{
 
 		$method = Helper::getCamelName($action, false);
-		$page = (Helper::isService($page)) ? $page : Helper::getCamelName($page);
-		$className = ($path . $page);
+		//$page = (Helper::isService($page)) ? $page : Helper::getCamelName($page);
+		$className = (Helper::isService($page)) ? "Roducks\\{$page}" : $path.$page;
 		$class = self::getClassNamespace($className);
 
 		$filePath = preg_replace(Helper::REGEXP_PATH, '$1', $path . $page);

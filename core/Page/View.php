@@ -371,7 +371,11 @@ final class View
 			if (Helper::isPage($dir_view)) {
 				Layout::view(null, $this->_error);
 			} else {
-				include $dir_view;
+				if (preg_match('/\.tpl$/', $dir_view)) {
+					echo Duckling::parser($dir_view, $data);
+				} else {
+					include $dir_view;
+				}
 			}
 		}
 
