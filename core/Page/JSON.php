@@ -178,6 +178,10 @@ class JSON extends GenericPage
 		$this->_crossDomain = true;
 		$this->_methods = (count($options) > 0) ? $options : ["POST","OPTIONS"];
 		$this->_domains = $domains;
+
+		if (in_array('POST', $options)) {
+			$this->post->required();
+		}
 	}
 
 /* ------------------------------------*/
