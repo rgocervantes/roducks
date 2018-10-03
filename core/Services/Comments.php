@@ -72,6 +72,9 @@ class Comments extends Service
 
       $data = $data + $attrs;
 
+      $data['name'] = Login::getSubscriberName();
+      $data['date'] = Date::getDateFormat($attrs['date'], $this->getLang());
+
       $node = $xml->createNode([
               'name' => 'comment',
               'attributes' => $attrs

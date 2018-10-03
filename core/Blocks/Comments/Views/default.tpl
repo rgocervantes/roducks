@@ -18,9 +18,14 @@
 
 <div rdks-each="comments" class="rdks-template comment-box">
   <div class="comment-inner">
-    <img rdks-src="{{picture}}" width="45" height="45">
-    <span>{{name}}</span>
-    <span>{{date}}</span>
+    <img src="{{picture}}" width="45" height="45">
+    <div class="">
+      <span><b>{{name}}</b></span>
+    </div>
+    <div class="">
+      <span>{{date}}</span>
+    </div>
+    <div class="clearfix"></div>
     <p>{{comment}}</p>
   </div>
 </div>
