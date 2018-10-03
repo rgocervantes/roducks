@@ -88,14 +88,14 @@ class Generate extends CLI
 
   private function _create($path, $name, $content, $type)
   {
-    File::create($path, "{$name}.php", $content);
+    File::create($path, "{$name}".FILE_EXT, $content);
 
     if ($this->_title) {
       $this->success("{$type} '{$name}' was created:");
       $this->success("[x]");
     }
 
-    $this->success("[x]{$path}{$name}.php");
+    $this->success("[x]{$path}{$name}".FILE_EXT);
 
   }
 
@@ -109,12 +109,12 @@ return [
 ];
 EOT;
 
-    File::create($path, "modules.inc", $content);
+    File::create($path, "modules" . FILE_INC, $content);
   }
 
   private function _file($path, $name, $content, $type = "")
   {
-    $ext = $name.".php";
+    $ext = $name.FILE_EXT;
     $file = $path.$ext;
 
     if (Path::exists($file)) {
@@ -547,21 +547,23 @@ EOT;
         break;
     }
 
-    $conf = "{$pathConfig}modules.inc";
-    $config = Request::getContent($conf);
-    if (!preg_match('#\''.$module.'\' => true,#', $config)) {
-      $cnf = preg_replace_callback('/return \[(.*?)\];/sm', function($ret) use($module) {
-        return "return [{$ret[1]}\t\t'{$module}' => true,\n];";
-      }, $config);
+    if ($site != 'All/') {
+      $conf = "{$pathConfig}modules".FILE_INC;
+      $config = Request::getContent($conf);
+      if (!preg_match('#\''.$module.'\' => true,#', $config)) {
+        $cnf = preg_replace_callback('/return \[(.*?)\];/sm', function($ret) use($module) {
+          return "return [{$ret[1]}\t'{$module}' => true,\n];";
+        }, $config);
 
-      File::create($pathConfig, "modules.inc", $cnf);
+        File::create($pathConfig, "modules".FILE_INC, $cnf);
+      }
     }
 
     self::_make($pathPageViews);
     self::_make($pathHelper);
     self::_make($pathJSON);
 
-    File::create($pathPageViews, "index.tpl", '<h1>{{% $_PAGE_TITLE %}}</h1>');
+    File::create($pathPageViews, "index".FILE_TPL, '<h1>{{% $_PAGE_TITLE %}}</h1>');
 
     $this->_fileModule($pathPage, $site, $module, 'Page', $page, 'index');
     $this->_title = false;
@@ -636,7 +638,7 @@ EOT;
     $pathBlockViews = "{$pathBlock}/Views/";
 
     self::_make($pathBlockViews);
-    File::create($pathBlockViews, "default.tpl", '<h1>{{% $_PAGE_TITLE %}}</h1>');
+    File::create($pathBlockViews, "default".FILE_TPL, '<h1>{{% $_PAGE_TITLE %}}</h1>');
 
     $this->_cmd = true;
     $this->_fileBlock($pathBlock, $site, $block);
