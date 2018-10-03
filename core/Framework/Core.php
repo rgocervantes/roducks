@@ -616,8 +616,7 @@ class Core
 	{
 
 		$method = Helper::getCamelName($action, false);
-		//$page = (Helper::isService($page)) ? $page : Helper::getCamelName($page);
-		$className = (Helper::isService($page)) ? "Roducks\\{$page}" : $path.$page;
+		$className = (Helper::isService($page) && preg_match('/^core/', $path)) ? "Roducks\\{$page}" : $path.$page;
 		$class = self::getClassNamespace($className);
 
 		$filePath = preg_replace(Helper::REGEXP_PATH, '$1', $path . $page);
