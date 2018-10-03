@@ -42,7 +42,7 @@ class Comments extends Service
         $comments[] = [
           'name' => $user->getFirstName(),
           'email' => $user->getEmail(),
-          'date' => Date::getDateFormat($node['date']->__toString(), $this->getLang()),
+          'date' => Date::getDateFormatLong($node['date']->__toString(), $this->getLang()),
           'picture' => Path::getPublicUploadedUsers($user->getPicture(), 90),
           'post' => $node->post->__toString(),
           'replies' => $replies
