@@ -36,8 +36,4 @@ return [
 		'jquery-ui.min.css',
 		'jquery-ui.min.js'
 	],
-	'roducks-layout' => [
-	  'roducks-layout.css',
-	  'roducks-layout.js'
-	],
 ];
