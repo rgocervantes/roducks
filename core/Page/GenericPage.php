@@ -85,7 +85,7 @@ class GenericPage extends Frame
 	/**
 	*	EMAIL SERNDER
 	*/
-	/*	
+	/*
 		$this->sendEmail("contact-us", function ($sender) {
 			$sender->to = "example@domain.com";
 			$sender->from = EMAIL_FROM;
@@ -112,7 +112,7 @@ class GenericPage extends Frame
 		$data = $this->getViewData();
 		$data = array_merge($data, $this->getJsonData());
 
-		// send form post data 
+		// send form post data
 		$store['form'] = Helper::cleanData(Post::stData());
 		// set custom data
 		$store['data'] = $data;
@@ -123,7 +123,7 @@ class GenericPage extends Frame
 		$url = URL::setAbsoluteURL("/_email/{$template}");
 
 		// get html
-		$request = Request::init('GET', $url);
+		$request = Request::get($url);
 
 		if ($attrs->cookie) {
 			$request->persistSession();
@@ -135,8 +135,8 @@ class GenericPage extends Frame
 			$message = $request->getOutput();
 			// this function sends an email with html format.
 			return Helper::mailHTML($headers, $message);
-		endif;	
-		
+		endif;
+
 		return false;
 
 	}
