@@ -345,18 +345,6 @@ abstract class Model extends ORM
 		return $this;
 	}
 
-	public function save()
-	{
-		switch ($this->_action) {
-			case 'insert':
-				$this->insert();
-				break;
-			case 'update':
-				$this->update();
-				break;
-		}
-	}
-
 	public function update($id = "", array $data = [], array $condition = [])
 	{
 
@@ -458,6 +446,23 @@ abstract class Model extends ORM
 		$where = $this->_where($condition);
 
 		return parent::lastId($this->id, $where);
+	}
+
+	public function save()
+	{
+		switch ($this->_action) {
+			case 'insert':
+				$this->insert();
+				break;
+			case 'update':
+				$this->update();
+				break;
+		}
+	}
+
+	public function execute()
+	{
+		return $this->filter();
 	}
 
 	public function getTableTotalRows()
