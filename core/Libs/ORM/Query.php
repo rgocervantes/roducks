@@ -860,9 +860,9 @@ class Query
 		return $this;
 	}
 
-	public function groupBy($field)
+	public function groupBy(array $fields)
 	{
-		$this->_filter['groupby'] = $field;
+		$this->_filter['groupby'] = implode(", ", $fields);
 		return $this;
 	}
 
