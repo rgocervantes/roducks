@@ -132,7 +132,7 @@ class Query
 
 			switch ($match[2]) {
 					case 'regexp':
-						$ret .= $match[1] . " REGEXP '".$value."' ";
+						$ret .= $match[1] . " REGEXP '".$value."'";
 						break;
 					case 'string':
 						$ret .= $match[1] . " = '{$value}'";
@@ -152,23 +152,29 @@ class Query
 							foreach ($value[1] as $v) {
 								$values[] = ($v == " ") ? self::_field($v) : $v;
 							}
-							$ret .= "CONCAT(".implode(",", $values) . ") LIKE '%".$value[0]."%' ";
+							$ret .= "CONCAT(".implode(",", $values) . ") LIKE '%".$value[0]."%'";
 						}
 						break;
-					case 'is-null':
-						$ret .= $match[1] . " IS NULL ";
+					case 'empty':
+						$ret .= $match[1] . " = ''";
 						break;
-					case 'is-not-null':
-						$ret .= $match[1] . " IS NOT NULL ";
+					case 'not-empty':
+						$ret .= $match[1] . " <> ''";
+						break;
+					case 'null':
+						$ret .= $match[1] . " IS NULL";
+						break;
+					case 'not-null':
+						$ret .= $match[1] . " IS NOT NULL";
 						break;
 					case '%like%':
-						$ret .= $match[1] . " LIKE '%".$value."%' ";
+						$ret .= $match[1] . " LIKE '%".$value."%'";
 						break;
 					case '%like':
-						$ret .= $match[1] . " LIKE '%".$value."' ";
+						$ret .= $match[1] . " LIKE '%".$value."'";
 						break;
 					case 'like%':
-						$ret .= $match[1] . " LIKE '".$value."%' ";
+						$ret .= $match[1] . " LIKE '".$value."%'";
 						break;
 					case 'ucase':
 						$ret .= "UCASE(".$match[1].") = " . self::_field($value);
@@ -885,6 +891,13 @@ class Query
 	public function offset($offset, $limit = 50)
 	{
 		return $this->paginate(self::getPageFromOffset($offset, $limit), $limit);
+	}
+
+	public function limit($n)
+	{
+		$this->_filter['page'] = 1;
+		$this->_filter['limit'] = $n;
+		return $this;
 	}
 
 	/**
