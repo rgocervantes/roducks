@@ -5,8 +5,6 @@
     var index = $(this).attr('data-index');
         index = parseInt(index);
 
-        console.log(index);
-
     if($rdks.pipe('stepper').get().indexOf('step_'+index) != -1 || index == 0){
       $(this).tab('show');
     }

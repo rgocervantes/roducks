@@ -48,6 +48,11 @@ class Install extends Service
 		$hash = substr($hash, 0, 32);
     $data = $this->post->data();
 
+    $find_url_in_db = (isset($data['site']['find_url_in_db'])) ? 'true' : 'false';
+    $allow_subscribers_register = (isset($data['site']['allow_subscribers_register'])) ? 'true' : 'false';
+    $multilanguage = (isset($data['site']['multilanguage'])) ? 'true' : 'false';
+    $browser_language = (isset($data['site']['browser_language'])) ? 'true' : 'false';
+
 $config = <<< EOT
 <?php
 
@@ -79,11 +84,11 @@ return [
 //-------------------------------------------------------------------
 //  Find Request URL in Database
 //-------------------------------------------------------------------
-	'find_url_in_db' 				=> false,
+	'find_url_in_db' 				=> {$find_url_in_db},
 //-------------------------------------------------------------------
 //  Allow Subscribers to register
 //-------------------------------------------------------------------
-	'allow_subscribers_register' 	=> true,
+	'allow_subscribers_register' 	=> {$allow_subscribers_register},
 //-------------------------------------------------------------------
 //  Subscribers expires in ? days
 //-------------------------------------------------------------------
@@ -93,15 +98,15 @@ return [
 //-------------------------------------------------------------------
 //  Is your site multilanguage?
 //-------------------------------------------------------------------
-	'multilanguage' 				=> true,
+	'multilanguage' 				=> {$multilanguage},
 //-------------------------------------------------------------------
 //  Allows user's browser language as default
 //-------------------------------------------------------------------
-	'browser_language' 				=> true,
+	'browser_language' 				=> {$browser_language},
 //-------------------------------------------------------------------
 //  Default language ISO
 //-------------------------------------------------------------------
-	'default_language' 				=> 'en' // ISO: en | es
+	'default_language' 				=> '{$data['default_language']}' // ISO: en | es
 ];
 EOT;
 

@@ -33,7 +33,8 @@
           data-callback-success="cbFormSuccessInstaller"
           data-callback-loading="cbFormLoading"
           data-callback-error="cbFormError"
-          data-alert-warning="Please fill out the required fields *"
+          data-callback-submit="cbFormSubmitInstaller"
+          data-alert-warning="Please fill out the required fields (*) for each tab"
           data-alert-error="Oops! Form has errors."
           data-alert-failed="Server does not respond. Please Try again later."
           >
@@ -81,22 +82,68 @@
               <div class="form-group has-feedback">
                 <label class="control-label"><span class="color-red">*</span> Title</label>
                 <input type="text" name="site[title]" data-required="true" class="form-control" placeholder="Roducks">
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+              </div>
+              <div class="form-group has-feedback">
+                <label class="control-label"><span class="color-red">*</span> Email From</label>
+                <input type="text" name="site[email_from]" data-type="email" data-alert-error="Invalid Email." data-required="true" class="form-control">
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                <span class="help-block">noreply@example.com</span>
+              </div>
+              <div class="form-group has-feedback">
+                <label class="control-label"><span class="color-red">*</span> Email To</label>
+                <input type="text" name="site[email_to]" data-type="email" data-alert-error="Invalid Email." data-required="true" class="form-control">
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                <span class="help-block">contact@example.com</span>
               </div>
               <div class="form-group has-feedback">
                 <label class="control-label"><span class="color-red">*</span> Timezone</label>
                 <input type="text" name="site[timezone]" data-required="true" class="form-control" placeholder="America/New_York">
-                <p> <a href="http://php.net/manual/en/timezones.php" target="_blank">http://php.net/manual/en/timezones.php</a> </p>
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                <span class="help-block"></span>
+                <a href="http://php.net/manual/en/timezones.php" target="_blank">http://php.net/manual/en/timezones.php</a>
               </div>
               <div class="form-group has-feedback">
-                <label class="control-label"><span class="color-red">*</span> Email From</label>
-                <input type="text" name="site[email_from]" data-required="true" class="form-control">
+                <label class="control-label"><span class="color-red">*</span> Default Language</label>
+                <select name="default_language" data-required="true" data-height="65" rel="rdks-select-autocomplete" class="rdks-select-autocomplete form-control">
+                  <option value="en">English</option>
+                  <option value="es">Spanish</option>
+                </select>
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
               </div>
               <div class="form-group has-feedback">
-                <label class="control-label"><span class="color-red">*</span> Email To</label>
-                <input type="text" name="site[email_to]" data-required="true" class="form-control">
+                 <div class="checkbox">
+                   <label>
+                     <input type="checkbox" name="site[find_url_in_db]"> Find URLs in Data Base?
+                   </label>
+                 </div>
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
               </div>
-
-              <button type="button" name="button" class="btn btn-lg btn-primary right" onclick="stepper(2);">Next</button>
+              <div class="form-group has-feedback">
+                 <div class="checkbox">
+                   <label>
+                     <input type="checkbox" name="site[allow_subscribers_register]"> Allow Subscribers Register
+                   </label>
+                 </div>
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+              </div>
+              <div class="form-group has-feedback">
+                 <div class="checkbox">
+                   <label>
+                     <input type="checkbox" name="site[multilanguage]"> Is your site multilanguage?
+                   </label>
+                 </div>
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+              </div>
+              <div class="form-group has-feedback">
+                 <div class="checkbox">
+                   <label>
+                     <input type="checkbox" name="site[browser_language]"> Allow user's browser language as default
+                   </label>
+                 </div>
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+              </div>
+              <button type="button" name="button" class="btn btn-lg btn-primary right" onclick="next();">Next</button>
             </div>
 
             <div role="tabpanel" class="tab-pane fade" id="database">
@@ -104,16 +151,19 @@
               <div class="form-group has-feedback">
                 <label class="control-label"><span class="color-red">*</span> Name</label>
                 <input type="text" name="database[name]" data-required="true" class="form-control">
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
               </div>
 
               <div class="form-group has-feedback">
                 <label class="control-label"><span class="color-red">*</span> User</label>
                 <input type="text" name="database[user]" data-required="true" class="form-control">
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
               </div>
 
               <div class="form-group has-feedback">
                 <label class="control-label"><span class="color-red">*</span> Password</label>
                 <input type="text" name="database[password]" data-required="true" class="form-control">
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
               </div>
 
               <button type="submit" name="sender" class="btn btn-lg btn-primary right">Save</button>

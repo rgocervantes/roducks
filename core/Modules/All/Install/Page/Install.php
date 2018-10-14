@@ -37,6 +37,7 @@ class Install extends Page
     ], true);
 
     $this->view->assets->scriptsInline([
+      'form',
       'installer'
     ]);
 
