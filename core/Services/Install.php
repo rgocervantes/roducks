@@ -41,12 +41,7 @@ class Install extends Service
 
   }
 
-  public function rest()
-  {
-
-    $hash = Hash::getToken();
-		$hash = substr($hash, 0, 32);
-    $data = $this->post->data();
+  public function configLocal($data){
 
     $find_url_in_db = (isset($data['site']['find_url_in_db'])) ? 'true' : 'false';
     $allow_subscribers_register = (isset($data['site']['allow_subscribers_register'])) ? 'true' : 'false';
@@ -110,6 +105,19 @@ return [
 ];
 EOT;
 
+    File::create(Path::get(DIR_APP_CONFIG), 'config.local.inc', $config);
+
+  }
+
+  public function rest()
+  {
+
+    $this->post->required();
+
+    $hash = Hash::getToken();
+		$hash = substr($hash, 0, 32);
+    $data = $this->post->data();
+
 $database = <<< EOT
 <?php
 
@@ -133,7 +141,7 @@ return [
 ];
 EOT;
 
-    File::create(Path::get(DIR_APP_CONFIG), 'config.local.inc', $config);
+    $this->configLocal($data);
     File::create(Path::get(DIR_APP_CONFIG), 'database.local.inc', $database);
 		File::create(Path::getData(), self::LOCK, $hash);
 
