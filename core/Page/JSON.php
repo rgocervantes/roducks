@@ -187,7 +187,7 @@ class JSON extends GenericPage
 /* ------------------------------------*/
 /* 		PUBLIC METHODS
 /* ------------------------------------*/
-	public function __construct($settings)
+	public function __construct(array $settings)
 	{
 		parent::__construct($settings);
 

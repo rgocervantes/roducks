@@ -21,7 +21,7 @@
 require "App.php";
 
 
-# Default file extentions
+# Default file extensions
 App::define('FILE_EXT', ".php");
 App::define('FILE_INC', ".inc");
 App::define('FILE_PHTML', ".phtml");

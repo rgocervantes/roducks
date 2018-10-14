@@ -31,23 +31,19 @@ class Core
 	const ALL_SITES_DIRECTORY = 'All';
 	const NS = 'Roducks/';
 
-	static function requirements()
+	static function extensions()
 	{
-		$version = '7.0.0';
-
-		if (version_compare(PHP_VERSION, $version) <= 0) {
-			$text = "requires version {$version} or later.";
-			if (Environment::inDEV()) {
-				Error::requirements('PHP VERSION '.PHP_VERSION, 0, '', '', ['Roducks '.$text], "<b>Roducks</b> {$text}");
-			} else {
-				Error::pageNotFound();
-			}
-
-		}
+		$php = [];
+		$php['version_require'] = '7.0.0';
+		$php['version'] = PHP_VERSION;
+		$php['compare'] = (version_compare($php['version'], $php['version_require']) <= 0);
+		$php['alert'] = ($php['compare']) ? "requires version {$php['version_require']} or later." : "This version looks fine to run Roducks!";
+		$error = 0;
+		$loaded = [];
+		$list = '';
 
 		if (function_exists('extension_loaded')) {
-			$error = 0;
-			$items = [];
+
 			$exts = [
 				'date',
 				'libxml',
@@ -66,25 +62,51 @@ class Core
 				'xmlwriter',
 				'zip'
 			];
-			$message = '<ul>';
 
 			foreach ($exts as $ext) {
 				if (!extension_loaded($ext)) {
 					$error++;
-					array_push($items, $ext);
-					$message .= '<li>'.$ext.'</li>';
+					$loaded['items'] = $ext;
+					$loaded['exts'][] = ['flag' => 'danger', 'type' => 'remove', 'name' => $ext];
+					$list .= '<li>'.$ext.'</li>';
+				} else {
+					$loaded['exts'][] = ['flag' => 'success', 'type' => 'ok', 'name' => $ext];
 				}
 			}
+
+		}
+
+		return [
+			'loaded' => $loaded,
+			'list' => $list,
+			'error' => $error,
+			'php' => $php
+		];
+
+	}
+
+	static function requirements()
+	{
+		$loaded = self::extensions();
+
+		if ($loaded['php']['compare']) {
+			if (Environment::inDEV()) {
+				Error::requirements('PHP VERSION '.PHP_VERSION, 0, '', '', ['Roducks '.$loaded['php']['alert']], "<b>Roducks</b> {$loaded['php']['alert']}");
+			} else {
+				Error::pageNotFound();
+			}
+		}
+
+		if ($loaded['error'] > 0) {
+			$message = '<ul>';
+			$message .= $loaded['list'];
 			$message .= '</ul>';
 
-			if ($error > 0) {
-				if (Environment::inDEV()) {
-					Error::requirements('PHP Required Extentions', 0, '', '', $items, $message);
-				} else {
-					Error::pageNotFound();
-				}
+			if (Environment::inDEV()) {
+				Error::requirements('PHP Required Extentions', 0, '', '', $loaded['loaded']['items'], $message);
+			} else {
+				Error::pageNotFound();
 			}
-
 		}
 
 	}
@@ -982,6 +1004,14 @@ class Core
 			} else {
 				Error::pageNotFound();
 			}
+		}
+	}
+
+	static function install()
+	{
+		if (!file_exists(Path::getData('install.lock')) && !Helper::isUrlDispatch()) {
+			self::loadPage('Roducks/Modules/All/', 'Install/Page/Install', 'run');
+			exit;
 		}
 	}
 

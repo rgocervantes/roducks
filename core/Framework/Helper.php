@@ -100,6 +100,11 @@ class Helper
 		return self::isDispatch($dispatch);
 	}
 
+	static function onInstall()
+	{
+		return !file_exists(Path::getData('install.lock'));
+	}
+
 	static function isBlockDispatched()
 	{
 		$url = URL::getSplittedURL();

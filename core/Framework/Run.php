@@ -20,6 +20,7 @@
 
 use Roducks\Framework\Core;
 use Roducks\Framework\Error;
+use Roducks\Framework\Helper;
 
 /*
 |--------------------------------|
@@ -52,9 +53,15 @@ if (App::fileExists($siteDbConfig)) {
 	$dbConfig = Core::getDbSiteConfigFile($environment['database'], false);
 	$dbFile = $siteDbConfig;
 } else {
+	// Overwrite database filename on install
+	if (Helper::onInstall()) {
+		$environment['database'] = 'database';
+	}
+
 	// get app data base config
 	$dbConfig = Core::getDbAppConfigFile($environment['database'], true);
 	$dbFile = $appDbConfig;
+
 }
 
 if (!isset($dbConfig['host'])) {
