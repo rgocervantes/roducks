@@ -58,11 +58,11 @@ class Asset
 	{
 		if (count($scripts) > 0) {
 			echo "\n$(document).ready(function() {\n\n";
-			self::load($scripts, $data);	
-			echo "\n});\n\n";			
+			self::load($scripts, $data);
+			echo "\n});\n\n";
 		}
 	}
-	
+
 	private function _getResource($dir, $script, $type)
 	{
 
@@ -77,7 +77,7 @@ class Asset
 				$load = false;
 				$script = "unknown{$type}";
 			}
-			
+
 		}
 
 		$load = true;
@@ -90,9 +90,9 @@ class Asset
 			$file_repo =  str_replace('/public/', 'public/assets/', $file);
 
 			if (!\App::fileExists($file_repo)) $load = false;
-		} 
+		}
 
-		return ['load' => $load, 'file' => $dir.$script, 'attrs' => $attrs];
+		return ['load' => $load, 'file' => $file, 'attrs' => $attrs];
 
 	}
 
@@ -101,14 +101,14 @@ class Asset
 
 		foreach($arr as $css) {
 			$resource = $this->_getResource($dir, $css, "css");
-			
+
 			if ($resource['load']) {
 				$file = $resource['file'];
 				$p = (preg_match('/\?v=[0-9\.]+$/', $file)) ? "&t" : "?t";
 				if (Environment::inDEV()) $file = $file .  $p . "=" . time();
 				$attrs = (!empty($resource['attrs'])) ? " " . Html::getAttributes($resource['attrs']) : "";
 				$tag = "<link type=\"text/css\" rel=\"stylesheet\" href=\"{$file}\"{$attrs} />\n";
-			
+
 				if ($alt) {
 					$this->_css .= $tag;
 				} else {
@@ -123,7 +123,7 @@ class Asset
 
 		foreach($arr as $js) {
 			$resource = $this->_getResource($dir, $js, "js");
-			
+
 			if ($resource['load']) {
 				$file = $resource['file'];
 				$p = (preg_match('/\?v=[0-9\.]+$/', $file)) ? "&t" : "?t";
@@ -170,18 +170,18 @@ class Asset
 	{
 
 		if ($overwrite) {
-			$this->_scriptsInline = $scripts; 
+			$this->_scriptsInline = $scripts;
 		} else {
 			$this->_scriptsInline = array_merge($this->_scriptsInline, $scripts);
 		}
 
-	}	
+	}
 
 	public function scriptsOnReady($scripts, $overwrite = false)
 	{
 
 		if ($overwrite) {
-			$this->_scriptsOnReady = $scripts; 
+			$this->_scriptsOnReady = $scripts;
 		} else {
 			$this->_scriptsOnReady = array_merge($this->_scriptsOnReady, $scripts);
 		}
@@ -237,7 +237,7 @@ class Asset
 						case 'css':
 							$fx = "_cssMeta";
 							break;
-						
+
 						case 'js':
 							$fx = "_jsMeta";
 							break;
