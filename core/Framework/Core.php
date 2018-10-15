@@ -1009,7 +1009,12 @@ class Core
 
 	static function install()
 	{
-		if (!file_exists(Path::getData('install.lock')) && !Helper::isUrlDispatch()) {
+		if (
+			!Helper::isUrlDispatch() &&
+			!file_exists(Path::getData('install.lock')) &&
+			!file_exists(Path::get(DIR_APP_CONFIG . 'database.local' . FILE_INC)) &&
+			!file_exists(Path::get(DIR_APP_CONFIG . 'config.local' . FILE_INC))
+		) {
 			self::loadPage('Roducks/Modules/All/', 'Install/Page/Install', 'run');
 			exit;
 		}
