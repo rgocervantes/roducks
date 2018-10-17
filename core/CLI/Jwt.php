@@ -51,10 +51,4 @@ EOT;
 		parent::output();
 	}
 
-	public function moduleTest($title)
-	{
-		$this->success($title);
-		parent::output();
-	}
-
 }
