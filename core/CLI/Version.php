@@ -9,8 +9,7 @@ class Version extends CLI implements CLIInterface
 {
   public function run()
   {
-    $this->dialogInfo(null);
-    $this->info("[x]" . RDKS_VERSION);
+    echo $this->colorGreen(RDKS_VERSION) . "\n";
     parent::output();
   }
 }
