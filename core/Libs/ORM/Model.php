@@ -140,6 +140,7 @@ abstract class Model extends ORM
 
 	private $_ORM = false;
 	private $_data = [];
+	private $_dataUpdate = [];
 	private $_id;
 	private $_action = 'none';
 
@@ -282,7 +283,7 @@ abstract class Model extends ORM
 	public function __call($method, $args)
 	{
 
-	    if (preg_match('/^(get|set)(\w+)$/', $method, $fx)) {
+	    if (preg_match('/^(get|set|inc)(\w+)$/', $method, $fx)) {
 
 	        $first = strtolower(substr($fx[2],0,1));
 	        $property = $first . substr($fx[2],1);
@@ -290,16 +291,22 @@ abstract class Model extends ORM
 	        $name = self::getConventionName($property, "_");
 
 	        if (isset($this->fields[$name]) || count($this->_fields) > 0) {
-	            if ("get" == $fx[1]) {
-	            	$value = (isset($this->_data[$name])) ? $this->_data[$name] : "";
-	                return $value;
-	            }
+						$value = (isset($this->_data[$name])) ? $this->_data[$name] : "";
 
-	            if ("set" == $fx[1]) {
-	                $this->_data[$name] = $args[0];
-	            }
+						switch ($fx[1]) {
+							case 'get':
+								return $value;
+								break;
+							case 'set':
+								$this->_dataUpdate[$name] = $args[0];
+								break;
+							case 'inc':
+								$value = (empty($value) || !preg_match('/^\d+$/', $value)) ? 0 : $value;
+								$inc = (empty($args[0])) ? 1 : $args[0];
+								$this->_dataUpdate[$name] = intval($value) + intval($inc);
+								break;
+						}
 	        }
-
 	    }
 
 	    return "";
@@ -350,7 +357,7 @@ abstract class Model extends ORM
 
 		if ($this->_ORM) {
 			$id = $this->_id;
-			$data = $this->_data;
+			$data = $this->_dataUpdate;
 		}
 
 		if ($this->_unexcepted($data) || $this->_unexcepted($condition)) {
