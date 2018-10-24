@@ -19,8 +19,8 @@
  */
 /*
 	USAGE:
-	
-	$file = File::init();
+
+	$file = File::manager();
 	$file->type(['image/jpg','image/jpeg','image/png']);
 	$file->kb(150);
 	$file->upload(DIR_UPLOAD_USERS, "profile_user", "my_custom_name");
@@ -33,12 +33,12 @@
 
 */
 
-namespace Roducks\Libs\Files;	
+namespace Roducks\Libs\Files;
 
 final class File
 {
 
-/* 
+/*
 |-------------------------------|
 |		PRIVATE
 |-------------------------------|
@@ -54,8 +54,8 @@ final class File
 			'image/jpg',
 			'image/png',
 			'audio/mpeg',
-			'audio/mp3',			
-			'video/quicktime',	
+			'audio/mp3',
+			'video/quicktime',
 			'video/mpeg',
 			'application/zip',
 			'application/pdf',
@@ -65,7 +65,7 @@ final class File
 	private function _getSize($f)
 	{
 		return ceil($this->_getAttribute($f,'size') / 1024);
-	}	
+	}
 
 	private function _setSize($n)
 	{
@@ -74,18 +74,18 @@ final class File
 
 	private function _getAttribute($file, $attr)
 	{
-		return $_FILES[$file][$attr];			
-	}	
+		return $_FILES[$file][$attr];
+	}
 
-/* 
+/*
 |-------------------------------|
 |		STATIC
 |-------------------------------|
 */
 
-	static function init()
+	static function manager($file = null)
 	{
-		$file = new File;
+		$file = new File($file);
 		return $file;
 	}
 
@@ -99,7 +99,7 @@ final class File
 	 */
 	static function remove($filename)
 	{
-		return self::init()->delete($filename, null);
+		return self::manager()->delete($filename, null);
 	}
 
 	/**
@@ -116,12 +116,12 @@ final class File
 			// From path
 			$fromPath = explode(DIRECTORY_SEPARATOR, $origin);
 			$total1 = count($fromPath);
-			
+
 			if ($total1 > 1) {
 				$index1 =  $total1 - 1;
 				unset($fromPath[$index1]);
 			}
-			
+
 			$folder1 = implode(DIRECTORY_SEPARATOR, $fromPath);
 
 			// To path
@@ -150,7 +150,7 @@ final class File
 				if ($total1 > 2 && $canRemove) {
 					Directory::remove($removePath);
 				}
-				
+
 				$rootFolder = $path1.$fromPath[0];
 				if ($fromPath[0] != $toPath[0] && Directory::isEmpty($rootFolder)) {
 					Directory::remove($rootFolder);
@@ -179,11 +179,16 @@ final class File
 		self::create($path, preg_replace('/^(.+)\.json$/', '$1', $name) . ".json", $data);
 	}
 
-/* 
+/*
 |-------------------------------|
 |		PUBLIC
 |-------------------------------|
 */
+
+	public function __construct($file = null)
+	{
+		$this->_name = $file;
+	}
 
 	public function type($arr)
 	{
@@ -216,21 +221,38 @@ final class File
 		return $this->_filename;
 	}
 
-	public function upload($path, $file, $rename = null)
+	public function getTmp($file)
 	{
-		
+		$this->_getAttribute($file,'tmp_name');
+	}
+
+	public function getContent($name = null)
+	{
+		$file = (is_null($name)) ? $this->_name : $name;
+		return file_get_contents($this->getTmp($file));
+	}
+
+	public function upload($path, $file = null, $rename = null)
+	{
+
+		$file = (is_null($file)) ? $this->_name : $file;
+
+		if (is_null($file)) {
+			$file = 'file_'.time();
+		}
+
 		$this->_filename = $this->_getAttribute($file,'name');
 
 		// if upload is successed
 		if (!empty($this->_filename) && $this->_getAttribute($file,'error') == 0) {
-			
+
 			// Allowed size
 			if ($this->_getSize($file) <= $this->_limit) {
-				
+
 				// Allowed type
 				if (in_array($this->_getAttribute($file,'type'), $this->_ext)) {
 					$this->_filename = (!is_null($rename)) ? $rename . preg_replace('/^.+(\.\w{3,4})$/', '$1', $this->_filename) : $this->_filename;
-					
+
 					if (move_uploaded_file($this->_getAttribute($file,'tmp_name'), $path . $this->_filename)) {
 						$this->_success = true;
 						$this->_message = "File was uploaded successfully.";
@@ -241,8 +263,8 @@ final class File
 					}
 
 				} else {
-					$this->_message = "Type" . $this->_getAttribute($file,'type') . " is not allowed.";
-					$code = 2;					
+					$this->_message = "Type: " . $this->_getAttribute($file,'type') . " is not allowed.";
+					$code = 2;
 				}
 			} else {
 				$this->_message = "File size is too heavy: " . $this->_getSize($file) . " KB.";
@@ -261,14 +283,14 @@ final class File
 				];
 
 	}
-	
+
 	public function update($path, $file)
 	{
 
 		$filename = $this->_getAttribute($file,'name');
 		$copy = $_POST[$file . '_copy'];
 
-		if (!empty($filename)) {	
+		if (!empty($filename)) {
 			if (empty($copy)) {
 				$this->upload($path, $file);
 			} else {
@@ -276,9 +298,9 @@ final class File
 				{
 					$this->upload($path, $file);
 					$this->delete($path, $copy);
-				}	
-			}	
-		}	
+				}
+			}
+		}
 	}
 
 	public function delete($path, $file)
@@ -292,7 +314,7 @@ final class File
 		}
 	}
 
-	public function info($file)
+	public function info($file, $index = null)
 	{
 
 			$details = [
@@ -303,8 +325,12 @@ final class File
 					'error' => $this->_getAttribute($file,'error')
 			];
 
+			if (!is_null($index)) {
+				return (isset($details[$index])) ? $details[$index] : null;
+			}
+
 		return $details;
-		
+
 	}
 
 }

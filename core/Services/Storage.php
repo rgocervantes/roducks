@@ -129,7 +129,7 @@ class Storage extends Service
 	// delete old image when uploading a new one.
 	private function __deleteCrops($path, array $cuts = [])
 	{
-		$file = File::init();
+		$file = File::manager();
 
 		$copy = $this->post->param('copy');
 
@@ -172,7 +172,7 @@ class Storage extends Service
 	private function _upload($prefix, $dir, $dir2, array $size = [], array $types = [])
 	{
 
-		$file = File::init();
+		$file = File::manager();
 		if (count($types) > 0) $file->type($types);
 		if (count($size) > 0) {
 
@@ -216,7 +216,7 @@ class Storage extends Service
 
 	private function _deleteFile($dir)
 	{
-		$file = File::init();
+		$file = File::manager();
 		$file = ($this->_ajax) ? $this->post->param("file") : $this->_input;
 		$response = $file->delete($dir, $file);
 
