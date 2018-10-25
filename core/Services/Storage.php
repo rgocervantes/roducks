@@ -237,7 +237,7 @@ class Storage extends Service
 		]);
 
 		$method = Helper::getCamelName($action, false);
-		$config = $this->config($class, $index, null);
+		$config = $this->getConfig($class, $index, null);
 
 		if (is_null($config)) {
 			$method = "invalid";
@@ -313,7 +313,7 @@ class Storage extends Service
 
 	public function getSize($name, $index)
 	{
-		$config = $this->config($name, "{$index}:size", null);
+		$config = $this->getConfig($name, "{$index}:size", null);
 		$json = (!is_null($config)) ? $config : [100,"KB"];
 
 		return JSON::encode($json);

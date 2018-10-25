@@ -85,7 +85,7 @@ class API extends Service
 
 	private function _getSecretKey()
 	{
-		$secret = $this->config('file:jwt', 'secret');
+		$secret = $this->getConfig('file:jwt', 'secret');
 
 		if (!is_array($secret)) {
 			return $secret;

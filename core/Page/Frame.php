@@ -255,18 +255,18 @@ abstract class Frame
 
 	/*
 
-		$this->config('global',"user:prefix", 1);
+		$this->getConfig('global',"user:prefix", 1);
 
-		$this->config('site', "user:prefix"], 1);
-		$this->config('site:test', "user:prefix"], 1);
+		$this->getConfig('site', "user:prefix"], 1);
+		$this->getConfig('site:test', "user:prefix"], 1);
 
-		$this->config('module', "user:prefix"], 1);
-		$this->config('module:blog', "user:prefix"], 1);
+		$this->getConfig('module', "user:prefix"], 1);
+		$this->getConfig('module:blog', "user:prefix"], 1);
 
-		$this->config('admin:users', "user:prefix"], 1);
+		$this->getConfig('admin:users', "user:prefix"], 1);
 
 	*/
-	protected function config($tag, $var = "", $value = "")
+	protected function getConfig($tag, $var = "", $value = "")
 	{
 
 		$name = "";
