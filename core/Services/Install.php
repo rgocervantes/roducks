@@ -41,7 +41,15 @@ class Install extends Service
 
   }
 
-  public function configLocal($data){
+  public function goLive()
+  {
+    $hash = Hash::getToken();
+    $hash = substr($hash, 0, 32);
+    File::create(Path::getData(), self::LOCK, $hash);
+  }
+
+  public function configLocal($data)
+  {
 
     $find_url_in_db = (isset($data['site']['find_url_in_db'])) ? 'true' : 'false';
     $allow_subscribers_register = (isset($data['site']['allow_subscribers_register'])) ? 'true' : 'false';
@@ -113,9 +121,6 @@ EOT;
   {
 
     $this->post->required();
-
-    $hash = Hash::getToken();
-		$hash = substr($hash, 0, 32);
     $data = $this->post->data();
 
 $database = <<< EOT
@@ -143,7 +148,7 @@ EOT;
 
     $this->configLocal($data);
     File::create(Path::get(DIR_APP_CONFIG), 'database.local.inc', $database);
-		File::create(Path::getData(), self::LOCK, $hash);
+		$this->goLive();
 
     parent::output();
   }

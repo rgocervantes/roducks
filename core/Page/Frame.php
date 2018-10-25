@@ -577,12 +577,14 @@ abstract class Frame
 		/* ------------------------------------*/
 		/* 		DISPATCH URL
 		/* ------------------------------------*/
-		$this->_urlDispatcher();
+		if (!Environment::inCLI()) {
+			$this->_urlDispatcher();
+		}
 
 		/* ------------------------------------*/
 		/* 		INITIALIZE VARS
 		/* ------------------------------------*/
-		$url = URL::getParams();
+		$url = (!Environment::inCLI()) ? URL::getParams() : [];
 		$tag = (isset($url[0])) ? $url[0] : "";
 
 		if ($this->_pageType == 'PAGE' || Helper::isDispatch($tag))

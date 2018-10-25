@@ -670,7 +670,7 @@ class Core
 	static function loadPage($path, $page, $action, array $urlParam = [], array $params = [], $return = false, array $url = [])
 	{
 
-		$browserUrl = URL::getParams();
+		$browserUrl = (!Environment::inCLI()) ? URL::getParams() : ['none'];
 		$loadCoreClass = false;
 		$autoload = true;
 		$isBlock = false;
@@ -994,11 +994,20 @@ class Core
 
 	static function install()
 	{
+
+		$db = file_exists(Path::get(DIR_APP_CONFIG . 'database.local' . FILE_INC));
+		$conf = file_exists(Path::get(DIR_APP_CONFIG . 'config.local' . FILE_INC));
+
+		if (Environment::inPro()) {
+			$db = false;
+			$conf = false;
+		}
+
 		if (
 			!Helper::isUrlDispatch() &&
 			!file_exists(Path::getData('install.lock')) &&
-			!file_exists(Path::get(DIR_APP_CONFIG . 'database.local' . FILE_INC)) &&
-			!file_exists(Path::get(DIR_APP_CONFIG . 'config.local' . FILE_INC))
+			!$db &&
+			!$conf
 		) {
 			self::loadPage('Roducks/Modules/All/', 'Install/Page/Install', 'run');
 			exit;
