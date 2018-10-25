@@ -37,30 +37,37 @@ namespace Roducks\Libs\Files;
 
 final class File
 {
+	const TYPE_PLAIN = 'text/plain';
+	const TYPE_CSV = 'text/csv';
+	const TYPE_GIF = 'image/gif';
+	const TYPE_JPEG = 'image/jpeg';
+	const TYPE_PNG = 'image/png';
+	const TYPE_MP3 = 'audio/mp3';
+	const TYPE_MPEG = 'video/mpeg';
+	const TYPE_QUICKTIME = 'video/quicktime';
+	const TYPE_ZIP = 'application/zip';
+	const TYPE_PDF = 'application/pdf';
+	const TYPE_XML = 'application/xml';
+	const TYPE_JSON = 'application/json';
+	const TYPE_OTHER = 'application/octet-stream';
+	const TYPE_XLS = 'application/vnd.ms-excel';
+	const TYPE_PPT = 'application/vnd.ms-powerpoint';
+	const TYPE_WORD = 'application/msword';
+	const TYPE_RAR = 'application/x-rar-compressed';
+	const TYPE_TAR = 'application/x-tar';
 
-/*
-|-------------------------------|
-|		PRIVATE
-|-------------------------------|
-*/
+	/*
+	|-------------------------------|
+	|		PRIVATE
+	|-------------------------------|
+	*/
+
 	private $_limit = 1024; // 1 MB by default
 	private $_success = false;
 	private $_message = "Ok.";
 	private $_filename = "";
-	private $_ext = [
-			'text/plain',
-			'image/gif',
-			'image/jpeg',
-			'image/jpg',
-			'image/png',
-			'audio/mpeg',
-			'audio/mp3',
-			'video/quicktime',
-			'video/mpeg',
-			'application/zip',
-			'application/pdf',
-			'application/octet-stream'
-		];
+	private $_rename = null;
+	private $_ext = [];
 
 	private function _getSize($f)
 	{
@@ -77,11 +84,11 @@ final class File
 		return $_FILES[$file][$attr];
 	}
 
-/*
-|-------------------------------|
-|		STATIC
-|-------------------------------|
-*/
+	/*
+	|-------------------------------|
+	|		STATIC
+	|-------------------------------|
+	*/
 
 	static function manager($file = null)
 	{
@@ -179,12 +186,11 @@ final class File
 		self::create($path, preg_replace('/^(.+)\.json$/', '$1', $name) . ".json", $data);
 	}
 
-/*
-|-------------------------------|
-|		PUBLIC
-|-------------------------------|
-*/
-
+	/*
+	|-------------------------------|
+	|		PUBLIC
+	|-------------------------------|
+	*/
 	public function __construct($file = null)
 	{
 		$this->_name = $file;
@@ -193,22 +199,30 @@ final class File
 	public function type($arr)
 	{
 		$this->_ext = $arr;
+		return $this;
 	}
 
 	public function kb($n)
 	{
 		$this->_setSize($n);
+		return $this;
 	}
 
 	public function mb($n)
 	{
 		$cal = ceil($n * 1024);
 		$this->_setSize($cal);
+		return $this;
 	}
 
 	public function onSuccess()
 	{
 		return $this->_success;
+	}
+
+	public function onError()
+	{
+		return !$this->_success;
 	}
 
 	public function getMessage()
@@ -235,6 +249,7 @@ final class File
 	public function upload($path, $file = null, $rename = null)
 	{
 
+		$rename = (is_null($rename)) ? $this->_rename : $rename;
 		$file = (is_null($file)) ? $this->_name : $file;
 
 		if (is_null($file)) {
@@ -250,7 +265,7 @@ final class File
 			if ($this->_getSize($file) <= $this->_limit) {
 
 				// Allowed type
-				if (in_array($this->_getAttribute($file,'type'), $this->_ext)) {
+				if (in_array($this->_getAttribute($file,'type'), $this->_ext) || empty($this->_ext)) {
 					$this->_filename = (!is_null($rename)) ? $rename . preg_replace('/^.+(\.\w{3,4})$/', '$1', $this->_filename) : $this->_filename;
 
 					if (move_uploaded_file($this->_getAttribute($file,'tmp_name'), $path . $this->_filename)) {
@@ -276,11 +291,12 @@ final class File
 			$code = 4;
 		}
 
-		return ['success' => $this->_success,
-				'message' => $this->_message,
-				'code' => $code,
-				'file' => $this->_filename
-				];
+		return [
+			'success' => $this->_success,
+			'message' => $this->_message,
+			'code' => $code,
+			'file' => $this->_filename
+		];
 
 	}
 
