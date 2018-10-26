@@ -84,7 +84,7 @@ class Error
 
 		if (!empty($error)) {
 			$markup .= '<h2 style="margin:0">Error Message:</h2>';
-			$markup .= '<div style="background:#24272e; font-family:monospace; font-size:16px; padding:10px; color: #c0dfdf; margin: 10px 0; "><pre style="
+			$markup .= '<div style="background:#123346; font-family:monospace; font-size:16px; padding:10px; color: #c0dfdf; margin: 10px 0; "><pre style="
     background: none;
     color: #fff;
     border: none;
@@ -200,7 +200,7 @@ class Error
 		$error .= "Correct:<br><br>";
 		$error .= "<a href=\"{$correctUrl}\" style=\"color: #bcd92e; text-decoration:none;\">{$correctUrl}</a><br>";
 		$error .= "^<br>";
-		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Click on this link</span><br><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#003c5f; border:solid 1px #366986; padding:4px;\">Click on this link</span><br><br>";
 
 		if (isset($params[0]) && $params[0] == '_page' && file_exists($factory)) {
 			self::debug("Can't dispatch URL",__LINE__, __FILE__, $pagePath.$page.FILE_EXT, $error);
@@ -219,7 +219,7 @@ class Error
 		$error .= "{<br>";
 		$error .= "&nbsp;&nbsp;<span style=\"color:#3bde9a; \">protected</span> <span style=\"color:#FF9800;\">\$_dispatchUrl</span> = <span style=\"color:#bcd92e;\">true</span>;<br>";
 		$error .= "&nbsp;&nbsp;^<br>";
-		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this property is defined.</span><br>...";
+		$error .= "<span style=\"color:#fff4d1; background:#003c5f; border:solid 1px #366986; padding:4px;\">Make sure this property is defined.</span><br>...";
 
 		self::debug($title, $line, $path, $file, $error);
 	}
@@ -241,7 +241,7 @@ class Error
 			$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3bde9a; \">{$visibility}</span> <span style=\"color:#bcd92e; \">function</span> <span style=\"color:#00BCD4;\">$method()</span><br>";
 			$error .= "&nbsp;&nbsp;&nbsp;{<br>";
 			$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
-			$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">{$alert}</span><br>";
+			$error .= "<span style=\"color:#fff4d1; background:#003c5f; border:solid 1px #366986; padding:4px;\">{$alert}</span><br>";
 			$error .= "&nbsp;&nbsp;&nbsp;&nbsp;...<br>";
 			$error .= "&nbsp;&nbsp;&nbsp;}<br>";
 			$error .= "}<br>";
@@ -264,7 +264,7 @@ class Error
 		$error .= "{<br>";
 		$error .= "&nbsp;&nbsp;<span style=\"color:#3bde9a; \">var</span> <span style=\"color:#FF9800;\">\${$param};</span><br>";
 		$error .= "&nbsp;&nbsp;^<br>";
-		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this property is defined.</span><br>...";
+		$error .= "<span style=\"color:#fff4d1; background:#003c5f; border:solid 1px #366986; padding:4px;\">Make sure this property is defined.</span><br>...";
 
 		self::debug($title, $line, $path, $file, $error);
 	}
@@ -281,7 +281,7 @@ class Error
 		$error .= "<span style=\"color:#bcd92e;\">class</span> <span style=\"color:#00BCD4;\">{$class}</span> <span style=\"color:#bc99e0;\">extends</span> <span style=\"color:#bcd92e;\">{$extend}</span><br>";
 		$error .= "{<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
-		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this class is defined.</span><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#003c5f; border:solid 1px #366986; padding:4px;\">Make sure this class is defined.</span><br>";
 		$error .= " ... <br>";
 		$error .= "}<br>";
 
@@ -305,7 +305,7 @@ class Error
 		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3bde9a; \">public</span> <span style=\"color:#bcd92e; \">function</span> <span style=\"color:#00BCD4;\">$method()</span><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;{<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
-		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">{$alert}</span><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#003c5f; border:solid 1px #366986; padding:4px;\">{$alert}</span><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;...<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;}<br>";
 		$error .= "}<br>";
@@ -326,7 +326,7 @@ class Error
 		$error .= "&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$subdomain}'</span> <span style=\"color:#00BCD4;\">=></span> [<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'site'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#bc99e0;\">'{$site}'</span>,<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
-		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this folder exists in: <span style=\"color:#bcd92e; \">{$dir}</span></span><br><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#003c5f; border:solid 1px #366986; padding:4px;\">Make sure this folder exists in: <span style=\"color:#bcd92e; \">{$dir}</span></span><br><br>";
 		$error .= "&nbsp;&nbsp;],<br>";
 		$error .= "...<br>";
 		$error .= "];";
@@ -341,7 +341,7 @@ class Error
 		$error .= "...<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$module}'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#bcd92e;\">true</span><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
-		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure it is defined.</span><br><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#003c5f; border:solid 1px #366986; padding:4px;\">Make sure it is defined.</span><br><br>";
 		$error .= "...<br>";
 		$error .= "];<br>";
 
@@ -357,7 +357,7 @@ class Error
 		$error .= "...<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#3bde9a; \">Router</span><span style=\"color:#00BCD4;\">::</span><span style=\"color:#bc99e0; \">get</span>(<span style=\"color:#e2b75b; \">\"/\"</span><span style=\"color:#00BCD4;\">,</span> <span style=\"color:#3bde9a; \">Dispatch</span><span style=\"color:#00BCD4;\">::</span><span style=\"color:#bc99e0; \">page</span>(<span style=\"color:#e2b75b; \">\"home\"</span>,<span style=\"color:#e2b75b; \">\"index\"</span>));<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#00BCD4;\">^</span><br>";
-		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure to add a 'slash' as default page.</span><br><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#003c5f; border:solid 1px #366986; padding:4px;\">Make sure to add a 'slash' as default page.</span><br><br>";
 		$error .= "...<br>";
 		$error .= "});<br>";
 
@@ -372,7 +372,7 @@ class Error
 		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$url}'</span> <span style=\"color:#00BCD4;\">=></span> [<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'dispatch'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#3bde9a; \">Dispatch</span><span style=\"color:#00BCD4;\">::</span><span style=\"color:#bc99e0; \">page</span>(<span style=\"color:#e2b75b; \">\"home\"</span>,<span style=\"color:#e2b75b; \">\"index\"</span>)<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#00BCD4;\">^</span><br>";
-		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure this index is defined.</span><br><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#003c5f; border:solid 1px #366986; padding:4px;\">Make sure this index is defined.</span><br><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;],<br>";
 		$error .= "...<br>";
 		$error .= "];<br>";
@@ -387,7 +387,7 @@ class Error
 		$error .= "...<br>";
 		$error .= "&nbsp;&nbsp;&nbsp;<span style=\"color:#e2b75b; \">'{$key}'</span> <span style=\"color:#00BCD4;\">=></span> <span style=\"color:#e2b75b; \">'{$value}'</span><br>";
 		$error .= "&nbsp;&nbsp;&nbsp;&nbsp;^<br>";
-		$error .= "<span style=\"color:#fff4d1; background:#0d4547; border:solid 1px #1b6364; padding:4px;\">Make sure it is defined.</span><br><br>";
+		$error .= "<span style=\"color:#fff4d1; background:#003c5f; border:solid 1px #366986; padding:4px;\">Make sure it is defined.</span><br><br>";
 		$error .= "...<br>";
 		$error .= "];<br>";
 
