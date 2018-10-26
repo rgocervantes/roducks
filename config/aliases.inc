@@ -35,6 +35,7 @@ return [
 	'Login' 					=> 'Roducks\\Framework\\Login',
 	'Router' 					=> 'Roducks\\Framework\\Router',
 	'Setup' 					=> 'Roducks\\Framework\\Setup',
+	'Event' 					=> 'Roducks\\Framework\\Event',
 	'Crypt\\Hash' 		=> 'Roducks\\Framework\\Hash',
 	'API' 						=> 'Roducks\\API\\API',
 	/*
