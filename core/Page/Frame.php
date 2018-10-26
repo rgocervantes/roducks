@@ -63,6 +63,7 @@ abstract class Frame
 		if ($class == Helper::PAGE_NOT_FOUND
 			|| $this->getParentClassName() == '\Roducks\Page\HelperPage'
 			|| $this->_pageType == 'DATA'
+			|| $this->_pageType == 'EVENT'
 			|| ($this->_pageType == 'BLOCK' && $url[0] == '_page')
 		) {
 			return;

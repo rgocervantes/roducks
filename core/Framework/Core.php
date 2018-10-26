@@ -772,7 +772,7 @@ class Core
 
 		} else {
 
-			if (Helper::isService($page)) {
+			if (Helper::isService($page) || Helper::isEvent($page)) {
 				$pageObj['url_dispatcher'] = false;
 			}
 

@@ -44,6 +44,7 @@ class Helper
 	const REGEXP_IS_PAGE = '#Page#';
 	const REGEXP_IS_BLOCK = '#Blocks#';
 	const REGEXP_IS_XML = '#XML#';
+	const REGEXP_IS_EVENT = '#Events#';
 	const REGEXP_IS_FACTORY = '#Factory#';
 	const REGEXP_PATH = '/^([a-zA-Z_\/]+\/)(\w+)$/';
 
@@ -115,6 +116,11 @@ class Helper
 	static function isService($str)
 	{
 		return self::regexp(self::REGEXP_IS_SERVICE, $str);
+	}
+
+	static function isEvent($str)
+	{
+		return self::regexp(self::REGEXP_IS_EVENT, $str);
 	}
 
 	static function isApi($str)
