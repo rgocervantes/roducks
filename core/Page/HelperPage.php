@@ -31,9 +31,10 @@ class HelperPage extends Frame
 		$obj = new $class([
 				'className' 	=> $className,
 				'filePath'		=> "",
-				'fileName' 		=> "", 
+				'fileName' 		=> "",
 				'urlParam'		=> "",
-				'method'		=> ""
+				'method'		=> "",
+				'url_dispatcher' => ""
 		]);
 
 		return $obj;

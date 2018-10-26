@@ -560,7 +560,8 @@ abstract class Frame
 				'filePath'		=> "",
 				'fileName' 		=> "",
 				'urlParam'		=> "",
-				'method'		=> "",
+				'method'			=> "",
+				'url_dispatcher' => ""
 			];
 		}
 
@@ -574,19 +575,17 @@ abstract class Frame
 		$this->pageObj->urlParam = $settings['urlParam'];
 		$this->pageObj->method = $settings['method'];
 
-		$className = Helper::getSlash($this->pageObj->className);
-
 		/* ------------------------------------*/
 		/* 		DISPATCH URL
 		/* ------------------------------------*/
-		if (!Helper::isService($className)) {
+		if (!Environment::inCLI() && $settings['url_dispatcher']) {
 			$this->_urlDispatcher();
 		}
 
 		/* ------------------------------------*/
 		/* 		INITIALIZE VARS
 		/* ------------------------------------*/
-		$url = (!Helper::isService($className)) ? URL::getParams() : [];
+		$url = (!Environment::inCLI() && $settings['url_dispatcher']) ? URL::getParams() : [];
 		$tag = (isset($url[0])) ? $url[0] : "";
 
 		if ($this->_pageType == 'PAGE' || Helper::isDispatch($tag))

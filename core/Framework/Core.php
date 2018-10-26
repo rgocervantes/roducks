@@ -660,7 +660,8 @@ class Core
 				'params' 		=> $params,
 				'filePath'		=> $filePath,
 				'fileName' 		=> $filePath . $fileName . FILE_EXT,
-				'urlParam'		=> $urlParam
+				'urlParam'		=> $urlParam,
+				'url_dispatcher' => true
 		];
 
 		return [$method, $page, $className, $class, $filePath, $pageObj];
@@ -742,21 +743,21 @@ class Core
 			if (Helper::isBlock($class)) {
 
 				$path = $pageObj['fileName'];
-			    $class = Helper::getBlockClassName($class);
-			    $isBlock = true;
-			    list($realPath, $fileExists) = \App::getRealPath($path);
+			  $class = Helper::getBlockClassName($class);
+			  $isBlock = true;
+			  list($realPath, $fileExists) = \App::getRealPath($path);
 
-			    if ($fileExists) {
+				if ($fileExists) {
 
 					include_once $realPath;
 
 					if (!class_exists($class)) {
-						$autoload = false;
+					$autoload = false;
 					}
-			    } else {
-			    	$autoload = false;
-			    	Error::debug(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $path);
-			    }
+				} else {
+					$autoload = false;
+					Error::debug(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $path);
+				}
 
 			}
 
@@ -771,6 +772,10 @@ class Core
 
 		} else {
 
+			if (Helper::isService($page)) {
+				$pageObj['url_dispatcher'] = false;
+			}
+
 			// Call API|Service|Event|XML
 			$obj = new $class($pageObj);
 
@@ -779,13 +784,11 @@ class Core
 				$obj->verifyToken();
 			}
 
-		    if (Helper::isService($page)) {
-				if (Helper::regexp('/^get/', $method)) {
-					if (method_exists($class, $method)) {
-						$obj->_disableServiceUrl($method);
-					}
-		   		}
-		    }
+	    if (Helper::isService($page)) {
+				if (Helper::regexp('/^get/', $method) && method_exists($class, $method)) {
+					$obj->_disableServiceUrl($method);
+	   		}
+	    }
 
 		}
 
