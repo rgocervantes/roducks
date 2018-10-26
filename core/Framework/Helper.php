@@ -38,7 +38,7 @@ class Helper
 	const REGEXP_GET_MODULE = '/^([a-zA-Z\-]+)\/.+$/';
 	const REGEXP_IS_URL_DISPATCH = '/^_/';
 	const REGEXP_IS_BLOCK_DISPATCHED = '/^_block/';
-	const REGEXP_IS_SERVICE = '/^Services\/[a-zA-Z_]+$/';
+	const REGEXP_IS_SERVICE = '/Services\/[a-zA-Z_]+$/';
 	const REGEXP_IS_API = '/^API\/[a-zA-Z_]+$/';
 	const REGEXP_IS_JSON = '#JSON#';
 	const REGEXP_IS_PAGE = '#Page#';
@@ -233,6 +233,11 @@ class Helper
 	static function getInvertedSlash($str)
 	{
 		return str_replace('/', '\\', $str);
+	}
+
+	static function getSlash($str)
+	{
+		return str_replace('\\','/', $str);
 	}
 
 	static function getTable($class)

@@ -574,17 +574,19 @@ abstract class Frame
 		$this->pageObj->urlParam = $settings['urlParam'];
 		$this->pageObj->method = $settings['method'];
 
+		$className = Helper::getSlash($this->pageObj->className);
+
 		/* ------------------------------------*/
 		/* 		DISPATCH URL
 		/* ------------------------------------*/
-		if (!Environment::inCLI()) {
+		if (!Helper::isService($className)) {
 			$this->_urlDispatcher();
 		}
 
 		/* ------------------------------------*/
 		/* 		INITIALIZE VARS
 		/* ------------------------------------*/
-		$url = (!Environment::inCLI()) ? URL::getParams() : [];
+		$url = (!Helper::isService($className)) ? URL::getParams() : [];
 		$tag = (isset($url[0])) ? $url[0] : "";
 
 		if ($this->_pageType == 'PAGE' || Helper::isDispatch($tag))
