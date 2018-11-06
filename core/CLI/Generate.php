@@ -467,12 +467,40 @@ EOT;
   private function _fileModel($path, $folder, $name, $type)
   {
     $ns = Helper::getInvertedSlash("DB/Models/{$folder}");
+    $comments = '';
 
 switch ($type) {
   case 'Model':
 
+$comments = <<< EOT
+/**
+ *
+ *  Map the table \$fields with their data type:
+ *
+ *
+ *  Model::TYPE_INTEGER
+ *  Model::TYPE_DECIMAL
+ *  Model::TYPE_BOOL
+ *  Model::TYPE_VARCHAR
+ *  Model::TYPE_TEXT
+ *  Model::TYPE_BLOB
+ *  Model::TYPE_DATETIME
+ *  Model::TYPE_DATE
+ *  Model::TYPE_TIME
+ *
+ *  ----------------
+ *  @example:
+ *  ----------------
+ *
+ *  var \$fields = [
+ *    'field_name' => Model::TYPE_INTEGER
+ *  ];
+ */
+EOT;
+
 $body = <<< EOT
 
+  //var \$table = "name";
   var \$id = "id";
   var \$fields = [
 
@@ -498,7 +526,7 @@ EOT;
 
 $file = <<< EOT
 <?php
-
+{$comments}
 namespace {$ns};
 
 use $type;
