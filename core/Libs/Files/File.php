@@ -21,12 +21,15 @@
 	USAGE:
 
 	$file = File::manager();
-	$file->type(['image/jpg','image/jpeg','image/png']);
-	$file->kb(150);
-	$file->upload(DIR_UPLOAD_USERS, "profile_user", "my_custom_name");
+	->type([File::TYPE_JPG',File::TYPE_PNG]);
+	->kb(150);
+	->path(Path::getData())
+	->input($input)
+	->name('profile')
+	->upload();
 
 	if ($file->onSuccess()) {
-		echo $file->getFilename();
+		echo $file->getName();
 	} else {
 		echo $file->getMessage();
 	}
@@ -40,7 +43,7 @@ final class File
 	const TYPE_PLAIN = 'text/plain';
 	const TYPE_CSV = 'text/csv';
 	const TYPE_GIF = 'image/gif';
-	const TYPE_JPEG = 'image/jpeg';
+	const TYPE_JPG = 'image/jpeg';
 	const TYPE_PNG = 'image/png';
 	const TYPE_MP3 = 'audio/mp3';
 	const TYPE_MPEG = 'video/mpeg';
@@ -65,23 +68,25 @@ final class File
 	private $_limit = 1024; // 1 MB by default
 	private $_success = false;
 	private $_message = "Ok.";
-	private $_filename = "";
+	private $_name = "";
 	private $_rename = null;
+	private $_path = null;
+	private $_input = null;
 	private $_ext = [];
+
+	private function _getAttribute($file, $attr)
+	{
+		return $_FILES[$file][$attr];
+	}
 
 	private function _getSize($f)
 	{
-		return ceil($this->_getAttribute($f,'size') / 1024);
+		return ceil($this->_getAttribute($f, 'size') / 1024);
 	}
 
 	private function _setSize($n)
 	{
 		$this->_limit = $n;
-	}
-
-	private function _getAttribute($file, $attr)
-	{
-		return $_FILES[$file][$attr];
 	}
 
 	/*
@@ -106,7 +111,10 @@ final class File
 	 */
 	static function remove($filename)
 	{
-		return self::manager()->delete($filename, null);
+		return self::manager()
+		->path($filename)
+		->name('')
+		->delete();
 	}
 
 	/**
@@ -230,9 +238,14 @@ final class File
 		return $this->_message;
 	}
 
-	public function getFilename()
+	public function getCode()
 	{
-		return $this->_filename;
+		return $this->_code;
+	}
+
+	public function getName()
+	{
+		return $this->_name;
 	}
 
 	public function getTmp($file)
@@ -246,104 +259,121 @@ final class File
 		return file_get_contents($this->getTmp($file));
 	}
 
-	public function upload($path, $file = null, $rename = null)
+	public function path($dir)
+	{
+		$this->_path = $dir;
+		return $this;
+	}
+
+	public function input($name)
+	{
+		$this->_input = $name;
+		return $this;
+	}
+
+	public function name($name)
+	{
+		$this->_rename = $name;
+		return $this;
+	}
+
+	public function upload()
 	{
 
-		$rename = (is_null($rename)) ? $this->_rename : $rename;
-		$file = (is_null($file)) ? $this->_name : $file;
+	  $path = $this->_path;
+	  $input = $this->_input;
+		$rename = $this->_rename;
 
-		if (is_null($file)) {
-			$file = 'file_'.time();
-		}
+	  if (is_null($rename)) {
+	    $rename = 'file_'.time();
+	  }
 
-		$this->_filename = $this->_getAttribute($file,'name');
+	  $this->_name = $this->_getAttribute($input, 'name');
 
-		// if upload is successed
-		if (!empty($this->_filename) && $this->_getAttribute($file,'error') == 0) {
+	  // if upload is successed
+	  if (!empty($this->_name) && $this->_getAttribute($input, 'error') == 0) {
 
-			// Allowed size
-			if ($this->_getSize($file) <= $this->_limit) {
+	    // Allowed size
+	    if ($this->_getSize($input) <= $this->_limit) {
 
-				// Allowed type
-				if (in_array($this->_getAttribute($file,'type'), $this->_ext) || empty($this->_ext)) {
-					$this->_filename = (!is_null($rename)) ? $rename . preg_replace('/^.+(\.\w{3,4})$/', '$1', $this->_filename) : $this->_filename;
+	      // Allowed type
+	      if (in_array($this->_getAttribute($input, 'type'), $this->_ext) || empty($this->_ext)) {
+	        $this->_name = $rename . preg_replace('/^.+(\.\w{3,4})$/', '$1', $this->_name);
 
-					if (move_uploaded_file($this->_getAttribute($file,'tmp_name'), $path . $this->_filename)) {
-						$this->_success = true;
-						$this->_message = "File was uploaded successfully.";
-						$code = 1;
-					} else {
-						$this->_message = "It couln't be moved file to destination.";
-						$code = 5;
-					}
+	        if (move_uploaded_file($this->_getAttribute($input, 'tmp_name'), $path . $this->_name)) {
+	          $this->_success = true;
+	          $this->_message = "File was uploaded successfully.";
+	          $this->_code = 1;
+	        } else {
+	          $this->_message = "It couln't be moved file to destination.";
+	          $this->_code = 5;
+	        }
 
-				} else {
-					$this->_message = "Type: " . $this->_getAttribute($file,'type') . " is not allowed.";
-					$code = 2;
-				}
-			} else {
-				$this->_message = "File size is too heavy: " . $this->_getSize($file) . " KB.";
-				$code = 3;
-			}
+	      } else {
+	        $this->_message = "Type: " . $this->_getAttribute($input, 'type') . " is not allowed.";
+	        $this->_code = 2;
+	      }
+	    } else {
+	      $this->_message = "File size is too heavy: " . $this->_getSize($input) . " KB.";
+	      $this->_code = 3;
+	    }
 
-		} else {
-			$this->_message = "There was an error:  #" . $this->_getAttribute($file,'error');
-			$code = 4;
-		}
+	  } else {
+	    $this->_message = "There was an error:  #" . $this->_getAttribute($input, 'error');
+	    $this->_code = 4;
+	  }
 
-		return [
-			'success' => $this->_success,
-			'message' => $this->_message,
-			'code' => $code,
-			'file' => $this->_filename
-		];
+	  return $this;
 
 	}
 
-	public function update($path, $file)
+	public function update()
 	{
 
-		$filename = $this->_getAttribute($file,'name');
-		$copy = $_POST[$file . '_copy'];
+		$filename = $this->_getAttribute($this->_input, 'name');
+		$copy = $_POST[$input . '_copy'];
 
 		if (!empty($filename)) {
 			if (empty($copy)) {
-				$this->upload($path, $file);
+				$this->upload();
 			} else {
 				if ($copy != $filename)
 				{
-					$this->upload($path, $file);
-					$this->delete($path, $copy);
+					$this->upload();
+					$this
+					->name($copy)
+					->delete();
 				}
 			}
 		}
 	}
 
-	public function delete($path, $file)
+	public function delete()
 	{
 
-		$filename = (!is_null($file)) ? $path . $file : $path;
-		$remove = (is_null($file)) ? false : empty($file);
+		$path = $this->_path;
+	  $input = $this->_input;
+		$filename = $path . $input;
 
-		if (file_exists($filename) && !$remove) {
+		if (file_exists($filename)) {
 			return @unlink($filename);
 		}
 	}
 
-	public function info($file, $index = null)
+	public function info($input, $index = null)
 	{
 
-			$details = [
-					'name' => $this->_getAttribute($file,'name'),
-					'type' => $this->_getAttribute($file,'type'),
-					'size' => $this->_getSize($file),
-					'tmp_name' => $this->_getAttribute($file,'tmp_name'),
-					'error' => $this->_getAttribute($file,'error')
-			];
+		$details = [
+			'name' => $this->_getAttribute($input, 'name'),
+			'type' => $this->_getAttribute($input, 'type'),
+			'size' => $this->_getSize($input),
+			'tmp_name' => $this->_getAttribute($input, 'tmp_name'),
+			'error' => $this->_getAttribute($input, 'error')
+		];
 
-			if (!is_null($index)) {
-				return (isset($details[$index])) ? $details[$index] : null;
-			}
+		if (!is_null($index)) {
+			return (isset($details[$index])) ? $details[$index] : null;
+		}
 
 		return $details;
 
