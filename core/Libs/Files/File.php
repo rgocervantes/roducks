@@ -20,7 +20,7 @@
 /*
 	USAGE:
 
-	$file = File::manager();
+	$file = File::system();
 	->type([File::TYPE_JPG',File::TYPE_PNG]);
 	->kb(150);
 	->path(Path::getData())
@@ -95,7 +95,7 @@ final class File
 	|-------------------------------|
 	*/
 
-	static function manager($file = null)
+	static function system($file = null)
 	{
 		$file = new File($file);
 		return $file;
@@ -111,7 +111,7 @@ final class File
 	 */
 	static function remove($filename)
 	{
-		return self::manager()
+		return self::system()
 		->path($filename)
 		->name('')
 		->delete();
@@ -248,15 +248,34 @@ final class File
 		return $this->_name;
 	}
 
-	public function getTmp($file)
+	public function getTmp()
 	{
-		$this->_getAttribute($file,'tmp_name');
+		return $this->_getAttribute($this->_input, 'tmp_name');
 	}
 
 	public function getContent($name = null)
 	{
-		$file = (is_null($name)) ? $this->_name : $name;
-		return file_get_contents($this->getTmp($file));
+		return file_get_contents($this->getTmp());
+	}
+
+	public function getDetails($index = null)
+	{
+
+		$input = $this->_input;
+		$details = [
+			'name' => $this->_getAttribute($input, 'name'),
+			'type' => $this->_getAttribute($input, 'type'),
+			'size' => $this->_getSize($input),
+			'tmp_name' => $this->_getAttribute($input, 'tmp_name'),
+			'error' => $this->_getAttribute($input, 'error')
+		];
+
+		if (!is_null($index)) {
+			return (isset($details[$index])) ? $details[$index] : null;
+		}
+
+		return $details;
+
 	}
 
 	public function path($dir)
@@ -358,25 +377,6 @@ final class File
 		if (file_exists($filename)) {
 			return @unlink($filename);
 		}
-	}
-
-	public function info($input, $index = null)
-	{
-
-		$details = [
-			'name' => $this->_getAttribute($input, 'name'),
-			'type' => $this->_getAttribute($input, 'type'),
-			'size' => $this->_getSize($input),
-			'tmp_name' => $this->_getAttribute($input, 'tmp_name'),
-			'error' => $this->_getAttribute($input, 'error')
-		];
-
-		if (!is_null($index)) {
-			return (isset($details[$index])) ? $details[$index] : null;
-		}
-
-		return $details;
-
 	}
 
 }

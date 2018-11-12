@@ -78,14 +78,14 @@ class CSV
     return $str;
   }
 
-  static function init($name)
+  static function init($name = "")
   {
     return new CSV($name);
   }
 
-  public function __construct($name)
+  public function __construct($name = "")
   {
-    $this->_doc = self::_ext($name);
+    $this->_doc = (!empty($name)) ? self::_ext($name) : '';
   }
 
   public function path($path)
