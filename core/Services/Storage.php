@@ -129,15 +129,13 @@ class Storage extends Service
 	// delete old image when uploading a new one.
 	private function __deleteCrops($path, array $cuts = [])
 	{
-		$file = File::manager();
-
 		$copy = $this->post->param('copy');
 
 		if (!empty($copy)) :
-			$file->delete($path, $copy);
+			File::remove($path.$copy);
 			// delte all the crops
 			if (count($cuts) > 0) : foreach($cuts as $c) :
-				$file->delete($path, Path::getCropName($copy, $c));
+				File::remove($path.Path::getCropName($copy, $c));
 			endforeach; endif;
 		endif;
 	}
@@ -172,7 +170,7 @@ class Storage extends Service
 	private function _upload($prefix, $dir, $dir2, array $size = [], array $types = [])
 	{
 
-		$file = File::manager();
+		$file = File::system();
 		if (count($types) > 0) $file->type($types);
 		if (count($size) > 0) {
 
@@ -190,18 +188,22 @@ class Storage extends Service
 		Directory::make(Path::get(), $dir);
 
 		$filename = (!is_null($this->_fileName)) ? $this->_fileName : $prefix . Date::getCurrentDateTimeFlat();
-		$resp = $file->upload(Path::get($dir), $this->_input, $filename);
+		$file
+		->path(Path::get($dir))
+		->input($this->_input)
+		->name($filename)
+		->upload();
 
 		$data = [
-				'success' => $resp['success'],
-				'message' => $resp['message'],
-				'code' => $resp['code'],
-				'data' => [
-					'dir' => $dir2,
-					'file' => $resp['file'],
-					'path' => $dir2 . $resp['file']
-				]
-			];
+			'success' => $file->onSuccess(),
+			'message' => $file->getMessage(),
+			'code' => $file->getCode(),
+			'data' => [
+				'dir' => $dir2,
+				'file' => $file->getName(),
+				'path' => $dir2 . $file->getName()
+			]
+		];
 
 		if ($this->_ajax) {
 			$this->data($data);
@@ -216,9 +218,8 @@ class Storage extends Service
 
 	private function _deleteFile($dir)
 	{
-		$file = File::manager();
 		$file = ($this->_ajax) ? $this->post->param("file") : $this->_input;
-		$response = $file->delete($dir, $file);
+		$response = File::remove($dir.$file);
 
 		if ($this->_ajax) {
 			parent::output();

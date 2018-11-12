@@ -111,10 +111,9 @@ final class File
 	 */
 	static function remove($filename)
 	{
-		return self::system()
-		->path($filename)
-		->name('')
-		->delete();
+		if (self::exists($filename)) {
+			return @unlink($filename);
+		}
 	}
 
 	/**
@@ -350,18 +349,15 @@ final class File
 	{
 
 		$filename = $this->_getAttribute($this->_input, 'name');
-		$copy = $_POST[$input . '_copy'];
+		$copy = $_POST[$this->_input . '_copy'];
 
 		if (!empty($filename)) {
 			if (empty($copy)) {
 				$this->upload();
 			} else {
-				if ($copy != $filename)
-				{
+				if ($copy != $filename) {
 					$this->upload();
-					$this
-					->name($copy)
-					->delete();
+					self::remove($this->_path.$copy);
 				}
 			}
 		}
@@ -369,14 +365,7 @@ final class File
 
 	public function delete()
 	{
-
-		$path = $this->_path;
-	  $input = $this->_input;
-		$filename = $path . $input;
-
-		if (file_exists($filename)) {
-			return @unlink($filename);
-		}
+		return self::remove($this->_path.$this->_input);
 	}
 
 }
