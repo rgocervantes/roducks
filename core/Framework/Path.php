@@ -56,6 +56,10 @@ class Path
 	static function getCropName($src, $s)
 	{
 
+		if (!Helper::regexp('/\.\w{3,4}$/', $src)) {
+			return self::getIcon('unavailable.jpg');
+		}
+
 		$img = explode(".", $src);
 		$size = count($img);
 

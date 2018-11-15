@@ -1,10 +1,10 @@
 RewriteEngine on
 Options +FollowSymlinks
-Options All -Indexes 
+Options All -Indexes
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^static/images/(.+) static/uploads/images/$1
+RewriteRule ^static/(.+) static/uploads/$1
 RewriteRule ^public/(.+) assets/$1
 
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
