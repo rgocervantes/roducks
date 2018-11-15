@@ -29,10 +29,10 @@ class Service extends JSON
 	protected $_pageType = 'SERVICE';
 	var $rdks = 1;
 
-	static function init()
+	static function init($site = "")
 	{
 		$page = get_called_class();
-		return Core::loadService($page);
+		return Core::loadService($page, $site);
 	}
 
 	public function _disableServiceUrl($method)

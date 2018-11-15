@@ -244,10 +244,10 @@ class Core
 		return DIR_APP_LANGUAGES . $lang . FILE_INC;
 	}
 
-	static function getServicesPath($service = "")
+	static function getServicesPath($service = "", $site = "")
 	{
 
-		$path1 = self::getSitePath();
+		$path1 = self::getSitePath($site);
 		$path2 = self::getGlobalPath();
 		$path3 = DIR_CORE;
 		$path = $path3;
@@ -803,13 +803,13 @@ class Core
 
 	}
 
-	static function loadService($page)
+	static function loadService($page, $site = "")
 	{
 
 		$page = Helper::getClassName($page);
 		$page = DIR_SERVICES . Helper::getCamelName($page);
 
-		$servicePath = self::getServicesPath($page);
+		$servicePath = self::getServicesPath($page, $site);
 		$pagePath = $servicePath['path'];
 
 		return self::loadPage($pagePath, $page, "", array(),array(), true);
