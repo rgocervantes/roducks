@@ -52,6 +52,30 @@ class Storage extends Service
 		return LogData::init($id, $date);
 	}
 
+	static function makeDir($dir = "")
+	{
+		if (empty($dir)) {
+			return false;
+		}
+
+		return Directory::make(Path::getData(), $dir);
+	}
+
+	static function removeDir($dir = "", $rm = false)
+	{
+		if (empty($dir)) {
+			return false;
+		}
+
+		Directory::remove(Path::getData($dir));
+
+		if ($rm) {
+			list($root) = explode("/", $dir);
+			Directory::remove(Path::getData($root));
+		}
+
+	}
+
 	static function issetJSON($dir, $name)
 	{
 		$path = Path::getData($dir) . Helper::ext($name, 'json');
