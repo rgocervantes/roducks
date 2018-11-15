@@ -19,18 +19,27 @@
  *
  */
 
-if (!isset($argv) || php_sapi_name() != "cli") die("Unauthorized to access"); 
+if (!isset($argv) || php_sapi_name() != "cli") die("Unauthorized to access");
 
 /*
 |--------------------------------|
-|		 LOAD BOOTSTRAP			 |
+|		           ROOT
+|--------------------------------|
+*/
+require_once "./core/Framework/App.php";
+
+App::root(__DIR__);
+
+/*
+|--------------------------------|
+|		     LOAD BOOTSTRAP
 |--------------------------------|
 */
 require "./core/Framework/Bootstrap.php";
 
 /*
 |--------------------------------|
-|	     	 RUN CLI 			 |
+|	     	      RUN CLI
 |--------------------------------|
 */
 \Roducks\Framework\Core::CLI($argv);

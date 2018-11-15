@@ -18,9 +18,6 @@
  *
  */
 
-require "App.php";
-
-
 # Default file extensions
 App::define('FILE_EXT', ".php");
 App::define('FILE_INC', ".inc");

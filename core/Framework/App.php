@@ -33,24 +33,23 @@ class App
 		}
 	}
 
+	static function root($dir)
+	{
+		$root = str_replace('/public', '', $dir) . DIRECTORY_SEPARATOR;
+		self::define('RDKS_ROOT', $root);
+	}
+
 	static function text($name, $value)
 	{
 		self::define("TEXT_{$name}", $value);
 	}
 
-	static function getRealPath($path)
+	static function getRealPath($dir)
 	{
+		$path = RDKS_ROOT . $dir;
+	  $fileExists = file_exists($path);
 
-	    if (preg_match('/^core\/Framework/', $path)) {
-	        $path = str_replace('core/Framework/', '', $path);
-	        $fileExists = file_exists(__DIR__  . "/" . $path);
-	    } else {
-	    	$dir = preg_replace('/^(.+)core\/Framework$/', '$1', __DIR__);
-	        $path = $dir.$path;
-	        $fileExists = file_exists($path);
-	    }
-
-	    return [$path, $fileExists];
+		return [$path, $fileExists];
 	}
 
 	static function getRealFilePath($path)

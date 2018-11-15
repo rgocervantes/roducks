@@ -24,14 +24,21 @@
  *
  */
 
-namespace Roducks;
-
 /*
 |--------------------------------|
-|            RUN APP             |
+|		           ROOT
 |--------------------------------|
 */
-$app = __DIR__ . "/../core/Framework/Web.php";
+$dir = __DIR__;
+require_once $dir . "/../core/Framework/App.php";
+
+App::root($dir);
+/*
+|--------------------------------|
+|            RUN APP
+|--------------------------------|
+*/
+$app = RDKS_ROOT . "core/Framework/Web.php";
 
 if (file_exists($app)) {
 	require_once $app;
