@@ -40,7 +40,7 @@ final class View
 	/* ------------------------------------*/
 	private $_template = "";
 	private $_layout = "";
-	private $_view = "view";
+	private $_view = "";
 	private $_body = "";
 	private $_meta = "";
 	private $_data = [];
