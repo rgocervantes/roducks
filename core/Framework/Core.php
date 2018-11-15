@@ -915,7 +915,7 @@ class Core
 		$environment = [
 			'errors' => $dev,
 			'subdomain' => self::DEFAULT_SUBDOMAIN,
-			'site' => "Front",
+			'site' => "All",
 			'mode' => Environment::CLI,
 			'database' => $db_name
 		];
