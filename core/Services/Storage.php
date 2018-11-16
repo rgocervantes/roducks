@@ -76,6 +76,21 @@ class Storage extends Service
 
 	}
 
+	static function openDir($dir)
+	{
+		return Directory::open(Path::getData($dir));
+	}
+
+	static function cleanDir($dir, array $options)
+	{
+		Directory::clean(Path::getData($dir), $options);
+	}
+
+	static function moveDir($dir1, $dir2)
+	{
+		Directory::move(Path::getData($dir1), Path::getData($dir2));
+	}
+
 	static function issetJSON($dir, $name)
 	{
 		$path = Path::getData($dir) . Helper::ext($name, 'json');
