@@ -30,6 +30,7 @@ use Roducks\Data\Log as LogData;
 use Roducks\Libs\Files\Image;
 use Roducks\Libs\Files\File;
 use Roducks\Libs\Files\Directory;
+use Roducks\Libs\Files\Zip;
 use Roducks\Libs\Utils\Date;
 
 class Storage extends Service
@@ -52,6 +53,16 @@ class Storage extends Service
 		return LogData::init($id, $date);
 	}
 
+	static function moveFile($dir1, $dir2)
+	{
+		File::move(Path::getData(), $dir1, Path::getData(), $dir2);
+	}
+
+	static function removeFile($file)
+	{
+		File::remove(Path::getData($file));
+	}
+
 	static function makeDir($dir = "")
 	{
 		if (empty($dir)) {
@@ -61,18 +72,13 @@ class Storage extends Service
 		return Directory::make(Path::getData(), $dir);
 	}
 
-	static function removeDir($dir = "", $rm = false)
+	static function removeDir($dir = "")
 	{
 		if (empty($dir)) {
 			return false;
 		}
 
 		Directory::remove(Path::getData($dir));
-
-		if ($rm) {
-			list($root) = explode("/", $dir);
-			Directory::remove(Path::getData($root));
-		}
 
 	}
 
@@ -88,7 +94,29 @@ class Storage extends Service
 
 	static function moveDir($dir1, $dir2)
 	{
-		Directory::move(Path::getData($dir1), Path::getData($dir2));
+		Directory::move(Path::getData(), $dir1, Path::getData(), $dir2);
+	}
+
+	static function zipDir($dir_to_zip, $dir_destination, $name, array $exclude = [])
+	{
+
+		self::makeDir($dir_destination);
+
+		Directory::zip([
+			'path' => Path::getData($dir_to_zip),
+	    'exclude' => $exclude,
+	    'destination' => Path::getData($dir_destination),
+	    'filename' => $name // .zip
+		]);
+	}
+
+	static function unzipDir($file, $remove = false)
+	{
+		Zip::extract(Path::getData($file));
+
+		if ($remove) {
+			self::removeFile($file);
+		}
 	}
 
 	static function issetJSON($dir, $name)

@@ -217,20 +217,81 @@ class Directory
 	/**
 	 *	@example Directory::move(Path::getData(), "xml", Path::getData(), "content/xml");
 	*/
-	static function move($path1, $origin, $path2, $destination)
+	static function move($p1, $dir1, $p2, $dir2)
 	{
 
-		if ($origin != $destination) {
-			$origin = self::_getDir($origin);
-			$destination = self::_getDir($destination);
+		if ($dir1 == $dir2) {
+			return false;
+		}
 
-			self::make($path2, $destination);
-			$tree = self::_tree($path1, $origin);
+		$path1 = $p1.$dir1;
+		$path2 = $p2.$dir2;
 
-			foreach ($tree as $route => $files) {
-				foreach ($files as $file) {
-					File::move($path1, $route.$file, $path2, $destination.$route.$file);
+		self::make($p2, $dir2);
+
+		$folders1 = explode('/', $dir1);
+		$folders2 = explode('/', $dir2);
+
+		$path = "";
+		$rdirs = [];
+
+		if (file_exists($path1)) {
+
+			if (
+				(count($folders2) == 1) ||
+				(count($folders2) == 2 && empty($folders2[1]))
+			) {
+
+				$open = self::open($path1);
+				$path_destination = $p2.$folders2[0].DIRECTORY_SEPARATOR;
+
+				foreach ($open['files'] as $file) {
+					rename($path1.$file, $path_destination.$file);
 				}
+
+				foreach ($open['folders'] as $fold) {
+					self::moveDir($dir1.$fold, $dir2.$fold);
+				}
+
+			} else if (
+				(count($folders1) == 1) ||
+				(count($folders1) == 2 && empty($folders1[1]))
+			) {
+
+				$open = self::open($path1);
+
+				foreach ($open['files'] as $file) {
+					rename($path1.$file, $path2.$file);
+				}
+
+				foreach ($open['folders'] as $fold) {
+					if ($dir2 != $dir1.$fold) {
+						self::moveDir($dir1.$fold, $dir2.$fold);
+					}
+				}
+
+			} else {
+				rename($path1, $path2);
+			}
+
+		}
+
+		foreach ($folders1 as $folder) {
+
+			if (!empty($folder)) {
+				$path = $path.$folder.DIRECTORY_SEPARATOR;
+
+				if ($folder != $folders2[0]) {
+					$rdirs[] = $path;
+				}
+			}
+		}
+
+		$rmdirs = array_reverse($rdirs);
+
+		foreach ($rmdirs as $dir) {
+			if (self::isEmpty($p1.$dir)) {
+				self::remove($p1.$dir);
 			}
 		}
 
