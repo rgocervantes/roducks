@@ -301,9 +301,9 @@ class Directory
 	 * @example
 	 *
 	 *	Directory::zip([
-	 * 	 'path' => Path::getData(),
-	 *	 'exlude' => [Path::getData('zip/') => 1],
-	 *	 'destination' => Path::getData('zip/'),
+	 * 	 'folder' => Path::getData('uploads/'),
+	 *	 'exlude' => ['tmp' => 1],
+	 *	 'destination' => [Path::getData(), 'zip/'],
 	 *	 'filename' => 'rodrigo',
 	 * ]);
 	 */
@@ -312,7 +312,7 @@ class Directory
 		$exclude = (isset($obj['exclude'])) ? $obj['exclude'] : [];
 		$files = self::_tree($obj['path'], '', $exclude);
 
-		self::make($obj['destination']);
+		self::make($obj['destination'][0], $obj['destination'][1]);
 		Zip::create($obj['path'], $files, "{$obj['destination']}{$obj['filename']}.zip");
 	}
 

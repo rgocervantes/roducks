@@ -100,14 +100,13 @@ class Storage extends Service
 	static function zipDir($dir_to_zip, $dir_destination, $name, array $exclude = [])
 	{
 
-		self::makeDir($dir_destination);
-
 		Directory::zip([
-			'path' => Path::getData($dir_to_zip),
+			'folder' => Path::getData($dir_to_zip),
 	    'exclude' => $exclude,
-	    'destination' => Path::getData($dir_destination),
+	    'destination' => [Path::getData(), $dir_destination],
 	    'filename' => $name // .zip
 		]);
+
 	}
 
 	static function unzipDir($file, $remove = false)
