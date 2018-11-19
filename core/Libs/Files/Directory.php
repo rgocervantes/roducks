@@ -310,7 +310,7 @@ class Directory
 	static function zip($obj)
 	{
 		$exclude = (isset($obj['exclude'])) ? $obj['exclude'] : [];
-		$files = self::_tree($obj['path'], '', $exclude);
+		$files = self::_tree($obj['folder'], '', $exclude);
 
 		self::make($obj['destination'][0], $obj['destination'][1]);
 		Zip::create($obj['path'], $files, "{$obj['destination']}{$obj['filename']}.zip");
