@@ -313,7 +313,7 @@ class Directory
 		$files = self::_tree($obj['folder'], '', $exclude);
 
 		self::make($obj['destination'][0], $obj['destination'][1]);
-		Zip::create($obj['path'], $files, "{$obj['destination']}{$obj['filename']}.zip");
+		Zip::create($obj['folder'], $files, "{$obj['destination'][0]}{$obj['destination'][1]}{$obj['filename']}.zip");
 	}
 
 }
