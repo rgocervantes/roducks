@@ -338,6 +338,12 @@ class Core
 			$path = Helper::getBlockName($path);
 		}
 
+		$viewAlt = str_replace(FILE_PHTML, FILE_TPL, $view);
+
+		if (\App::fileExists($path.$viewAlt)) {
+			$view = $viewAlt;
+		}
+
 		if (\App::fileExists($path.$view)) {
 
 			$found = true;
@@ -1002,7 +1008,7 @@ class Core
 		$db = file_exists(Path::get(DIR_APP_CONFIG . 'database.local' . FILE_INC));
 		$conf = file_exists(Path::get(DIR_APP_CONFIG . 'config.local' . FILE_INC));
 
-		if (Environment::inPro()) {
+		if (Environment::inPRO()) {
 			$db = false;
 			$conf = false;
 		}
