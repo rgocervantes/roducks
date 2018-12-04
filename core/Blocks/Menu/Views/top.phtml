@@ -1,11 +1,11 @@
-<?php 
-use Roducks\Framework\Login; 
+<?php
+use Roducks\Framework\Login;
 ?>
 <ul class="dropdown-menu">
-<? foreach ($items as $key => $value) : ?>
+<?php foreach ($items as $key => $value) : ?>
 	<?php if (isset($value['separator'])) : ?>
 	<li role="separator" class="divider"></li>
-<?php else: 
+<?php else:
 
 	if (!isset($value['access'])) {
 		$value['access'] = "all";
@@ -19,16 +19,16 @@ use Roducks\Framework\Login;
 		$all = $value['access'];
 	}
 
-	if ($action || $all == "all" || Login::isSuperAdmin()) : 
+	if ($action || $all == "all" || Login::isSuperAdmin()) :
 
 ?>
 		<li>
 			<a href="<?php echo $value['link']; ?>">
 		<?php if (isset($value['icon'])): ?>
-			<span class="glyphicon glyphicon-<?php echo $value['icon']; ?>" aria-hidden="true"></span> 
+			<span class="glyphicon glyphicon-<?php echo $value['icon']; ?>" aria-hidden="true"></span>
 		<?php endif; ?>
 			<?php echo $value['text']; ?></a>
-		</li>  
+		</li>
 	<?php endif; ?>
 <?php endif; ?>
 <?php endforeach; ?>
