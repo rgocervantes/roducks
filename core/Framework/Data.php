@@ -42,6 +42,7 @@ abstract class Data extends XML
 		$settings['urlParam'] = '';
 		$settings['id'] = $id;
 		$settings['method'] = 'write';
+		$settings['url_dispatcher'] = false;
 
 		if (!empty($date)) {
 			$settings['date'] = $date;

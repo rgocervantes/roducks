@@ -562,7 +562,7 @@ abstract class Frame
 				'fileName' 		=> "",
 				'urlParam'		=> "",
 				'method'			=> "",
-				'url_dispatcher' => ""
+				'url_dispatcher' => true
 			];
 		}
 

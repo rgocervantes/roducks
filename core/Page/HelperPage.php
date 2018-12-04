@@ -34,7 +34,7 @@ class HelperPage extends Frame
 				'fileName' 		=> "",
 				'urlParam'		=> "",
 				'method'		=> "",
-				'url_dispatcher' => ""
+				'url_dispatcher' => false
 		]);
 
 		return $obj;
