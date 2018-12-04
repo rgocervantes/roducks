@@ -139,7 +139,7 @@ class Core
 	static function db()
 	{
 		try {
-			return DB::get([DB_HOST,DB_USER,DB_PASSWORD,DB_NAME]);
+			return DB::get([DB_HOST,DB_USER,DB_PASSWORD,DB_NAME,DB_PORT]);
 		} catch (\Exception $e) {
 
 			$file = (Environment::inDEV() || RDKS_ERRORS) ? 'database.local' : 'database';

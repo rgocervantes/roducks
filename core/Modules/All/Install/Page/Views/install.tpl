@@ -162,7 +162,7 @@
 
               <div class="form-group has-feedback">
                 <label class="control-label"><span class="color-red">*</span> Password</label>
-                <input type="text" name="database[password]" data-required="true" class="form-control">
+                <input type="password" name="database[password]" class="form-control">
                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
               </div>
 

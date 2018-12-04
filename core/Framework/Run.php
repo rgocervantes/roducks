@@ -75,6 +75,7 @@ if (!isset($dbConfig['host'])) {
 }
 
 App::define('DB_HOST', $dbConfig['host']); // localhost
+App::define('DB_PORT', $dbConfig['port']); // 3306
 App::define('DB_NAME', $dbConfig['name']);
 App::define('DB_USER', $dbConfig['user']);
 App::define('DB_PASSWORD', $dbConfig['password']);

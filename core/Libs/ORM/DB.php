@@ -37,8 +37,8 @@ class DB
         mysqli_report(MYSQLI_REPORT_STRICT);
 
         try {
-            $mysqli = new \mysqli($conn[0],$conn[1],$conn[2],$conn[3]);
-
+            $mysqli = new \mysqli($conn[0],$conn[1],$conn[2],$conn[3],$conn[4]);
+  
             if ($mysqli->connect_errno) {
                 throw new \Exception("{$mysqli->connect_errno} :: {$mysqli->connect_error}", 1);
             }

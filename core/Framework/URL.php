@@ -25,14 +25,14 @@ use Roducks\Libs\Request\Http;
 class URL
 {
 	const CSRF_ATTACK_BASE_URL = '"\'\\\(\)\s{}<>\[\]=!@$&*:;,'; // Forbidden chars
-	const CSRF_ATTACK_GET_PARAMS = '\/\'\\\(\)\s{}<>\[\]!@$*%#:;,'; // Forbidden chars
+	const CSRF_ATTACK_GET_PARAMS = '\/\'\\\(\)\s{}<>\[\]!@$*#:;,'; // Forbidden chars
 	const CSRF_ATTACK_RULE_1 = '\.{2,}'; // More than 1 dot
 	const CSRF_ATTACK_RULE_2 = '\.(exe|ini|inc|doc|docx|xls|xlsx|php|phtml|sql|yml)$'; // Forbidden extensions
 	const CSRF_ATTACK_RULE_3 = '-[\-]+'; // more than 1 dashes
 	const CSRF_ATTACK_RULE_4 = '\/-'; // slash + dash
 	const CSRF_ATTACK_END_URL = '[\?&=\.\-_,;:\$\(\)%*@]$';
 
-	const REGEXP_GET = '(\?[a-zA-Z0-9_\-=&+]+)?';
+	const REGEXP_GET = '(\?[a-zA-Z0-9_\-=%&+]+)?';
 
 	static function preventCSRFAttack()
 	{
