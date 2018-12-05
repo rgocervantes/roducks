@@ -417,6 +417,12 @@ class CLI extends Frame
 
 	}
 
+	public function run()
+	{
+		echo $this->colorRed('Unknown command') . "\n";
+		$this->output();
+	}
+
 	public function __construct(array $flags = [], array $args = [])
 	{
 		$c = 1;
