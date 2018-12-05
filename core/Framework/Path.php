@@ -197,7 +197,7 @@ class Path
 		return URL::setAbsoluteURL(self::getImage($file));
 	}
 
-	static function getPublicUploadedUsers($file, $crop = 0)
+	static function getPublicUploadedUsers($file, $crop = 0, $absolute = true)
 	{
 		$path = self::getUploadedUsers($file);
 
@@ -209,7 +209,11 @@ class Path
 			}
 		}
 
-		return URL::setAbsoluteURL($path);
+		if ($absolute) {
+			return URL::setAbsoluteURL($path);
+		}
+
+		return $path;
 	}
 
 }
