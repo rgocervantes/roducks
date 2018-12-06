@@ -22,6 +22,7 @@ namespace Roducks\Blocks\User;
 
 use Roducks\Page\Block;
 use Roducks\Page\JSON;
+use Roducks\Data\User as UserData;
 use Roducks\Framework\Dispatch;
 use Roducks\Framework\Helper;
 use Roducks\Framework\Login;
@@ -119,6 +120,22 @@ class User extends Block
 
 		return $this->view->output();
 
+	}
+
+	public function profile($resize = 150)
+	{
+
+		$this->params([
+			'resize' => [$resize, 'PARAM', Dispatch::PARAM_INTEGER]
+		]);
+
+		$this->view->data('user_name', UserData::getFullName());
+		$this->view->data('email', UserData::getEmail());
+		$this->view->data('img_full', UserData::getPicture(false));
+		$this->view->data('img_crop', UserData::getPicture(false, $resize));
+		$this->view->load('profile');
+
+		return $this->view->output();
 	}
 
 	public function output($session, $resize = 150)
