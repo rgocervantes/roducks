@@ -23,6 +23,7 @@ namespace Roducks\Data;
 use Roducks\Framework\Core;
 use Roducks\Framework\Login;
 use Roducks\Framework\EAV;
+use Roducks\Framework\Path;
 use Roducks\Libs\Data\Session;
 use DB\Models\Users\Users;
 
