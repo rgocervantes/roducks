@@ -112,14 +112,23 @@ class User extends Block
 
 	}
 
-	public function picture($img, $resize, $tpl = "cropped")
+	public function picture($resize = 150)
 	{
 
-		$this->_picture($img, $resize);
-		$this->view->load($tpl);
+		$this->view->data('img', UserData::getPicture(false, $resize));
+		$this->view->load('picture');
 
 		return $this->view->output();
 
+	}
+
+	public function pictureModal($resize = 150)
+	{
+		$this->view->data('img', UserData::getPicture(false));
+		$this->view->data('resize', $resize);
+		$this->view->load('picture-modal');
+
+		return $this->view->output();
 	}
 
 	public function profile($resize = 150)
@@ -131,8 +140,6 @@ class User extends Block
 
 		$this->view->data('user_name', UserData::getFullName());
 		$this->view->data('email', UserData::getEmail());
-		$this->view->data('img_full', UserData::getPicture(false));
-		$this->view->data('img_crop', UserData::getPicture(false, $resize));
 		$this->view->load('profile');
 
 		return $this->view->output();

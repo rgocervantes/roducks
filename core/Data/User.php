@@ -30,6 +30,9 @@ use DB\Models\Users\Users;
 class User extends EAV
 {
 
+	static $_sessionName = null;
+	static $_sessionData = [];
+
 	public function __construct($id)
 	{
 		$this->_id = $id;
@@ -38,105 +41,110 @@ class User extends EAV
 		parent::__construct();
 	}
 
-	/*
-    Array
-    (
-        [id_user] => 1
-        [id_user_parent] => 0
-        [id_user_tree] => 0
-        [id_role] => 7
-        [email] => rodrigocervantez@gmail.com
-        [first_name] => Rodrigo
-        [last_name] => Cervantes
-        [gender] => male
-        [picture] => user_20181204150942.jpeg
-        [active] => 1
-        [trash] => 0
-        [token] =>
-        [loggedin] => 0
-        [location] => 127.0.0.1
-        [expires] => 0
-        [expiration_date] =>
-        [created_at] => 2018-12-04 11:21:59
-        [updated_at] => 2018-12-04 17:29:26
-        [deleted_at] =>
-        [role] => Subscribers
-        [ractive] => 1
-        [config] => subscribers.json
-    )
-  */
-  private static function _getSession()
+	private static function _getSessionName()
   {
     $siteConfig = Core::getSiteConfigFile("config", false);
+    return (isset($siteConfig['SESSION_NAME'])) ? $siteConfig['SESSION_NAME'] : null;
+  }
 
-    if (isset($siteConfig['SESSION_NAME'])) {
-      $sessionName = $siteConfig['SESSION_NAME'];
-      $isLoggedIn = Session::exists($sessionName);
-      if ($isLoggedIn) {
-        $session = Login::getSession($sessionName);
-        return $session;
-      }
+	private static function _isLoggedIn()
+  {
+
+		if (!is_null(self::$_sessionName)) {
+			$sessionName = self::$_sessionName;
+		} else {
+			self::$_sessionName = self::_getSessionName();
+			$sessionName = self::$_sessionName;
+		}
+
+    if (!is_null($sessionName)) {
+      return Session::exists($sessionName);
+    }
+
+    return false;
+  }
+
+  private static function _getSession()
+  {
+
+    if (self::_isLoggedIn()) {
+      return Login::getSession(self::$_sessionName);
     }
 
     return [];
   }
 
-  private static function _getData($index)
-  {
-    $data = self::_getSession();
+	static function isLoggedIn()
+	{
+		return self::_isLoggedIn();
+	}
 
-    if (empty($data)) {
+  static function getData($index)
+  {
+
+		if (!empty(self::$_sessionData)) {
+			return self::$_sessionData[$index];
+		}
+
+    self::$_sessionData = self::_getSession();
+
+    if (empty(self::$_sessionData)) {
       return null;
     }
 
-    if (isset($data[$index])) {
-      return $data[$index];
+    if (isset(self::$_sessionData[$index])) {
+      return self::$_sessionData[$index];
     }
   }
 
   static function getEmail()
   {
-    return self::_getData('email');
+    return self::getData('email');
   }
 
   static function getId()
   {
-    return self::_getData('id_user');
+    return self::getData('id_user');
   }
 
   static function getRoleId()
   {
-    return self::_getData('id_role');
+    return self::getData('id_role');
   }
 
   static function getFirstName()
   {
-    return self::_getData('first_name');
+    return self::getData('first_name');
+  }
+
+	static function getName()
+  {
+    return self::getFirstName();
   }
 
   static function getLastName()
   {
-    return self::_getData('last_name');
+    return self::getData('last_name');
   }
 
   static function getFullName()
   {
-    return implode(' ', [self::_getData('first_name'), self::_getData('last_name')]);
+    return implode(' ', [self::getData('first_name'), self::getData('last_name')]);
   }
 
   static function getGender()
   {
-    return self::_getData('gender');
+    return self::getData('gender');
   }
 
   static function getConfigName()
   {
-    return self::_getData('config');
+    return self::getData('config');
   }
 
   static function getPicture($absolute = false, $crop = 0)
   {
-    return Path::getPublicUploadedUsers(self::_getData('picture'), $crop, $absolute);
+    return Path::getPublicUploadedUsers(self::getData('picture'), $crop, $absolute);
   }
 
 }
