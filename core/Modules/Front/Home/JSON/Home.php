@@ -20,7 +20,7 @@
 
 namespace Roducks\Modules\Front\Home\JSON;
 
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Framework\Hash;
 use Roducks\Framework\Role;
 use Roducks\Framework\Form;
@@ -30,7 +30,7 @@ use Roducks\Page\JSON;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Utils\Date;
 use DB\Models\Users\Users as UsersTable;
-use Roducks\Services\Auth as LoginAuth;
+use Roducks\Services\Auth as AuthService;
 
 class Home extends JSON
 {
@@ -52,12 +52,12 @@ class Home extends JSON
 
 		Form::setKey($this->post->hidden('form-key'));
 
-		if (Login::isSubscriberLoggedIn()) {
+		if (User::isLoggedIn()) {
 			Http::sendHeaderForbidden();
 		}
 
 		$gender = $this->post->select('gender');
-		$admin_id_user_tree = Login::getAdminData('id_user_tree');
+		$admin_id_user_tree = User::getData('id_user_tree');
 
 		$fields = [
 			'id_role' 		 => 7, // reserved for subscribers
@@ -107,7 +107,7 @@ class Home extends JSON
 				$user->update($id, ['id_user_tree' => '0']);
 
 				Event::dispatch('onEventCreateAccount', [$id, Role::TYPE_SUBSCRIBERS]);
-				$auth = LoginAuth::init()->loginSubscriber(true);
+				AuthService::init()->login();
 				$this->data("url_redirect", "/");
 			}
 
@@ -121,7 +121,7 @@ class Home extends JSON
 	public function restorePassword()
 	{
 
-		if (Login::isSubscriberLoggedIn()) {
+		if (User::isLoggedIn()) {
 			Http::sendHeaderForbidden();
 		}
 

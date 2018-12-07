@@ -1,6 +1,6 @@
 <?php
 use Roducks\Page\Template;
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Framework\Helper;
 use Roducks\Framework\Language;
 use Roducks\Libs\Utils\Date;
@@ -26,7 +26,7 @@ use Roducks\Libs\Utils\Date;
 				data-focus="true" 
 				action="<?php echo "/_json{$url}/{$action}"; ?>">
 
-					<?php if(Login::getAdminId() != $row['id_user']): ?>
+					<?php if(User::getId() != $row['id_user']): ?>
 					<div class="checkbox">
 						<label>
 						<input<?php echo Template::checked($row['active']); ?> type="checkbox" name="active" value="1" /> 

@@ -21,7 +21,7 @@
 namespace Roducks\Blocks\Menu;
 
 use Roducks\Page\Block;
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 
 class Menu extends Block
 {
@@ -49,7 +49,7 @@ class Menu extends Block
 		$this->role($type);
 		$access = $this->grantAccess->getData();
 
-		if (!empty($permission) && !Login::isSuperAdmin()) {
+		if (!empty($permission) && !User::isSuperAdmin()) {
 			$access = $access[$permission];
 		}
 

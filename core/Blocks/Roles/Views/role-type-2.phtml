@@ -1,5 +1,5 @@
 <?php 
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Page\Template; 
 ?>
 	<div class="row_">
@@ -7,7 +7,7 @@ use Roducks\Page\Template;
 
 			<div class="well">
 				<h3>Account</h3>
-				<?php if(isset($data['account']) || isset($access['all']) || Login::isSuperAdmin()): ?>
+				<?php if(isset($data['account']) || isset($access['all']) || User::isSuperAdmin()): ?>
 				<ul class="list-group">
 					<li class="list-group-item">
 						<div class="checkbox" style="margin:0;">

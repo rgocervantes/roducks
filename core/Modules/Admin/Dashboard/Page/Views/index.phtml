@@ -1,5 +1,5 @@
 <?php
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Framework\Role;
 use Roducks\Page\Block;
 use Roducks\Modules\Admin\Dashboard\Page\Dashboard;
@@ -10,19 +10,19 @@ use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 ?>
 <div class="container-fluid">
 
-	<?php if(Login::roleAdmin()): ?>
+	<?php if(User::roleAdmin()): ?>
 		<h1><span class="glyphicon glyphicon-bookmark icon-rdks" aria-hidden="true"></span> Dashboard</h1>
 	<?php else: ?>
 		<h1><span class="glyphicon glyphicon-stats icon-rdks" aria-hidden="true"></span> <?php echo TEXT_LATEST . " (" . Dashboard::ROWS_PER_PAGE . ")"; ?></h1>
 	<?php endif; ?>
-	
+
 	<div class="box-white">
 
-		<?php if(Login::roleAdmin()): ?>
+		<?php if(User::roleAdmin()): ?>
 			<?php Block::load("latest-users/current", ['type' => Role::TYPE_USERS, 'url' => "users"]); ?>
 		<?php endif; ?>
 
-		<?php if((isset($access['users']) || Login::isSuperAdmin()) && Login::getAdminData('id_role') != 6): ?>
+		<?php if((isset($access['users']) || User::isSuperAdmin()) && User::getData('id_role') != 6): ?>
 
 		<div class="left"><h2 style="margin:0;"><span class="glyphicon glyphicon-<?php echo RolesHelper::getIcon(Role::TYPE_USERS); ?>" aria-hidden="true"></span> <?php echo TEXT_USERS; ?></h2></div>
 		<div class="right">
@@ -36,7 +36,7 @@ use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 
 		<?php endif; ?>
 
-		<?php if(isset($access['subscribers']) || Login::isSuperAdmin()): ?>
+		<?php if(isset($access['subscribers']) || User::isSuperAdmin()): ?>
 
 		<hr />
 
@@ -51,7 +51,7 @@ use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 
 		<?php endif; ?>
 
-		<?php if(isset($access['clients']) || Login::isSuperAdmin()): ?>
+		<?php if(isset($access['clients']) || User::isSuperAdmin()): ?>
 
 		<hr />
 
@@ -67,5 +67,5 @@ use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
 		<?php endif; ?>
 
 	</div>
-	
+
 </div>

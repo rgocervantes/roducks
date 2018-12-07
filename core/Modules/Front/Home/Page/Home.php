@@ -20,7 +20,7 @@
 
 namespace Roducks\Modules\Front\Home\Page;
 
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Page\FrontPage;
 use DB\Models\Users\Users as UsersTable;
 

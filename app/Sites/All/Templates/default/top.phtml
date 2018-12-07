@@ -4,8 +4,8 @@ use Roducks\Framework\Core;
 use Roducks\Framework\Path;
 use Roducks\Framework\Environment;
 use Roducks\Framework\URL;
-use Roducks\Framework\Login;
 use Roducks\Framework\Role;
+use Roducks\Data\User;
 use Roducks\Page\Block;
 use Roducks\Page\Template;
 
@@ -36,22 +36,22 @@ use Roducks\Page\Template;
 		</ul>
 
 		<?php Block::load("language/output/{$_PAGE_ID}/nav"); ?>
-	
+
 		<ul class="nav navbar-nav navbar-right">
 			<li class="dropdown">
-			
+
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-			<?php if(Login::isSubscriberLoggedIn()): ?>	
-				<?php Block::load("user", ['session' => Login::SESSION_FRONT, 'size' => 20]); ?> <?php echo Login::getSubscriberName(); ?> <span class="caret"></span>
+			<?php if(User::isLoggedIn()): ?>
+				<?php Block::load("user/picture/20"); ?> <?php echo User::getName(); ?> <span class="caret"></span>
 			</a>
 				<?php Block::load("menu/access", ['type' => Role::TYPE_SUBSCRIBERS, 'items' => Template::menu("top-account"), 'tpl' => "top", 'permission' => "account"]); ?>
 			<?php else: ?>
 				<span class="glyphicon glyphicon-user" aria-hidden="true"></span> <span class="caret"></span>
 			</a>
-				<?php Block::load("menu/nav/front-login"); ?>	
-			<?php endif; ?> 
+				<?php Block::load("menu/nav/front-login"); ?>
+			<?php endif; ?>
 			</li>
-		</ul> 
+		</ul>
 
 	</div><!-- /.navbar-collapse -->
 </div><!-- /.container-fluid -->
@@ -62,4 +62,4 @@ use Roducks\Page\Template;
 	<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 	<span class="alert-text"><?php echo TEXT_APP_IN_DEV_MODE; ?></span>
 </div>
-<?php endif; ?> 
+<?php endif; ?>

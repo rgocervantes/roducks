@@ -1,1 +1,1 @@
-<img src="{{% $img %}}" alt="">
+<img src="{{% $img %}}" width="{{% $resize %}}" height="{{% $resize %}}">

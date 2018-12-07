@@ -28,12 +28,12 @@ class Home extends HomePage
 	public function index()
 	{
 
-		$this->view->title(TEXT_WELCOME);
+		$this->view->title(__('Welcome'));
 		$this->view->data("foo", "Initialized FooVar!");
 		$this->view->assets->scriptsInline(["foo"]);
 		$this->view->assets->scriptsOnReady(["home"]);
 		$this->view->load("index");
-		
+
 		return $this->view->output();
 
 	}

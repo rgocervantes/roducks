@@ -50,7 +50,7 @@ class Path
 
 	static function getRoles($path = "")
 	{
-		return self::get(DIR_ROLES . $path);
+		return self::getData(DIR_ROLES . $path);
 	}
 
 	static function getCropName($src, $s)

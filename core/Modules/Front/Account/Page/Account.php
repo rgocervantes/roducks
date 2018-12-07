@@ -33,7 +33,7 @@ class Account extends FrontPage
 	{
 		parent::__construct($settings, $view);
 
-		$this->login->required();
+		$this->requireLogin();
 		$this->role(Role::TYPE_SUBSCRIBERS);
 	}
 

@@ -20,17 +20,17 @@
 
 namespace Roducks\Page;
 
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Framework\Role;
 use Roducks\Framework\Helper;
 use Roducks\Framework\Error;
-use Roducks\Libs\Request\Request;
+use Storage;
+use Path;
 
 class GrantAccess
 {
 
 	private $_page;
-	private $_session;
 	private $_view;
 	private $_json = false;
 
@@ -46,16 +46,15 @@ class GrantAccess
 	private function _load($name)
 	{
 
-		$file = DIR_ROLES . $name;
-		list($realPath, $fileExists) = \App::getRealPath($file);
+		$path = Path::getRoles();
+		$json = Storage::getJSON(DIR_ROLES, $name);
+		$file = $path . $name;
 
-		if ($fileExists && !empty($name)) {
-			$config = Request::getContent($realPath);
-			$json = JSON::decode($config);
+		if (!empty($json)) {
 			return $json;
 		} else {
-			if (!Login::isSuperAdmin()) {
-				Error::debug("Role config file was not found", __LINE__, __FILE__, $file, 'Make sure it exists in: <b>' . $realPath . "</b>");
+			if (!User::isSuperAdmin()) {
+				Error::debug("Role config file was not found", __LINE__, __FILE__, $file, 'Make sure it exists in: <b>' . $path . "</b>");
 			}
 		}
 
@@ -64,7 +63,7 @@ class GrantAccess
 
 	private function _action($action)
 	{
-		if (!Login::isSuperAdmin() && !$this->hasAccess($action)) {
+		if (!User::isSuperAdmin() && !$this->hasAccess($action)) {
 			$this->_pageNotFound();
 		}
 	}
@@ -74,10 +73,9 @@ class GrantAccess
 //	PUBLIC METHODS
 //---------------------------------
 */
-	public function __construct($page, $session)
+	public function __construct($page)
 	{
 		$this->_page = $page;
-		$this->_session = $session;
 	}
 
 	public function json()
@@ -93,7 +91,7 @@ class GrantAccess
 	public function getConfig()
 	{
 
-		$name = Login::getData($this->_session, "config");
+		$name = User::getData('config');
 		$conf = $this->getFileConfig($name);
 
 		if (empty($conf)) {
@@ -101,7 +99,7 @@ class GrantAccess
 		}
 
 		return $conf;
-	}		
+	}
 
 	public function getData()
 	{
@@ -113,7 +111,7 @@ class GrantAccess
 	{
 		$data = $this->getData();
 
-		if ( Login::isSuperAdmin() ) {
+		if ( User::isSuperAdmin() ) {
 			return [];
 		}
 		return (isset($data[$this->_page])) ? $data[$this->_page] : [];
@@ -123,14 +121,14 @@ class GrantAccess
 	{
 		$data = $this->getData();
 		return isset($data[$this->_page][$action]);
-	}	
+	}
 
 	public function superAdmin()
 	{
-		if ( !Login::isSuperAdmin() ) {
+		if ( !User::isSuperAdmin() ) {
 			$this->_pageNotFound();
 		}
-	}	
+	}
 
 	public function view()
 	{
@@ -140,7 +138,7 @@ class GrantAccess
 	public function create()
 	{
 		$this->_action(__FUNCTION__);
-	}	
+	}
 
 	public function reset()
 	{
@@ -150,12 +148,12 @@ class GrantAccess
 	public function picture()
 	{
 		$this->_action(__FUNCTION__);
-	}	
+	}
 
 	public function visibility()
 	{
 		$this->_action(__FUNCTION__);
-	}	
+	}
 
 	public function edit()
 	{
@@ -170,7 +168,7 @@ class GrantAccess
 	public function action($action)
 	{
 		$this->_action($action);
-	}		
+	}
 
 	public function editDescendent($id_user, $user, $isDescendent, $action)
 	{
@@ -178,33 +176,33 @@ class GrantAccess
 		$this->_action($action);
 
 		// Nobody can edit *Super Admin Master* except himself!
-		if ( !Login::isSuperAdmin() && Login::getSuperAdminId() == $id_user ) {
-			$this->_pageNotFound();	
+		if ( !User::isSuperAdmin() && User::getSuperAdminId() == $id_user ) {
+			$this->_pageNotFound();
 		}
 
 		// a Super Admin can't edit greater users
-		if (!Login::isSuperAdmin() 
-			&& Login::roleSuperAdmin() 
-			&& $id_user != Login::getAdminId() 
-			&& $user['id_role'] == Login::getAdminData('id_role') 
-			&& $user['id_user_parent'] <= Login::getAdminData('id_user_parent')
-			&& !Helper::regexp('#'.Login::getAdminId().'#', $user['id_user_tree'])
+		if (!User::isSuperAdmin()
+			&& User::roleSuperAdmin()
+			&& $id_user != User::getId()
+			&& $user['id_role'] == User::getData('id_role')
+			&& $user['id_user_parent'] <= User::getData('id_user_parent')
+			&& !Helper::regexp('#'.User::getId().'#', $user['id_user_tree'])
 		) {
 			$this->_pageNotFound();
 		}
 
 		// If admin session id is not super admin
-		if ( !Login::isSuperAdmin() && $id_user != Login::getAdminId() && Login::getAdminData('id_role') > 2) {
+		if ( !User::isSuperAdmin() && $id_user != User::getId() && User::getData('id_role') > 2) {
 			if ($this->hasAccess("descendants") && !$isDescendent) {
-				$this->_pageNotFound();	
+				$this->_pageNotFound();
 			}
 
 			// Can't edit parent - OR - ascedent users - OR - Siblings
-			if (!Helper::regexp('#'.Login::getAdminId().'#', $user['id_user_tree']) 
-				|| $id_user < Login::getAdminId() 
-				|| $user['id_user_parent'] == Login::getAdminData('id_user_parent')
+			if (!Helper::regexp('#'.User::getId().'#', $user['id_user_tree'])
+				|| $id_user < User::getId()
+				|| $user['id_user_parent'] == User::getData('id_user_parent')
 			) {
-				$this->_pageNotFound();	
+				$this->_pageNotFound();
 			}
 		}
 

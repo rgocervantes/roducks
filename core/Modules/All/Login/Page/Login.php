@@ -20,38 +20,36 @@
 
 namespace Roducks\Modules\All\Login\Page;
 
-use Roducks\Framework\Role;
-use Roducks\Framework\Event;
-use Roducks\Framework\Login as LoginAuth;
 use Roducks\Page\Page;
-use DB\Models\Users\Users as UsersTable;
+use Roducks\Data\User;
 
 class Login extends Page
 {
 
-	protected $_session;
-
-	public function login()
+	private function _redirect()
 	{
+		$this->redirect(static::LOGIN_URL);
+	}
 
-		$login = new LoginAuth($this->_session, static::LOGIN_URL);
-		$login->redirect(); // obligatory
+	public function form()
+	{
+		if (User::isLoggedIn()) {
+			$this->_redirect();
+		}
+
+		$this->view->title(__('Log In'));
+		$this->view->assets->scriptsInline(['login']);
+		$this->view->assets->scriptsOnReady(['login.ready']);
+		$this->view->load("login");
+
+		return $this->view->output();
 
 	}
 
 	public function logout()
 	{
-
-		$id_user = LoginAuth::getId($this->_session);
-		LoginAuth::logout($this->_session);
-
-		Event::dispatch('onEventLogout', [$id_user]);
-
-		$db = $this->db();
-		UsersTable::open($db)->logInOut($id_user, 0);
-		$db->close();
-
-		$this->redirect(static::LOGIN_URL);
+		User::logout();
+		$this->_redirect();
 	}
 
 }

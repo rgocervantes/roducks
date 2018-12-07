@@ -23,12 +23,12 @@ namespace Roducks\Page;
 use Roducks\Framework\Core;
 use Roducks\Framework\Dispatch;
 use Roducks\Framework\URL;
-use Roducks\Framework\Login;
 use Roducks\Framework\Role;
 use Roducks\Framework\Error;
 use Roducks\Framework\Helper;
 use Roducks\Framework\Language;
 use Roducks\Framework\Environment;
+use Roducks\Data\User;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Data\Cache;
 
@@ -352,16 +352,9 @@ abstract class Frame
 		return (isset($params[$index])) ? $params[$index] : "";
 	}
 
-	protected function accessAdmin()
+	protected function accessDenied()
 	{
-		if (!Login::isAdminLoggedIn()) {
-			Http::setHeaderInvalidRequest();
-		}
-	}
-
-	protected function accessSubscriber()
-	{
-		if (!Login::isSubscriberLoggedIn()) {
+		if (!User::isLoggedIn()) {
 			Http::setHeaderInvalidRequest();
 		}
 	}
@@ -377,9 +370,7 @@ abstract class Frame
 			$class = Helper::removeSlash($class);
 		}
 
-		$session = Role::getSession($type);
-		$session = (empty($session)) ? $type : $session;
-		$this->grantAccess = new GrantAccess($class, $session);
+		$this->grantAccess = new GrantAccess($class);
 	}
 
 	protected function params(array $values = [])

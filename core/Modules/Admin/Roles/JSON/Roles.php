@@ -20,7 +20,7 @@
 
 namespace Roducks\Modules\Admin\Roles\JSON;
 
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Framework\Role;
 use Roducks\Framework\Language;
 use Roducks\Framework\Path;
@@ -85,7 +85,7 @@ class Roles extends JSON
 		$method = $this->post->hidden("method");
 		$config = $this->post->hidden("config", "");
 		$name = ucwords($this->post->text("_name"));
-		
+
 		if ($method == "insert") {
 			$this->grantAccess->create();
 		} else {
@@ -104,7 +104,7 @@ class Roles extends JSON
 				$this->setError(0, Language::translate("Name already taken, please choose another.","Ya existe este nombre, por favor elige otro."));
 				$valid = false;
 			} else {
-			
+
 				$configName = "role_" . Date::getCurrentDateFlat() . "_" . mt_rand();
 
 				$RolesTable->insert([
@@ -112,15 +112,15 @@ class Roles extends JSON
 					'type' => $type,
 					'config' => "{$configName}.json",
 					'active' => 1,
-					'created_by' => Login::getAdminId(),
-					'updated_by' => Login::getAdminId(),
+					'created_by' => User::getId(),
+					'updated_by' => User::getId(),
 					'created_at' => Date::getCurrentDateTime()
 				]);
 
 			}
-			
+
 		} else if ($method == "update" && !empty($id_role)) {
-			$RolesTable->update($id_role, ['name' => $name, 'updated_by' => Login::getAdminId(), 'updated_at' => Date::getCurrentDateTime()]);
+			$RolesTable->update($id_role, ['name' => $name, 'updated_by' => User::getId(), 'updated_at' => Date::getCurrentDateTime()]);
 		}
 
 		if ($valid) {
@@ -130,8 +130,8 @@ class Roles extends JSON
 				$data['config'] = $configName;
 			}
 
-			Directory::make(Path::get(), DIR_ROLES);
-			File::createJSON(Path::get(DIR_ROLES), $config, $data);
+			Directory::make(Path::getData(), DIR_ROLES);
+			File::createJSON(Path::getRoles(), $config, $data);
 		}
 
 		parent::output();
@@ -145,18 +145,18 @@ class Roles extends JSON
 		$id_role = $this->post->param("id");
 		$value = $this->post->param("value");
 
-		if ($id_role == Login::getAdminData("id_role")) {
+		if ($id_role == User::getData("id_role")) {
 			$this->setError(1, Language::translate("Can't disable the role you belong to.","No puedes desactivar el rol al que perteneces."));
 		}
 
 		$db = $this->db();
 		$tx = RolesTable::open($db)->update($id_role, ['active' => $value]);
-		
+
 		if ($tx === FALSE) {
 			$this->setError(0, TEXT_WAS_AN_ERROR);
 		}
-		
+
 		parent::output();
 	}
 
-} 
+}

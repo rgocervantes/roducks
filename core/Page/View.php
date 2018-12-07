@@ -24,7 +24,7 @@ use Roducks\Framework\Core;
 use Roducks\Framework\Asset;
 use Roducks\Framework\Helper;
 use Roducks\Framework\Error;
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Framework\Language;
 use Roducks\Framework\Path;
 use Roducks\Libs\Data\Session;
@@ -196,7 +196,7 @@ final class View
 		}
 
 		$this->data('_PAGE_TITLE', $str);
-		$this->data('_TITLE', $title);
+		$this->_setGlobals('_TITLE', $title);
 
 		if (!is_null($tpl)) {
 			$this->data('_VIEW_TITLE', $tpl);
@@ -331,9 +331,9 @@ final class View
 					include $top;
 				}
 
-				if (Session::exists(Login::SESSION_SECURITY)) {
+				if (Session::exists(User::SESSION_SECURITY)) {
 					Error::security();
-					Login::security(false);
+					User::security(false);
 				}
 			} else if(file_exists($header_alt)) {
 
@@ -351,9 +351,9 @@ final class View
 					echo Duckling::parser($top, $topData);
 				}
 
-				if (Session::exists(Login::SESSION_SECURITY)) {
+				if (Session::exists(User::SESSION_SECURITY)) {
 					Error::security();
-					Login::security(false);
+					User::security(false);
 				}
 
 			} else {

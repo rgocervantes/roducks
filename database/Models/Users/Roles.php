@@ -21,7 +21,7 @@
 namespace DB\Models\Users;
 
 use Model;
-use Login;
+use User;
 
 class Roles extends Model
 {
@@ -52,7 +52,7 @@ class Roles extends Model
 	public function search($value, $type)
 	{
 		$ret = [];
-		$id_role = Login::getAdminData('id_role');
+		$id_role = User::getData('id_role');
 		$this->filter(["name:%like%" => $value, 'type' => $type, 'id_role:>' => $id_role]);
 
 		if ($this->rows()) {
@@ -71,7 +71,7 @@ class Roles extends Model
 	{
 
 		// Get current admin session
-		$id_role = Login::getAdminData('id_role');
+		$id_role = User::getData('id_role');
 
 		$condition = [
 				'id_role:>' => $id_role,
@@ -89,7 +89,7 @@ class Roles extends Model
 	{
 
 		// Get current admin session
-		$id_role = Login::getAdminData('id_role');
+		$id_role = User::getData('id_role');
 
 		// Role for super admin is protected.
 		$op = ($id_role == 1) ? '>' : '>=';

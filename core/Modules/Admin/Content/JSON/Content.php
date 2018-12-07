@@ -24,6 +24,7 @@ use Roducks\Services\Url as UrlService;
 use JSON;
 use Helper;
 use Login;
+use Dispatch;
 
 class Content extends JSON
 {
@@ -57,24 +58,31 @@ class Content extends JSON
       $url .= '-1';
     }
 
-    $idUrl = UrlService::init()->set([
+    $urlService = UrlService::init()->set([
       'en' => [
         'url' => $url,
-        'dispatch' => 'ContentViewer/Page/ContentViewer::index',
+        'dispatch' => Dispatch::page('content-viewer', 'index'),
         'tpl' => $this->post->hidden('tpl')
       ],
     ]);
 
     $content = $this->model('content/content')->prepare();
-    $content->setIdUrl($idUrl);
     $content->setIdType($id);
     $content->setIdLayout(1);
-    $content->setIdUser(Login::getAdminId());
-    $content->setTitle($title);
-    $content->setDescription($description);
+    $content->setIdUser(User::getId());
     $content->setCreatedAt('NOW()');
     $content->setUpdatedAt('NOW()');
     $content->save();
+
+    $contentLang = $this->model('content/content-lang')->prepare();
+
+    foreach ($urlService->getIds() as $iso => $id) {
+      $contentLang->setIdContent($urlService->getId());
+      $contentLang->setIdUrlLang($id);
+      $contentLang->setTitle($this->post->param('title'));
+      $contentLang->setDescription($this->post->param('description'));
+      $contentLang->save();
+    }
 
     $this->data($this->post->data());
 

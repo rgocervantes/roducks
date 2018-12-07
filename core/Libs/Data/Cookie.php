@@ -35,7 +35,7 @@ class Cookie
 			unset($serverName[0]); // remove www or subdomain
 			$host = implode(".", $serverName);
 		}
-		
+
 		//$expire = time()+60*60*24*30; // a month
 		$expire = time() + (10 * 365 * 24 * 60 * 60); // a year
 		setcookie($name, $value, $expire, '/', $host);
@@ -69,5 +69,3 @@ class Cookie
 	}
 
 }
-
-?>

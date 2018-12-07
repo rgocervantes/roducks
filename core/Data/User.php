@@ -21,16 +21,24 @@
 namespace Roducks\Data;
 
 use Roducks\Framework\Core;
-use Roducks\Framework\Login;
 use Roducks\Framework\EAV;
 use Roducks\Framework\Path;
+use Roducks\Framework\Hash;
+use Roducks\Services\Auth as AuthService;
 use Roducks\Libs\Data\Session;
 use DB\Models\Users\Users;
 
 class User extends EAV
 {
 
+	const SESSION_ADMIN = "RDKS_ADMIN";
+	const SESSION_FRONT = "RDKS_FRONT";
+	const SESSION_CLIENT = "RDKS_CLIENT";
+	const SESSION_SUPPLIER = "RDKS_SUPPLIER";
+	const SESSION_SECURITY = "RDKS_SECURITY";
+
 	static $_sessionName = null;
+	static $_sessionType = null;
 	static $_sessionData = [];
 
 	public function __construct($id)
@@ -41,21 +49,66 @@ class User extends EAV
 		parent::__construct();
 	}
 
+	static function generatePassword($pwd)
+	{
+   	return Hash::getSaltPassword($pwd);
+	}
+
+	static function paywall($db_password, $db_salt, $input_password)
+	{
+		return ($db_password == Hash::get($input_password . $db_salt));
+	}
+
+	static function security($return = true)
+	{
+		if ($return) {
+			return Session::exists(self::SESSION_SECURITY);
+		} else {
+			Session::reset(self::SESSION_SECURITY);
+		}
+	}
+
+	private static function _getConfigData()
+	{
+		$siteConfig = Core::getSiteConfigFile("config", false);
+		$sessionName = (isset($siteConfig['SESSION_NAME'])) ? $siteConfig['SESSION_NAME'] : null;
+		$roleType = (isset($siteConfig['ROLE_TYPE'])) ? $siteConfig['ROLE_TYPE'] : null;
+
+		return [
+			'session_name' => $sessionName,
+			'role_type' => $roleType
+		];
+
+	}
+
+	private static function _getRoleType()
+  {
+
+		if (is_null(self::$_roleType)) {
+	    $siteConfig = self::_getConfigData();
+	    $roleType = $siteConfig['role_type'];
+			self::$_roleType = $roleType;
+		}
+
+		return self::$_roleType;
+  }
+
 	private static function _getSessionName()
   {
-    $siteConfig = Core::getSiteConfigFile("config", false);
-    return (isset($siteConfig['SESSION_NAME'])) ? $siteConfig['SESSION_NAME'] : null;
+
+		if (is_null(self::$_sessionName)) {
+	    $siteConfig = self::_getConfigData();
+	    $sessionName = $siteConfig['session_name'];
+			self::$_sessionName = $sessionName;
+		}
+
+		return self::$_sessionName;
   }
 
 	private static function _isLoggedIn()
   {
 
-		if (!is_null(self::$_sessionName)) {
-			$sessionName = self::$_sessionName;
-		} else {
-			self::$_sessionName = self::_getSessionName();
-			$sessionName = self::$_sessionName;
-		}
+		$sessionName = self::_getSessionName();
 
     if (!is_null($sessionName)) {
       return Session::exists($sessionName);
@@ -64,11 +117,11 @@ class User extends EAV
     return false;
   }
 
-  private static function _getSession()
+  private static function _getStoredData()
   {
 
     if (self::_isLoggedIn()) {
-      return Login::getSession(self::$_sessionName);
+      return Session::get(self::$_sessionName);
     }
 
     return [];
@@ -79,22 +132,46 @@ class User extends EAV
 		return self::_isLoggedIn();
 	}
 
+	/**
+	*	@param $obj array
+	*/
+	static function setSessionData($obj)
+	{
+
+		$data = self::_getStoredData();
+		$sessionName = self::_getSessionName();
+
+		// if there's data in session, we merge it
+		if (count($data) > 0) {
+			$obj = array_merge($data, $obj);
+		}
+
+		Session::set($sessionName, $obj);
+	}
+
+	/**
+	*	@param $id integer USER ID
+	*	@param $obj array Session data
+	*/
+	static function updateSessionData($id, $obj)
+	{
+		if ($id == self::getId()) {
+			self::setSessionData($obj);
+		}
+	}
+
   static function getData($index)
   {
 
-		if (!empty(self::$_sessionData)) {
-			return self::$_sessionData[$index];
+		if (empty(self::$_sessionData)) {
+			self::$_sessionData = self::_getStoredData();
 		}
-
-    self::$_sessionData = self::_getSession();
-
-    if (empty(self::$_sessionData)) {
-      return null;
-    }
 
     if (isset(self::$_sessionData[$index])) {
       return self::$_sessionData[$index];
     }
+
+		return "";
   }
 
   static function getEmail()
@@ -146,5 +223,49 @@ class User extends EAV
   {
     return Path::getPublicUploadedUsers(self::getData('picture'), $crop, $absolute);
   }
+
+	static function getSuperAdminId()
+	{
+		return 1;
+	}
+
+	static function isSuperAdmin()
+	{
+		return (self::getId() == self::getSuperAdminId());
+	}
+
+	static function login()
+	{
+		return self::_getConfigData();
+	}
+
+	static function logout()
+	{
+
+		if (self::_isLoggedIn()) {
+			$sessionName = self::_getSessionName();
+			$userId = self::getId();
+			Session::reset(self::SESSION_SECURITY);
+			Session::reset($sessionName);
+
+			AuthService::init()->logout($userId);
+		}
+
+	}
+
+	static function roleSuperAdminMaster()
+	{
+		return (self::getData('id_role') == 1);
+	}
+
+	static function roleSuperAdmin()
+	{
+		return (self::getData('id_role') == 2);
+	}
+
+	static function roleAdmin()
+	{
+		return (self::getData('id_role') == 6);
+	}
 
 }

@@ -35,7 +35,7 @@ class Dashboard extends AdminPage
 		$access = $this->grantAccess->getData();
 
 		$this->view->assets->scriptsInline(["grid","grid-subscribers","grid-clients","popover","users","roles.modal"]);
-		$this->view->assets->scriptsOnReady(["grid.ready","grid-subscribers.ready","grid-clients.ready"]);	
+		$this->view->assets->scriptsOnReady(["grid.ready","grid-subscribers.ready","grid-clients.ready"]);
 
 		$this->view->data("url", UsersHelper::URL);
 		$this->view->data("access", $access);
@@ -45,16 +45,16 @@ class Dashboard extends AdminPage
 			],
 			'SIDEBAR-CHILD-LEFT' => [
 				$this->view->setTemplate("profile"),
-				$this->view->setTemplate("sidebar-users"),		
-				$this->view->setTemplate("sidebar-roles"),								
-			],			
+				$this->view->setTemplate("sidebar-users"),
+				$this->view->setTemplate("sidebar-roles"),
+			],
 			'CONTENT' => [
 				$this->view->setView("index")
 			]
 		]);
-		
+
 		return $this->view->output();
 
 	}
 
-} 
+}

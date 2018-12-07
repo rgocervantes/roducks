@@ -31,7 +31,7 @@ class Auth extends API
 		$email = $this->post->param('email');
 		$password = $this->post->param('password');
 		$type = $this->post->param('type');
-		$auth = AuthService::init()->auth($type, $email, $password);
+		$auth = AuthService::init()->valid($type, $email, $password);
 
 		if ($auth['valid']) {
 

@@ -1,10 +1,10 @@
-<?php 
+<?php
 use Roducks\Page\Block;
 use Roducks\Page\Template;
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 ?>
-<div class="text-centered"><h1 style="margin: 0 0 10px 0;"><?php echo TEXT_WELCOME; ?></h1></div>
-<div class="text-centered profile-dashboard"><?php Block::load("user", ['session' => Login::SESSION_ADMIN]); ?></div>
-<h3><?php echo Login::getAdminFullName(); ?></h3>
-<p><span class="glyphicon glyphicon-star<?php echo Template::conditional(Login::isSuperAdmin(),'','-empty'); ?>" aria-hidden="true"></span> <?php echo Login::getAdminData('role'); ?></p>
-<p><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <?php echo Login::getAdminEmail(); ?></p>
+<div class="text-centered"><h1 style="margin: 0 0 10px 0;"><?php echo __('Welcome'); ?></h1></div>
+<div class="text-centered profile-dashboard"><?php Block::load("user/picture/150"); ?></div>
+<h3><?php echo User::getFullName(); ?></h3>
+<p><span class="glyphicon glyphicon-star<?php echo Template::conditional(User::isSuperAdmin(),'','-empty'); ?>" aria-hidden="true"></span> <?php echo User::getData('role'); ?></p>
+<p><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> <?php echo User::getEmail(); ?></p>

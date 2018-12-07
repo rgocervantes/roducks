@@ -1,5 +1,5 @@
 <?php 
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Framework\Language; 
 use Roducks\Page\Template; 
 ?>
@@ -8,7 +8,7 @@ use Roducks\Page\Template;
 
 			<div class="well">
 				<h3><?php echo TEXT_USERS; ?></h3>
-				<?php if(isset($data['users']) || isset($access['all']) || Login::isSuperAdmin() || Login::roleSuperAdmin()): ?>
+				<?php if(isset($data['users']) || isset($access['all']) || User::isSuperAdmin() || User::roleSuperAdmin()): ?>
 				<ul class="list-group">
 					<li class="list-group-item">
 						<div class="checkbox" style="margin:0;">
@@ -129,7 +129,7 @@ use Roducks\Page\Template;
 
 			<div class="well">
 				<h3><?php echo TEXT_SUBSCRIBERS; ?></h3>
-				<?php if(isset($data['subscribers']) || isset($access['all']) || Login::isSuperAdmin() || Login::roleSuperAdmin()): ?>
+				<?php if(isset($data['subscribers']) || isset($access['all']) || User::isSuperAdmin() || User::roleSuperAdmin()): ?>
 				<ul class="list-group">
 					<li class="list-group-item">
 						<div class="checkbox" style="margin:0;">
@@ -254,7 +254,7 @@ use Roducks\Page\Template;
 
 			<div class="well">
 				<h3><?php echo TEXT_CLIENTS; ?></h3>
-				<?php if(isset($data['clients']) || isset($access['all']) || Login::isSuperAdmin() || Login::roleSuperAdmin()): ?>
+				<?php if(isset($data['clients']) || isset($access['all']) || User::isSuperAdmin() || User::roleSuperAdmin()): ?>
 				<ul class="list-group">
 					<li class="list-group-item">
 						<div class="checkbox" style="margin:0;">
@@ -375,7 +375,7 @@ use Roducks\Page\Template;
 			<div class="well">
 	
 				<h3>Roles</h3>
-				<?php if(isset($data['roles']) || isset($access['all']) || Login::isSuperAdmin() || Login::roleSuperAdmin()): ?>
+				<?php if(isset($data['roles']) || isset($access['all']) || User::isSuperAdmin() || User::roleSuperAdmin()): ?>
 				<ul class="list-group">
 					<li class="list-group-item">
 						<div class="checkbox" style="margin:0;">

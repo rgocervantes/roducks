@@ -1,5 +1,5 @@
 <?php 
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 
 $i=0; foreach ($items as $key => $value) : 
 
@@ -11,7 +11,7 @@ $i=0; foreach ($items as $key => $value) :
 		$all = $value['access'];
 	}
 
-	if ($action || $all == "all" || Login::isSuperAdmin()) : $i++; 
+	if ($action || $all == "all" || User::isSuperAdmin()) : $i++; 
 
 ?>	
 <ul class="nav nav-sidebar">
@@ -29,7 +29,7 @@ $i=0; foreach ($items as $key => $value) :
 		$al = $value['access'];
 	}
 
-	if ($ac || $al == "all" || Login::isSuperAdmin()) :
+	if ($ac || $al == "all" || User::isSuperAdmin()) :
 
 	?>
 		<li><a href="<?php echo $v['link']; ?>"><span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> <?php echo $v['text']; ?></a></li>

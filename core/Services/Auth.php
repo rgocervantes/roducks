@@ -20,10 +20,9 @@
 
 namespace Roducks\Services;
 
-use Roducks\Framework\Login;
-use Roducks\Framework\Role;
 use Roducks\Framework\Event;
 use Roducks\Page\Service;
+use Roducks\Data\User;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Data\Session;
 use Roducks\Libs\Utils\Date;
@@ -71,7 +70,7 @@ class Auth extends Service
 				} else {
 
 					// Password matches and role is active
-					if (Login::paywall($auth['password'], $auth['salt'], $password) && $auth['ractive'] == 1) {
+					if (User::paywall($auth['password'], $auth['salt'], $password) && $auth['ractive'] == 1) {
 
 						$success = true;
 						$message = TEXT_AUTH_OK;
@@ -87,7 +86,7 @@ class Auth extends Service
 						// Log out all current users
 						if (!empty($auth['location']) && $auth['location'] != $ip && $auth['loggedin'] == 1) {
 							$logInOut = 0;
-							Session::set(Login::SESSION_SECURITY, 1);
+							Session::set(User::SESSION_SECURITY, 1);
 						}
 
 						// Store user data in session to recover later
@@ -170,54 +169,9 @@ class Auth extends Service
 	}
 
 	/**
-	*	@return json
-	*/
-	public function loginAdmin($return = false)
-	{
-		if ($return) {
-			return $this->_response(Login::SESSION_ADMIN, Role::TYPE_USERS, $return);
-		}
-
-		$this->_response(Login::SESSION_ADMIN, Role::TYPE_USERS, $return);
-	}
-
-	public function paywallAdmin() {
-		$id = Login::getAdminId();
-		$this->_paywall($id);
-	}
-
-	public function loginSubscriber($return = false)
-	{
-		if ($return) {
-			return $this->_response(Login::SESSION_FRONT, Role::TYPE_SUBSCRIBERS, $return);
-		}
-
-		$this->_response(Login::SESSION_FRONT, Role::TYPE_SUBSCRIBERS, $return);
-	}
-
-	public function paywallSubscriber()
-	{
-		$id = Login::getSubscriberId();
-		$this->_paywall($id);
-	}
-
-	public function logout()
-	{
-		$id = $this->post->param("id");
-		$db = $this->db();
-		$tx = UsersTable::open($db)->logInOut($id, 0);
-
-		if ($tx === false) {
-			$this->setError(0, "Something went wrong!");
-		}
-
-		parent::output();
-	}
-
-	/**
 	 * @return bool
 	 */
-	public function auth($type, $email, $password)
+	public function valid($type, $email, $password)
  	{
  		$valid = false;
  		$data = [];
@@ -234,7 +188,7 @@ class Auth extends Service
  			if ($auth['active'] == 1 && $auth['trash'] == 0) {
 
  				// Password matches and role is active
- 				$valid = (Login::paywall($auth['password'], $auth['salt'], $password) && $auth['ractive'] == 1);
+ 				$valid = (User::paywall($auth['password'], $auth['salt'], $password) && $auth['ractive'] == 1);
  				$data = $auth;
  			}
 
@@ -243,20 +197,36 @@ class Auth extends Service
  		return ['valid' => $valid, 'data' => $data];
  	}
 
-	/**
-	 * @return bool
-	 */
-	public function authAdmin($email, $password)
+	public function login($return = false)
 	{
-		return $this->auth(Role::TYPE_USERS, $email, $password);
+
+		$config = User::login();
+
+		if ($return) {
+			return $this->_response($config['session_name'], $config['role_type'], $return);
+		}
+
+		$this->_response($config['session_name'], $config['role_type'], $return);
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function authSubscriber($email, $password)
+	public function logout($userId)
 	{
-		return $this->auth(Role::TYPE_SUBSCRIBERS, $email, $password);
+		Event::dispatch('onEventLogout', [$userId]);
+		return $this->model('users/users')->logInOut($userId, 0);
+	}
+
+	public function forceToLogout()
+	{
+		if (User::isLoggedIn()) {
+			$id = $this->post->param("id");
+			$tx = $this->logout($id);
+
+			if ($tx === false) {
+				$this->setError(0, "Something went wrong!");
+			}
+		}
+
+		parent::output();
 	}
 
 }

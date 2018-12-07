@@ -38,6 +38,8 @@ use Roducks\Framework\Language;
 
 class Url extends Service
 {
+  private $_id = 0;
+  private $_urls = [];
 
   public function set(array $urls)
   {
@@ -45,13 +47,13 @@ class Url extends Service
     $urlsTable = $this->model('SEO/urls')->prepare();
     $urlsTable->setCreatedAt('NOW()');
     $urlsTable->save();
-    $urlId = $urlsTable->getId();
+    $this->_id = $urlsTable->getId();
 
     foreach ($urls as $iso => $url) {
       $langId = Language::getId($iso);
 
       $urlLangTable = $this->model('SEO/urls-lang')->prepare();
-      $urlLangTable->setIdUrl($urlId);
+      $urlLangTable->setIdUrl($this->_id);
       $urlLangTable->setIdLang($langId);
       $urlLangTable->setUrl($url['url']);
       $urlLangTable->setDispatch($url['dispatch']);
@@ -69,11 +71,22 @@ class Url extends Service
       }
 
       $urlLangTable->save();
+      $this->_urls[$iso] = $urlLangTable->getId();
 
     }
 
-    return $urlId;
+    return $this;
 
+  }
+
+  public function getId()
+  {
+    return $this->_id;
+  }
+
+  public function getIds()
+  {
+    return $this->_urls;
   }
 
 }

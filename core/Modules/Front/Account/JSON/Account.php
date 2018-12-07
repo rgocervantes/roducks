@@ -22,7 +22,7 @@ namespace Roducks\Modules\Front\Account\JSON;
 
 use Roducks\Page\JSON;
 use Roducks\Page\View;
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Framework\Role;
 use Roducks\Libs\Utils\Date;
 use DB\Models\Users\Users as UsersTable;
@@ -41,7 +41,7 @@ class Account extends JSON
 		parent::__construct($settings);
 
 		$this->post->required();
-		$this->accessSubscriber();
+		$this->accessDenied();
 		$this->role(Role::TYPE_SUBSCRIBERS);
 		$this->grantAccess->json();
 
@@ -53,7 +53,7 @@ class Account extends JSON
 
 		$db = $this->db();
 		$this->_user = UsersTable::open($db);
-		$this->_id = Login::getSubscriberId();
+		$this->_id = User::getId();
 
 	}
 
@@ -66,12 +66,12 @@ class Account extends JSON
 		$this->grantAccess->edit();
 
 		// Update admin session ONLY if $id equals adminId session
-		Login::updateSubscriber($this->_id, $this->_fields);
+		User::updateSessionData($this->_id, $this->_fields);
 
 		$this->_user->update($this->_id, $this->_fields);
 
 		$this->data('url_redirect', '/account');
-		
+
 		parent::output();
 	}
 
@@ -98,7 +98,7 @@ class Account extends JSON
 		$data = ['picture' => $this->post->text('picture')];
 		// Update admin session ONLY if $id equals adminId session
 		$this->_user->update($this->_id, $data);
-		Login::updateSubscriber($this->_id, $data);
+		User::updateSessionData($this->_id, $data);
 
 		parent::output();
 	}

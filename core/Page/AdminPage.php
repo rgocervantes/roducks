@@ -20,18 +20,15 @@
 
 namespace Roducks\Page;
 
-use Roducks\Framework\Login;
-use Roducks\Framework\Path;
+use Roducks\Data\User;
 
 class AdminPage extends Page
 {
 
 	public function __construct(array $settings, View $view)
 	{
-		parent::__construct($settings, $view);	
-
-		$login = new Login(Login::SESSION_ADMIN, static::LOGIN_URL);
-		$login->required(); // *Important*
+		parent::__construct($settings, $view);
+		$this->requireLogin();
 	}
 
 }

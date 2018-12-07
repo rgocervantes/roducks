@@ -22,10 +22,9 @@ namespace Roducks\Blocks\User;
 
 use Roducks\Page\Block;
 use Roducks\Page\JSON;
-use Roducks\Data\User as UserData;
 use Roducks\Framework\Dispatch;
 use Roducks\Framework\Helper;
-use Roducks\Framework\Login;
+use Roducks\Data\User as UserData;
 use Roducks\Framework\Path;
 use Roducks\Libs\Utils\Date;
 use Roducks\Services\Storage;
@@ -38,9 +37,8 @@ class User extends Block
 
 	private function _picture($img, $resize)
 	{
-
 		$squared = Path::getIcon("users/{$img}");
-		$original = $squared;
+		$full = $squared;
 
 		if (!empty($img)) {
 
@@ -53,13 +51,13 @@ class User extends Block
 			}
 
 			if (\App::fileExists( Path::getUploadsUsers($img) )) {
-				$original = Path::getUploadedUsers($img);
+				$full = Path::getUploadedUsers($img);
 			}
 
 		}
 
-		$this->view->data('original', $original);
-		$this->view->data('squared', $squared);
+		$this->view->data('full', $full);
+		$this->view->data('img', $squared);
 		$this->view->data('resize', $resize);
 	}
 
@@ -116,6 +114,7 @@ class User extends Block
 	{
 
 		$this->view->data('img', UserData::getPicture(false, $resize));
+		$this->view->data('resize', $resize);
 		$this->view->load('picture');
 
 		return $this->view->output();
@@ -124,7 +123,9 @@ class User extends Block
 
 	public function pictureModal($resize = 150)
 	{
-		$this->view->data('img', UserData::getPicture(false));
+		$img = UserData::getPicture(false);
+		$this->view->data('full', $img);
+		$this->view->data('img', $img);
 		$this->view->data('resize', $resize);
 		$this->view->load('picture-modal');
 
@@ -145,16 +146,12 @@ class User extends Block
 		return $this->view->output();
 	}
 
-	public function output($session, $resize = 150)
+	public function output($picture, $resize = 150, $display = 'picture')
 	{
+		$this->_picture($picture, $resize);
+		$this->view->load($display);
 
-		$this->params([
-			'resize' => [$resize, 'PARAM', Dispatch::PARAM_INTEGER]
-		]);
-
-		$img = Login::getData($session, "picture");
-
-		return $this->picture($img, $resize);
+		return $this->view->output();
 
 	}
 

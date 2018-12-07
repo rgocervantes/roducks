@@ -18,8 +18,10 @@
  *
  */
 
-use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use Roducks\Data\User;
 
 return [
-	'SESSION_NAME' => Login::SESSION_FRONT
+	'SESSION_NAME' => User::SESSION_FRONT,
+	'ROLE_TYPE' => Role::TYPE_SUBSCRIBERS
 ];

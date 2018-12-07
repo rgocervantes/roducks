@@ -18,8 +18,10 @@
  *
  */
 
-use Roducks\Framework\Login;
+use Roducks\Framework\Role;
+use Roducks\Data\User;
 
 return [
-	'SESSION_NAME' => Login::SESSION_ADMIN
+	'SESSION_NAME' => User::SESSION_ADMIN,
+	'ROLE_TYPE' => Role::TYPE_USERS
 ];

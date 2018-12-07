@@ -20,7 +20,7 @@
 
 namespace Roducks\Modules\Admin\Users\JSON;
 
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Framework\Role;
 use Roducks\Framework\Form;
 use Roducks\Framework\Helper;
@@ -72,10 +72,10 @@ class Users extends JSON
 
 		$this->grantAccess->create();
 		$gender = $this->post->select('gender');
-		$admin_id_user_tree = Login::getAdminData('id_user_tree');
+		$admin_id_user_tree = User::getData('id_user_tree');
 
 		$fields = [
-			'id_user_parent' => Login::getAdminId(),
+			'id_user_parent' => User::getId(),
 			'email' 		 => $this->post->text('email'),
 			'password' 		 => $this->post->password('password'),
 			'gender' 		 => $gender,
@@ -88,7 +88,7 @@ class Users extends JSON
 
 		if ($tx !== false) {
 			$id = $this->_user->getId();
-			$tree = (Login::isSuperAdmin()) ? '0' : Login::getAdminId();
+			$tree = (User::isSuperAdmin()) ? '0' : User::getId();
 			$id_user_tree = ($admin_id_user_tree == '0') ? $tree : implode("_", [$admin_id_user_tree,$tree]);
 
 			$this->_user->update($id, ['id_user_tree' => $id_user_tree]);
@@ -109,16 +109,16 @@ class Users extends JSON
 	{
 
 		$row = $this->_user->row($id_user);
-		$this->grantAccess->editDescendent($id_user, $row, $this->_user->isDescendent($id_user, Login::getAdminId()), "edit");
+		$this->grantAccess->editDescendent($id_user, $row, $this->_user->isDescendent($id_user, User::getId()), "edit");
 
-		if (Login::getAdminId() == $id_user) {
+		if (User::getId() == $id_user) {
 			unset($this->_fields['id_role']);
 			unset($this->_fields['active']);
 			unset($this->_fields['expires']);
 			unset($this->_fields['expiration_date']);
 
 			// Update admin session ONLY if $id equals adminId session
-			Login::updateAdmin($id_user, $this->_fields);
+			User::updateSessionData($id_user, $this->_fields);
 		}
 
 		$this->data('url_redirect', $this->_url);
@@ -130,7 +130,7 @@ class Users extends JSON
 	public function changePassword()
 	{
 
-		$id_user = Login::getAdminId();
+		$id_user = User::getId();
 		$this->grantAccess->reset();
 
 		// Make sure user didn't skip his current password.
@@ -147,7 +147,7 @@ class Users extends JSON
 	{
 
 		$row = $this->_user->row($id_user);
-		$this->grantAccess->editDescendent($id_user, $row, $this->_user->isDescendent($id_user, Login::getAdminId()), "reset");
+		$this->grantAccess->editDescendent($id_user, $row, $this->_user->isDescendent($id_user, User::getId()), "reset");
 		$this->_user->changePassword($id_user, $this->post->password('new_password'));
 
 		parent::output();
@@ -157,12 +157,12 @@ class Users extends JSON
 	{
 
 		$row = $this->_user->row($id_user);
-		$this->grantAccess->editDescendent($id_user, $row, $this->_user->isDescendent($id_user, Login::getAdminId()), "picture");
+		$this->grantAccess->editDescendent($id_user, $row, $this->_user->isDescendent($id_user, User::getId()), "picture");
 
 		$data = ['picture' => $this->post->text('picture')];
 		// Update admin session ONLY if $id equals adminId session
 		$this->_user->update($id_user, $data);
-		Login::updateAdmin($id_user, $data);
+		User::updateSessionData($id_user, $data);
 
 		parent::output();
 	}
@@ -174,7 +174,7 @@ class Users extends JSON
 		$value = $this->post->param('value');
 
 		$row = $this->_user->row($id);
-		$this->grantAccess->editDescendent($id, $row, $this->_user->isDescendent($id, Login::getAdminId()), "trash");
+		$this->grantAccess->editDescendent($id, $row, $this->_user->isDescendent($id, User::getId()), "trash");
 
 		$form = Form::validation([
 			Form::filter(Form::FILTER_INTEGER, $id),
@@ -183,7 +183,7 @@ class Users extends JSON
 
 		if ($form->success()) {
 
-			if ($id != Login::getAdminId() || Login::isSuperAdmin()) {
+			if ($id != User::getId() || User::isSuperAdmin()) {
 				$user = $this->_user->row($id);
 				if ($this->_user->rows()) {
 					$this->_user->update($id, ['loggedin' => 0, 'trash' => $value]);
@@ -211,7 +211,7 @@ class Users extends JSON
 		$active = $this->post->param('value');
 
 		$row = $this->_user->row($id);
-		$this->grantAccess->editDescendent($id, $row, $this->_user->isDescendent($id, Login::getAdminId()), "visibility");
+		$this->grantAccess->editDescendent($id, $row, $this->_user->isDescendent($id, User::getId()), "visibility");
 
 		$form = Form::validation([
 			Form::filter(Form::FILTER_INTEGER, $id),
@@ -221,7 +221,7 @@ class Users extends JSON
 		if ($form->success()) {
 
 			// Make sure user ID is not the same as current adminId because you cannot disable yourself!
-			if ($id != Login::getAdminId() || Login::isSuperAdmin()) {
+			if ($id != User::getId() || User::isSuperAdmin()) {
 				$user = $this->_user->row($id);
 				if ($this->_user->rows()) {
 					$this->_user->update($id, ['loggedin' => 0,'active' => $active]);
@@ -248,7 +248,7 @@ class Users extends JSON
 		$date = $this->post->param('date');
 
 		$row = $this->_user->row($id);
-		$this->grantAccess->editDescendent($id, $row, $this->_user->isDescendent($id, Login::getAdminId()), "expiration");
+		$this->grantAccess->editDescendent($id, $row, $this->_user->isDescendent($id, User::getId()), "expiration");
 
 		$form = Form::validation([
 			Form::filter(Form::FILTER_INTEGER, $id),
@@ -257,7 +257,7 @@ class Users extends JSON
 
 		if ($form->success()) {
 
-			if ($id != Login::getAdminId() || Login::isSuperAdmin()) {
+			if ($id != User::getId() || User::isSuperAdmin()) {
 				$user = $this->_user->row($id);
 				if ($this->_user->rows()) {
 					$this->_user->update($id, ['expires' => 1,'expiration_date' => $date]);

@@ -37,22 +37,22 @@ class Session
 	{
 		session_set_cookie_params($lifetime); // 1 hr.
 	}
-	
+
 	public static function set($name,$value)
 	{
-		$_SESSION[$name] = $value; 
+		$_SESSION[$name] = $value;
 	}
 
 	public static function delete($n)
 	{
 		self::set($n,null);
-	}	
+	}
 
 	public static function exists($n)
 	{
 		return isset($_SESSION[$n]);
 	}
-	
+
 	public static function get($n)
 	{
 		return (self::exists($n)) ? $_SESSION[$n] : [];
@@ -66,7 +66,7 @@ class Session
 			foreach ($data as $key => $value) {
 				$stored[$key] = $value;
 			}
-			
+
 			self::set($name, $stored);
 		}
 	}
@@ -81,16 +81,16 @@ class Session
 					unset($stored[$key]);
 				}
 			}
-			
+
 			self::set($name, $stored);
 		}
-	}	
+	}
 
 	public static function reset($name)
 	{
 		if (self::exists($name)) {
-			unset($_SESSION[$name]);		
+			unset($_SESSION[$name]);
 		}
 	}
-		
+
 }

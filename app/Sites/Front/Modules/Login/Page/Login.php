@@ -20,26 +20,9 @@
 
 namespace App\Sites\Front\Modules\Login\Page;
 
-use Roducks\Framework\Login as LoginAuth;
 use Roducks\Modules\All\Login\Page\Login as LoginPage;
 
 class Login extends LoginPage
 {
-
-	protected $_session = LoginAuth::SESSION_FRONT;
-
-	public function login()
-	{
-
-		parent::login();
-
-		$this->view->title(TEXT_LOGIN);
-		$this->view->assets->scriptsInline(['login']);
-		$this->view->assets->scriptsOnReady(['login.ready']);
-		$this->view->load("login");
-
-		return $this->view->output();
-
-	}
 
 }

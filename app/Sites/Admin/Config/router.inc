@@ -21,7 +21,6 @@
 use Roducks\Framework\Router;
 use Roducks\Framework\Dispatch;
 use Roducks\Framework\Helper;
-use Roducks\Framework\Login;
 use Roducks\Framework\Role;
 use App\Sites\Admin\Modules\Users\Helper\Users;
 use App\Sites\Admin\Modules\Subscribers\Helper\Subscribers;
@@ -42,14 +41,14 @@ Router::init(function() {
 	|				AUTH
 	|---------------------------------
 	*/
-	Router::post('/auth', Dispatch::service("auth", "login-admin"), function() {
+	Router::post('/auth', Dispatch::service("auth", "login"), function() {
 		return [
 			'email' => Dispatch::PARAM_EMAIL,
 			'password' => Dispatch::PARAM_PASSWORD
 		];
 	});
 
-	Router::get('/login', Dispatch::page("login", "login"));
+	Router::get('/login', Dispatch::page("login", "form"));
 	Router::get('/logout', Dispatch::page("login", "logout"));
 
 	/*

@@ -21,7 +21,7 @@
 namespace DB\Models\Users;
 
 use Model;
-use Login;
+use User;
 
 class Users extends Model
 {
@@ -75,7 +75,7 @@ class Users extends Model
 			return false;
 		}
 
-		return Login::paywall($row['password'], $row['salt'], $password);
+		return User::paywall($row['password'], $row['salt'], $password);
 	}
 
 	/**
@@ -84,7 +84,7 @@ class Users extends Model
 	*/
 	public function changePassword($id, $password)
 	{
-		$secret = Login::generatePassword($password);
+		$secret = User::generatePassword($password);
 
 		$data = [];
 		$data['updated_at'] = self::now();
@@ -99,7 +99,7 @@ class Users extends Model
 	*/
 	public function create($data)
 	{
-		$secret = Login::generatePassword($data['password']);
+		$secret = User::generatePassword($data['password']);
 
 		$data['created_at'] = self::now();
 		$data['updated_at'] = self::now();

@@ -20,7 +20,7 @@
 
 namespace Roducks\Modules\Admin\Users\Page;
 
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Framework\Role;
 use Roducks\Framework\URL;
 use Roducks\Framework\Post;
@@ -88,16 +88,16 @@ class Users extends AdminPage
 		$end_date = Date::getFormatDMY("/");
 		$filter = ['u.trash' => $this->trash];
 
-		if (!Login::isSuperAdmin()) {
+		if (!User::isSuperAdmin()) {
 
 			if ($this->grantAccess->hasAccess("descendants")) {
-				$filter['u.id_user_parent'] = Login::getAdminId();
+				$filter['u.id_user_parent'] = User::getId();
 			}
 
-			if ($this->grantAccess->hasAccess("tree") && Login::roleSuperAdmin()) {
+			if ($this->grantAccess->hasAccess("tree") && User::roleSuperAdmin()) {
 				$filter['[BEGIN_COND]'] = "(";
-					$filter['[NON]u.id_user_parent:>'] = Login::getAdminData('id_user_parent');
-					$filter['[OR]u.id_role:>'] = Login::getAdminData('id_role');
+					$filter['[NON]u.id_user_parent:>'] = User::getData('id_user_parent');
+					$filter['[OR]u.id_role:>'] = User::getData('id_role');
 				$filter['[END_COND]'] = ")";
 
 				if ($this->tree == 1) {
@@ -108,7 +108,7 @@ class Users extends AdminPage
 					unset($filter['[OR]u.id_role:>']);
 					unset($filter['[END_COND]']);
 
-					$filter['u.id_user_tree:%like%'] = Login::getAdminId();
+					$filter['u.id_user_tree:%like%'] = User::getId();
 				}
 			}
 		} else {
@@ -116,7 +116,7 @@ class Users extends AdminPage
 
 			if ($this->tree == 1) {
 				unset($access['tree']);
-				$filter['u.id_user_parent'] = Login::getAdminId();
+				$filter['u.id_user_parent'] = User::getId();
 			}
 		}
 
@@ -229,14 +229,14 @@ class Users extends AdminPage
 	public function logs()
 	{
 
-		$id_user = $this->getUrlParam('userId', Login::getAdminId());
+		$id_user = $this->getUrlParam('userId', User::getId());
 
 		$db = $this->db();
 		$user = UsersTable::open($db);
 		$row = $user->row($id_user);
 		$this->hasData( $user->rows() );
 
-		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, Login::getAdminId()), "logs");
+		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, User::getId()), "logs");
 
 		$filter = [];
 		$isFiltered = false;
@@ -311,7 +311,7 @@ class Users extends AdminPage
 	public function edit()
 	{
 
-		$id_user = $this->getUrlParam('userId', Login::getAdminId());
+		$id_user = $this->getUrlParam('userId', User::getId());
 		$db = $this->db();
 		$user = UsersTable::open($db);
 		$userJoin = UsersRoles::open($db);
@@ -319,7 +319,7 @@ class Users extends AdminPage
 
 		$this->hasData( $userJoin->rows() );
 
-		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, Login::getAdminId()), "edit");
+		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, User::getId()), "edit");
 
 		$this->_form($db);
 
@@ -400,7 +400,7 @@ class Users extends AdminPage
 		$id_user = $this->getUrlParam('userId');
 
 		// Can't reset yourself!
-		if (Login::getAdminId() == $id_user) {
+		if (User::getId() == $id_user) {
 			$this->forbiddenRequest();
 		}
 
@@ -409,7 +409,7 @@ class Users extends AdminPage
 		$row = $user->row($id_user);
 		$this->hasData( $user->rows() );
 
-		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, Login::getAdminId()), "reset");
+		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, User::getId()), "reset");
 
 		$this->view->assets->scriptsInline(["form"]);
 		$this->view->title(TEXT_RESET_PASSWORD);
@@ -448,14 +448,14 @@ class Users extends AdminPage
 	public function picture()
 	{
 
-		$id_user = $this->getUrlParam('userId', Login::getAdminId());
+		$id_user = $this->getUrlParam('userId', User::getId());
 
 		$db = $this->db();
 		$user = UsersTable::open($db);
 		$row = $user->row($id_user);
 		$this->hasData( $user->rows() );
 
-		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, Login::getAdminId()), "picture");
+		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, User::getId()), "picture");
 
 		$this->view->assets->plugins([
 			'bootstrap',

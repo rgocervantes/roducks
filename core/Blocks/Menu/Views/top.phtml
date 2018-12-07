@@ -1,5 +1,5 @@
 <?php
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 ?>
 <ul class="dropdown-menu">
 <?php foreach ($items as $key => $value) : ?>
@@ -19,7 +19,7 @@ use Roducks\Framework\Login;
 		$all = $value['access'];
 	}
 
-	if ($action || $all == "all" || Login::isSuperAdmin()) :
+	if ($action || $all == "all" || User::isSuperAdmin()) :
 
 ?>
 		<li>

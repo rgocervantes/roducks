@@ -20,6 +20,8 @@
 
 namespace Roducks\Framework;
 
+use Roducks\Data\User;
+
 class Role
 {
 
@@ -32,28 +34,28 @@ class Role
 
 	static $types = [
 		self::TYPE_USERS => [
-			'session' => Login::SESSION_ADMIN,
+			'session' => User::SESSION_ADMIN,
 			'title' => TEXT_USERS,
 			'url' => "/roles/list",
 			'icon' => 'user',
 			'access' => ["roles","view"]
 		],
 		self::TYPE_SUBSCRIBERS => [
-			'session' => Login::SESSION_FRONT,
+			'session' => User::SESSION_FRONT,
 			'title' => TEXT_SUBSCRIBERS,
 			'url' => "/roles/list",
 			'icon' => 'user',
 			'access' => ["roles","view"]
 		],
 		self::TYPE_CLIENTS => [
-			'session' => Login::SESSION_CLIENT,
+			'session' => User::SESSION_CLIENT,
 			'title' => TEXT_CLIENTS,
 			'url' => "/roles/list",
 			'icon' => 'briefcase',
 			'access' => ["roles","view"]
 		],
 		self::TYPE_SUPPLIERS => [
-			'session' => Login::SESSION_SUPPLIER,
+			'session' => User::SESSION_SUPPLIER,
 			'title' => TEXT_SUPPLIERS,
 			'url' => "/roles/list",
 			'icon' => 'briefcase',
@@ -95,7 +97,7 @@ class Role
 
 		foreach ($list as $type => $role) {
 			$menu[] = [
-				'link' => URL::setURL(self::$types[$type]['url'], ['type' => $type], false), 
+				'link' => URL::setURL(self::$types[$type]['url'], ['type' => $type], false),
 				'text' => self::$types[$type]['title'],
 				'access' => self::$types[$type]['access'],
 			];

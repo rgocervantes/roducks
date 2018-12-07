@@ -27,6 +27,7 @@ extensions.js
 deploy.sh
 
 # Roducks Local files
+data
 public/static
 config/*.local.inc
 app/Data

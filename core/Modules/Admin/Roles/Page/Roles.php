@@ -24,7 +24,7 @@ use Roducks\Page\View;
 use Roducks\Page\JSON;
 use Roducks\Page\AdminPage;
 use Roducks\Framework\URL;
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Framework\Role;
 use Roducks\Libs\Data\Session;
 use DB\Models\Users\Roles as RolesTable;
@@ -177,7 +177,7 @@ class Roles extends AdminPage
 		$edit = ($id_role > 6);
 
 		// Can't edit role you belong to.
-		if($id_role == 1 || $id_role == Login::getAdminData('id_role') || $id_role < Login::getAdminData('id_role')){
+		if($id_role == 1 || $id_role == User::getData('id_role') || $id_role < User::getData('id_role')){
 			$this->pageNotFound();
 		}		
 

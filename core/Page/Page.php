@@ -21,12 +21,12 @@
 namespace Roducks\Page;
 
 use Roducks\Framework\Core;
-use Roducks\Framework\Login;
 use Roducks\Framework\Language;
 use Roducks\Framework\URL;
 use Roducks\Framework\Error;
 use Roducks\Framework\Helper;
 use Roducks\Framework\Path;
+use Roducks\Data\User;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Data\Session;
 
@@ -68,10 +68,10 @@ class Page extends GenericPage
 		$this->hasData(false);
 	}
 
-	protected function accountSubscriber($url = "/")
+	protected function requireLogin()
 	{
-		if (Login::isSubscriberLoggedIn() || !ALLOW_SUBSCRIBERS_REGISTER) {
-			$this->redirect($url);
+		if (!User::isLoggedIn()) {
+			$this->redirect(static::LOGIN_URL);
 		}
 	}
 

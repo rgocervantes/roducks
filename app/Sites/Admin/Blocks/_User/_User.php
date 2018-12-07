@@ -32,7 +32,7 @@ class _User extends User
 	{
 		parent::__construct($settings, $view);
 
-		$this->accessAdmin(); // Only can be dispatched when admin is logged in.
+		$this->accessDenied(); // Only can be dispatched when admin is logged in.
 	}	
 
 }

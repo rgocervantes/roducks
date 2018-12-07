@@ -20,18 +20,16 @@
 
 namespace Roducks\Page;
 
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 
 class FrontPage extends Page
 {
 
-	protected $login;
-
-	public function __construct(array $settings, View $view)
+  protected function accountSubscriber($url = "/")
 	{
-		parent::__construct($settings, $view);
-
-		$this->login = new Login(Login::SESSION_FRONT, static::LOGIN_URL);
+		if (User::isLoggedIn() || !ALLOW_SUBSCRIBERS_REGISTER) {
+			$this->redirect($url);
+		}
 	}
 
 }

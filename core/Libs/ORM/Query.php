@@ -57,8 +57,8 @@ namespace Roducks\Libs\ORM;
 	// PARENTHESIS
 
 		$filter['[BEGIN_COND]'] = "(";
-			$filter['[NON]u.id_user_parent:>'] = Login::getAdminData('id_user_parent');
-			$filter['[OR]u.id_role:>'] = Login::getAdminData('id_role');
+			$filter['[NON]u.id_user_parent:>'] = User::getData('id_user_parent');
+			$filter['[OR]u.id_role:>'] = User::getData('id_role');
 		$filter['[END_COND]'] = ")";
 
 */

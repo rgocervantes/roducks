@@ -227,21 +227,33 @@ INSERT INTO `Fields` (`id_type`, `title`, `name`, `type`, `required`, `created_a
 
 CREATE TABLE IF NOT EXISTS `Content` (
   `id_content` bigint(8) UNSIGNED AUTO_INCREMENT NOT NULL,
-  `id_url` bigint(8) UNSIGNED NOT NULL,
   `id_type` bigint(8) UNSIGNED NOT NULL,
   `id_layout` bigint(8) UNSIGNED NOT NULL,
   `id_user` bigint(8) UNSIGNED NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `description` text NULL,
   `active` tinyint(1) DEFAULT '1',
   `created_at` datetime NOT NULL,
   `updated_at` datetime NULL,
   `deleted_at` datetime NULL,
   PRIMARY KEY (`id_content`),
-  CONSTRAINT `fk_pc_id_url` FOREIGN KEY (`id_url`) REFERENCES `Urls` (`id_url`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_pc_id_type` FOREIGN KEY (`id_type`) REFERENCES `PageTypes` (`id_type`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_pc_id_layout` FOREIGN KEY (`id_layout`) REFERENCES `Layouts` (`id_layout`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_pc_id_user` FOREIGN KEY (`id_user`) REFERENCES `Users` (`id_user`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `ContentLang` (
+  `id_content_lang` bigint(8) UNSIGNED AUTO_INCREMENT NOT NULL,
+  `id_content` bigint(8) UNSIGNED NOT NULL,
+  `id_url_lang` bigint(8) UNSIGNED NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NULL,
+  `deleted_at` datetime NULL,
+  PRIMARY KEY (`id_content_lang`),
+  CONSTRAINT `fk_pc_id_content` FOREIGN KEY (`id_content`) REFERENCES `Content` (`id_content`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_pc_id_url_lang` FOREIGN KEY (`id_url_lang`) REFERENCES `UrlsLang` (`id_url_lang`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

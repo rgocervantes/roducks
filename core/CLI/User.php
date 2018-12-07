@@ -43,13 +43,13 @@ class User extends CLI
 
 			$id_role = 1; // super-admin
 			$ids_roles = [];
-			$user = $this->model("Users\Users");
+			$user = $this->model('users/users');
 
 			if ($this->getFlag('--super-admin') || $user->exists($email)) {
 				array_push($ids_roles, $id_role);
 			} else {
 
-				$roles = $this->model("Users\Roles")->getCatalog();
+				$roles = $this->model('users/roles')->getCatalog();
 
 				$this->dialogInfo('Roles');
 
@@ -102,7 +102,7 @@ class User extends CLI
 						if ($tx === false) {
 							$this->error("User could not be created.");
 							$this->error("[x]");
-							$this->error("[*]It is very possible that it already exist.");
+							$this->error("[*]It is very possible that it already exists.");
 						} else {
 							$this->success("User was created successfully!");
 						}
@@ -130,7 +130,7 @@ class User extends CLI
 
 		if (!empty($email) && !empty($password)) {
 
-			$user = $this->model("Users\Users");
+			$user = $this->model('users/users');
 			$user->filter(['email' => $email]);
 
 			if ($user->foundRow()) {
@@ -162,7 +162,7 @@ class User extends CLI
 		$id = $this->getParam('id', 1);
 		$email = $this->getParam('email', null);
 
-		$usersTable = $this->model("Users\Users");
+		$usersTable = $this->model('users/users');
 
 		if (!is_null($email)) {
 			$usersTable->filter(['email' => $email]);

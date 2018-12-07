@@ -23,11 +23,12 @@ namespace Roducks\Framework;
 use Roducks\Page\JSON;
 use Roducks\Libs\Data\Session;
 use Roducks\Libs\Utils\Date;
-use Request;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Request\CORS;
 use DB\Models\SEO\UrlsUrlsLang;
 use DB\Models\Users\Users as UsersTable;
+use Request;
+use User;
 
 class Dispatch
 {
@@ -216,7 +217,7 @@ class Dispatch
 			$isLoggedIn = Session::exists($sessionName);
 
 			if ($isLoggedIn) {
-				$id_user = Login::getId($sessionName);
+				$id_user = User::getId($sessionName);
 
 				$ip = Http::getIPClient();
 				$db = Core::db();
@@ -235,10 +236,10 @@ class Dispatch
 				// Log Out when User is disabled - or - Admin forces User to log out
 				if ( $row['active'] == 0 || $row['loggedin'] == 0 ) {
 
-					if ($location == $ip && Login::security(true) && $secure === TRUE) {
+					if ($location == $ip && User::security(true) && $secure === TRUE) {
 						$user->update(['id_user' => $id_user],['loggedin' => 1]);
 					} else {
-						Login::logout($sessionName);
+						User::logout();
 					}
 
 				}

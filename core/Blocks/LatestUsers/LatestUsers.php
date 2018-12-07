@@ -21,7 +21,7 @@
 namespace Roducks\Blocks\LatestUsers;
 
 use Roducks\Page\Block;
-use Roducks\Framework\Login;
+use Roducks\Data\User;
 use Roducks\Framework\Role;
 use DB\Models\Users\UsersRoles;
 use App\Sites\Admin\Modules\Roles\Helper\Roles as RolesHelper;
@@ -49,7 +49,7 @@ class LatestUsers extends Block
 		$access = $this->grantAccess->getAccess();
 		
 		$filter = [];
-		$filter['u.id_user'] = Login::getAdminId();
+		$filter['u.id_user'] = User::getId();
 			
 		$db = $this->db();
 		$users = UsersRoles::open($db);
@@ -68,16 +68,16 @@ class LatestUsers extends Block
 		$filter = [];
 		$filter['u.trash'] = 0; 
 
-		if (!Login::isSuperAdmin()) {
+		if (!User::isSuperAdmin()) {
 
 			if ($this->grantAccess->hasAccess("descendants")/* || in_array($type, RolesHelper::getIds())*/) {
-				$filter['u.id_user_parent'] = Login::getAdminId();
+				$filter['u.id_user_parent'] = User::getId();
 			}
 
-			if ($this->grantAccess->hasAccess("tree") && Login::roleSuperAdmin()) {
+			if ($this->grantAccess->hasAccess("tree") && User::roleSuperAdmin()) {
 				$filter['[BEGIN_COND]'] = "(";
-					$filter['[NON]u.id_user_parent:>'] = Login::getAdminData('id_user_parent');
-					$filter['[OR]u.id_role:>'] = Login::getAdminData('id_role');
+					$filter['[NON]u.id_user_parent:>'] = User::getData('id_user_parent');
+					$filter['[OR]u.id_role:>'] = User::getData('id_role');
 				$filter['[END_COND]'] = ")";
 			}
 		} else {

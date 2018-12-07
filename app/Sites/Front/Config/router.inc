@@ -30,26 +30,27 @@ Router::init(function() {
 	|---------------------------------
 	*/
 	Router::get('/', Dispatch::page("home","index"));
+	Router::get('/profile', Dispatch::page('home', 'profile'));
 
 	Router::prefix('/contact-us', function($path) {
 
 		Router::get([$path => '/'], Dispatch::page("home","contact-us"));
 		Router::post([$path => '/submit'], Dispatch::json("home","contact-us-submit"));
-		
+
 	});
 	/*
 	|---------------------------------
 	|				AUTH
 	|---------------------------------
 	*/
-	Router::post('/auth', Dispatch::service("auth", "login-subscriber"), function() {
+	Router::post('/auth', Dispatch::service("auth", "login"), function() {
 		return [
 			'email' => Dispatch::PARAM_EMAIL,
 			'password' => Dispatch::PARAM_PASSWORD
 		];
 	});
 
-	Router::get('/login', Dispatch::page("login", "login"));
+	Router::get('/login', Dispatch::page("login", "form"));
 	Router::get('/logout', Dispatch::page("login", "logout"));
 
 	/*
@@ -75,4 +76,3 @@ Router::init(function() {
 	});
 
 });
-

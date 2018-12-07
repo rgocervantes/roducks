@@ -25,7 +25,7 @@ use Lib\XML;
 use Lib\Directory;
 use Path;
 use Helper;
-use Login;
+use User;
 use Date;
 
 class Comments extends Service
@@ -82,15 +82,15 @@ class Comments extends Service
     $comment = $this->post->textarea('comment');
     $data = ['comment' => $comment];
 
-    if (Login::isSubscriberLoggedIn()) {
+    if (User::isLoggedIn()) {
 
-      $data['picture'] = Path::getPublicUploadedUsers(Login::getSubscriberPicture(), 90);
+      $data['picture'] = User::getPicture(false, 90);
 
-      $attrs = ['id' => Login::getSubscriberId(), 'date' => Date::getCurrentDate()];
+      $attrs = ['uid' => User::getId(), 'date' => Date::getCurrentDate()];
 
       $data = $data + $attrs;
 
-      $data['name'] = Login::getSubscriberName();
+      $data['name'] = User::getName();
       $data['date'] = Date::getDateFormat($attrs['date'], $this->getLang());
 
       $node = $xml->createNode([

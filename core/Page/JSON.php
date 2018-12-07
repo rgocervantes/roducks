@@ -192,7 +192,7 @@ class JSON extends GenericPage
 		parent::__construct($settings);
 
 		if ($this->_authentication) {
-			$this->accessAdmin();
+			$this->accessDenied();
 		}
 
 		$this->post = Post::init();

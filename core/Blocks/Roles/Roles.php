@@ -21,6 +21,7 @@
 namespace Roducks\Blocks\Roles;
 
 use Roducks\Page\Block;
+use Path;
 
 class Roles extends Block
 {
@@ -37,7 +38,7 @@ class Roles extends Block
 		$config = $this->grantAccess->getFileConfig($name);
 
 		if (isset($config['data']) && count($config['data']) == 0) {
-			return $this->view->error('public', __METHOD__, "Invalid role config: " . DIR_ROLES . $name);
+			return $this->view->error('public', __METHOD__, "Invalid role config: " . Path::getRoles() . $name);
 		}
 
 		return $this->output($config['data'], $this->type, ["all" => 1]);
