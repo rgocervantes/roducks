@@ -107,7 +107,7 @@ class Home extends JSON
 				$user->update($id, ['id_user_tree' => '0']);
 
 				Event::dispatch('onEventCreateAccount', [$id, Role::TYPE_SUBSCRIBERS]);
-				AuthService::init()->login();
+				$auth = AuthService::init()->success($fields['email'], $fields['password']);
 				$this->data("url_redirect", "/");
 			}
 

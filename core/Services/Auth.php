@@ -122,34 +122,12 @@ class Auth extends Service
 		return $response;
 	}
 
-	/**
-	*	@return json
-	*/
-	private function _response($session, $type, $return = false)
-	{
-
-		$this->post->required();
-		$email = $this->post->text('email');
-		$password = $this->post->password('password');
-
-		$auth = $this->_login($session, $type, $email, $password);
-
-		if ($return) {
-			return $auth;
-		} else {
-			$this->setStatus($auth);
-			parent::output();
-		}
-
-	}
-
 	private function _paywall($id)
 	{
 
 		$this->post->required();
 		$password = $this->post->param('password');
-		$db = $this->db();
-		$users = UsersTable::open($db);
+		$users = $this->model('users/users');
 
 		if (!$users->paywall($id, $password)) {
 			$this->setError(401, TEXT_INCORRECT_PASSWORD);
@@ -197,16 +175,27 @@ class Auth extends Service
  		return ['valid' => $valid, 'data' => $data];
  	}
 
-	public function login($return = false)
+	public function success($email, $password)
+	{
+		$config = User::login();
+		return $this->_login($config['session_name'], $config['role_type'], $email, $password);
+	}
+
+	/**
+	*	@return json
+	*/
+	public function login()
 	{
 
-		$config = User::login();
+		$this->post->required();
+		$email = $this->post->text('email');
+		$password = $this->post->password('password');
 
-		if ($return) {
-			return $this->_response($config['session_name'], $config['role_type'], $return);
-		}
+		$auth = $this->success($email, $password);
 
-		$this->_response($config['session_name'], $config['role_type'], $return);
+		$this->setStatus($auth);
+		parent::output();
+
 	}
 
 	public function logout($userId)
@@ -218,6 +207,7 @@ class Auth extends Service
 	public function forceToLogout()
 	{
 		if (User::isLoggedIn()) {
+			$this->post->required();
 			$id = $this->post->param("id");
 			$tx = $this->logout($id);
 

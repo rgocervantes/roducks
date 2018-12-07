@@ -32,14 +32,13 @@ class Home extends FrontPage
 
 		$this->view->title(TEXT_WELCOME);
 		$this->view->load("index");
-		
+
 		return $this->view->output();
 
 	}
 
 	public function createAccount()
 	{
-
 		$this->accountSubscriber();
 
 		$this->view->assets->scriptsInline(["form"]);
@@ -53,7 +52,7 @@ class Home extends FrontPage
 	public function forgottenPassword()
 	{
 
-		$this->accountSubscriber();		
+		$this->accountSubscriber();
 
 		$this->view->assets->scriptsInline(["form"]);
 		$this->view->title("Forgotten Password");
@@ -69,7 +68,7 @@ class Home extends FrontPage
 
 		$db = $this->db();
 		$rows = UsersTable::open($db)->results(['token' => $token]);
-		
+
 		if (!$rows) {
 			$this->forbiddenRequest();
 		}
@@ -80,15 +79,15 @@ class Home extends FrontPage
 		$this->view->load("reset-password");
 
 		return $this->view->output();
-	}	
+	}
 
 	public function contactUs()
 	{
 
 		$this->view->assets->scriptsInline(["form"]);
 		$this->view->load("contact-us");
-		
-		return $this->view->output();
-	}	
 
-} 
+		return $this->view->output();
+	}
+
+}
