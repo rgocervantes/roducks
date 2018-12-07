@@ -64,13 +64,13 @@ use Roducks\Libs\Utils\Date;
 			<td><?php echo $row['email']; ?></td>
 			<td align="center">
 				<?php if( (isset($access['expiration']) || User::isSuperAdmin()) && ($row['id_user'] != User::getId() && $row['id_user'] != 1)): ?>
-					<button type="button" onclick="expirationDate(<?php echo $row['id_user']; ?>,'<?php echo Date::parseDate($row['expiration_date']); ?>')" class="btn btn-info"><span class="glyphicon glyphicon-time" aria-hidden="true"></span></button>
+					<button type="button" onclick="expirationDate(<?php echo $row['id_user']; ?>,'<?php echo $row['expiration_date']; ?>')" class="btn btn-info"><span class="glyphicon glyphicon-time" aria-hidden="true"></span></button>
 				<?php endif; ?>
 			</td>
 			<td align="center">
 				<span id="exp-<?php echo $row['id_user']; ?>">
-					<?php if($row['expiration_date'] != Date::getEmptyDate()): ?>
-						<?php echo Date::getDateFormat(Date::parseDate($row['expiration_date']), Language::get()); ?>
+					<?php if(!empty($row['expiration_date'])): ?>
+						<?php echo Date::getDateFormat($row['expiration_date'], Language::get()); ?>
 					<?php endif; ?>
 				</span>
 			</td>
