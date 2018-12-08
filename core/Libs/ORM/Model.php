@@ -298,12 +298,21 @@ abstract class Model extends ORM
 								return $value;
 								break;
 							case 'set':
-								$this->_dataUpdate[$name] = $args[0];
+								if ($this->_action == 'insert') {
+									$this->_data[$name] = $args[0];
+								} else {
+									$this->_dataUpdate[$name] = $args[0];
+								}
 								break;
 							case 'inc':
 								$value = (empty($value) || !preg_match('/^\d+$/', $value)) ? 0 : $value;
 								$inc = (empty($args[0])) ? 1 : $args[0];
-								$this->_dataUpdate[$name] = intval($value) + intval($inc);
+								$i = intval($value) + intval($inc);
+								if ($this->_action == 'insert') {
+									$this->_date[$name] = $i;
+								} else {
+									$this->_dataUpdate[$name] = $i;
+								}
 								break;
 						}
 	        }
