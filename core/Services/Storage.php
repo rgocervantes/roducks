@@ -168,10 +168,10 @@ class Storage extends Service
 	private function __makeCrops($fx, $dir, $f, array $cuts = [])
 	{
 
-		$w = $this->post->param("w");
-		$h = $this->post->param("h");
-		$x = $this->post->param("x");
-		$y = $this->post->param("y");
+		$w = intval($this->post->param("w"));
+		$h = intval($this->post->param("h"));
+		$x = intval($this->post->param("x"));
+		$y = intval($this->post->param("y"));
 
 		/* --- CROP ---- */
 		$fn = explode(".", $f);

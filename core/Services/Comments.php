@@ -51,7 +51,7 @@ class Comments extends Service
 
       foreach ($content->children() as $node) {
         $replies = [];
-        $user = $this->model('users/users')->getRow(intval($node['id']->__toString()));
+        $user = $this->model('users/users')->getRow(intval($node['uid']->__toString()));
 
         foreach ($node->replies->reply as $reply) {
           $replies[] = [];
@@ -75,7 +75,7 @@ class Comments extends Service
   {
     $this->post->required();
 
-    Directory::make(Path::getData(self::FOLDER));
+    Directory::make(Path::getData(), self::FOLDER);
     $file = self::_getPath($id);
     $xml = XML::create($file);
     $xml->root('comments');
