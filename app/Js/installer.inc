@@ -4,6 +4,13 @@ function cbFormSuccessInstaller(response){
     $rdks.modal.loader(false);
     $("#finish").show();
     $("#stepper").hide();
+  } else {
+    $rdks.alert.notice({
+      title: "There was an Error. Try again!",
+      result: false,
+      message: 'Go fix form data before continue.',
+      elastic: true
+    });
   }
 }
 
@@ -16,7 +23,18 @@ function cbFormSubmitInstaller(valid, data){
     fields['site[timezone]'].value != "" &&
     fields['default_language'].value != ""
   ){
-    stepper(2);
+
+    if (
+      fields['database[name]'].value != "" &&
+      fields['database[port]'].value != "" &&
+      fields['database[user]'].value != "" &&
+      fields['database[password]'].value != ""
+    ) {
+      stepper(3);
+    } else {
+      stepper(2);
+    }
+
   }
 }
 
