@@ -21,7 +21,6 @@
 namespace Roducks\Modules\Admin\Dashboard\Page;
 
 use Roducks\Page\AdminPage;
-use Roducks\Framework\Role;
 use App\Sites\Admin\Modules\Users\Helper\Users as UsersHelper;
 
 class Dashboard extends AdminPage
@@ -31,7 +30,7 @@ class Dashboard extends AdminPage
 
 	public function index(){
 
-		$this->role(Role::TYPE_USERS);
+		$this->role();
 		$access = $this->grantAccess->getData();
 
 		$this->view->assets->scriptsInline(["grid","grid-subscribers","grid-clients","popover","users","roles.modal"]);

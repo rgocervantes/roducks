@@ -34,7 +34,7 @@ class LatestUsers extends Block
 
 		$this->view->data("icon", RolesHelper::getIcon($type));
 		$this->view->data("url", $url);
-		$this->view->data("access", $access);		
+		$this->view->data("access", $access);
 		$this->view->data("data", $data);
 		$this->view->data("alt", $alt);
 		$this->view->load("grid");
@@ -45,12 +45,12 @@ class LatestUsers extends Block
 	public function current($type, $url)
 	{
 
-		$this->role(Role::TYPE_USERS, $url);
+		$this->role($url);
 		$access = $this->grantAccess->getAccess();
-		
+
 		$filter = [];
 		$filter['u.id_user'] = User::getId();
-			
+
 		$db = $this->db();
 		$users = UsersRoles::open($db);
 		$data = $users->getAll($type, 1, 1, "desc", $filter);
@@ -62,11 +62,11 @@ class LatestUsers extends Block
 	public function output($type, $url, $limit, $alt = "")
 	{
 
-		$this->role(Role::TYPE_USERS, $url);
+		$this->role($url);
 		$access = $this->grantAccess->getAccess();
 
 		$filter = [];
-		$filter['u.trash'] = 0; 
+		$filter['u.trash'] = 0;
 
 		if (!User::isSuperAdmin()) {
 
@@ -92,4 +92,4 @@ class LatestUsers extends Block
 
 	}
 
-} 
+}

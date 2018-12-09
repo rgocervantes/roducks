@@ -35,7 +35,7 @@ class Post
 	{
 		$v = $_POST[$name];
 
-		if ($clean) {
+		if (!$clean) {
 			return $v;
 		}
 
@@ -48,7 +48,7 @@ class Post
 	static function stData()
 	{
 		return $_POST;
-	}	
+	}
 
 	static function stSentData()
 	{
@@ -67,14 +67,21 @@ class Post
 		return isset($_POST[$name]);
 	}
 
-	static function stValue($name, $default = "", $clean = false)
+	static function stValue($name, $default = "", $clean = true, $returnDefault = false)
 	{
-		if (!self::stSent($name))
-			return "";
+
+		if (!self::stSent($name)) {
+			return $default;
+		}
 
 		$value = (is_array($_POST[$name])) ? $_POST[$name] : self::value($name, $clean);
-		return (self::stSent($name)) ? $value : $default;
-	}	
+
+		if ($returnDefault && empty($value)) {
+			return $default;
+		}
+
+		return $value;
+	}
 
 	public function sentData()
 	{
@@ -96,50 +103,50 @@ class Post
 		return self::stSent($name);
 	}
 
-	public function text($name, $default = "")
+	public function text($name, $default = "", $returnDefault = false)
 	{
-		return self::stValue($name, $default);
+		return self::stValue($name, $default, true, $returnDefault);
 	}
 
-	public function param($name, $default = "")
+	public function param($name, $default = "", $returnDefault = false)
 	{
-		return $this->text($name, $default);
-	}	
-
-	public function hidden($name, $default = "")
-	{
-		return $this->text($name, $default);
-	}	
-
-	public function password($name, $default = "")
-	{
-		return $this->text($name, $default);
+		return $this->text($name, $default, true, $returnDefault);
 	}
 
-	public function checkbox($name, $default = "")
+	public function hidden($name, $default = "", $returnDefault = false)
 	{
-		return $this->text($name, $default);
+		return $this->text($name, $default, true, $returnDefault);
 	}
 
-	public function radio($name, $default = "")
+	public function password($name, $default = "", $returnDefault = false)
 	{
-		return $this->text($name, $default);
+		return $this->text($name, $default, true, $returnDefault);
 	}
 
-	public function textarea($name, $default = "")
+	public function checkbox($name, $default = "", $returnDefault = false)
 	{
-		return $this->text($name, $default);
+		return $this->text($name, $default, true, $returnDefault);
+	}
+
+	public function radio($name, $default = "", $returnDefault = false)
+	{
+		return $this->text($name, $default, true, $returnDefault);
+	}
+
+	public function textarea($name, $default = "", $returnDefault = false)
+	{
+		return $this->text($name, $default, true, $returnDefault);
 	}
 
 	public function textareaRich($name, $default = "")
 	{
-		return self::value($name, $default, true);
-	}	
+		return self::stValue($name, $default, false);
+	}
 
 	public function filter($name, $text = "")
 	{
 
-		$value = $this->text($name, $text);
+		$value = self::stValue($name, $text, false);
 
 		if (preg_match('#[|]#', $value)) {
 			list($value, $text) = explode("|", $value);
@@ -155,6 +162,6 @@ class Post
 	public function select($name, $text = "")
 	{
 		return $this->filter($name, $text)->value;
-	}				
+	}
 
 }

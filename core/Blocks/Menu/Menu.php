@@ -46,7 +46,7 @@ class Menu extends Block
 	public function access($type, array $items = [], $tpl, $permission = "")
 	{
 
-		$this->role($type);
+		$this->role();
 		$access = $this->grantAccess->getData();
 
 		if (!empty($permission) && !User::isSuperAdmin()) {

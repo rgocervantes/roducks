@@ -359,7 +359,7 @@ abstract class Frame
 		}
 	}
 
-	protected function role($type, $class = "")
+	protected function role($class = "")
 	{
 
 		if (empty($class)) {

@@ -28,7 +28,6 @@ use Roducks\Framework\Event;
 use Roducks\Page\JSON;
 use Roducks\Page\View;
 use Roducks\Libs\Utils\Date;
-use DB\Models\Users\Users as UsersTable;
 
 class Users extends JSON
 {
@@ -46,7 +45,7 @@ class Users extends JSON
 		parent::__construct($settings);
 
 		$this->post->required();
-		$this->role(Role::TYPE_USERS, $this->_url);
+		$this->role($this->_url);
 		$this->grantAccess->json();
 
 		$this->_fields = [
@@ -56,11 +55,10 @@ class Users extends JSON
 			'updated_at' 		=> Date::getCurrentDateTime(),
 			'active' 			=> $this->post->checkbox('active',0),
 			'expires'			=> $this->post->checkbox('expires', 0),
-			'expiration_date'	=> $this->post->hidden('expiration_date', ''),
+			'expiration_date'	=> $this->post->hidden('expiration_date', 'NULL', true),
 		];
 
-		$db = $this->db();
-		$this->_user = UsersTable::open($db);
+		$this->_user = $this->model('users/users');
 
 	}
 
@@ -110,6 +108,10 @@ class Users extends JSON
 
 		$row = $this->_user->row($id_user);
 		$this->grantAccess->editDescendent($id_user, $row, $this->_user->isDescendent($id_user, User::getId()), "edit");
+
+		if ($this->_fields['expires'] == 0) {
+			$this->_fields['expiration_date'] = 'NULL';
+		}
 
 		if (User::getId() == $id_user) {
 			unset($this->_fields['id_role']);

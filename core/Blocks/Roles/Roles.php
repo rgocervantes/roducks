@@ -32,7 +32,7 @@ class Roles extends Block
 	public function modal()
 	{
 
-		$this->role($this->type);
+		$this->role();
 
 		$name = $this->config . ".json";
 		$config = $this->grantAccess->getFileConfig($name);

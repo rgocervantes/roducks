@@ -21,7 +21,6 @@
 namespace Roducks\Modules\Admin\Roles\JSON;
 
 use Roducks\Data\User;
-use Roducks\Framework\Role;
 use Roducks\Framework\Language;
 use Roducks\Framework\Path;
 use Roducks\Page\JSON;
@@ -50,7 +49,7 @@ class Roles extends JSON
 		parent::__construct($settings);
 
 		$this->post->required();
-		$this->role(Role::TYPE_USERS);
+		$this->role();
 		$this->grantAccess->json();
 	}
 

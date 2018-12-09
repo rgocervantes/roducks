@@ -23,7 +23,6 @@ namespace Roducks\Modules\Front\Account\Page;
 use Roducks\Page\View;
 use Roducks\Page\FrontPage;
 use Roducks\Data\User;
-use Roducks\Framework\Role;
 use DB\Models\Users\Users as UsersTable;
 
 class Account extends FrontPage
@@ -34,7 +33,7 @@ class Account extends FrontPage
 		parent::__construct($settings, $view);
 
 		$this->requireLogin();
-		$this->role(Role::TYPE_SUBSCRIBERS);
+		$this->role();
 	}
 
 	public function index()

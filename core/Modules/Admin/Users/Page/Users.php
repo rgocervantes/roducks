@@ -56,7 +56,7 @@ class Users extends AdminPage
 	{
 		parent::__construct($settings, $view);
 
-		$this->role(Role::TYPE_USERS, $this->_url);
+		$this->role($this->_url);
 	}
 
 	protected function _form($db)

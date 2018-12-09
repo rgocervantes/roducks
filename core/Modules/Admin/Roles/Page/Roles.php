@@ -43,13 +43,13 @@ class Roles extends AdminPage
 	{
 		parent::__construct($settings, $view);
 
-		$this->role(Role::TYPE_USERS); // Only Admins can modify Roles
+		$this->role(); // Only Admins can modify Roles
 	}
 
 	private function _getRoleType()
 	{
 		return Session::get('ROLE_TYPE');
-	}	
+	}
 
 	private function _form()
 	{
@@ -80,11 +80,11 @@ class Roles extends AdminPage
 			],
 			'SIDEBAR' => [
 				$this->view->setTemplate("sidebar-left")
-			],		
+			],
 			'SIDEBAR-CHILD-LEFT' => [
 				$this->view->setTemplate("sidebar-dashboard"),
 				$this->view->setTemplate("sidebar-roles")
-			]					
+			]
 		]);
 
 		return $this->view->output();
@@ -100,7 +100,7 @@ class Roles extends AdminPage
 		$db = $this->db();
 		$data = RolesTable::open($db)->getAll($this->type, $this->page, $this->_rowsPerPage);
 		$access = $this->getAccess();
-		
+
 		$this->view->assets->scriptsInline(["pager","grid","popover","roles","roles.modal"]);
 		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","grid.ready"]);
 
@@ -130,11 +130,11 @@ class Roles extends AdminPage
 			],
 			'SIDEBAR' => [
 				$this->view->setTemplate("sidebar-left")
-			],		
+			],
 			'SIDEBAR-CHILD-LEFT' => [
-				$this->view->setTemplate("sidebar-dashboard"),	
+				$this->view->setTemplate("sidebar-dashboard"),
 				$this->view->setTemplate("sidebar-roles")
-			]					
+			]
 		]);
 
 		return $this->view->output();
@@ -154,17 +154,17 @@ class Roles extends AdminPage
 
 		$this->view->data("edit", true);
 		$this->view->data("method", "insert");
-		$this->view->data("action", "save");	
-		$this->view->data("id_role", 0);				
+		$this->view->data("action", "save");
+		$this->view->data("id_role", 0);
 		$this->view->data("insert", true);
 		$this->view->data("access", $this->_allowedRoles);
-		
+
 		$this->view->layout("form",[
 			'FORM' => [
 				$this->view->setView("form")
 			]
 		]);
-		
+
 		return $this->view->output();
 	}
 
@@ -179,14 +179,14 @@ class Roles extends AdminPage
 		// Can't edit role you belong to.
 		if($id_role == 1 || $id_role == User::getData('id_role') || $id_role < User::getData('id_role')){
 			$this->pageNotFound();
-		}		
+		}
 
 		$db = $this->db();
 		$RolesTable = RolesTable::open($db);
 
 		$role = $RolesTable->row( $id_role );
 		$this->hasData( $RolesTable->rows() );
-		
+
 		// get File
 		$config = $this->grantAccess->getFileConfig( $role['config'] );
 
@@ -201,20 +201,20 @@ class Roles extends AdminPage
 		$this->view->data("config", $role['config']);
 
 		$this->view->data("edit", $edit);
-		$this->view->data("method", "update");	
-		$this->view->data("action", "save/{$id_role}");	
-		$this->view->data("id_role", $id_role);		
+		$this->view->data("method", "update");
+		$this->view->data("action", "save/{$id_role}");
+		$this->view->data("id_role", $id_role);
 		$this->view->data("insert", false);
-		$this->view->data("access", $access);		
-		
+		$this->view->data("access", $access);
+
 		$this->view->layout("form",[
 			'FORM' => [
 				$this->view->setView("form")
 			]
 		]);
-		
+
 		return $this->view->output();
 
 	}
 
-} 
+}
