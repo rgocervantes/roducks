@@ -125,7 +125,6 @@ class Auth extends Service
 	private function _paywall($id)
 	{
 
-		$this->post->required();
 		$password = $this->post->param('password');
 		$users = $this->model('users/users');
 
@@ -136,6 +135,7 @@ class Auth extends Service
 		parent::output();
 	}
 
+
 	private function _emailExists()
 	{
 		$email = $this->post->text('email');
@@ -144,6 +144,12 @@ class Auth extends Service
 		$users = UsersTable::open($db);
 
 		return $users->results(['email' => $email]);
+	}
+
+	public function paywall()
+	{
+		$this->post->required();
+		$this->_paywall(User::getId());
 	}
 
 	/**
