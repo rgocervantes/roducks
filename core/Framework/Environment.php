@@ -63,10 +63,6 @@ class Environment
 		$mode = (isset($config[$subdomain]['mode'])) ? $config[$subdomain]['mode'] : self::PRO;
 		$errors = ($mode == self::DEV) ? true : false;
 
-		if ($errors && !isset($config[$subdomain]['database'])) {
-			$database .= ".local";
-		}
-
 		return [
 			'errors' => $errors,
 			'subdomain' => $subdomain,

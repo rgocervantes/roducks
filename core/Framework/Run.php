@@ -24,10 +24,9 @@ use Roducks\Framework\Helper;
 
 /*
 |--------------------------------|
-|		   ENVIRONMENTS 	  	 |
+|		   		ENVIRONMENTS
 |--------------------------------|
 */
-
 
 // Only in devel mode errors should be displayed
 App::define('RDKS_ERRORS', $environment['errors']);
@@ -42,27 +41,11 @@ if (!App::fileExists(Core::getSitePath()) || empty($environment['site'])) {
 
 /*
 |--------------------------------|
-|		  APP DATABASE 			 |
+|		  		DATABASE CONFIG
 |--------------------------------|
 */
-$siteDbConfig = Core::getSiteConfigPath($environment['database']);
-$appDbConfig = Core::getAppConfigPath($environment['database']);
-
-// get site data base config if exists
-if (App::fileExists($siteDbConfig)) {
-	$dbConfig = Core::getDbSiteConfigFile($environment['database'], false);
-	$dbFile = $siteDbConfig;
-} else {
-	// Overwrite database filename on install
-	if (Helper::onInstall()) {
-		$environment['database'] = 'database';
-	}
-
-	// get app data base config
-	$dbConfig = Core::getDbAppConfigFile($environment['database'], true);
-	$dbFile = $appDbConfig;
-
-}
+$dbFile = Core::getDbConfigPath($environment['database']);
+$dbConfig = Core::getDbConfig($dbFile);
 
 if (!isset($dbConfig['host'])) {
 	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $dbFile, 'host', 'localhost');
@@ -82,7 +65,7 @@ App::define('DB_PASSWORD', $dbConfig['password']);
 
 /*
 |--------------------------------|
-|			  ERRORS 	  		 |
+|			  			ERRORS
 |--------------------------------|
 */
 // display errors in development mode
@@ -90,7 +73,7 @@ Error::display();
 
 /*
 |--------------------------------|
-|         ERROR HANDLER          |
+|         ERROR HANDLER
 |--------------------------------|
 */
 set_error_handler('handler');

@@ -22,6 +22,7 @@ namespace Roducks\Framework;
 
 use Roducks\Libs\ORM\DB;
 use Roducks\Page\View;
+use Lib\File;
 
 class Core
 {
@@ -148,7 +149,7 @@ class Core
 			if (RDKS_ERRORS) {
 				if (!Environment::inCLI()) {
 					if ($e->getMessage() == 'credentials') {
-						Error::missingDbConfig("Missing DB Credentails", __LINE__, __FILE__, $config, $e->getMessage(), '');
+						Error::debug("Invalid DB Credentails", __LINE__, __FILE__, $config, 'user is required.', '');
 					} else {
 						Error::fatal("MySQLi", __LINE__, __FILE__, $config, $e->getMessage());
 					}
@@ -584,14 +585,35 @@ class Core
 	/**
 	*	Database configs
 	*/
-	static function getDbSiteConfigFile($name, $required = true)
+	static function getDbConfig($path)
 	{
-		return self::getFileVar(self::getSiteConfigPath($name), "database", $required);
+		return self::getFileVar($path, "database", true);
 	}
 
-	static function getDbAppConfigFile($name, $required = true)
+	static function getDbConfigPath($name)
 	{
-		return self::getFileVar(self::getAppConfigPath($name), "database", $required);
+		$site = Core::getSiteConfigPath($name);
+		$siteLocal = Core::getSiteConfigPath("{$name}.local");
+		$config = Core::getAppConfigPath($name);
+		$configLocal = Core::getAppConfigPath("{$name}.local");
+
+		if (Path::exists($siteLocal)) {
+			$path = $siteLocal;
+		} else if (Path::exists($site)) {
+			$path = $site;
+		} else if (Path::exists($configLocal)) {
+			$path = $configLocal;
+		} else if (Path::exists($config)) {
+			$path = $config;
+		}
+
+		return $path;
+
+	}
+
+	static function getDbConfigFile($name)
+	{
+		return self::getDbConfig(self::getDbConfigPath($name));
 	}
 
 	/**
@@ -1005,20 +1027,9 @@ class Core
 	static function install()
 	{
 
-		$db = file_exists(Path::get(DIR_APP_CONFIG . 'database.local' . FILE_INC));
-		$conf = file_exists(Path::get(DIR_APP_CONFIG . 'config.local' . FILE_INC));
-
-		if (Environment::inPRO()) {
-			$db = false;
-			$conf = false;
-		}
-
-		if (
-			!Helper::isUrlDispatch() &&
-			!file_exists(Path::getData('install.lock')) &&
-			!$db &&
-			!$conf
-		) {
+		if ( Helper::onInstall() ) {
+			File::remove(Path::get(DIR_APP_CONFIG).'config.local.inc');
+			File::remove(Path::get(DIR_APP_CONFIG).'database.local.inc');
 			self::loadPage('Roducks/Modules/All/', 'Install/Page/Install', 'run');
 			exit;
 		}

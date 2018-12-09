@@ -12,13 +12,12 @@
     </div>
     <div id="stepper" class="row">
       <div class="col-md-4">
-        <div class="text-centered">
-          <h1>INSTALLER</h1>
-        </div>
+
         <ul id="myTabs" class="nav nav-pills nav-stacked" role="tablist">
           <li role="presentation" class="active"><a href="#requirements" aria-controls="home" role="tab" data-toggle="pill" data-index="0">System Requirements</a></li>
           <li role="presentation"><a href="#info" aria-controls="home" role="tab" data-toggle="pill" data-index="1">Site Info</a></li>
           <li role="presentation"><a href="#database" aria-controls="home" role="tab" data-toggle="pill" data-index="2">Data Base</a></li>
+          <li role="presentation"><a href="#user" aria-controls="home" role="tab" data-toggle="pill" data-index="3">User</a></li>
         </ul>
 
       </div>
@@ -155,6 +154,12 @@
               </div>
 
               <div class="form-group has-feedback">
+                <label class="control-label"><span class="color-red">*</span> Port</label>
+                <input type="text" name="database[port]" data-required="true" data-type="int" class="form-control" value="3306">
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+              </div>
+
+              <div class="form-group has-feedback">
                 <label class="control-label"><span class="color-red">*</span> User</label>
                 <input type="text" name="database[user]" data-required="true" class="form-control">
                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
@@ -166,7 +171,26 @@
                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
               </div>
 
-              <button type="submit" name="sender" class="btn btn-lg btn-primary right">Save</button>
+              <button type="button" name="button" class="btn btn-lg btn-primary right" onclick="next();">Next</button>
+
+            </div>
+
+            <div role="tabpanel" class="tab-pane fade" id="user">
+              <h1>User</h1>
+
+              <div class="form-group has-feedback">
+                <label class="control-label"><span class="color-red">*</span> Email</label>
+                <input type="text" name="user[email]" data-required="true" data-type="email" class="form-control">
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+              </div>
+
+              <div class="form-group has-feedback">
+                <label class="control-label"><span class="color-red">*</span> Password</label>
+                <input type="password" name="user[password]" data-required="true" class="form-control">
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+              </div>
+
+              <button type="submit" name="sender" class="btn btn-lg btn-primary right">Continue</button>
 
             </div>
 

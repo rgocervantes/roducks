@@ -25,6 +25,13 @@ use Roducks\Libs\Request\Http;
 class Error
 {
 
+	static $_json = false;
+
+	static function json()
+	{
+		self::$_json = true;
+	}
+
 	static function log($message, $file = "")
 	{
 		$code = (!empty($file)) ? 3 : 0;
@@ -127,7 +134,17 @@ class Error
 		$markup .= '</div>';
 		$markup .= '</body></html>';
 
-		die($markup);
+		if (self::$_json) {
+			header('Content-type: application/json; charset=utf8');
+			echo json_encode([
+				'success' => false,
+				'message' => $error,
+			]);
+			exit;
+		} else {
+			die($markup);
+		}
+
 	}
 
 	static function requirements($title, $line, $path, $file, $items, $error)

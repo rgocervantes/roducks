@@ -103,7 +103,7 @@ class Helper
 
 	static function onInstall()
 	{
-		return !file_exists(Path::getData('install.lock'));
+		return (!file_exists(Path::getData('install.lock')) && !self::isUrlDispatch());
 	}
 
 	static function isBlockDispatched()

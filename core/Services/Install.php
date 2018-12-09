@@ -21,9 +21,13 @@
 namespace Roducks\Services;
 
 use Roducks\Page\Service;
+use Roducks\Framework\Core;
+use Roducks\Framework\Error;
+use DB\Models\Users\Users as UsersTable;
 use Crypt\Hash;
 use Lib\File;
 use Path;
+use Helper;
 
 class Install extends Service
 {
@@ -134,7 +138,7 @@ return [
 //-------------------------------------------------------------------
 //  Port
 //-------------------------------------------------------------------
-	'port' 				=> 3306,
+	'port' 				=> {$data['database']['port']},
 //-------------------------------------------------------------------
 //  Data Base name
 //-------------------------------------------------------------------
@@ -151,8 +155,40 @@ return [
 EOT;
 
     $this->configLocal($data);
+    $tx = false;
     File::create(Path::get(DIR_APP_CONFIG), 'database.local.inc', $database);
-		$this->goLive();
+    Error::json();
+
+    try {
+      $dbConfig = Core::getDbConfigFile('database');
+      $db = $this->openDb([$dbConfig['host'], $dbConfig['user'], $dbConfig['password'], $dbConfig['name'], $dbConfig['port']]);
+      $user = UsersTable::open($db);
+      $gender = 'male';
+
+      $data = [
+        'id_user_tree' => '0',
+        'id_role' => 1,
+        'email' => $data['user']['email'],
+        'password' => $data['user']['password'],
+        'first_name' => 'Super',
+        'last_name' => 'Admin Master',
+        'gender' => $gender,
+        'picture' => Helper::getUserIcon($gender),
+      ];
+
+      $tx = $user->create($data);
+    } catch (\Exception $e) {
+      File::remove(Path::get(DIR_APP_CONFIG).'config.local.inc');
+      File::remove(Path::get(DIR_APP_CONFIG).'database.local.inc');
+    }
+
+    if ($tx) {
+      $this->goLive();
+    } else {
+      File::remove(Path::get(DIR_APP_CONFIG).'config.local.inc');
+      File::remove(Path::get(DIR_APP_CONFIG).'database.local.inc');
+      $this->setError(0, 'Database connection failed!');
+    }
 
     parent::output();
   }
