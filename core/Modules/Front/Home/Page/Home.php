@@ -84,6 +84,7 @@ class Home extends FrontPage
 	public function contactUs()
 	{
 
+		$this->view->title(_text('contact_us'));
 		$this->view->assets->scriptsInline(["form"]);
 		$this->view->load("contact-us");
 

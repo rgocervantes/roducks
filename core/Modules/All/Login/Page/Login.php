@@ -37,7 +37,7 @@ class Login extends Page
 			$this->_redirect();
 		}
 
-		$this->view->title(__('Log In'));
+		$this->view->title(_text('login'));
 		$this->view->assets->scriptsInline(['login']);
 		$this->view->assets->scriptsOnReady(['login.ready']);
 		$this->view->load("login");
