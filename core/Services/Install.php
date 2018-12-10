@@ -134,7 +134,7 @@ return [
 //-------------------------------------------------------------------
 //  Host name
 //-------------------------------------------------------------------
-	'host' 				=> 'localhost',
+	'host' 				=> '{$data['database']['host']}',
 //-------------------------------------------------------------------
 //  Port
 //-------------------------------------------------------------------
@@ -159,33 +159,43 @@ EOT;
     File::create(Path::get(DIR_APP_CONFIG), 'database.local.inc', $database);
     Error::json();
 
-    try {
-      $dbConfig = Core::getDbConfigFile('database');
-      $db = $this->openDb([$dbConfig['host'], $dbConfig['user'], $dbConfig['password'], $dbConfig['name'], $dbConfig['port']]);
-      $user = UsersTable::open($db);
-      $gender = 'male';
+    if (strlen($data['user']['password']) >= 7) {
 
-      $data = [
-        'id_user_tree' => '0',
-        'id_role' => 1,
-        'email' => $data['user']['email'],
-        'password' => $data['user']['password'],
-        'first_name' => 'Super',
-        'last_name' => 'Admin Master',
-        'gender' => $gender,
-        'picture' => Helper::getUserIcon($gender),
-      ];
+      try {
 
-      $tx = $user->create($data);
-    } catch (\Exception $e) {
-      File::remove(Path::get(DIR_APP_CONFIG).'config.local.inc');
-      File::remove(Path::get(DIR_APP_CONFIG).'database.local.inc');
-    }
+        $dbConfig = Core::getDbConfigFile('database');
+        $db = $this->openDb([$dbConfig['host'], $dbConfig['user'], $dbConfig['password'], $dbConfig['name'], $dbConfig['port']]);
+        $user = UsersTable::open($db);
+        $total = $user->getTableTotalRows();
+        $gender = 'male';
+        $id_role = ($total == 0) ? 1 : 2;
 
-    if ($tx) {
-      $this->goLive();
+        $data = [
+          'id_user_tree' => '0',
+          'id_role' => $id_role,
+          'email' => $data['user']['email'],
+          'password' => $data['user']['password'],
+          'first_name' => 'Super',
+          'last_name' => 'Admin Master',
+          'gender' => $gender,
+          'picture' => Helper::getUserIcon($gender),
+        ];
+
+        $tx = $user->create($data);
+
+      } catch (\Exception $e) {
+        File::remove(Path::get(DIR_APP_CONFIG).'config.local.inc');
+        File::remove(Path::get(DIR_APP_CONFIG).'database.local.inc');
+      }
+
+      if ($tx) {
+        $this->goLive();
+      } else {
+        $this->setError(2, 'User could not be created.');
+      }
+
     } else {
-      $this->setError(0, 'User could not be created.');
+      $this->setError(1, 'Password must be greater than 7 chars.');
     }
 
     parent::output();

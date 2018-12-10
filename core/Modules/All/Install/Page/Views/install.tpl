@@ -148,8 +148,14 @@
             <div role="tabpanel" class="tab-pane fade" id="database">
               <h1>MySQL Data Base</h1>
               <div class="form-group has-feedback">
+                <label class="control-label"><span class="color-red">*</span> Host</label>
+                <input type="text" name="database[host]" data-required="true" class="form-control" value="localhost">
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+              </div>
+
+              <div class="form-group has-feedback">
                 <label class="control-label"><span class="color-red">*</span> Name</label>
-                <input type="text" name="database[name]" data-required="true" class="form-control">
+                <input type="text" name="database[name]" data-required="true" class="form-control" value="roducks">
                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
               </div>
 
@@ -186,8 +192,9 @@
 
               <div class="form-group has-feedback">
                 <label class="control-label"><span class="color-red">*</span> Password</label>
-                <input type="password" name="user[password]" data-required="true" class="form-control">
+                <input type="password" name="user[password]" data-required="true" data-minlength="7|Password must be greater than 7 chars." class="form-control">
                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                <span class="help-block">Password must be greater than 7 chars.</span>
               </div>
 
               <button type="submit" name="sender" class="btn btn-lg btn-primary right">Continue</button>
