@@ -167,7 +167,7 @@ EOT;
         $db = $this->openDb([$dbConfig['host'], $dbConfig['user'], $dbConfig['password'], $dbConfig['name'], $dbConfig['port']]);
         $user = UsersTable::open($db);
         $total = $user->getTableTotalRows();
-        $gender = 'male';
+        $gender = $data['user_gender'];
         $id_role = ($total == 0) ? 1 : 2;
 
         $data = [
@@ -175,8 +175,8 @@ EOT;
           'id_role' => $id_role,
           'email' => $data['user']['email'],
           'password' => $data['user']['password'],
-          'first_name' => 'Super',
-          'last_name' => 'Admin Master',
+          'first_name' => $data['user']['first_name'],
+          'last_name' => $data['user']['last_name'],
           'gender' => $gender,
           'picture' => Helper::getUserIcon($gender),
         ];

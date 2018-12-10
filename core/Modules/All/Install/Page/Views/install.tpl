@@ -184,6 +184,24 @@
             <div role="tabpanel" class="tab-pane fade" id="user">
               <h1>User</h1>
 
+              <label class="control-label"><span class="color-red">*</span> Gender</label>
+              <select name="user_gender" data-required="true" data-height="65" rel="rdks-select-autocomplete" class="rdks-select-autocomplete form-control">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+
+              <div class="form-group has-feedback">
+                <label class="control-label"><span class="color-red">*</span> First Name</label>
+                <input type="text" name="user[first_name]" data-required="true" class="form-control">
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+              </div>
+
+              <div class="form-group has-feedback">
+                <label class="control-label"><span class="color-red">*</span> Last Name</label>
+                <input type="text" name="user[last_name]" data-required="true" class="form-control">
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+              </div>
+
               <div class="form-group has-feedback">
                 <label class="control-label"><span class="color-red">*</span> Email</label>
                 <input type="text" name="user[email]" data-required="true" data-type="email" class="form-control">
