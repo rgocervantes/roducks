@@ -185,9 +185,7 @@ EOT;
     if ($tx) {
       $this->goLive();
     } else {
-      File::remove(Path::get(DIR_APP_CONFIG).'config.local.inc');
-      File::remove(Path::get(DIR_APP_CONFIG).'database.local.inc');
-      $this->setError(0, 'Database connection failed!');
+      $this->setError(0, 'User could not be created.');
     }
 
     parent::output();

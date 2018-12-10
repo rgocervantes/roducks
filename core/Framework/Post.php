@@ -42,7 +42,7 @@ class Post
 		$v = trim($v);
 		$v = strip_tags($v);
 
-		return $v;
+		return (is_integer($v)) ? intval($v) : $v;
 	}
 
 	static function stData()
