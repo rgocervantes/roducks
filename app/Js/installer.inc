@@ -27,8 +27,7 @@ function cbFormSubmitInstaller(valid, data){
     if (
       fields['database[name]'].value != "" &&
       fields['database[port]'].value != "" &&
-      fields['database[user]'].value != "" &&
-      fields['database[password]'].value != ""
+      fields['database[user]'].value != ""
     ) {
       stepper(3);
     } else {

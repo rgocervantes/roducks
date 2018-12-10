@@ -21,7 +21,6 @@
 namespace Roducks\Services;
 
 use Roducks\Page\Service;
-use Roducks\Framework\Core;
 use Roducks\Framework\Error;
 use DB\Models\Users\Users as UsersTable;
 use Crypt\Hash;
@@ -126,6 +125,7 @@ EOT;
 
     $this->post->required();
     $data = $this->post->data();
+    Error::json();
 
 $database = <<< EOT
 <?php
@@ -154,42 +154,31 @@ return [
 ];
 EOT;
 
-    $this->configLocal($data);
-    $tx = false;
-    File::create(Path::get(DIR_APP_CONFIG), 'database.local.inc', $database);
-    Error::json();
-
     if (strlen($data['user']['password']) >= 7) {
 
-      try {
+      $db = $this->openDb([$data['database']['host'], $data['database']['user'], $data['database']['password'], $data['database']['name'], $data['database']['port']]);
+      $user = UsersTable::open($db);
+      $total = $user->getTableTotalRows();
+      $gender = $data['user_gender'];
+      $id_role = ($total == 0) ? 1 : 2;
 
-        $dbConfig = Core::getDbConfigFile('database');
-        $db = $this->openDb([$dbConfig['host'], $dbConfig['user'], $dbConfig['password'], $dbConfig['name'], $dbConfig['port']]);
-        $user = UsersTable::open($db);
-        $total = $user->getTableTotalRows();
-        $gender = $data['user_gender'];
-        $id_role = ($total == 0) ? 1 : 2;
+      $fields = [
+        'id_user_tree' => '0',
+        'id_role' => $id_role,
+        'email' => $data['user']['email'],
+        'password' => $data['user']['password'],
+        'first_name' => $data['user']['first_name'],
+        'last_name' => $data['user']['last_name'],
+        'gender' => $gender,
+        'picture' => Helper::getUserIcon($gender),
+      ];
 
-        $data = [
-          'id_user_tree' => '0',
-          'id_role' => $id_role,
-          'email' => $data['user']['email'],
-          'password' => $data['user']['password'],
-          'first_name' => $data['user']['first_name'],
-          'last_name' => $data['user']['last_name'],
-          'gender' => $gender,
-          'picture' => Helper::getUserIcon($gender),
-        ];
-
-        $tx = $user->create($data);
-
-      } catch (\Exception $e) {
-        File::remove(Path::get(DIR_APP_CONFIG).'config.local.inc');
-        File::remove(Path::get(DIR_APP_CONFIG).'database.local.inc');
-      }
+      $tx = $user->create($fields);
 
       if ($tx) {
         $this->goLive();
+        $this->configLocal($data);
+        File::create(Path::get(DIR_APP_CONFIG), 'database.local.inc', $database);
       } else {
         $this->setError(2, 'User could not be created.');
       }
