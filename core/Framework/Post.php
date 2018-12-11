@@ -42,7 +42,7 @@ class Post
 		$v = trim($v);
 		$v = strip_tags($v);
 
-		return (is_numeric($v)) ? intval($v) : $v;
+		return Helper::dataType($v);
 	}
 
 	static function stData()
@@ -76,7 +76,7 @@ class Post
 
 		$value = (is_array($_POST[$name])) ? $_POST[$name] : self::value($name, $clean);
 
-		if ($returnDefault && empty($value)) {
+		if ($returnDefault && $value == "") {
 			return $default;
 		}
 
@@ -110,7 +110,7 @@ class Post
 
 	public function param($name, $default = "", $returnDefault = false)
 	{
-		return $this->text($name, $default, true, $returnDefault);
+		return $this->text($name, $default, $returnDefault);
 	}
 
 	public function hidden($name, $default = "", $returnDefault = false)
