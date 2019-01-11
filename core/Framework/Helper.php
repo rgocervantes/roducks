@@ -67,6 +67,7 @@ class Helper
 	const VALID_IMAGE = '/\.(jpeg|jpg|png)$/';
 	const VALID_JSON = '/\.json$/';
 	const VALID_XML = '/\.xml$/';
+	const VALID_TPL = '/\.tpl$/';
 
 	const PAGE_NOT_FOUND = "Roducks\Page\Page";
 
@@ -151,6 +152,11 @@ class Helper
 	static function isFactory($str)
 	{
 		return self::regexp(self::REGEXP_IS_FACTORY, $str);
+	}
+
+	static function isTpl($str)
+	{
+		return self::regexp(self::VALID_TPL, $str);
 	}
 
 	static function isInteger($str)

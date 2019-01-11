@@ -24,6 +24,7 @@ use Roducks\Framework\Core;
 use Roducks\Framework\Asset;
 use Roducks\Framework\Helper;
 use Roducks\Framework\Error;
+use Roducks\Framework\Environment;
 use Roducks\Data\User;
 use Roducks\Framework\Language;
 use Roducks\Framework\Path;
@@ -64,6 +65,13 @@ final class View
 	/* 		Public Asset instance
 	/* ------------------------------------*/
 	public $assets;
+
+	private static function _guide($path, $tag)
+	{
+		if (Environment::inDEV()) {
+			echo "<!-- @{$tag}-view: {$path} -->\n";
+		}
+	}
 
 	private function _urlData()
 	{
@@ -324,11 +332,16 @@ final class View
 			$header = $dir_templates . "header" . FILE_PHTML;
 			$header_alt = $dir_templates . "header" . FILE_TPL;
 			if (file_exists($header)) {
+				self::_guide($header, 'start');
 				include $header;
+				self::_guide($header, 'end');
+
 				$top = $dir_templates . "top" . FILE_PHTML;
 
 				if (file_exists($top) && $this->_blocks['top']) {
+					self::_guide($top, 'start');
 					include $top;
+					self::_guide($top, 'end');
 				}
 
 				if (Session::exists(User::SESSION_SECURITY)) {
@@ -337,7 +350,9 @@ final class View
 				}
 			} else if(file_exists($header_alt)) {
 
+				self::_guide($header_alt, 'start');
 				echo Duckling::parser($header_alt, $this->_getGlobals());
+				self::_guide($header_alt, 'end');
 
 				$top = $dir_templates . "top" . FILE_TPL;
 
@@ -348,7 +363,9 @@ final class View
 					unset($topData['_META']);
 					unset($topData['_FAVICON']);
 
+					self::_guide($top, 'start');
 					echo Duckling::parser($top, $topData);
+					self::_guide($top, 'end');
 				}
 
 				if (Session::exists(User::SESSION_SECURITY)) {
@@ -370,18 +387,24 @@ final class View
 
 		// Load layout if exists
 		if (file_exists($dir_layouts)) {
+			self::_guide($dir_layouts, 'start');
 			include $dir_layouts;
+			self::_guide($dir_layouts, 'end');
 		} else if (file_exists($dir_view) && !empty($this->_view)) {
+
+			self::_guide($dir_view, 'start');
 
 			if (Helper::isPage($dir_view)) {
 				Layout::view(null, $this->_error);
 			} else {
-				if (preg_match('/\.tpl$/', $dir_view)) {
+				if (Helper::isTpl($dir_view)) {
 					echo Duckling::parser($dir_view, $data);
 				} else {
 					include $dir_view;
 				}
 			}
+
+			self::_guide($dir_view, 'end');
 		}
 
 		// Load body *ONLY* for 404 templates
@@ -391,12 +414,17 @@ final class View
 			$body_alt = $dir_templates.$this->_body.FILE_TPL;
 
 			if (file_exists($body)) {
+				self::_guide($body, 'start');
 				include $body;
+				self::_guide($body, 'end');
 			} else if(file_exists($body_alt)) {
+				self::_guide($body_alt, 'start');
 				echo Duckling::parser($body_alt, []);
+				self::_guide($body_alt, 'end');
 			} else {
 				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $body);
 			}
+
 		}
 
 		// Include Bottom & Footer
@@ -408,9 +436,13 @@ final class View
 				$footer_alt = $dir_templates . "footer" . FILE_TPL;
 
 				if (file_exists($bottom) && $this->_blocks['bottom']) {
+					self::_guide($bottom, 'start');
 					include $bottom;
+					self::_guide($bottom, 'end');
 				} else if(file_exists($bottom_alt) && $this->_blocks['bottom']) {
+					self::_guide($bottom_alt, 'start');
 					echo Duckling::parser($bottom_alt, ['_JS' => $this->assets->getJs()]);
+					self::_guide($bottom_alt, 'end');
 				}
 
 				if ($scripts) {
@@ -421,9 +453,13 @@ final class View
 				}
 
 				if (file_exists($footer)) {
+					self::_guide($footer, 'start');
 					include $footer;
+					self::_guide($footer, 'end');
 				} else if(file_exists($footer_alt)) {
+					self::_guide($footer_alt, 'start');
 					echo Duckling::parser($footer_alt, []);
+					self::_guide($footer_alt, 'end');
 				} else {
 					Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $footer);
 				}
