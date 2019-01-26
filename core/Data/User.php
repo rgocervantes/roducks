@@ -206,7 +206,7 @@ class User extends EAV
 
   static function getFullName()
   {
-    return implode(' ', [self::getData('first_name'), self::getData('last_name')]);
+    return implode(' ', [self::getFirstName(), self::getLastName()]);
   }
 
   static function getGender()
@@ -234,7 +234,7 @@ class User extends EAV
 		return (self::getId() == self::getSuperAdminId());
 	}
 
-	static function login()
+	static function getConfigData()
 	{
 		return self::_getConfigData();
 	}
