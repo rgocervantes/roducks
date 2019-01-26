@@ -968,6 +968,10 @@ class Core
 			$method = "run";
 			$name = $params[0];
 
+			if ($name == '-v') {
+				$name = 'version';
+			}
+
 			if (preg_match('#:#', $name)) {
 				list($name, $method) = explode(":", $name);
 				$method = Helper::getCamelName($method, false);
