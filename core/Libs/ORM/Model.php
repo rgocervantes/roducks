@@ -476,11 +476,6 @@ abstract class Model extends ORM
 		}
 	}
 
-	public function execute()
-	{
-		return $this->filter();
-	}
-
 	public function getTableTotalRows()
 	{
 		return $this->count($this->id);

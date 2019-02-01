@@ -71,6 +71,11 @@ abstract class ORM extends Query
 		return $ret;
 	}
 
+	public function first()
+	{
+		return $this->fetch();
+	}
+
 	public function filteredBy($field)
 	{
 
@@ -82,6 +87,11 @@ abstract class ORM extends Query
 
 		return $ret;
 
+	}
+
+	public function execute()
+	{
+		return $this->filter();
 	}
 
 }
