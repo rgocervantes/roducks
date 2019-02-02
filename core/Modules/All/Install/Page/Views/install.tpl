@@ -210,7 +210,7 @@
 
               <div class="form-group has-feedback">
                 <label class="control-label"><span class="color-red">*</span> Password</label>
-                <input type="password" name="user[password]" data-required="true" data-minlength="7|Password must be greater than 7 chars." class="form-control">
+                <input type="password" name="user[password]" data-required="true" data-type="password" data-strength="true" data-minlength="7|Password must be greater than 7 chars." class="form-control">
                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                 <span class="help-block">Password must be greater than 7 chars.</span>
               </div>

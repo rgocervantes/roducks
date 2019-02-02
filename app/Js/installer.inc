@@ -6,9 +6,9 @@ function cbFormSuccessInstaller(response){
     $("#stepper").hide();
   } else {
     $rdks.alert.notice({
-      title: "There was an Error. Try again!",
+      title: "There was an error",
       result: false,
-      message: 'Go fix form data before continue.',
+      message: "Fix form data and try again.",
       elastic: true
     });
   }
