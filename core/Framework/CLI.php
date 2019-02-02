@@ -36,6 +36,7 @@ class CLI extends Frame
 	private
 		$_args = [],
 		$_flags = [],
+		$_flagsx = [],
 		$_warnings = [],
 		$_errors = [],
 		$_info = [],
@@ -316,10 +317,9 @@ class CLI extends Frame
 
 	protected function getFlag($key)
 	{
-		$value = $this->getParam($key);
 
-		if (!empty($value)) {
-			return $value;
+		if (isset($this->_flagsx[$key])) {
+			return $this->_flagsx[$key];
 		}
 
 		return isset($this->_flags[$key]);
@@ -442,7 +442,12 @@ class CLI extends Frame
 		foreach ($args as $key => $value) {
 
 			if ($c > 1) {
-				$this->_args[$key] = $value;
+				if (preg_match('/^--/', $key)) {
+					$this->_flagsx[$key] = $value;
+				} else {
+					$this->_args[$key] = $value;
+				}
+
 			}
 
 			$c++;

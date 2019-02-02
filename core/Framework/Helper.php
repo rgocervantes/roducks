@@ -589,7 +589,9 @@ class Helper
 		foreach ($args as $key => $value) {
 
 			if ($c > 1) {
-				$params[] = ($value == 1) ? $key : $value;
+				if (!preg_match('/^--/', $key)) {
+					$params[] = ($value == 1) ? $key : $value;
+				}
 			}
 
 			$c++;
