@@ -316,6 +316,12 @@ class CLI extends Frame
 
 	protected function getFlag($key)
 	{
+		$value = $this->getParam($key);
+
+		if (!empty($value)) {
+			return $value;
+		}
+
 		return isset($this->_flags[$key]);
 	}
 
@@ -417,9 +423,14 @@ class CLI extends Frame
 
 	}
 
+	protected function outputLine($str)
+	{
+		echo $str . "\n";
+	}
+
 	public function run()
 	{
-		echo $this->colorRed('Unknown command') . "\n";
+		$this->outputLine($this->colorRed('Unknown command'));
 		$this->output();
 	}
 
