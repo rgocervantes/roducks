@@ -315,11 +315,15 @@ class CLI extends Frame
 		return $value;
 	}
 
-	protected function getFlag($key)
+	protected function getFlag($key, $value = "")
 	{
 
 		if (isset($this->_flagsx[$key])) {
 			return $this->_flagsx[$key];
+		} else {
+			if (!empty($value)) {
+				return $value;
+			}
 		}
 
 		return isset($this->_flags[$key]);
@@ -440,13 +444,18 @@ class CLI extends Frame
 
 	protected function outputLine($str)
 	{
-		echo $str . "\n";
+		$ret = $str;
+
+		if (is_array($str)) {
+			$ret = implode(" ", $str);
+		}
+
+		echo $ret . "\n";
 	}
 
 	public function run()
 	{
-		$this->outputLine($this->colorRed('Unknown command'));
-		$this->output();
+		self::println("Unknown command", self::FAILURE);
 	}
 
 	public function __construct(array $flags = [], array $args = [])
