@@ -163,7 +163,7 @@ class CLI extends Frame
 	{
 		$this->_reset();
 
-		echo $text;
+		echo $this->colorYellow($text);
 		$this->_answer = rtrim( fgets( STDIN ));
 
 		if (!in_array($this->_answer, ['y','n']) && $yn) {
@@ -391,7 +391,7 @@ class CLI extends Frame
 		if ($this->_badAnswer) {
 
 			$this->_reset();
-			$this->wrong("Unreconized option: '".$this->getAnswer()."'");
+			$this->wrong("Unrecognized option: '".$this->getAnswer()."'");
 			$this->wrong("Set 'y' (yes) or 'n' (no)");
 
 		}
