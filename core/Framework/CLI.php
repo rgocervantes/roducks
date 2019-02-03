@@ -340,14 +340,29 @@ class CLI extends Frame
 		return $this->_entered("n");
 	}
 
+	protected function colorRed($text)
+	{
+		return $this->_color($text, "0;31m");
+	}
+
 	protected function colorGreen($text)
 	{
 		return $this->_color($text, "0;32m");
 	}
 
-	protected function colorRed($text)
+	protected function colorYellow($text)
 	{
-		return $this->_color($text, "0;31m");
+		return $this->_color($text, "0;33m");
+	}
+
+	protected function colorPurple($text)
+	{
+		return $this->_color($text, "0;35m");
+	}
+
+	protected function colorBlue($text)
+	{
+		return $this->_color($text, "0;36m");
 	}
 
 	protected function bgGreenColorRed($text)
