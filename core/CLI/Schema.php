@@ -38,70 +38,27 @@ use Path;
 class Schema extends Setup
 {
 
-	private $_count = 0;
+	private $_count = 0,
+					$_exec = false;
 
 	static function _getFiles($folder)
 	{
-		$dir = Directory::open(Path::get(DIR_SCHEMA.$folder));
+		$dir = Directory::open(Path::get(DIR_SCHEMA_SCRIPTS.$folder));
 		$files = $dir['files'];
 
 		return $files;
 	}
 
-	private function _run($script, $run)
+	private function _runner($script, $files, $exec)
 	{
-
-		$class = "DB\\Schema\\Setup\\" . $script;
-		$dialog = ($run) ? 'success' : 'info';
-
-		if (class_exists($class)) {
-			$obj = new $class();
-
-			if (method_exists($obj, 'schema')) {
-				if ($run) $obj->schema($this->db());
-			}
-
-			if (method_exists($obj, 'data')) {
-				if ($run) $obj->data($this->db());
-			}
-
-			$finished = $obj->finished($script, $run);
-
-			if (!is_null($finished['success'])) {
-				$this->$dialog($finished['success']);
-			}
-
-			if (!is_null($finished['error'])) {
-				$this->error($finished['error']);
-			}
-
-		}
-
-	}
-
-	private function _search($file, $run = true)
-	{
-
-		if ($this->isUnsaved($file, 'php')) {
-			$this->_run($file, $run);
-		} else {
-			$this->_count++;
-		}
-
-	}
-
-	public function setup($script = null)
-	{
-
 		$prompt = true;
-		$files = self::_getFiles("Setup");
 		$setup = Helper::ext($script, 'php');
 		$run = $this->getFlag('--run');
 		$message = "these scripts";
 
 		if (!is_null($script)) {
 			if (in_array($setup, $files)) {
-				$this->_search($script, $run);
+				$this->_search($script, $run, $exec);
 				$total = 1;
 				$files = [];
 				array_push($files, $setup);
@@ -114,7 +71,8 @@ class Schema extends Setup
 				}
 			} else {
 				$prompt = false;
-				$this->error("[*]File: '/Setup/{$setup}' does not exist.");
+				$this->error("[x]File does not exist:");
+				$this->error(RDKS_ROOT."database/Schema/Setup/{$setup}");
 			}
 
 		} else {
@@ -123,7 +81,7 @@ class Schema extends Setup
 
 			foreach ($files as $file) {
 				$file = str_replace(FILE_EXT, '', $file);
-				$this->_search($file, $run);
+				$this->_search($file, $run, $exec);
 			}
 
 			if ($total == $this->_count) {
@@ -143,14 +101,76 @@ class Schema extends Setup
 
 				foreach ($files as $file) {
 					$file = str_replace(FILE_EXT, '', $file);
-					$this->_search($file, true);
+					$this->_search($file, true, $exec);
 				}
 
 			}
 
 			parent::output();
 		}
+	}
 
+	private function _run($script, $run, $exec)
+	{
+
+		$folder = (!$exec) ? "Scripts\\" : "Execute\\";
+		$class = "DB\\Schema\\Setup\\" . $folder . $script;
+		$dialog = ($run) ? 'success' : 'info';
+
+		if (class_exists($class)) {
+			$obj = new $class();
+
+			if (method_exists($obj, 'schema')) {
+				if ($run) $obj->schema($this->db());
+			}
+
+			if (method_exists($obj, 'data')) {
+				if ($run) $obj->data($this->db());
+			}
+
+			if (method_exists($obj, 'execute')) {
+				if ($run) {
+					$files = $obj->execute();
+					$this->_runner(null, $files, false);
+				}
+			}
+
+			$finished = $obj->finished($script, $run);
+
+			if (!is_null($finished['success'])) {
+				$this->$dialog($finished['success']);
+			}
+
+			if (!is_null($finished['error'])) {
+				$this->error($finished['error']);
+			}
+
+		}
+
+	}
+
+	private function _search($file, $run = true, $exec = false)
+	{
+
+		if ($this->isUnsaved($file, 'php')) {
+			$this->_run($file, $run, $exec);
+		} else {
+			$this->_count++;
+		}
+
+	}
+
+	public function setup($script = null)
+	{
+
+		$exec = $this->getFlag('--exec');
+
+		if (is_null($script)) {
+			$files = self::_getFiles("Setup");
+			$this->_runner($script, $files, $exec);
+		} else {
+			$this->_run($script, true, $exec);
+		}
 	}
 
 	private function _sql($script, $save = false, $loop = true)

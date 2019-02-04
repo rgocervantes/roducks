@@ -18,13 +18,12 @@
  *
  */
 
-namespace DB\Schema\Setup;
+namespace DB\Schema\Setup\Scripts;
 
-use Roducks\Framework\Setup;
-use Roducks\Interfaces\SetupInterface;
+use Setup;
 use DB;
 
-class Setup_2017_09_02_Rod extends Setup implements SetupInterface
+class Setup_2017_09_02_Rod extends Setup
 {
 
 	const COMMENTS = "Create Sample Table and insert some values.";

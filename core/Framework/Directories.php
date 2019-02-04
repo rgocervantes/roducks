@@ -80,6 +80,7 @@ App::define('DIR_DATA_UPLOADED_ZIP', DIR_DATA_UPLOADED . "zip/");
 App::define('DIR_ROLES', "roles/");
 App::define('DIR_DATABASE', "database/");
 App::define('DIR_SCHEMA', DIR_DATABASE . "Schema/");
+App::define('DIR_SCHEMA_SCRIPTS', DIR_SCHEMA . "Scripts/");
 App::define('DIR_SCHEMA_DATA', DIR_SCHEMA . "Data/");
 
 App::define('DIR_ASSETS', "assets/");

@@ -167,10 +167,13 @@ abstract class Setup extends CLI
 	protected function saved($file, $type)
 	{
 
-		$this->_query->insert([
+		$this->_query->insertOnce([
 			'file' => $file,
 			'type' => $type,
 			'executed_at' => Query::now()
+		], [
+			'file' => $file,
+			'type' => $type
 		]);
 	}
 

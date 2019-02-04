@@ -113,7 +113,7 @@ class CLI extends Frame
 	{
 
 		echo self::_colorize(self::SPACE, $color) . self::LN;
-		if (!is_null($title)) echo self::_colorize(self::line("  {$title}: "), $color);
+		if (!is_null($title)) echo self::_colorize(self::line("  [{$title}]: "), $color);
 		if (!is_null($title)) echo self::_colorize(self::SPACE, $color) . self::LN;
 		echo self::_colorize($output, $color);
 		echo self::_colorize(self::SPACE, $color) . self::LN;
@@ -155,7 +155,7 @@ class CLI extends Frame
 		if (!empty($line)) $error[] = self::line('[x]Line: '.$line, 4);
 		if (!empty($file)) $error[] = self::line('[x]File: '.$file, 4);
 
-		self::_dialog("[PHP Error]", self::_getOutput($error, "  - "), self::FAILURE);
+		self::_dialog("PHP Error", self::_getOutput($error, "  - "), self::FAILURE);
 		exit;
 	}
 
@@ -165,6 +165,10 @@ class CLI extends Frame
 
 		echo $this->colorYellow($text);
 		$this->_answer = rtrim( fgets( STDIN ));
+
+		if (strtolower($this->_answer) == 'y' || strtolower($this->_answer) == 'n') {
+			$this->_answer = strtolower($this->_answer);
+		}
 
 		if (!in_array($this->_answer, ['y','n']) && $yn) {
 			$this->_badAnswer = true;
@@ -382,7 +386,7 @@ class CLI extends Frame
 
 	protected function promptYN($text)
 	{
-		$this->_prompt("{$text} [y/n]: ", true);
+		$this->_prompt("{$text} [Y/n]: ", true);
 	}
 
 	protected function output()
