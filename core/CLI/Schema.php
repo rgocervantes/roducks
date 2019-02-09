@@ -43,7 +43,7 @@ class Schema extends Setup
 
 	static function _getFiles($folder)
 	{
-		$dir = Directory::open(Path::get(DIR_SCHEMA_SCRIPTS.$folder));
+		$dir = Directory::open(Path::get(DIR_SCHEMA.$folder));
 		$files = $dir['files'];
 
 		return $files;
@@ -106,7 +106,9 @@ class Schema extends Setup
 
 			}
 
-			parent::output();
+			if ($exec) {
+				parent::output();
+			}
 		}
 	}
 
@@ -158,19 +160,6 @@ class Schema extends Setup
 			$this->_count++;
 		}
 
-	}
-
-	public function setup($script = null)
-	{
-
-		$exec = $this->getFlag('--exec');
-
-		if (is_null($script)) {
-			$files = self::_getFiles("Setup");
-			$this->_runner($script, $files, $exec);
-		} else {
-			$this->_run($script, true, $exec);
-		}
 	}
 
 	private function _sql($script, $save = false, $loop = true)
@@ -254,9 +243,28 @@ class Schema extends Setup
 
 	}
 
+	public function setup($script = null)
+	{
+
+		$exec = $this->getFlag('--exec');
+
+		if (is_null($script)) {
+			$files = self::_getFiles("Setup/Scripts");
+			$this->_runner($script, $files, $exec);
+		} else {
+			$this->_run($script, true, $exec);
+		}
+	}
+
 	public function sql($script = null)
 	{
 		$this->_sql($script, false);
+	}
+
+	public function exec()
+	{
+		$files = self::_getFiles("Setup/Execute");
+		$this->_runner(null, $files, true);
 	}
 
 }
