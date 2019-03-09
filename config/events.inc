@@ -23,5 +23,6 @@ use Roducks\Framework\Dispatch;
 return [
 	'onEventLogin' 			 => Dispatch::event('register', 'on-login'),
 	'onEventLogout' 		 => Dispatch::event('register', 'on-logout'),
-	'onEventCreateAccount'	 => Dispatch::event('register', 'on-create-account')
+	'onEventCreateAccount'	 => Dispatch::event('register', 'on-create-account'),
+	'onLanguageSelector'				=> Dispatch::event('language-selector', 'on-change'),
 ];

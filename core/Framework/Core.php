@@ -831,17 +831,9 @@ class Core
 
 	}
 
-	static function loadService($page, $site = "")
+	static function loadService($page, array $settings)
 	{
-		$pagePath = '';
-/*
-		$page = Helper::getClassName($page);
-		$page = DIR_SERVICES . Helper::getCamelName($page);
-
-		$servicePath = self::getServicesPath($page, $site);
-		$pagePath = $servicePath['path'];
-*/
-		return self::loadPage($pagePath, $page, "", array(),array(), true);
+		return self::loadPage('', $page, '', array(), $settings, true);
 	}
 
 	static function dispatchEvent($e, $settings)
