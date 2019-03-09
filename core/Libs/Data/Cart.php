@@ -29,14 +29,15 @@ class Cart
 	private $_cart; // Stores cart's name
 	private $_subtotal = 0;
 	private $_total = 0;
-	private $_lang; 
+	private $_lang;
+	private $_currency = 'USD';
 
 //-------------------------------
-//	STATIC 
+//	STATIC
 //-------------------------------
-	static public function init($name, $lang = "en")
+	static public function init($name, $lang = "en", $currency = 'USD')
 	{
-		$ins = new Cart($name, $lang);
+		$ins = new Cart($name, $lang, $currency);
 		return $ins;
 	}
 
@@ -55,7 +56,7 @@ class Cart
 	{
 		$attrsValue = 0;
 		$groupedValue = 0;
-		
+
 		foreach($attrs as $a):
 			if ($a['price'][$lang] > 0):
 				$attrsValue += ($a['price'][$lang] * $qty);
@@ -71,7 +72,7 @@ class Cart
 				foreach ($g['attributes'] as $gpa):
 					if ($gpa['price'][$lang] > 0):
 						$groupedValue += ($gpa['price'][$lang] * $qty);
-					endif;	
+					endif;
 				endforeach;
 			endif;
 
@@ -80,15 +81,35 @@ class Cart
 		return ($qty * $price) + $attrsValue + $groupedValue;
 	}
 
-	static public function getItemFormat($lang, $item)
+	static public function getAttributes($lang, $currency, $attrs)
 	{
+		$ret = [];
+
+		foreach ($attrs as $key => $attr) {
+			$price = $attr['price'][$lang];
+			unset($attr['price']);
+			$attr['price'] = $price;
+			$attr['price_format'] = self::getPriceFormat($price, $currency);
+			$ret[] = $attr;
+		}
+
+		return $ret;
+	}
+
+	static public function getItemFormat($lang, $currency, $item)
+	{
+
+		$subtotal = self::getItemSubtotal($lang, $item['price'][$lang], $item['qty'], $item['attributes'], $item['grouped_products']);
+
 		return [
 			'index' => $item['index'],
 			'qty' => $item['qty'],
 			'price' => $item['price'][$lang],
-			'subtotal' => self::getItemSubtotal($lang, $item['price'][$lang], $item['qty'], $item['attributes'], $item['grouped_products']),
+			'price_format' => self::getPriceFormat($item['price'][$lang], $currency),
+			'subtotal' => $subtotal,
+			'subtotal_format' => self::getPriceFormat($subtotal, $currency),
 			'data' => $item['data'],
-			'attributes' => $item['attributes'],
+			'attributes' => self::getAttributes($lang, $currency, $item['attributes']),
 			'grouped_products' => $item['grouped_products']
 		];
 	}
@@ -102,13 +123,8 @@ class Cart
 		return $value;
 	}
 
-	static function intQty($v)
-	{
-		return intval($v);
-	}
-
 //-------------------------------
-//	PRIVATE 
+//	PRIVATE
 //-------------------------------
 	private function _setData($index, $data)
 	{
@@ -118,23 +134,28 @@ class Cart
 			$session = Session::get($this->_cart);
 			$session[$index] = $data;
 			Session::set($this->_cart, $session);
-		endif;	
+		endif;
 	}
 
-	private function _getData($index)
+	private function _getData($index = null)
 	{
 
 		$ret = [];
 
 		if (Session::exists($this->_cart)):
 			$data = Session::get($this->_cart);
+
+			if (is_null($index)) {
+				return $data;
+			}
+
 			if (isset($data[$index])):
 				$ret = $data[$index];
 			endif;
 		endif;
 
 		return $ret;
-	}	
+	}
 
 	private function _format($index, $obj, $qty)
 	{
@@ -157,7 +178,7 @@ class Cart
 			$grouped_products = [];
 
 			foreach ($obj['grouped_products'] as $key => $value) {
-				$idx = $this->_setId($value['id'], $this->_attributes($value['attributes']));
+				$idx = $this->_setItemId($value['id'], $this->_setAttrsId($value['attributes']));
 				$grouped_products[$idx] = $value;
 			}
 
@@ -167,20 +188,20 @@ class Cart
 		return $data;
 	}
 
-	private function _attributes($attrs)
+	private function _setAttrsId($attrs)
 	{
 
 		$values = [];
 		foreach($attrs as $obj):
 			$values[] = $obj['id'];
-		endforeach;	
+		endforeach;
 
 		return $values;
 	}
 
-	private function _setId($id, $keys)
+	private function _setItemId($id, $keys)
 	{
-		
+
 		$ext = "";
 
 		if (count($keys) > 0) $ext = "_" . implode("_", $keys);
@@ -188,29 +209,31 @@ class Cart
 		return 'item_' . $id . $ext;
 	}
 
-	private function _refresh($items)
+	private function _store($items)
 	{
 		$this->_setData('items', $items);
 	}
 
 	private function _percentage($per)
 	{
-		$subtotal = $this->getSubtotal();
+		$subtotal = $this->getSubtotal(false);
 		return self::getPercentageValue($subtotal, $per);
 	}
 
 	private function _totals()
 	{
 
+		$this->_subtotal = 0;
+		$this->_total = 0;
+
 		if ($this->hasItems()):
-			$this->_subtotal = 0;
-			$this->_total = 0;
+
 			$lang = $this->_lang;
 
 			$items = $this->getData();
-			$charges = $this->_getData('charges'); 
+			$charges = $this->_getData('charges');
 			$discounts = $this->_getData('discounts');
-				
+
 			foreach ($items as $key => $stored):
 				$attrs = 0;
 				$grouped = 0;
@@ -219,33 +242,33 @@ class Cart
 					foreach ($stored['attributes'] as $a):
 						if ($a['price'][$lang] > 0):
 							$attrs += ($a['price'][$lang] * $stored['qty']);
-						endif;	
+						endif;
 					endforeach;
-				endif;	
+				endif;
 
 				if (!empty($stored['grouped_products'])):
 					foreach ($stored['grouped_products'] as $gp):
 						if ($gp['price'][$lang] > 0):
 							$grouped += (($gp['price'][$lang] * $gp['qty']) * $stored['qty']);
-						endif;	
+						endif;
 
 						if (isset($gp['attributes'])):
 							foreach ($gp['attributes'] as $gpa):
 								if ($gpa['price'][$lang] > 0):
 									$grouped += (($gpa['price'][$lang] * $gp['qty']) * $stored['qty']);
-								endif;	
+								endif;
 							endforeach;
 						endif;
 
 					endforeach;
-				endif;	
+				endif;
 
 				$this->_subtotal += ($stored['price'][$lang] * $stored['qty']) + $attrs + $grouped;
 			endforeach;
 
 			$this->_total += $this->_subtotal;
 
-			$tax = $this->getTax();	
+			$tax = $this->getTax();
 			$this->_total += $tax['value'];
 
 			if (count($charges) > 0):
@@ -265,21 +288,25 @@ class Cart
 							$this->_total -= $discount['value'][$lang];
 						elseif ($discount['type'] == self::TYPE_PERCENTAGE):
 							$this->_total -= $this->_percentage($discount['value'][$lang]);
-						endif;	
+						endif;
 					endif;
 				endforeach;
-			endif;	
+			endif;
 
+		else:
+			$this->removeCharges();
+			$this->removeDiscounts();
 		endif;
 	}
 
 //-------------------------------
-//	PUBLIC 
+//	PUBLIC
 //-------------------------------
-	public function __construct($name, $lang)
+	public function __construct($name, $lang, $currency)
 	{
 		$this->_cart = $name;
 		$this->_lang = $lang;
+		$this->_currency = $currency;
 		$this->refresh();
 	}
 
@@ -293,7 +320,7 @@ class Cart
 		return $this->_getData('items');
 	}
 
-	public function getTotalItems()
+	public function getCountItems()
 	{
 		$data = $this->getData();
 		$count = count($data);
@@ -309,7 +336,7 @@ class Cart
 
 	public function hasItems()
 	{
-		if ($this->getTotalItems() > 0) return true;
+		if ($this->getCountItems() > 0) return true;
 
 		return false;
 	}
@@ -327,7 +354,7 @@ class Cart
 
 		if ($this->hasItems()):
 			foreach($this->getData() as $item):
-				$items[] = self::getItemFormat($this->_lang, $item);
+				$items[] = self::getItemFormat($this->_lang, $this->_currency, $item);
 			endforeach;
 		endif;
 
@@ -336,10 +363,10 @@ class Cart
 
 	public function getItem($id)
 	{
-		
+
 		if ($this->itemExists($id)){
 			$items = $this->getData();
-			return self::getItemFormat($this->_lang, $items[$id]);
+			return self::getItemFormat($this->_lang, $this->_currency, $items[$id]);
 		}
 
 		return [];
@@ -354,6 +381,62 @@ class Cart
 		}
 
 		return false;
+	}
+
+	public function remove($id)
+	{
+
+		if ($this->itemExists($id)){
+			$items = $this->getData();
+			unset($items[$id]);
+			$this->_store($items);
+		}
+	}
+
+	public function removeGrouped($id, $key, $force = false)
+	{
+
+		if ($this->itemExists($id)){
+			$data = $this->getData();
+			$item = $data[$id];
+
+			if (isset($item['grouped_products'][$key])){
+				if (
+					(isset($item['grouped_products'][$key]["remove"]) && $item['grouped_products'][$key]["remove"] === true)
+					|| $force
+				){
+					unset($item['grouped_products'][$key]);
+					$this->update($id, null, $item);
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public function add($item)
+	{
+
+		// cast qty to integer
+		$item['qty'] = intval($item['qty']);
+
+		$items = $this->getData();
+
+		$id = $this->_setItemId($item['id'], $this->_setAttrsId($item['attributes']));
+
+		if (isset($items[$id])) {
+			//let's update qty
+			$qty = ($item['qty'] + $items[$id]['qty']);
+
+			// store items before pushing in session again
+			$items[$id] = $this->_format($id, $item, $qty);
+		} else {
+			$items[$id] = $this->_format($id, $item, $item['qty']);
+		}
+
+		$this->_store($items);
+
 	}
 
 	public function update($id, $qty, array $data = [])
@@ -371,10 +454,10 @@ class Cart
 				if (is_null($qty)){
 					$qty = $items[$id]['qty'];
 				}
-				
+
 				$items[$id] = $this->_format($obj['index'], $obj, $qty);
-				
-				$this->_refresh($items);
+
+				$this->_store($items);
 			}else{
 				$this->remove($id);
 			}
@@ -382,84 +465,7 @@ class Cart
 
 	}
 
-	public function remove($id)
-	{
-		
-		if ($this->itemExists($id)){
-			$items = $this->getData();
-			unset($items[$id]);
-			$this->_refresh($items);
-		}	
-	}
-
-	public function removeGrouped($id, $key, $force = false)
-	{
-
-		if ($this->itemExists($id)){
-			$data = $this->getData();
-			$item = $data[$id];
-
-			if (isset($item['grouped_products'][$key])){
-				if (
-					(isset($item['grouped_products'][$key]["remove"]) && $item['grouped_products'][$key]["remove"] === true) 
-					|| $force
-				){
-					unset($item['grouped_products'][$key]);
-					$this->update($id, null, $item);
-					return true;
-				}	
-			}
-		}
-
-		return false;
-	}
-
-	public function add($item)
-	{
-
-		$items = $this->getData();
-		$insert = [];
-
-		$id = $this->_setId($item['id'], $this->_attributes($item['attributes']));
-
-		// if there's items already
-		if (count($items) > 0):
-			
-			foreach ($items as $key => $saved):
-				
-				// item already exists in cart?
-				if ($id == $key):
-
-					//let's update qty
-					$qty = ($item['qty'] + $saved['qty']);
-
-					// store items before pushing in session again
-					$insert[$id] = $this->_format($id, $item, $qty);					
-				
-				else:
-					// retrieve stored quantity
-					$qty = $saved['qty'];
-					
-					// store items before pushing in session again
-					$insert[$key] = $this->_format($saved['index'], $saved, $qty);
-
-				endif;	
-
-			endforeach;
-
-			// if it's a new one
-			if (!isset($insert[$id])):
-				$insert[$id] = $this->_format($id, $item, $item['qty']);
-			endif;	
-
-		else: // cart is empty, so let's add the first item
-			$insert[$id] = $this->_format($id, $item, $item['qty']);
-		endif;	
-
-		$this->_refresh($insert);
-
-	}
-
+	// @deprecated
 	public function updateAll($ids, array $index = [])
 	{
 
@@ -477,7 +483,7 @@ class Cart
 				$q = $qtys[$key];
 				if ($q > 0) $insert[$key] = $this->_format($saved['index'],$saved, $q);
 			endforeach;
-		endif;	
+		endif;
 
 		// if users checked boxes, rip them off.
 		if (count($index) > 0):
@@ -486,13 +492,15 @@ class Cart
 			endforeach;
 		endif;
 
-		$this->_refresh($insert);
+		$this->_store($insert);
 
 	}
 
 	public function setTax($tx)
 	{
-		$this->_setData('tax', $tx);
+		if (!$this->hasItems()) {
+			$this->_setData('tax', $tx);
+		}
 	}
 
 	public function getTax(){
@@ -501,13 +509,15 @@ class Cart
 
 		if (empty($data)){
 			$tax = $value;
+			$format = $value;
 		} else {
 			$tax = $data[$this->_lang];
 			$value = $this->_percentage($tax);
+			$format = self::getPriceFormat($value, $this->_currency);
 		}
 
-		return ['percentage' => $tax, 'value' => $value];
-	}	
+		return ['percentage' => $tax, 'value' => $value, 'format' => $format];
+	}
 
 	public function setCharges(array $data, $overwrite = true)
 	{
@@ -524,8 +534,20 @@ class Cart
 
 	public function getCharges()
 	{
-		return $this->_getData('charges');
-	}	
+		$charges = $this->_getData('charges');
+
+		foreach ($charges as $i => $charge) {
+			$charges[$i]['value'] = $charge['value'][$this->_lang];
+			$charges[$i]['format'] = self::getPriceFormat($charge['value'][$this->_lang], $this->_currency);
+		}
+
+		return $charges;
+	}
+
+	public function removeCharges()
+	{
+		$this->setCharges([]);
+	}
 
 	public function setDiscounts(array $data, $overwrite = true)
 	{
@@ -538,21 +560,76 @@ class Cart
 		}
 
 		$this->_setData('discounts', $data);
-	}	
+	}
 
 	public function getDiscounts()
 	{
-		return $this->_getData('discounts');
+		$discounts = $this->_getData('discounts');
+
+		foreach ($discounts as $i => $discount) {
+			$discounts[$i]['value'] = $discount['value'][$this->_lang];
+			$discounts[$i]['format'] = self::getPriceFormat($discount['value'][$this->_lang], $this->_currency);
+		}
+
+		return $discounts;
 	}
 
-	public function getSubtotal()
+	public function removeDiscounts()
 	{
-		return $this->_subtotal;
+		$this->setDiscounts([]);
 	}
 
-	public function getTotal()
+	public function setShipping($title, $value)
 	{
-		return $this->_total;
+		$this->setCharges([
+			'shipping' => [
+				'type' => self::TYPE_AMOUNT,
+				'title' => $title,
+				'value' => $value
+			]
+		]);
+	}
+
+	public function getShipping()
+	{
+		$charges = $this->getCharges();
+		return (isset($charges['shipping'])) ? $charges['shipping']['value'] : 0;
+	}
+
+	public function updateShipping($value, $title = null)
+	{
+		$charges = $this->_getData('charges');
+		$charges['shipping']['value'] = $value;
+
+		if (!is_null($title)) {
+			$charges['shipping']['title'] = $title;
+		}
+
+		$this->setCharges($charges);
+	}
+
+	public function freeShipping($title = null)
+	{
+		$this->updateShipping([
+			'es' => 0,
+			'en' => 0,
+			'fr' => 0
+		], $title);
+	}
+
+	public function getSubtotal($format = true)
+	{
+		return ($format) ? self::getPriceFormat($this->_subtotal, $this->_currency) : $this->_subtotal;
+	}
+
+	public function getTotal($format = true)
+	{
+		return ($format) ? self::getPriceFormat($this->_total, $this->_currency) : $this->_total;
+	}
+
+	public function getCurrency()
+	{
+		return $this->_currency;
 	}
 
 	public function getItemsStock()
@@ -599,14 +676,14 @@ class Cart
 
 		foreach ($this->getItems() as $key => $item) {
 			if (isset($item['data']['weight'])):
-				$total += $item['data']['weight'];
+				$total += $item['data']['weight'] * $item['qty'];
 			endif;
 
 			if (!empty($item['grouped_products'])):
 				foreach ($item['grouped_products'] as $gp):
 					if (isset($gp['data']['weight'])):
 						$total += ($gp['data']['weight'] * $gp['qty']);
-					endif;	
+					endif;
 				endforeach;
 			endif;
 
