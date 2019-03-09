@@ -70,6 +70,16 @@ class Error
 		}
 	}
 
+	static function message($error)
+	{
+		header('Content-type: application/json; charset=utf8');
+		echo json_encode([
+			'success' => false,
+			'message' => $error,
+		]);
+		exit;
+	}
+
 	static function logger($title, $error, $file)
 	{
 		self::log("{$title}\n[file] {$file}\n\n{$error}");
@@ -135,12 +145,7 @@ class Error
 		$markup .= '</body></html>';
 
 		if (self::$_json) {
-			header('Content-type: application/json; charset=utf8');
-			echo json_encode([
-				'success' => false,
-				'message' => $error,
-			]);
-			exit;
+			self::message($error);
 		} else {
 			die($markup);
 		}

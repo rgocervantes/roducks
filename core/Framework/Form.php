@@ -45,15 +45,20 @@ class Form
 
 	static function getKey()
 	{
-		$token = Hash::getToken();
-		Session::set(self::HASH_KEY, $token);
-		return $token;
+		if (!empty(Http::getUserAgent())) {
+			$token = Hash::getToken();
+			Session::set(self::HASH_KEY, $token);
+			return $token;
+		}
+
+		return null;
+
 	}
 
 	static function setKey($token = "")
 	{
 		if ( (Session::exists(self::HASH_KEY) && $token != Session::get(self::HASH_KEY)) || empty($token) ) {
-			Http::setHeaderInvalidRequest();
+			Error::message('Bad Request.');
 		} else {
 			Session::reset(self::HASH_KEY);
 		}
@@ -95,7 +100,7 @@ class Form
 	}
 
 	/**
-	*	@param $filters array	
+	*	@param $filters array
 	*	@return bool
 	*/
 	static function validation(array $filters)
@@ -125,7 +130,7 @@ class Form
 					if (intval($value['data']) < $value['filter']['greater_than']) {
 						$error++;
 						array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
-					}					
+					}
 
 				} else if (isset($value['filter']['less_than'])) {
 
@@ -151,11 +156,11 @@ class Form
 
 					case self::FILTER_WORD:
 						$rule = Helper::VALID_WORD;
-						break;					
+						break;
 
 					case self::FILTER_WORDS:
 						$rule = Helper::VALID_WORDS;
-						break;	
+						break;
 
 					case self::FILTER_INTEGER:
 						$rule = Helper::VALID_INTEGER;
@@ -183,7 +188,7 @@ class Form
 
 					case self::FILTER_URL:
 						$rule = Helper::VALID_URL;
-						break;	
+						break;
 				endswitch;
 
 				if (!Helper::regexp($rule, $value['data'])) {
@@ -191,7 +196,7 @@ class Form
 					array_push($alert, ['message' => $value['message'], 'field' => $value['field']]);
 				}
 
-			}	
+			}
 
 		endforeach;
 

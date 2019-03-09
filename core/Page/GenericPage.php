@@ -24,6 +24,7 @@ use Roducks\Framework\Helper;
 use Roducks\Framework\URL;
 use Roducks\Framework\Post;
 use Roducks\Framework\Path;
+use Roducks\Framework\Form;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Request\Request;
 use Roducks\Libs\Data\Session;
@@ -80,6 +81,16 @@ class GenericPage extends Frame
 	protected function helper()
 	{
 		return $this->_helper;
+	}
+
+	protected function csrfToken()
+	{
+		$this->view->meta('name', "csrf-token", Form::getKey());
+	}
+
+	protected function csrfTokenValidation()
+	{
+		Form::setKey($this->post->param('csrf_token', null));
 	}
 
 	/**

@@ -94,6 +94,11 @@ class Http
 		return self::getProtocol() . $_SERVER['SERVER_NAME'];
 	}
 
+	static function getUserAgent()
+	{
+		return (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : "";
+	}
+
 	static function getSplittedURL($siteDomain)
 	{
 		$domain = explode(".", $siteDomain);
