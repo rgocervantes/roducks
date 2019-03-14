@@ -59,7 +59,7 @@ abstract class ORM extends Query
 		return parent::filter([], $fields);
 	}
 
-	public function getData()
+	public function getData($reverse = false)
 	{
 
 		$ret = [];
@@ -68,12 +68,21 @@ abstract class ORM extends Query
 		        $ret[] = $row;
 		endwhile; endif;
 
+		if ($reverse) {
+			return array_reverse($ret);
+		}
+
 		return $ret;
 	}
 
-	public function first()
+	public function first($limit = 1)
 	{
-		return $this->fetch();
+		return $this->limit($limit)->execute();
+	}
+
+	public function last($limit = 1, array $orderBy = [])
+	{
+		return $this->orderBy([$this->id => 'desc'])->first($limit);
 	}
 
 	public function filteredBy($field)

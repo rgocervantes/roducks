@@ -700,7 +700,7 @@ class Query
 	/**
 	 *	@return string Query statment
 	 */
-	public function getQueryString()
+	public function getQuery()
 	{
 		return $this->_queryString;
 	}
