@@ -28,7 +28,6 @@ use Roducks\Framework\Helper;
 use Roducks\Framework\Path;
 use Roducks\Data\User;
 use Roducks\Libs\Request\Http;
-use Roducks\Libs\Data\Session;
 use Roducks\Framework\Event;
 
 class Page extends GenericPage
@@ -134,36 +133,6 @@ class Page extends GenericPage
 		} else {
 			Error::debug(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $dir_languages, "Make sure file exists with translations.");
 		}
-
-	}
-
-	/**
-	 *
-	 */
-	public function _email($type, $tpl)
-	{
-
-		if (!Session::exists(self::SESSION_EMAIL)) {
-			$this->pageNotFound();
-		}
-
-		$emailPath = Core::getEmailsPath($tpl);
-
-		if (file_exists($emailPath)):
-
-			$store = Session::get(self::SESSION_EMAIL);
-			$output = [];
-			$output['form'] = (isset($store['form'])) ? $store['form'] : [];
-			$output['data'] = (isset($store['data'])) ? $store['data'] : [];
-			extract($output);
-
-			Session::reset(self::SESSION_EMAIL);
-
-			include $emailPath;
-
-		else:
-			JSON::stOutput(['data' => ['error' => true]]);
-		endif;
 
 	}
 

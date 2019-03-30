@@ -25,14 +25,13 @@ use Roducks\Framework\URL;
 use Roducks\Framework\Post;
 use Roducks\Framework\Path;
 use Roducks\Framework\Form;
+use Roducks\Framework\Core;
 use Roducks\Libs\Request\Http;
-use Roducks\Libs\Request\Request;
-use Roducks\Libs\Data\Session;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
 
 class GenericPage extends Frame
 {
-
-	const SESSION_EMAIL = "RDKS_EMAIL";
 
 	private $_helper;
 
@@ -108,16 +107,8 @@ class GenericPage extends Frame
 	protected function sendEmail($template, callable $callback)
 	{
 
+		$tpl = Core::getEmailsPath($template);
 		$attrs = new \stdClass;
-		$attrs->cookie = true;
-		$callback($attrs);
-
-		$headers = [
-			'to' => $attrs->to,
-			'from' => $attrs->from,
-			'company' => $attrs->company,
-			'subject' => $attrs->subject
-		];
 
 		$store = [];
 		$data = $this->getViewData();
@@ -128,25 +119,47 @@ class GenericPage extends Frame
 		// set custom data
 		$store['data'] = $data;
 
-		// store in a session to retrieve data by requesting email template
-		Session::set(self::SESSION_EMAIL, $store);
+		if (file_exists($tpl)) {
 
-		$url = URL::setAbsoluteURL("/_email/{$template}");
+			extract($store);
+	
+			ob_start();
+			include $tpl;
+      $html = ob_get_contents();
+      ob_end_clean();
 
-		// get html
-		$request = Request::get($url);
-
-		if ($attrs->cookie) {
-			$request->persistSession();
+			$mail = new PHPMailer(true);
+			$smtp = Core::getLocalConfigFile("smtp");
+	
+			try {
+					//Server settings
+					$mail->SMTPDebug = 0;                                       // Enable verbose debug output
+					$mail->isSMTP();                                            // Set mailer to use SMTP
+					$mail->Host       = $smtp['server'];  // Specify main and backup SMTP servers
+					$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+					$mail->Username   = $smtp['username'];                     // SMTP username
+					$mail->Password   = $smtp['password'];                               // SMTP password
+					$mail->SMTPSecure = $smtp['encryption'];                                  // Enable TLS encryption, `ssl` also accepted
+					$mail->Port       = $smtp['port'];                                    // TCP port to connect to
+				
+					$callback($mail, $attrs);
+	
+					$mail->setFrom($smtp['email_from'], $attrs->Name);
+	
+					// Content
+					$mail->isHTML(true);                                  // Set email format to HTML
+					
+					$mail->Body    = $html;
+					$mail->AltBody = strip_tags($html);
+	
+					$mail->send();
+	
+					return true;
+	
+			} catch (PHPMailerException $e) {
+				Error::debug("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+			}
 		}
-
-		$request->execute();
-
-		if ($request->getContentType() != Http::getHeaderJSON()) :
-			$message = $request->getOutput();
-			// this function sends an email with html format.
-			return Helper::mailHTML($headers, $message);
-		endif;
 
 		return false;
 
