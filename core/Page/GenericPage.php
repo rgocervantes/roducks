@@ -26,6 +26,7 @@ use Roducks\Framework\Post;
 use Roducks\Framework\Path;
 use Roducks\Framework\Form;
 use Roducks\Framework\Core;
+use Roducks\Framework\Settings;
 use Roducks\Libs\Request\Http;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception as PHPMailerException;
@@ -96,11 +97,10 @@ class GenericPage extends Frame
 	*	EMAIL SERNDER
 	*/
 	/*
-		$this->sendEmail("contact-us", function ($sender) {
-			$sender->to = "example@domain.com";
-			$sender->from = EMAIL_FROM;
-			$sender->company = PAGE_TITLE;
-			$sender->subject = "Contact Form";
+
+		$this->sendEmail('test', function(PHPMailer $mail) {
+			$mail->Subject = 'Welcome';
+			$mail->addAddress('sender@example.com', 'John Doe');
 		});
 
 	*/
@@ -108,11 +108,8 @@ class GenericPage extends Frame
 	{
 
 		$tpl = Core::getEmailsPath($template);
-		$attrs = new \stdClass;
-
 		$store = [];
-		$data = $this->getViewData();
-		$data = array_merge($data, $this->getJsonData());
+		$data = $this->getViewData() + $this->getJsonData();
 
 		// send form post data
 		$store['form'] = Helper::cleanData(Post::stData());
@@ -136,15 +133,19 @@ class GenericPage extends Frame
 					$mail->SMTPDebug = 0;                                       // Enable verbose debug output
 					$mail->isSMTP();                                            // Set mailer to use SMTP
 					$mail->Host       = $smtp['server'];  // Specify main and backup SMTP servers
-					$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-					$mail->Username   = $smtp['username'];                     // SMTP username
-					$mail->Password   = $smtp['password'];                               // SMTP password
+					
+					if (!empty($smtp['username']) && !empty($smtp['password'])) {
+						$mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+						$mail->Username   = $smtp['username'];                     // SMTP username
+						$mail->Password   = $smtp['password'];                               // SMTP password
+					}
+
 					$mail->SMTPSecure = $smtp['encryption'];                                  // Enable TLS encryption, `ssl` also accepted
 					$mail->Port       = $smtp['port'];                                    // TCP port to connect to
 				
-					$callback($mail, $attrs);
+					$callback($mail);
 	
-					$mail->setFrom($smtp['email_from'], $attrs->Name);
+					$mail->setFrom($smtp['email_from'], Settings::getPageTitle());
 	
 					// Content
 					$mail->isHTML(true);                                  // Set email format to HTML
