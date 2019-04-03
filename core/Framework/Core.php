@@ -876,9 +876,13 @@ class Core
 
 		    foreach ($arguments as $arg) :
 
-		    	if($arg == '--') :
+		    	if ($arg == '--' || $arg == '__version') :
 		    		continue;
-		    	endif;
+					endif;
+					
+					if ($arg == '--version') {
+						$arg = '__version';
+					}
 
 		    	if (in_array($arg, ['--dev','--pro'])) :
 
@@ -960,7 +964,7 @@ class Core
 			$method = "run";
 			$name = $params[0];
 
-			if ($name == '-v') {
+			if ($name == '-v' || $name == '__version') {
 				$name = 'version';
 			}
 
