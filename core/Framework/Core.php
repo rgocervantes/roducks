@@ -877,7 +877,7 @@ class Core
 
 		    foreach ($arguments as $arg) :
 
-		    	if ($arg == '--' || $arg == '__version') :
+		    	if ($arg == '--' || $arg == '__version' || $arg == 'version') :
 		    		continue;
 					endif;
 					
@@ -976,6 +976,7 @@ class Core
 
 			$cls = $name;
 			$name = Helper::getCamelName($name);
+			$cmd = ($method == 'run') ? $cls : "{$cls}:{$method}";
 
 			$script = "Roducks\\CLI\\{$name}";
 			$appScript = "App\\CLI\\{$name}";
@@ -983,16 +984,19 @@ class Core
 			if (Path::exists("app/CLI/{$name}".FILE_EXT)) {
 				$script = $appScript;
 			} else if (!Path::exists("core/CLI/{$name}".FILE_EXT)) {
-				CLI::printError("Unknown command: {$cls}:{$method}", CLI::FAILURE);
+				CLI::printError("Unknown command: {$cmd}", CLI::FAILURE);
 			}
 
 			$class = new $script($flags, $values);
 			$class->inLocal($dev);
 			if (method_exists($class, $method)) {
 				$values = Helper::getCliParams($values);
+				if ($method == 'run') {
+					array_push($values, $cls);
+				}
 				call_user_func_array(array($class,$method), $values);
 			} else {
-				CLI::println("Unknown command: {$cls}:{$method}", CLI::FAILURE);
+				CLI::println("Unknown command: {$cmd}", CLI::FAILURE);
 			}
 
 		} else {

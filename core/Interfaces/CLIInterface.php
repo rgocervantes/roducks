@@ -22,5 +22,5 @@ namespace Roducks\Interfaces;
 
 Interface CLIInterface
 {
-	public function run();
+	public function run($cmd);
 }

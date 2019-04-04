@@ -457,9 +457,9 @@ class CLI extends Frame
 		echo $ret . "\n";
 	}
 
-	public function run()
+	public function run($cmd)
 	{
-		self::println("Unknown command", self::FAILURE);
+		self::println("Unknown command: {$cmd}", self::FAILURE);
 	}
 
 	public function __construct(array $flags = [], array $args = [])
