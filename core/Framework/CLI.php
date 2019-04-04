@@ -106,7 +106,7 @@ class CLI extends Frame
 			break;
 		}
 
-		return chr(27) . "{$out}{$text}" . chr(27);
+		return chr(27) . "[0;37m\033{$out}{$text}" . chr(27);
 	}
 
 	static private function _dialog($title, $output, $color)

@@ -596,6 +596,7 @@ class Core
 		$siteLocal = Core::getSiteConfigPath("{$name}.local");
 		$config = Core::getAppConfigPath($name);
 		$configLocal = Core::getAppConfigPath("{$name}.local");
+		$path = $config;
 
 		if (Path::exists($siteLocal)) {
 			$path = $siteLocal;
