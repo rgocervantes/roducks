@@ -347,10 +347,12 @@ use Roducks\\Interfaces\\CLIInterface;
 
 class {$name} extends CLI implements CLIInterface
 {
-  public function run()
+  public function run(\$cmd)
   {
-
-    parent::output();
+    \$this->outputLine(
+      \$this->colorYellow("Command:") . 
+      \$this->colorGreen(\$cmd)
+    );
   }
 }
 EOT;
