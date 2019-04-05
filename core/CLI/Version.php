@@ -29,9 +29,11 @@ use Roducks\Interfaces\CLIInterface;
 
 class Version extends CLI implements CLIInterface
 {
-  public function run()
+  public function run($cmd)
   {
-    echo $this->colorGreen(RDKS_VERSION) . "\n";
-    parent::output();
+    $this->outputLine(
+      $this->colorYellow("Roducks Version:") .
+      $this->colorGreen(RDKS_VERSION)
+    );
   }
 }
