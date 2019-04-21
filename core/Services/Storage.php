@@ -32,6 +32,7 @@ use Roducks\Libs\Files\File;
 use Roducks\Libs\Files\Directory;
 use Roducks\Libs\Files\Zip;
 use Roducks\Libs\Utils\Date;
+use Roducks\Libs\Request\Request;
 
 class Storage extends Service
 {
@@ -134,14 +135,19 @@ class Storage extends Service
 	{
 		$path = Path::getData($dir) . Helper::ext($name, 'json');
 
-        if (file_exists($path)) {
-        	$content = \Roducks\Libs\Request\Request::getContent($path);
-        	$json = \Roducks\Page\JSON::decode($content);
-        } else {
-        	$json = [];
-        }
+		if (file_exists($path)) {
+			$content = Request::getContent($path);
+			$json = \Roducks\Page\JSON::decode($content);
+		} else {
+			$json = [];
+		}
 
-        return $json;
+		return $json;
+	}
+
+	static function getJSONString($dir, $name)
+	{
+		return Request::getContent(Path::getData($dir . $name . ".json"));
 	}
 
 	static function updateJSON($dir, $name, $content)
