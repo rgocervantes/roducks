@@ -34,11 +34,11 @@ class Content extends AdminPage
 
     if ($this->preview == 0) {
 
-  		$this->view->assets->scriptsInline([
+  		$this->view->assets->jsInline([
   			'layout'
   		]);
 
-  		$this->view->assets->scriptsOnReady([
+  		$this->view->assets->jsOnReady([
   			'layout.ready'
   		]);
 
@@ -70,7 +70,7 @@ class Content extends AdminPage
       return $this->pageNotFound();
     }
 
-    $this->view->assets->scriptsInline([
+    $this->view->assets->jsInline([
       "form", // app/Js/form.inc
     ]);
 

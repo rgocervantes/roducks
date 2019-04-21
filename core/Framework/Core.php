@@ -749,8 +749,8 @@ class Core
 				$assetsMap['js'] = "JS";
 				$assetsMap['css'] = "CSS";
 				$assetsMap['plugins'] = "PLUGINS";
-				$assetsMap['scriptsInline'] = "SCRIPTS_INLINE";
-				$assetsMap['scriptsOnReady'] = "SCRIPTS_ONREADY";
+				$assetsMap['jsInline'] = "JS_INLINE";
+				$assetsMap['jsOnReady'] = "JS_ONREADY";
 
 				$view->page(1);
 				$view->meta('http-equiv','Content-Type','text/html; charset=utf-8');

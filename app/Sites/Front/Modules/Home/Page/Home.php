@@ -30,8 +30,8 @@ class Home extends HomePage
 
 		$this->view->title(__('Welcome'));
 		$this->view->data("foo", "Initialized FooVar!");
-		$this->view->assets->scriptsInline(["foo"]);
-		$this->view->assets->scriptsOnReady(["home"]);
+		$this->view->assets->jsInline(["foo"]);
+		$this->view->assets->jsOnReady(["home"]);
 		$this->view->load("index");
 
 		return $this->view->output();

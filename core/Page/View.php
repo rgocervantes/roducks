@@ -447,8 +447,8 @@ final class View
 
 				if ($scripts) {
 					echo "<script type=\"text/javascript\">\n";
-					Asset::includeInLine($this->assets->getScriptsInline(), $this->getData());
-					Asset::includeOnReady($this->assets->getScriptsOnReady(), $this->getData());
+					Asset::includeInLine($this->assets->getJsInline(), $this->getData());
+					Asset::includeOnReady($this->assets->getJsOnReady(), $this->getData());
 					echo "</script>\n";
 				}
 

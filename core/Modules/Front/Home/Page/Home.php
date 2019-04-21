@@ -41,7 +41,7 @@ class Home extends FrontPage
 	{
 		$this->accountSubscriber();
 
-		$this->view->assets->scriptsInline(["form"]);
+		$this->view->assets->jsInline(["form"]);
 		$this->view->title("Create Account");
 		$this->view->load("account");
 
@@ -54,7 +54,7 @@ class Home extends FrontPage
 
 		$this->accountSubscriber();
 
-		$this->view->assets->scriptsInline(["form"]);
+		$this->view->assets->jsInline(["form"]);
 		$this->view->title("Forgotten Password");
 		$this->view->load("forgotten-password");
 
@@ -73,7 +73,7 @@ class Home extends FrontPage
 			$this->forbiddenRequest();
 		}
 
-		$this->view->assets->scriptsInline(["form"]);
+		$this->view->assets->jsInline(["form"]);
 		$this->view->title("Reset Password");
 		$this->view->data("token", $token);
 		$this->view->load("reset-password");
@@ -85,7 +85,7 @@ class Home extends FrontPage
 	{
 
 		$this->view->title(_text('contact_us'));
-		$this->view->assets->scriptsInline(["form"]);
+		$this->view->assets->jsInline(["form"]);
 		$this->view->load("contact-us");
 
 		return $this->view->output();

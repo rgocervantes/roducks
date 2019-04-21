@@ -33,8 +33,8 @@ class Dashboard extends AdminPage
 		$this->role();
 		$access = $this->grantAccess->getData();
 
-		$this->view->assets->scriptsInline(["grid","grid-subscribers","grid-clients","popover","users","roles.modal"]);
-		$this->view->assets->scriptsOnReady(["grid.ready","grid-subscribers.ready","grid-clients.ready"]);
+		$this->view->assets->jsInline(["grid","grid-subscribers","grid-clients","popover","users","roles.modal"]);
+		$this->view->assets->jsOnReady(["grid.ready","grid-subscribers.ready","grid-clients.ready"]);
 
 		$this->view->data("url", UsersHelper::URL);
 		$this->view->data("access", $access);

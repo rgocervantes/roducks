@@ -93,7 +93,7 @@ class Page extends GenericPage
 	{
 		Http::sendHeaderNotFound(false);
 		$this->view->assets->css(["page-404.css"]);
-		$this->view->assets->scriptsOnReady(["page-404"]);
+		$this->view->assets->jsOnReady(["page-404"]);
 		$this->view->setError();
 		$this->view->template("404");
 		$this->view->body();

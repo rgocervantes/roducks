@@ -33,10 +33,10 @@ return [
 		'bootstrap',
 		'roducks'
 	],
-	'SCRIPTS_INLINE' => [
+	'JS_INLINE' => [
 		'comments'
 	],
-	'SCRIPTS_ONREADY' => [
+	'JS_ONREADY' => [
 		'rdks.ready'
 	]
 ];

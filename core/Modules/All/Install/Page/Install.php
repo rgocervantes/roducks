@@ -36,12 +36,12 @@ class Install extends Page
       'installer.css'
     ], true);
 
-    $this->view->assets->scriptsInline([
+    $this->view->assets->jsInline([
       'form',
       'installer'
     ]);
 
-    $this->view->assets->scriptsOnReady([
+    $this->view->assets->jsOnReady([
       'installer.ready'
     ]);
 

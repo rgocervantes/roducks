@@ -55,8 +55,8 @@ class Roles extends AdminPage
 	{
 
 		$this->view->title("Roles", true, "title-roles");
-		$this->view->assets->scriptsInline(["form","tooltip"]);
-		$this->view->assets->scriptsOnReady(["roles.ready"]);
+		$this->view->assets->jsInline(["form","tooltip"]);
+		$this->view->assets->jsOnReady(["roles.ready"]);
 
 		$this->view->data("type", $this->_getRoleType());
 
@@ -101,8 +101,8 @@ class Roles extends AdminPage
 		$data = RolesTable::open($db)->getAll($this->type, $this->page, $this->_rowsPerPage);
 		$access = $this->getAccess();
 
-		$this->view->assets->scriptsInline(["pager","grid","popover","roles","roles.modal"]);
-		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","grid.ready"]);
+		$this->view->assets->jsInline(["pager","grid","popover","roles","roles.modal"]);
+		$this->view->assets->jsOnReady(["pager.ready","pager.focus.ready","grid.ready"]);
 
 		$this->view->title("Roles - " . Role::getTitle($this->type), true, "title-roles");
 		$this->view->page($this->page);

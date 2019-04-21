@@ -53,7 +53,7 @@ class Account extends FrontPage
 
 		$this->grantAccess->edit();
 
-		$this->view->assets->scriptsInline(['form']);
+		$this->view->assets->jsInline(['form']);
 		$this->view->data("first_name", User::getFirstName());
 		$this->view->data("last_name", User::getLastName());
 		$this->view->load("edit");
@@ -83,8 +83,8 @@ class Account extends FrontPage
 			'roducks'
 		], true);
 
-		$this->view->assets->scriptsInline(["crop","form","picture"]);
-		$this->view->assets->scriptsOnReady(["crop.ready"]);
+		$this->view->assets->jsInline(["crop","form","picture"]);
+		$this->view->assets->jsOnReady(["crop.ready"]);
 
 		$this->view->title(__("Picture"));
 		$this->view->tpl("urlJsonPicture", "/_json/account/picture");

@@ -38,8 +38,8 @@ class Login extends Page
 		}
 
 		$this->view->title(_text('login'));
-		$this->view->assets->scriptsInline(['login']);
-		$this->view->assets->scriptsOnReady(['login.ready']);
+		$this->view->assets->jsInline(['login']);
+		$this->view->assets->jsOnReady(['login.ready']);
 		$this->view->load("login");
 
 		return $this->view->output();

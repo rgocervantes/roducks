@@ -25,8 +25,8 @@ use Roducks\Libs\Output\Html;
 class Asset
 {
 
-	private $_scriptsInline = [];
-	private $_scriptsOnReady = [];
+	private $_jsInline = [];
+	private $_jsOnReady = [];
 	private $_css = "";
 	private $_js = "";
 	private $_css_alt = "";
@@ -143,14 +143,14 @@ class Asset
 	/**
 	*	Get values
 	*/
-	public function getScriptsInline()
+	public function getJsInline()
 	{
-		return $this->_scriptsInline;
+		return $this->_jsInline;
 	}
 
-	public function getScriptsOnReady()
+	public function getJsOnReady()
 	{
-		return $this->_scriptsOnReady;
+		return $this->_jsOnReady;
 	}
 
 	public function getCss()
@@ -166,24 +166,24 @@ class Asset
 	/**
 	*	Set values
 	*/
-	public function scriptsInline($scripts, $overwrite = false)
+	public function jsInline($scripts, $overwrite = false)
 	{
 
 		if ($overwrite) {
-			$this->_scriptsInline = $scripts;
+			$this->_jsInline = $scripts;
 		} else {
-			$this->_scriptsInline = array_merge($this->_scriptsInline, $scripts);
+			$this->_jsInline = array_merge($this->_jsInline, $scripts);
 		}
 
 	}
 
-	public function scriptsOnReady($scripts, $overwrite = false)
+	public function jsOnReady($scripts, $overwrite = false)
 	{
 
 		if ($overwrite) {
-			$this->_scriptsOnReady = $scripts;
+			$this->_jsOnReady = $scripts;
 		} else {
-			$this->_scriptsOnReady = array_merge($this->_scriptsOnReady, $scripts);
+			$this->_jsOnReady = array_merge($this->_jsOnReady, $scripts);
 		}
 
 	}

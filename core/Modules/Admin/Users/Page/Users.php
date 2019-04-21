@@ -69,7 +69,7 @@ class Users extends AdminPage
 			return $this->view->error('protected',__METHOD__, "There's no roles for: ".Role::getList($this->_type)['title']);
 		}
 
-		$this->view->assets->scriptsInline(["form","users","roles.modal"]);
+		$this->view->assets->jsInline(["form","users","roles.modal"]);
 		$this->view->data("url", $this->_url);
 		$this->view->data("roles", $roles);
 	}
@@ -164,8 +164,8 @@ class Users extends AdminPage
 			$paramTrash = URL::setQueryString(['trash' => $this->trash]);
 		}
 
-		$this->view->assets->scriptsInline(["pager","grid","popover","users","roles.modal"]);
-		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","grid.ready","datepicker-range.ready"]);
+		$this->view->assets->jsInline(["pager","grid","popover","users","roles.modal"]);
+		$this->view->assets->jsOnReady(["pager.ready","pager.focus.ready","grid.ready","datepicker-range.ready"]);
 
 		$this->view->title($this->_title, true, "title-users");
 		$this->view->page($this->page);
@@ -270,8 +270,8 @@ class Users extends AdminPage
 			die($e->getMessage());
 		}
 
-		$this->view->assets->scriptsInline(["pager","logs"]);
-		$this->view->assets->scriptsOnReady(["pager.ready","pager.focus.ready","datepicker-range.ready.inc"]);
+		$this->view->assets->jsInline(["pager","logs"]);
+		$this->view->assets->jsOnReady(["pager.ready","pager.focus.ready","datepicker-range.ready.inc"]);
 
 		$this->view->title("Logs: " . $this->_title, true, "title-logs");
 		$this->view->page($this->page);
@@ -411,7 +411,7 @@ class Users extends AdminPage
 
 		$this->grantAccess->editDescendent($id_user, $row, $user->isDescendent($id_user, User::getId()), "reset");
 
-		$this->view->assets->scriptsInline(["form"]);
+		$this->view->assets->jsInline(["form"]);
 		$this->view->title(TEXT_RESET_PASSWORD);
 		$this->view->data("id_user", $id_user);
 		$this->view->data("user", $row);
@@ -434,7 +434,7 @@ class Users extends AdminPage
 
 		$id_user = $this->getUrlParam('userId');
 
-		$this->view->assets->scriptsInline(["form"]);
+		$this->view->assets->jsInline(["form"]);
 		$this->view->title(TEXT_CHANGE_PASSWORD);
 
 		$this->view->layout("form",[
@@ -463,8 +463,8 @@ class Users extends AdminPage
 			'roducks'
 		], true); // true = overwrite global plugins, false = append more plugins
 
-		$this->view->assets->scriptsInline(["crop","form","picture"]);
-		$this->view->assets->scriptsOnReady(["crop.ready"]);
+		$this->view->assets->jsInline(["crop","form","picture"]);
+		$this->view->assets->jsOnReady(["crop.ready"]);
 
 		$this->view->title(TEXT_PROFILE_PICTURE);
 		$this->view->tpl("urlJsonPicture", "/_json{$this->_url}/picture/id/{$id_user}");
