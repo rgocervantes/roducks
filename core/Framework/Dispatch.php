@@ -250,7 +250,7 @@ class Dispatch
 		/* 		INITIAL VARS
 		/* ------------------------------------*/
 		$requestMethod = Http::getRequestMethod();
-		$getGETParams = URL::getGETParams();
+		$getGETParams = URL::getQueryString();
 		$routerPath = Core::getSiteConfigPath("router");
 		$params = URL::getParams();
 		$dispatcher = ['dispatch' => Helper::PAGE_NOT_FOUND . '::pageNotFound'];

@@ -185,7 +185,7 @@ class URL
 
 	}
 
-	static function getGETParams()
+	static function getQueryString()
 	{
 
 		$baseGETParams = self::getBaseGETParams();
@@ -228,7 +228,7 @@ class URL
 			return $url;
 		}
 
-		$getParams = ($complete) ? self::getGETParams() : [];
+		$getParams = ($complete) ? self::getQueryString() : [];
 
 		$arr = array_merge($getParams, $params);
 		$ret = [];

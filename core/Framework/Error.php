@@ -173,7 +173,7 @@ class Error
 				if (Helper::isBlock($file) && !Helper::isBlockDispatched()) {
 					echo self::block($title, $line, $path, $file, $error);
 				} else {
-					$params = URL::getGETParams();
+					$params = URL::getQueryString();
 
 					if (isset($params['rdks']) && $params['rdks'] == 1) {
 						echo self::block($title, $line, $path, $file, $error);

@@ -382,7 +382,7 @@ abstract class Frame
 		$skip = false;
 		$params = [];
 		$relativeUrl = URL::getRelativeURL();
-		$getGETParams = URL::getGETParams();
+		$getGETParams = URL::getQueryString();
 		$alert = "debug";
 		$title = "Unexpected value";
 
@@ -581,7 +581,7 @@ abstract class Frame
 		$tag = (isset($url[0])) ? $url[0] : "";
 
 		if ($this->_pageType == 'PAGE' || Helper::isDispatch($tag))
-			$this->_autoLoad(URL::getGETParams());
+			$this->_autoLoad(URL::getQueryString());
 
 	}
 
