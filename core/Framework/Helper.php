@@ -47,6 +47,7 @@ class Helper
 	const REGEXP_IS_EVENT = '#Events#';
 	const REGEXP_IS_FACTORY = '#Factory#';
 	const REGEXP_PATH = '/^([a-zA-Z_\/]+\/)(\w+)$/';
+	const REGEXP_SITES = '[a-zA-Z0-9_]+';
 
 	const VALID_DATETIME = '/^(\d{4}-\d{2}-\d{2})\s(\d{2}:\d{2}:\d{2})$/';
 	const VALID_DATE_YYYY_MM_DD = '/^(\d{4})-(\d{2})-(\d{2})$/';

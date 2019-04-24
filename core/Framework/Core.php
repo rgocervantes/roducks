@@ -941,7 +941,7 @@ class Core
 		$environment = [
 			'errors' => $dev,
 			'subdomain' => self::DEFAULT_SUBDOMAIN,
-			'site' => "All",
+			'site' => self::ALL_SITES_DIRECTORY,
 			'mode' => Environment::CLI,
 			'database' => $db_name
 		];
@@ -1035,7 +1035,7 @@ class Core
 		if ( Helper::onInstall() ) {
 			File::remove(Path::get(DIR_APP_CONFIG).'config.local.inc');
 			File::remove(Path::get(DIR_APP_CONFIG).'database.local.inc');
-			self::loadPage('Roducks/Modules/All/', 'Install/Page/Install', 'run');
+			self::loadPage('Roducks/Modules/'. self::ALL_SITES_DIRECTORY .'/', 'Install/Page/Install', 'run');
 			exit;
 		}
 	}

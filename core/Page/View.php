@@ -409,7 +409,11 @@ final class View
 
 		// Load body *ONLY* for 404 templates
 		if (!empty($this->_body)) {
-			//Core::loadFile($dir_templates,$this->_body.FILE_PHTML);
+
+			if (!file_exists($dir_templates.$this->_body.FILE_PHTML) && !file_exists($dir_templates.$this->_body.FILE_TPL)) {
+				$dir_templates = preg_replace('#' . DIR_SITES . Helper::REGEXP_SITES . '#', DIR_SITES . Core::ALL_SITES_DIRECTORY, $dir_templates);
+			}
+
 			$body = $dir_templates.$this->_body.FILE_PHTML;
 			$body_alt = $dir_templates.$this->_body.FILE_TPL;
 
@@ -422,7 +426,7 @@ final class View
 				echo Duckling::parser($body_alt, []);
 				self::_guide($body_alt, 'end');
 			} else {
-				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $body);
+				Error::warning(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $body);
 			}
 
 		}

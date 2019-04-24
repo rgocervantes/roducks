@@ -89,14 +89,20 @@ class Page extends GenericPage
 		if ($this->_viewport) $this->view->meta('name','viewport',"width=device-width,initial-scale=1,shrink-to-fit=no");
 	}
 
-	public function pageNotFound()
+	public function pageNotFound($overwrite = false)
 	{
+
 		Http::sendHeaderNotFound(false);
+	
 		$this->view->assets->css(["page-404.css"]);
 		$this->view->assets->jsOnReady(["page-404"]);
-		$this->view->setError();
-		$this->view->template("404");
-		$this->view->body();
+
+		if (!$overwrite) {
+			$this->view->setError();
+			$this->view->template("404");
+			$this->view->body();
+		}
+
 		return $this->view->output();
 		exit;
 	}

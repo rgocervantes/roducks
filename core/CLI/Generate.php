@@ -56,6 +56,7 @@
 namespace Roducks\CLI;
 
 use Roducks\Framework\CLI;
+use Roducks\Framework\Core;
 use Lib\Directory as DirectoryHandler;
 use Lib\File;
 use Path;
@@ -577,7 +578,7 @@ EOT;
         break;
     }
 
-    if ($site != 'All/') {
+    if ($site != Core::ALL_SITES_DIRECTORY.DIRECTORY_SEPARATOR) {
       $conf = "{$pathConfig}modules".FILE_INC;
       $config = Request::getContent($conf);
       if (!preg_match('#\''.$module.'\' => true,#', $config)) {
