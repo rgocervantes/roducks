@@ -411,11 +411,13 @@ final class View
 		if (!empty($this->_body)) {
 
 			if (!file_exists($dir_templates.$this->_body.FILE_PHTML) && !file_exists($dir_templates.$this->_body.FILE_TPL)) {
-				$dir_templates = preg_replace('#' . DIR_SITES . Helper::REGEXP_SITES . '#', DIR_SITES . Core::ALL_SITES_DIRECTORY, $dir_templates);
+				$dir_templates_alt = preg_replace('#' . DIR_SITES . Helper::REGEXP_SITES . '#', DIR_SITES . Core::ALL_SITES_DIRECTORY, $dir_templates);
+				$body = $dir_templates_alt.$this->_body.FILE_PHTML;
+				$body_alt = $dir_templates_alt.$this->_body.FILE_TPL;
+			} else {
+				$body = $dir_templates.$this->_body.FILE_PHTML;
+				$body_alt = $dir_templates.$this->_body.FILE_TPL;
 			}
-
-			$body = $dir_templates.$this->_body.FILE_PHTML;
-			$body_alt = $dir_templates.$this->_body.FILE_TPL;
 
 			if (file_exists($body)) {
 				self::_guide($body, 'start');
