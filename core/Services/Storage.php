@@ -153,7 +153,7 @@ class Storage extends Service
 
 	static function getJSONString($dir, $name)
 	{
-		return Request::getContent(Path::getData($dir . $name . ".json"));
+		return Request::getContent(Path::getData($dir) . Helper::ext($name, 'json'));
 	}
 
 	static function updateJSON($dir, $name, $content)
@@ -168,6 +168,11 @@ class Storage extends Service
 		$path = Path::getData($dir) . Helper::ext($name, 'json');
 		header("Content-Type: application/json; charset=utf8");
 		readfile($path);
+	}
+
+	static function removeJSON($dir, $name)
+	{
+		File::remove(Path::getData($dir) . Helper::ext($name, 'json'));
 	}
 
 	private function _serviceError($code, $msg)
