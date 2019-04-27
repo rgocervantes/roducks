@@ -131,6 +131,12 @@ class Storage extends Service
 		File::createJSON(Path::getData($dir), $name, $data);
 	}
 
+	static function setJSONString($dir, $name, $data)
+	{
+		Directory::make(Path::getData(), $dir);
+		File::create(Path::getData($dir), Helper::ext($name, 'json'), $data);
+	}
+
 	static function getJSON($dir, $name)
 	{
 		$path = Path::getData($dir) . Helper::ext($name, 'json');
