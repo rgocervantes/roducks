@@ -451,7 +451,7 @@ class CLI extends Frame
 		$ret = $str;
 
 		if (is_array($str)) {
-			$ret = implode(" ", $str);
+			$ret = implode("", $str);
 		}
 
 		echo $ret . "\n";
