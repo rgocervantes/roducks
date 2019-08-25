@@ -158,7 +158,9 @@ EOT;
 
     if ($type == 'JSON' || $type == 'XML') {
 $var .= <<< EOT
-protected \$_dispatchUrl = true;
+protected 
+  \$_dispatchUrl = true,
+  \$_format = true;
 
 EOT;
     }

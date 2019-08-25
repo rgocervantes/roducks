@@ -30,6 +30,7 @@ class JSON extends GenericPage
 
 	protected $post;
 	protected $_authentication = false;
+	protected $_format = true;
 
 	private $_crossDomain = false;
 	private $_methods = [];
@@ -164,13 +165,19 @@ class JSON extends GenericPage
 	protected function output($format = true)
 	{
 
+		$mode = $format;
+
+		if ($mode && !$this->_format) {
+			$mode = $this->_format;
+		}
+
 		if ($this->_crossDomain) {
 			CORS::allowDomains($this->_domains);
 			CORS::methods($this->_methods);
 			CORS::maxAge();
 		}
 
-		$this->_jsonOutput($format);
+		$this->_jsonOutput($mode);
 	}
 
 	protected function crossDomain(array $options = [], $domains = "*")
