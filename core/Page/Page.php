@@ -86,7 +86,7 @@ class Page extends GenericPage
 
 		$this->view = $view;
 		$this->view->parentPage($this->_getParentClassName());
-		if ($this->_viewport) $this->view->meta('name','viewport',"width=device-width,initial-scale=1,shrink-to-fit=no");
+		if ($this->_viewport) $this->view->meta('name','viewport', $this->getConfig('file:config', 'viewport', "width=device-width,initial-scale=1,shrink-to-fit=no"));
 	}
 
 	public function pageNotFound($overwrite = false)
