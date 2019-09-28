@@ -22,6 +22,7 @@ namespace Roducks\Services;
 
 use Roducks\Page\Service;
 use Roducks\Framework\Error;
+use Roducks\Framework\Config;
 use DB\Models\Users\Users as UsersTable;
 use Crypt\Hash;
 use Lib\File;
@@ -59,64 +60,32 @@ class Install extends Service
     $multilanguage = (isset($data['site']['multilanguage'])) ? 'true' : 'false';
     $browser_language = (isset($data['site']['browser_language'])) ? 'true' : 'false';
 
-$config = <<< EOT
-<?php
+    $config = [
+      'domain.name' => '*',
+      'timezone' => $data['site']['timezone'],
+      'site.title' => $data['site']['title'],
+      'email' => [
+          'to' => $data['site']['email_to'],
+          'from' => $data['site']['email_from'],
+      ],
+      'logo.image' => 'roducks_logo.png',
+      'find.url.in.db' => $find_url_in_db,
+      'subscribers' => [
+          'allow.register' => $allow_subscribers_register,
+          'expire' => false,
+          'how.long' => 2, 
+          'period' => MONTHS,
+      ],
+      'language' => [
+          'default' => $data['default_language'],
+          'multilanguage' => $multilanguage,
+          'user.browser' => $browser_language,
+      ],
+      'content.type' => 'text/html; charset=utf-8',
+      'viewport' => 'width=device-width,initial-scale=1,shrink-to-fit=no',
+    ];
 
-return [
-//-------------------------------------------------------------------
-//  Your Domain Name (WITHOUT www or any subdomain)
-//-------------------------------------------------------------------
-	'domain_name' 					=> '*', // Example: yoursite.test
-//-------------------------------------------------------------------
-//  Timezone @url http://php.net/manual/en/timezones.php
-//-------------------------------------------------------------------
-	'default_timezone' 			=> '{$data['site']['timezone']}',
-//-------------------------------------------------------------------
-//  Default Title for all pages
-//-------------------------------------------------------------------
-	'page_title' 					=> '{$data['site']['title']}',
-//-------------------------------------------------------------------
-//   Email reply
-//-------------------------------------------------------------------
-	'email_from'					=> '{$data['site']['email_from']}',
-//-------------------------------------------------------------------
-//   Email sender
-//-------------------------------------------------------------------
-	'email_to' 						=> '{$data['site']['email_to']}',
-//-------------------------------------------------------------------
-//  Logo
-//-------------------------------------------------------------------
-	'logo_image' 					=> 'roducks_logo.png',
-//-------------------------------------------------------------------
-//  Find Request URL in Database
-//-------------------------------------------------------------------
-	'find_url_in_db' 				=> {$find_url_in_db},
-//-------------------------------------------------------------------
-//  Allow Subscribers to register
-//-------------------------------------------------------------------
-	'allow_subscribers_register' 	=> {$allow_subscribers_register},
-//-------------------------------------------------------------------
-//  Subscribers expires in ? days
-//-------------------------------------------------------------------
-	'subscribers_expire'			=> false,
-	'subscribers_expire_time'		=> 'MONTHS', // DAYS | MONTHS
-	'subscribers_expire_in' 		=> 2,
-//-------------------------------------------------------------------
-//  Is your site multilanguage?
-//-------------------------------------------------------------------
-	'multilanguage' 				=> {$multilanguage},
-//-------------------------------------------------------------------
-//  Allows user's browser language as default
-//-------------------------------------------------------------------
-	'browser_language' 				=> {$browser_language},
-//-------------------------------------------------------------------
-//  Default language ISO
-//-------------------------------------------------------------------
-	'default_language' 				=> '{$data['default_language']}' // ISO: en | es
-];
-EOT;
-
-    File::create(Path::get(DIR_APP_CONFIG), 'config.local.inc', $config);
+    Config::set('config.local', $config);
 
   }
 
@@ -127,32 +96,13 @@ EOT;
     $data = $this->post->data();
     Error::json();
 
-$database = <<< EOT
-<?php
-
-return [
-//-------------------------------------------------------------------
-//  Host name
-//-------------------------------------------------------------------
-	'host' 				=> '{$data['database']['host']}',
-//-------------------------------------------------------------------
-//  Port
-//-------------------------------------------------------------------
-	'port' 				=> {$data['database']['port']},
-//-------------------------------------------------------------------
-//  Data Base name
-//-------------------------------------------------------------------
-	'name' 				=> '{$data['database']['name']}',
-//-------------------------------------------------------------------
-//  User
-//-------------------------------------------------------------------
-	'user' 				=> '{$data['database']['user']}',
-//-------------------------------------------------------------------
-//  Password
-//-------------------------------------------------------------------
-	'password' 			=> '{$data['database']['password']}'
-];
-EOT;
+    $database = [
+      'host' => $data['database']['host'],
+      'port' => $data['database']['port'],
+      'name' => $data['database']['name'],
+      'user' => $data['database']['user'],
+      'password' => $data['database']['password']
+    ];
 
     if (strlen($data['user']['password']) >= 7) {
 
@@ -178,7 +128,7 @@ EOT;
       if ($tx) {
         $this->goLive();
         $this->configLocal($data);
-        File::create(Path::get(DIR_APP_CONFIG), 'database.local.inc', $database);
+        Config::set('database.local', $database);
       } else {
         $this->setError(2, 'User could not be created.');
       }

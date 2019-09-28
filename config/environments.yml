@@ -1,0 +1,6 @@
+www:
+    site: Front
+    mode: 1
+admin:
+    site: Admin
+    mode: 1

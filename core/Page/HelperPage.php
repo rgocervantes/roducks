@@ -20,7 +20,7 @@
 
 namespace Roducks\Page;
 
-class HelperPage extends Frame
+abstract class HelperPage extends Frame
 {
 
 	protected $_pageType = 'HELPER';

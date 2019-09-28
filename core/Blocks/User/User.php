@@ -86,7 +86,7 @@ class User extends Block
 			return $this->view->output();
 		}
 
-		return $this->view->error(__METHOD__, "'{$id}' is not a valid user id.");
+		return $this->view->error('public', __METHOD__, "'{$id}' is not a valid user id.");
 
 	}
 

@@ -13,7 +13,7 @@ class ContentViewer extends \Roducks\Page\FrontPage
     $content = $this->model('content/content')->filter(['id_url' => $urlData['id_url']])->getData();
 
     if (!isset($content[0])) {
-      return $this->pageNotFound();
+      return $this->notFound();
     }
 
     $page = $content[0];

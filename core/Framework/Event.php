@@ -29,6 +29,6 @@ abstract class Event extends Frame
 
 	static function dispatch($e, $settings = "")
 	{
-		Core::dispatchEvent($e, $settings);
+		Render::event($e, $settings);
 	}
 }

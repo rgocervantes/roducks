@@ -22,7 +22,7 @@ namespace Roducks\Framework;
 
 use Roducks\Data\User;
 
-class Role
+abstract class Role
 {
 
 	const URL = "/roles";

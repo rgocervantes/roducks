@@ -25,7 +25,7 @@ use Roducks\Framework\URL;
 use Roducks\Framework\Post;
 use Roducks\Framework\Path;
 use Roducks\Framework\Form;
-use Roducks\Framework\Core;
+use Roducks\Framework\Config;
 use Roducks\Framework\Settings;
 use Roducks\Libs\Request\Http;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -107,7 +107,7 @@ class GenericPage extends Frame
 	protected function sendEmail($template, callable $callback)
 	{
 
-		$tpl = Core::getEmailsPath($template);
+		$tpl = Path::getEmail($template);
 		$store = [];
 		$data = $this->getViewData() + $this->getJsonData();
 
@@ -120,13 +120,10 @@ class GenericPage extends Frame
 
 			extract($store);
 	
-			ob_start();
-			include $tpl;
-      $html = ob_get_contents();
-      ob_end_clean();
+			$html = Helper::extractHtml($tpl);
 
 			$mail = new PHPMailer(true);
-			$smtp = Core::getLocalConfigFile("smtp");
+			$smtp = Config::getSmtp();
 	
 			try {
 					//Server settings
@@ -145,7 +142,7 @@ class GenericPage extends Frame
 				
 					$callback($mail);
 	
-					$mail->setFrom($smtp['email_from'], Settings::getPageTitle());
+					$mail->setFrom($smtp['from'], Settings::getPageTitle());
 	
 					// Content
 					$mail->isHTML(true);                                  // Set email format to HTML

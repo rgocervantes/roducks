@@ -21,7 +21,9 @@
 namespace Roducks\Page;
 
 use Roducks\Framework\Core;
+use Roducks\Framework\Render;
 use Roducks\Framework\Helper;
+use Roducks\Framework\Path;
 
 class Block extends Frame
 {
@@ -77,6 +79,7 @@ class Block extends Frame
 	{
 
 		list($block, $method, $params) = self::_getBlockPath($path);
+
 		$block = Helper::getCamelName($block);
 		$method = Helper::getCamelName($method, false);
 
@@ -84,7 +87,7 @@ class Block extends Frame
 			$params = array_merge($params, $extraParams);
 		}
 
-		Core::loadPage(Core::getBlocksPath($block), $block, $method, $queryString, $params);
+		Render::view(Path::getBlock($block), $block, $method, $queryString, $params);
 
 	}
 
@@ -96,7 +99,7 @@ class Block extends Frame
 
 		$block = Helper::getCamelName($block);
 
-		return Core::loadPage(Core::getBlocksPath($block), $block, "output", array(), array(), true);
+		return Render::view(Path::getBlock($block), $block, "output", array(), array(), true);
 
 	}
 

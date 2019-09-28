@@ -31,7 +31,7 @@ class Environment
 
 	static function getConfig()
 	{
-		$config = Core::getEnvConfigFile();
+		$config = Config::getEnvs()['data'];
 		$serverName = str_replace(['https://', 'http://'], '', Http::getServerName());
 
 		if (isset($config[$serverName])) {
@@ -55,7 +55,7 @@ class Environment
 				Http::sendHeaderNotFound();
 			}
 
-			$subdomain = Http::getSubdomain(DOMAIN_NAME, Core::DEFAULT_SUBDOMAIN);
+			$subdomain = Http::getSubdomain(DOMAIN_NAME, Path::DEFAULT_SUBDOMAIN);
 		}
 
 		$site = (isset($config[$subdomain]['site'])) ? $config[$subdomain]['site'] : "Front";

@@ -49,7 +49,8 @@ final class View
 	private $_tpl = [];
 	private $_url = [];
 	private $_error = false;
-	private $_filePath;
+	private $_isBlock = false;
+	private $_pageObj;
 	private $_parentPage;
 	private $_blocks = ['top' => true, 'bottom' => true];
 
@@ -88,10 +89,9 @@ final class View
 		}
 	}
 
-	private function _htmlTag($name, array $arr)
+	private function _htmlTag($name, array $attrs)
 	{
-		$attrs = Html::getAttributes($arr);
-		return "<{$name} {$attrs} />\n";
+		return Html::tag($name, "", $attrs, false);
 	}
 
 	private function _setGlobals($key, $value = "")
@@ -104,20 +104,28 @@ final class View
 		return $this->_globals;
 	}
 
+	private function _notFound($tpl)
+	{
+		$error = ($this->_template == '404') ? 'fatal' : 'debug';
+		Error::$error(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $tpl);
+	}
+
 	/* ------------------------------------*/
 	/* 		PUBLIC METHODS
 	/* ------------------------------------*/
-	public function __construct(Asset $assets, $filePath, $url)
+	public function __construct(Asset $assets, array $pageObj, $url)
 	{
 
-		$this->_filePath = $filePath;
+		$this->_pageObj = $pageObj;
 
 		$this->assets = $assets;
 		$this->_template = self::DEFAULT_TEMPLATE;
 		$this->_url = $url;
 		$idUrl = (isset($this->_url['id_url'])) ? $this->_url['id_url'] : 0;
 
-		if (!Helper::isBlock($filePath)) {
+		if (Helper::isBlock($this->_pageObj['filePath'])) {
+			$this->_isBlock = true;
+		} else {
 			$this->_setGlobals('_TITLE', PAGE_TITLE);
 			$this->data('_PAGE_TITLE', PAGE_TITLE);
 			$this->data('_VIEW_TITLE', 'title');
@@ -179,6 +187,7 @@ final class View
 
 	public function template($template = null, $top = true, $bottom = true)
 	{
+
 		if (!is_null($template)) {
 			$this->_template = $template;
 		}
@@ -213,12 +222,12 @@ final class View
 
 	public function load($name)
 	{
-		$this->_view = Helper::ext($name,'phtml');
+		$this->_view = $name;
 	}
 
-	public function body()
+	public function body($tpl = 'body')
 	{
-		$this->_body = "body";
+		$this->_body = $tpl;
 	}
 
 	public function setView($name)
@@ -253,30 +262,7 @@ final class View
 
 	public function error($visibility = "", $method = "", $alert = "An error ocurred in this method")
 	{
-
-		if (Helper::regexp('#app#', $this->_filePath)) {
-
-			$page = preg_replace('/^.+\/modules\/([a-zA-Z]+)\/page\/$/', '$1', $this->_filePath);
-			$file = str_replace("/", "", Helper::getClassName($this->_filePath, '$2'));
-			$class = ($file == 'page') ? $page : $file;
-			$filePath = $this->_filePath . $class . FILE_EXT;
-			$extend = "\\" . $this->_parentPage;
-
-			if (Helper::regexp('#::#', $method)) {
-				list($cls, $mt) = explode("::", $method);
-				$method = "rdks/{$this->_filePath}{$class}::{$mt}";
-			}
-
-		} else {
-
-			$filePath = Helper::getClassName($this->_parentPage, '$1');
-			$class = Helper::getClassName($this->_parentPage);
-			$filePath = $filePath . "/" . $class . FILE_EXT;
-			$extend = '\Roducks\Page\Block';
-
-		}
-
-		Error::view("View Error", __LINE__, __FILE__ , $filePath, $visibility, $extend, $method, $alert);
+		Error::view("View Error", __LINE__, __FILE__ , $this->_pageObj['filePath'], $visibility, '\\' . $this->_parentPage, $method, $alert);
 		return false;
 	}
 
@@ -289,190 +275,127 @@ final class View
 
 		$this->_urlData();
 
-		$dir_templates = Core::getTemplatesPath($this->_template);
-		$dir_layouts = Core::getLayoutsPath($this->_layout);
-		$dir_view = Core::getViewsPath($this->_parentPage, $this->_filePath, $this->_view);
-
-		// If it's a block header & footer are not required
-		if (Helper::isBlock($this->_filePath)) {
-			$header_footer = false;
-		} else {
-			Layout::$path = $dir_view;
-		}
-
-		// Make sure 404 template exists if else throw a fatal error because we don't have any other template to show.
-		if ($this->_template == "404" && !file_exists($dir_templates)) {
-			Error::fatal("404 Folder Not Found", __LINE__, __FILE__, $dir_templates);
-		}
-
-		// Make sure layouts exists in case it is required to be shown.
-		if (!file_exists($dir_layouts) && !empty($this->_layout)) {
-			Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $dir_layouts);
-		}
+		$data = $this->getData();
 
 		$this->data("tpl", $this->_tpl);
 
-		// Get Stylesheets & javascripts
+		// Get Stylesheets & Javascripts
 		$this->_setGlobals('_CSS', $this->assets->getCss());
 		$this->_setGlobals('_JS', $this->assets->getJs());
 
-		// Get meta tags
+		// Get Meta tags
 		$this->_setGlobals('_META', $this->_meta);
 
 		// Favicon
-		$this->_setGlobals('_FAVICON', $this->_htmlTag('link',['rel' => "shortcut icon", 'type' => "image/png", 'href' => Path::getIcon("favicon.png")]));
+		$this->_setGlobals('_FAVICON', $this->_htmlTag('link', ['rel' => "shortcut icon", 'type' => "image/png", 'href' => Path::getIcon("favicon.png")]));
 
-		$data = array_merge($this->getData(), $this->_getGlobals());
+		if ($this->_isBlock) {
+			$header_footer = false;
+			$dir_view = Path::getBlockView($this->_pageObj['class'], $this->_view);
+		} else {
+			$dir_view = Path::getPageView($this->_pageObj['class'], $this->_view);
+			$data = $this->_getGlobals() + $this->getData();
+			Template::$name = $this->_template;
+			Template::$data = Template::$data + $data;
+		}
 
-		// Get data passed from page
 		extract($data);
 
-		// Include Header
 		if ($header_footer) {
-			$header = $dir_templates . "header" . FILE_PHTML;
-			$header_alt = $dir_templates . "header" . FILE_TPL;
-			if (file_exists($header)) {
-				self::_guide($header, 'start');
-				include $header;
-				self::_guide($header, 'end');
 
-				$top = $dir_templates . "top" . FILE_PHTML;
+			$template_header = Path::getTemplate($this->_template, 'header');
+			$template_top = Path::getTemplate($this->_template, 'top');
+			$template_body = Path::getTemplate($this->_template, 'body');
+			$template_bottom = Path::getTemplate($this->_template, 'bottom');
+			$template_footer = Path::getTemplate($this->_template, 'footer');	
 
-				if (file_exists($top) && $this->_blocks['top']) {
-					self::_guide($top, 'start');
-					include $top;
-					self::_guide($top, 'end');
-				}
-
-				if (Session::exists(User::SESSION_SECURITY)) {
-					Error::security();
-					User::security(false);
-				}
-			} else if(file_exists($header_alt)) {
-
-				self::_guide($header_alt, 'start');
-				echo Duckling::parser($header_alt, $this->_getGlobals());
-				self::_guide($header_alt, 'end');
-
-				$top = $dir_templates . "top" . FILE_TPL;
-
-				if (file_exists($top) && $this->_blocks['top']) {
-					$topData = $this->_getGlobals();
-					unset($topData['_CSS']);
-					unset($topData['_JS']);
-					unset($topData['_META']);
-					unset($topData['_FAVICON']);
-
-					self::_guide($top, 'start');
-					echo Duckling::parser($top, $topData);
-					self::_guide($top, 'end');
-				}
-
-				if (Session::exists(User::SESSION_SECURITY)) {
-					Error::security();
-					User::security(false);
-				}
-
-			} else {
-				Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $header);
-			}
-		}
-
-		// Set template data
-		if (!Helper::isBlock($this->_filePath)) {
-			Template::$data = array_merge(Template::$data, $this->getData());
-		}
-
-		Template::$path = $dir_templates;
-
-		// Load layout if exists
-		if (file_exists($dir_layouts)) {
-			self::_guide($dir_layouts, 'start');
-			include $dir_layouts;
-			self::_guide($dir_layouts, 'end');
-		} else if (file_exists($dir_view) && !empty($this->_view)) {
-
-			self::_guide($dir_view, 'start');
-
-			if (Helper::isPage($dir_view)) {
-				Layout::view(null, $this->_error);
-			} else {
-				if (Helper::isTpl($dir_view)) {
-					echo Duckling::parser($dir_view, $data);
+			if (file_exists($template_header)) {
+				self::_guide($template_header, 'start');
+				if (Helper::isTpl($template_header)) {
+					echo Duckling::parser($template_header, $this->_getGlobals());
 				} else {
-					include $dir_view;
+					include $template_header;
 				}
-			}
+				self::_guide($template_header, 'end');
+	
+				if (Session::exists(User::SESSION_SECURITY)) {
+					Error::security();
+					User::security(false);
+				}
 
-			self::_guide($dir_view, 'end');
+				if (file_exists($template_top) && $this->_blocks['top']) {
+					self::_guide($template_top, 'start');
+					if (Helper::isTpl($template_top)) {
+						$topData = $this->_getGlobals();
+						unset($topData['_CSS']);
+						unset($topData['_JS']);
+						unset($topData['_META']);
+						unset($topData['_FAVICON']);
+						echo Duckling::parser($template_top, $topData);
+					} else {
+						include $template_top;
+					}
+					self::_guide($template_top, 'end');
+				}
+	
+			} else {
+				$this->_notFound($template_header);
+			}
 		}
 
-		// Load body *ONLY* for 404 templates
 		if (!empty($this->_body)) {
-
-			if (!file_exists($dir_templates.$this->_body.FILE_PHTML) && !file_exists($dir_templates.$this->_body.FILE_TPL)) {
-				$dir_templates_alt = preg_replace('#' . DIR_SITES . Helper::REGEXP_SITES . '#', DIR_SITES . Core::ALL_SITES_DIRECTORY, $dir_templates);
-				$body = $dir_templates_alt.$this->_body.FILE_PHTML;
-				$body_alt = $dir_templates_alt.$this->_body.FILE_TPL;
-			} else {
-				$body = $dir_templates.$this->_body.FILE_PHTML;
-				$body_alt = $dir_templates.$this->_body.FILE_TPL;
-			}
-
-			if (file_exists($body)) {
-				self::_guide($body, 'start');
-				include $body;
-				self::_guide($body, 'end');
-			} else if(file_exists($body_alt)) {
-				self::_guide($body_alt, 'start');
-				echo Duckling::parser($body_alt, []);
-				self::_guide($body_alt, 'end');
-			} else {
-				Error::warning(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $body);
-			}
-
+			$dir_view = $template_body;
 		}
 
-		// Include Bottom & Footer
+		self::_guide($dir_view, 'start');
+
+		if (file_exists($dir_view)) {
+			if (Helper::isTpl($dir_view)) {
+				echo Duckling::parser($dir_view, $data);
+			} else {
+				include $dir_view;
+			}
+		} else {
+			$this->_notFound($dir_view);
+		}
+
+		self::_guide($dir_view, 'end');
+
 		if ($header_footer) {
+			if (file_exists($template_footer)) {
 
-				$bottom = $dir_templates . "bottom" . FILE_PHTML;
-				$bottom_alt = $dir_templates . "bottom" . FILE_TPL;
-				$footer = $dir_templates . "footer" . FILE_PHTML;
-				$footer_alt = $dir_templates . "footer" . FILE_TPL;
-
-				if (file_exists($bottom) && $this->_blocks['bottom']) {
-					self::_guide($bottom, 'start');
-					include $bottom;
-					self::_guide($bottom, 'end');
-				} else if(file_exists($bottom_alt) && $this->_blocks['bottom']) {
-					self::_guide($bottom_alt, 'start');
-					echo Duckling::parser($bottom_alt, ['_JS' => $this->assets->getJs()]);
-					self::_guide($bottom_alt, 'end');
+				if (file_exists($template_bottom) && $this->_blocks['bottom']) {
+					self::_guide($template_bottom, 'start');
+					if (Helper::isTpl($template_bottom)) {
+						echo Duckling::parser($template_bottom, ['_JS' => $this->assets->getJs()]);
+					} else {
+						include $template_bottom;
+					}
+					self::_guide($template_bottom, 'end');
 				}
-
+	
 				if ($scripts) {
 					echo "<script type=\"text/javascript\">\n";
 					Asset::includeInLine($this->assets->getJsInline(), $this->getData());
 					Asset::includeOnReady($this->assets->getJsOnReady(), $this->getData());
 					echo "</script>\n";
 				}
-
-				if (file_exists($footer)) {
-					self::_guide($footer, 'start');
-					include $footer;
-					self::_guide($footer, 'end');
-				} else if(file_exists($footer_alt)) {
-					self::_guide($footer_alt, 'start');
-					echo Duckling::parser($footer_alt, []);
-					self::_guide($footer_alt, 'end');
+	
+				self::_guide($template_footer, 'start');
+				if (Helper::isTpl($template_footer)) {
+					echo Duckling::parser($template_footer, []);
 				} else {
-					Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $footer);
+					include $template_footer;
 				}
-
+				self::_guide($template_footer, 'end');
+		
+			} else {
+				$this->_notFound($template_footer);
+			}
 		}
 
 		return true;
+
 	}
 
 }

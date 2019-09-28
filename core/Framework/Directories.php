@@ -24,6 +24,7 @@ App::define('CORE_NS', "Roducks");
 App::define('DIR_CONFIG', "Config/");
 App::define('DIR_EMAILS', "Emails/");
 App::define('DIR_MODULES', "Modules/");
+App::define('DIR_PAGE', "Page/");
 App::define('DIR_SITES', "Sites/");
 App::define('DIR_BLOCKS', "Blocks/");
 App::define('DIR_SERVICES', "Services/");
@@ -98,4 +99,4 @@ App::define('DIR_PUBLIC', "public/");
 
 App::define('DIR_CORE', "core/");
 	App::define('DIR_CORE_CONFIG', DIR_CORE . DIR_CONFIG);
-	App::define('DIR_CORE_PAGE', DIR_CORE . "Page/");
+	App::define('DIR_CORE_PAGE', DIR_CORE . DIR_PAGE);

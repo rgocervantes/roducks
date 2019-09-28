@@ -1,0 +1,8 @@
+user:
+    prefix: user_
+    clipping: full
+    dir_upload: app/Data/uploads/images/users/
+    dir_uploaded: /static/images/users/
+    squared_clippings: [150, 90, 20]
+    size: [400, KB]
+    types: [image/jpg, image/png, image/jpeg]

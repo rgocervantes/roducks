@@ -632,7 +632,7 @@ class Duckling
 
       $merge = (count($vars) > 0);
 
-      return Template::tpl($file, $vars, $merge);
+      return Template::view($file, $vars, $merge);
     }, $tpl);
 
     /*

@@ -21,6 +21,7 @@
 namespace Roducks\Page;
 
 use Roducks\Framework\Core;
+use Roducks\Framework\Config;
 use Roducks\Framework\Dispatch;
 use Roducks\Framework\URL;
 use Roducks\Framework\Role;
@@ -44,7 +45,6 @@ abstract class Frame
 	protected $grantAccess;
 	protected $_dispatchUrl = false;
 	protected $_pageType = 'FRAME'; // PAGE|BLOCK|FACTORY
-	protected $_inLocal = true;
 
 	private $_cache = null;
 
@@ -131,11 +131,9 @@ abstract class Frame
 	{
 
 		if (is_null($this->_cache)) {
-			$memcache = Core::getCacheConfig($this->_inLocal);
-			$config = (Environment::inDEV() || $this->_inLocal) ? '.local' : '';
 			$errorMessage1 = 'Unable to connect to Memcache';
 			$errorMessage2 = 'Missing Cache config';
-			$errorFile = "config/memcache{$config}.inc";
+			$errorFile = Config::getMemcache()['path'];
 
 			if (count($memcache) > 0) {
 
@@ -224,47 +222,24 @@ abstract class Frame
 	//	Get configs
 	//---------------------------------
 	*/
-	protected function getGlobalConfig($name = "config")
-	{
-		return Core::getGlobalConfigFile($name);
-	}
-
-	protected function getSiteConfig($name = "")
-	{
-
-		if (!empty($name)) {
-			return Core::getSiteByNameConfigFile($name, false);
-		}
-
-		return Core::getSiteConfigFile("config", false);
-	}
-
-	protected function getModuleConfig($name = "")
-	{
-		if (empty($name)) {
-			$class = $this->pageObj->className;
-			$name = Helper::getClassName($class);
-		}
-
-		return Core::getModuleConfigFile($name, false);
-	}
-
-	protected function getSiteModuleConfig($site, $module)
-	{
-		return Core::getSiteModuleConfigFile($site, $module);
-	}
-
 	/*
 
 		$this->getConfig('global',"user:prefix", 1);
+		$this->getConfig('global:config',"user:prefix", 1);
+		$this->getConfig('global:foo',"user:prefix", 1);
 
-		$this->getConfig('site', "user:prefix"], 1);
-		$this->getConfig('site:test', "user:prefix"], 1);
+		$this->getConfig('site', "user:prefix", 1);
+		$this->getConfig('site:rod', "user:prefix"], 1);
+		$this->getConfig('site:rod:foo', "user:prefix"], 1);
 
-		$this->getConfig('module', "user:prefix"], 1);
-		$this->getConfig('module:blog', "user:prefix"], 1);
+		$this->getConfig('module', "user:prefix", 1);
+		$this->getConfig('module:user', "user:prefix", 1);
+		$this->getConfig('module:user:config', "user:prefix", 1);
+		$this->getConfig('module:user:foo', "user:prefix", 1);
 
-		$this->getConfig('admin:users', "user:prefix"], 1);
+		$this->getConfig('admin:users', "user:prefix", 1);
+		$this->getConfig('admin:users:config', "user:prefix", 1);
+		$this->getConfig('admin:users:foo', "user:prefix", 1);
 
 	*/
 	protected function getConfig($tag, $var = "", $value = "")
@@ -272,36 +247,63 @@ abstract class Frame
 
 		$name = "";
 		$type = null;
+		$key = null;
+		$default = 'config';
 		$config = [];
 
 		if (Helper::regexp("#:#", $tag)) {
-			list($tag, $type) = explode(":", $tag);
+			$terms = explode(":", $tag);
+			$total = count($terms);
+			switch ($total) {
+				case 3:
+					list($tag, $type, $key) = $terms;
+					break;
+				
+				default:
+				list($tag, $type) = $terms;
+					break;
+			}
+
 			$name = Helper::getCamelName($type);
 		}
 
 		switch ($tag) {
 			case 'global':
-				$config = (!is_null($type)) ? $this->getGlobalConfig($type) : $this->getGlobalConfig();
+				$data = (!is_null($type)) ? Config::fromSite($type, 'All') : Config::fromSite('config', 'All');
 				break;
 
 			case 'site':
-				$config = $this->getSiteConfig($name);
+
+				if (!is_null($type) && !is_null($key)) {
+					$data = Config::fromSite($key, Helper::getCamelName($type));
+				} else if (!is_null($type) && is_null($key)) {
+					$data = Config::fromSite($default, Helper::getCamelName($type));
+				} else {
+					$data = Config::fromSite($default);
+				}
 				break;
 
 			case 'module':
-				$config = $this->getModuleConfig($name);
+				$class = Helper::getClassName($this->pageObj->className);
+				$module = (!is_null($type)) ? Helper::getCamelName($type) : $class;
+				$index = (is_null($key)) ? $default : $key;
+				$data = Config::fromModule("{$module}/", $index);
 				break;
 
 			case 'file':
-				$config = (!is_null($type)) ? Core::getLocalConfigFile($type, "config", false) : [];
+				$data = (!is_null($type)) ? Config::get($type) : [];
 				break;
 
 			default:
-				$tag = Helper::getCamelName($tag);
-				$config = $this->getSiteModuleConfig($tag, $name);
+				$class = Helper::getClassName($this->pageObj->className);
+				$module = (!is_null($type)) ? Helper::getCamelName($type) : $class;
+				$index = (is_null($key)) ? $default : $key;
+				$data = Config::fromModule("{$module}/", $index, Helper::getCamelName($tag));
 				break;
 
 		}
+
+		$config = $data['data'];
 
 		if (empty($var)) {
 			return $config;
@@ -597,11 +599,6 @@ abstract class Frame
 	public function getParentClassName()
 	{
 		return '\\'.$this->_getParentClassName();
-	}
-
-	public function inLocal($bool)
-	{
-		$this->_inLocal = $bool;
 	}
 
 }

@@ -1,0 +1,5 @@
+-
+    text: Dashboard
+    link: /
+    access: all
+    children: {  }

@@ -185,6 +185,11 @@ class Helper
 		return self::regexp(self::REGEXP_HTTP, $str);
 	}
 
+	static function isFile($str)
+	{
+		return self::regexp(self::REGEXP_FILE_EXT, $str);
+	}
+
 	static function getFileExt($str)
 	{
 		return self::getMatches(self::REGEXP_FILE_EXT, $str);
@@ -612,6 +617,16 @@ class Helper
 		if ($die) {
 			exit;
 		}
+	}
+
+	public static function extractHtml($tpl)
+	{
+		ob_start();
+		include $tpl;
+		$html = ob_get_contents();
+		ob_end_clean();
+
+		return $html;
 	}
 
 	static function ext($file, $ext)

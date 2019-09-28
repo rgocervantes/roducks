@@ -57,6 +57,7 @@ namespace Roducks\CLI;
 
 use Roducks\Framework\CLI;
 use Roducks\Framework\Core;
+use Roducks\Framework\Config;
 use Lib\Directory as DirectoryHandler;
 use Lib\File;
 use Path;
@@ -98,19 +99,6 @@ class Generate extends CLI
 
     $this->success("[x]{$path}{$name}".FILE_EXT);
 
-  }
-
-  private function _config($path)
-  {
-
-$content = <<< EOT
-<?php
-
-return [
-];
-EOT;
-
-    File::create($path, "modules" . FILE_INC, $content);
   }
 
   private function _file($path, $name, $content, $type = "")
@@ -580,16 +568,10 @@ EOT;
         break;
     }
 
-    if ($site != Core::ALL_SITES_DIRECTORY.DIRECTORY_SEPARATOR) {
-      $conf = "{$pathConfig}modules".FILE_INC;
-      $config = Request::getContent($conf);
-      if (!preg_match('#\''.$module.'\' => true,#', $config)) {
-        $cnf = preg_replace_callback('/return \[(.*?)\];/sm', function($ret) use($module) {
-          return "return [{$ret[1]}\t'{$module}' => true,\n];";
-        }, $config);
-
-        File::create($pathConfig, "modules".FILE_INC, $cnf);
-      }
+    if ($site != Path::SITE_ALL . DIRECTORY_SEPARATOR) {
+      $config = Config::fromSite('modules', $site)['data'];
+      $config[$module] = true;
+      Config::set('modules', $config, $pathConfig);
     }
 
     self::_make($pathPageViews);
@@ -868,7 +850,6 @@ EOT;
       if ($this->yes()) {
         $configPath = "{$sitePath}Config/";
         self::_make($configPath);
-        $this->_config($configPath);
         $this->_run($site, $module);
         $this->_cmd = true;
       }

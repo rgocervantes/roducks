@@ -37,8 +37,7 @@ class Cart
 //-------------------------------
 	static public function init($name, $lang = "en", $currency = 'USD')
 	{
-		$ins = new Cart($name, $lang, $currency);
-		return $ins;
+		return new static($name, $lang, $currency);
 	}
 
 	/*

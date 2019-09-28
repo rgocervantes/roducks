@@ -25,8 +25,8 @@
 namespace Roducks\CLI;
 
 use Roducks\Framework\CLI;
+use Roducks\Framework\Config;
 use Crypt\Hash;
-use Lib\File;
 
 class Jwt extends CLI
 {
@@ -35,16 +35,9 @@ class Jwt extends CLI
 
 		$file = 'jwt.local.inc';
 		$hash = Hash::getToken();
-		$hash = substr($hash, 0, 32);
-		$config = <<< EOT
-<?php
+		$secret = substr($hash, 0, 32);
 
-return [
-	'secret' => '{$hash}'
-];
-EOT;
-
-		File::create(DIR_APP_CONFIG, $file, $config);
+		Config::set('jwt.local', ['secret' => $secret]);
 
 		$this->success("File: " . DIR_APP_CONFIG . "{$file} was created successfully!");
 

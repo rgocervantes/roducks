@@ -67,7 +67,7 @@ class Content extends AdminPage
     $data = $this->model('content/page-types')->getByName($name);
 
     if (empty($data->title)) {
-      return $this->pageNotFound();
+      return $this->notFound();
     }
 
     $this->view->assets->jsInline([

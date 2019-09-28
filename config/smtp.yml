@@ -1,0 +1,6 @@
+server: ''
+port: '587'
+from: ''
+username: ''
+password: ''
+encryption: tls

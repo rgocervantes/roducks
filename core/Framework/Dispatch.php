@@ -210,10 +210,10 @@ class Dispatch
 		/* ------------------------------------*/
 		$secure = true;
 
-		$siteConfig = Core::getSiteConfigFile("config", false);
+		$siteConfig = Config::fromSite()['data'];
 
-		if (isset($siteConfig['SESSION_NAME'])) {
-			$sessionName = $siteConfig['SESSION_NAME'];
+		if (isset($siteConfig['session.name'])) {
+			$sessionName = $siteConfig['session.name'];
 			$isLoggedIn = Session::exists($sessionName);
 
 			if ($isLoggedIn) {
@@ -251,9 +251,9 @@ class Dispatch
 		/* ------------------------------------*/
 		$requestMethod = Http::getRequestMethod();
 		$getGETParams = URL::getQueryString();
-		$routerPath = Core::getSiteConfigPath("router");
+		$routerPath = Config::getRouter()['full_path'];
 		$params = URL::getParams();
-		$dispatcher = ['dispatch' => Helper::PAGE_NOT_FOUND . '::pageNotFound'];
+		$dispatcher = ['dispatch' => 'Page/Page::notFound'];
 
 		$found = false;
 		$rowUrl = [];
@@ -273,10 +273,12 @@ class Dispatch
 		/* ------------------------------------*/
 		/* 		ROUTER URLS
 		/* ------------------------------------*/
-		Core::getRouterFile();
+
+
+		include $routerPath;
 		$routers = Router::dispatch();
 
-		$router['/_lang/(?P<LANG>\w{2}).*'] = ['dispatch' => Helper::PAGE_NOT_FOUND . '::_lang'];
+		$router['/_lang/(?P<LANG>\w{2}).*'] = ['dispatch' =>  'Page/Page::_lang'];
 		$router['/_(page|json|xml|factory)/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_data_'];
 		$router['/_block/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_block_'];
 		$router['/_service/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_service_'];
@@ -419,15 +421,16 @@ class Dispatch
 		}
 
 		// Modules Map
-		$modulesMap = Core::getModulesFile();
+		$siteModules = Config::getSiteModules();
+		$modulesMap = $siteModules['data'];
 		$module = Helper::getModule($page);
 
 		// Let's see if module is enabled
 		if (
 			(!isset($modulesMap[$module]) || $modulesMap[$module] === FALSE)
-		&& ($page != 'Output' && !Helper::isService($page) && !Helper::isApi($page) && $page != Helper::PAGE_NOT_FOUND)
+		&& ($page != 'Output' && !Helper::isService($page) && !Helper::isApi($page) && $page != 'Page/Page')
 		) {
-			Error::moduleDisabled("Module is disabled or undefined", __LINE__, __FILE__, Core::getSiteConfigPath("modules"), $module);
+			Error::moduleDisabled("Module is disabled or undefined", __LINE__, __FILE__, $siteModules['path'], $module);
 		} else {
 
 			if (Helper::isApi($page)) {
@@ -839,11 +842,19 @@ class Dispatch
 			// Dispatch page
 			/* ----------------------------------------------*/
 			if (Helper::isService($page) || Helper::isApi($page)) {
-				$servicePath = Core::getServicesPath($page);
-				$page = $servicePath['service'];
-				$pagePath = $servicePath['path'];
+				list($type, $page) = $params;
+				$method = (!isset($params[2])) ? 'rest' : $params[2];
+				$page = Helper::getCamelName($page);
+				$pagePath = Path::getService($page);
+				$params = Helper::getUrlParams($params);
 			} else {
-				$pagePath = ($page == Helper::PAGE_NOT_FOUND) ? '' : Core::getModulesPath();
+
+				$pagePath = Path::getModule($page);
+
+				if ($method == 'notFound') {
+					$pagePath = Path::getCorePage();
+					$params = [];
+				}
 			}
 
 			if ($method == "_data_" || $method == "_block_") {
@@ -852,37 +863,51 @@ class Dispatch
 
 				if ($invalidParam) {
 
-					$page = Helper::PAGE_NOT_FOUND;
-					$method = "pageNotFound";
-					$pagePath = DIR_CORE_PAGE;
+					$method = "notFound";
+					$pagePath = Path::getCorePage();
+					$params = [];
 
 				} else {
 
 					list($type, $page) = $params;
-					$type = Helper::removeUnderscore($type);
 					$page = Helper::getCamelName($page);
 
 					switch ($method) {
 						case '_data_':
-							$dType = ($type == 'json' || $type == 'xml') ? strtoupper($type) : ucfirst($type);
-							$pagePath = Core::getModulesPath() . $page . "/" . $dType . "/";
-							$action = ($type == 'page' || $type == 'factory') ? 'index' : 'encoded';
-							if ($type == 'xml') {
-								$action = 'preview';
+
+							switch ($type) {
+
+								case '_page':
+									$pagePath = Path::getModulePage($page);
+									$action = 'encoded';
+								break;
+
+								case '_json':
+									$pagePath = Path::getModuleJson($page);
+									$action = 'encoded';
+								break;
+
+								case '_xml':
+									$pagePath = Path::getModuleXml($page);
+									$action = 'preview';
+								break;
 							}
+
 							break;
+
 						case '_block_':
-							$pagePath = Core::getBlocksPath($page);
+							$pagePath = Path::getBlock($page);
 							$action = 'output';
-							$urlPattern = [];
+							$urlPattern = URL::getQueryString();
 							break;
+
 					}
 
 					$method = (!isset($params[2])) ? $action : $params[2];
 					$params = Helper::getUrlParams($params);
 
 					if ((!isset($modulesMap[$page]) || $modulesMap[$page] === FALSE) && ($method == '_data_')) {
-						Error::moduleDisabled("Module is disabled or undefined", __LINE__, __FILE__, Core::getSiteConfigPath("modules"), $page);
+						Error::moduleDisabled("Module is disabled or undefined", __LINE__, __FILE__, $siteModules['path'], $page);
 					}
 				}
 
@@ -892,20 +917,17 @@ class Dispatch
 
 				if ($invalidParam) {
 
-					$page = Helper::PAGE_NOT_FOUND;
-					$method = "pageNotFound";
-					$pagePath = DIR_CORE_PAGE;
+					$method = "notFound";
+					$pagePath = Path::getCorePage();
+					$params = [];
 
 				} else {
 
 					list($type, $page) = $params;
 					$method = (!isset($params[2])) ? 'rest' : $params[2];
-					$page = DIR_SERVICES . Helper::getCamelName($page);
-
-					$servicePath = Core::getServicesPath($page);
-					$page = $servicePath['service'];
-					$pagePath = $servicePath['path'];
-
+					$method = Helper::getCamelName($method, false);
+					$page = Helper::getCamelName($page);
+					$pagePath = Path::getService($page);
 					$params = Helper::getUrlParams($params);
 
 				}
@@ -932,9 +954,12 @@ class Dispatch
 
 		Core::duckling();
 
-		// Load page
-		Core::loadPage($pagePath, $page, $method, $urlPattern, $params, false, $rowUrl);
+		if ($page == 'Page/Page') {
+			$pagePath = Path::getCorePage();
+		}
 
+		// Load page
+		Render::view($pagePath, $page, $method, $urlPattern, $params, false, $rowUrl);
 
 	} // end init method
 

@@ -31,5 +31,7 @@ deploy.sh
 data
 public/static
 config/*.local.inc
+config/*.local.yml
 app/Data
 app/Sites/*/Config/*.local.inc
+app/Sites/*/Config/*.local.yml

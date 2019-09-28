@@ -97,8 +97,7 @@ final class File
 
 	static function system($file = null)
 	{
-		$file = new File($file);
-		return $file;
+		return new static($file);
 	}
 
 	static function exists($filename)
@@ -174,17 +173,20 @@ final class File
 		}
 	}
 
+	public static function putContent($path, $name, $content)
+	{
+		if (self::exists($path) && $path != '' && $name != '') {
+			file_put_contents($path.$name, $content);
+		}
+	}
+
 	static function create($path, $name, $content = '')
 	{
-
-		if (file_exists($path) && $path != '' && $name != '') {
-
+		if (self::exists($path) && $path != '' && $name != '') {
 			$file = fopen($path . $name, "w");
 					fwrite($file, $content);
 					fclose($file);
-
 		}
-
 	}
 
 	static function createJSON($path, $name, $content = '', $encode = true)

@@ -20,8 +20,16 @@
 
 namespace Roducks\Framework;
 
-class Path
+use Lib\File;
+
+abstract class Path
 {
+
+	const RDKS_NS = 'Roducks/';
+	const APP_NS = 'App/';
+	const SITE_ALL = 'All';
+	const DEFAULT_SUBDOMAIN = 'www';
+	const ADMIN_SUBDOMAIN = 'admin';
 
 	static function get($path = "")
 	{
@@ -31,6 +39,11 @@ class Path
 	static function exists($file)
 	{
 		return file_exists(self::get($file));
+	}
+
+	static function getAppConfig($path = "")
+	{
+		return self::get(DIR_APP_CONFIG) . $path;
 	}
 
 	static function getData($path = "")
@@ -214,6 +227,206 @@ class Path
 		}
 
 		return $path;
+	}
+
+	public static function clean($path)
+	{
+		return str_replace(RDKS_ROOT, '', $path);
+	}
+
+  /**
+   * DEFAULT
+   */
+  private static function _getDefaultSite($site)
+  {
+		// Avoid PHP Warnings.
+		if (!defined('RDKS_SITE')) {
+			return false;
+		}
+
+    return (is_null($site)) ? RDKS_SITE : $site;
+  }
+
+	public static function getLanguage($lang)
+	{
+		return self::get(DIR_APP_LANGUAGES) . $lang . FILE_INC;
+	}
+
+  /**
+   * CORE
+   */
+  public static function getCore($dir, $folder)
+  {
+    return self::get(DIR_CORE) . $dir . $folder;
+  }
+
+  /**
+   * APP
+   */
+  public static function getAppSite($site = NULL)
+  {
+		$site = self::_getDefaultSite($site);
+    $path = DIR_APP . DIR_SITES . $site . DIRECTORY_SEPARATOR;
+    return self::get($path);
+	}
+
+  public static function getAppSiteFolder($dir, $folder, $site = NULL)
+  {
+    return self::getAppSite($site) . $dir . $folder;
+	}
+
+	public static function getAppSiteModule($module, $site = NULL)
+  {
+		return self::getAppSiteFolder(DIR_MODULES, $module, $site);
+	}
+
+  public static function getAny($dir, $file, array $exts)
+  {
+    $paths = [];
+    $ret = [];
+
+    $paths[] = self::getAppSiteFolder($dir, $file);
+    $paths[] = self::getAppSiteFolder($dir, $file, self::SITE_ALL);
+
+		$paths[] = self::getCore($dir, RDKS_SITE . DIRECTORY_SEPARATOR . $file);
+		$paths[] = self::getCore($dir, self::SITE_ALL . DIRECTORY_SEPARATOR . $file);
+		
+		if (!in_array($dir, [DIR_MODULES, DIR_MENUS])) {
+			$paths[] = self::getCore($dir, $file);
+		}
+
+    foreach ($paths as $path) {
+      foreach ($exts as $ext) {
+        $f = $path . $ext;
+        $ret[] = $f;
+        if (!File::exists($f)) {
+          continue;
+        }
+  
+        return $f;
+      }
+
+		}
+
+    return end($ret);
+  }
+
+	public static function getModule($name, $subfolder = '')
+	{
+		return Path::getAny(DIR_MODULES . $subfolder, $name, [FILE_EXT]);
+	}
+
+	public static function setModule($name, $type)
+	{
+		return implode('/', [$name, $type, $name]);
+	}
+
+	public static function setModulePage($name)
+	{
+		return self::setModule($name, 'Page');
+	}
+
+	public static function getModulePage($name, $subfolder = '')
+	{
+		return self::getModule(self::setModulePage($name), $subfolder);
+	}
+
+	public static function getModuleJson($name, $subfolder = '')
+	{
+		return self::getModule(self::setModule($name, 'JSON'), $subfolder);
+	}
+
+	public static function getPageView($module, $name)
+	{
+		$page = preg_replace('/^([a-zA-Z]+)\/.+$/', '$1', $module);
+		return Path::getAny(DIR_MODULES, $page . DIRECTORY_SEPARATOR .  DIR_PAGE . DIR_VIEWS . $name, [FILE_PHTML, FILE_TPL]);
+	}
+
+	public static function getCorePage()
+	{
+		return self::get(DIR_CORE . 'Page/Page' . FILE_EXT);
+	}
+
+	public static function getCoreModulePageAll($name)
+	{
+		return self::getModulePage($name, self::SITE_ALL . DIRECTORY_SEPARATOR);
+	}
+
+  /**
+   * GET ANY PATH
+   */
+	public static function getMenu($name)
+	{
+		return Path::getAny(DIR_MENUS, $name, [FILE_YML, FILE_INC]);
+	}
+
+  public static function getEvent($name)
+  {
+    return self::getAny(DIR_EVENTS, $name, [FILE_EXT]);
+	}
+
+  public static function getBlock($name)
+  {
+    $file = "{$name}/{$name}";
+
+    return self::getAny(DIR_BLOCKS, $file, [FILE_EXT]);
+  }
+
+  public static function getBlockView($name, $view)
+  {
+    $file = $name . DIRECTORY_SEPARATOR . DIR_VIEWS . $view;
+
+    return self::getAny(DIR_BLOCKS, $file, [FILE_TPL, FILE_PHTML]);
+  }
+
+  public static function getTemplate($folder, $name)
+  {
+    $file = "{$folder}/{$name}";
+
+    return self::getAny(DIR_TEMPLATES, $file, [FILE_TPL, FILE_PHTML]);
+  }
+
+  public static function getLayout($folderOrFile)
+  {
+    return self::getAny(DIR_LAYOUTS, $folderOrFile, [FILE_TPL, FILE_PHTML]);
+	}
+
+  public static function getEmail($name)
+  {
+    return self::getAny(DIR_EMAILS, $name, [FILE_TPL, FILE_PHTML]);
+	}
+
+	public static function getService($name)
+  {
+    return self::getAny(DIR_SERVICES, $name, [FILE_EXT]);
+	}
+
+	public static function getClassName($cpath)
+	{
+		$class = str_replace(FILE_EXT, '', $cpath);
+
+		if (preg_match('/^app\//', $class)) {
+			$class = str_replace(DIR_APP, self::APP_NS, $class);
+		} else if(preg_match('/^core\//', $class)) {
+			$class = str_replace(DIR_CORE, self::RDKS_NS, $class);
+		}
+
+		$class = str_replace("/", "\\", $class);
+		
+		return $class;
+	}
+
+	public static function getFile($class)
+	{
+		$path = str_replace('\\', '/', $class);
+
+		if (preg_match('/^App\//', $path)) {
+			$path = str_replace(self::APP_NS, DIR_APP, $path);
+		} else if(preg_match('/^Roducks\//', $class)) {
+			$path = str_replace(self::RDKS_NS, DIR_CORE, $path);
+		}
+
+		return self::get($path . FILE_EXT);
 	}
 
 }

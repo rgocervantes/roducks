@@ -32,6 +32,7 @@ return [
 	'Form' 						=> 'Roducks\\Framework\\Form',
 	'Post' 						=> 'Roducks\\Framework\\Post',
 	'Path' 						=> 'Roducks\\Framework\\Path',
+	'Config' 					=> 'Roducks\\Framework\\Config',
 	'Router' 					=> 'Roducks\\Framework\\Router',
 	'Setup' 					=> 'Roducks\\Framework\\Setup',
 	'Event' 					=> 'Roducks\\Framework\\Event',

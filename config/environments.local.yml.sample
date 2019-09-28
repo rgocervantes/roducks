@@ -1,0 +1,6 @@
+local.roducks.test:
+    site: Front
+    mode: 1
+admin.local.roducks.test:
+    site: Admin
+    mode: 1

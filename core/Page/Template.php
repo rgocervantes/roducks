@@ -20,60 +20,41 @@
 
 namespace Roducks\Page;
 
-use Roducks\Framework\Core;
+use Roducks\Framework\Config;
+use Roducks\Framework\Helper;
 use Roducks\Framework\Error;
+use Roducks\Framework\Path;
 
 class Template
 {
 
-	static $path = null;
+	static $name = null;
 	static $data = [];
-
-	static function tpl($file, array $data = [], $merge = false)
-	{
-		if (!is_null(self::$path) && !empty($file)) {
-			$dir_template = self::$path.$file.FILE_TPL;
-			if (file_exists($dir_template)) {
-				$content = self::$data;
-
-				if (count($data) > 0) {
-					if ($merge) {
-						$content = array_merge(self::$data, $data);
-					} else {
-						$content = $data;
-					}
-				}
-
-				return Duckling::parser($dir_template, $content);
-			} else {
-				Error::warning(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $dir_template);
-			}
-		} else {
-			Error::warning("Invalid template name",__LINE__, __FILE__, $dir_template);
-		}
-
-	}
 
 	static function view($file, array $data = [], $merge = false)
 	{
 
-		if (!is_null(self::$path) && !empty($file)) {
-			$dir_template = self::$path.$file.FILE_PHTML;
+		$dir_template = Path::getTemplate(Template::$name, $file);
+
+		if (!is_null(self::$name) && !empty($file)) {
 			if (file_exists($dir_template)) {
 				$content = self::$data;
 
 				if (count($data) > 0) {
 					if ($merge) {
-						$content = array_merge(self::$data, $data);
+						$content = self::$data + $data;
 					} else {
 						$content = $data;
 					}
 				}
 
-				extract($content);
-				include $dir_template;
-			} else {
-				return self::tpl($file, $data, $merge);
+				if (Helper::isTpl($dir_template)) {
+					echo Duckling::parser($dir_template, $content);
+				} else {
+					extract($content);
+					include $dir_template;
+				}
+
 			}
 		} else {
 			Error::warning("Invalid template name",__LINE__, __FILE__, $dir_template);
@@ -82,7 +63,7 @@ class Template
 
 	static function menu($name)
 	{
-		return Core::getMenuFile($name);
+		return Config::getMenu($name)['data'];
 	}
 
 	static function displayBlock($bool)

@@ -21,6 +21,8 @@
 use Roducks\Framework\Core;
 use Roducks\Framework\Error;
 use Roducks\Framework\Helper;
+use Roducks\Framework\Config;
+use Roducks\Framework\Path;
 
 /*
 |--------------------------------|
@@ -35,8 +37,8 @@ App::define('RDKS_MODE', $environment['mode']); // LOCAL | QA | PRO
 App::define('RDKS_SUBDOMAIN', $environment['subdomain']);
 
 // In case subdomain folder does not exist
-if (!App::fileExists(Core::getSitePath()) || empty($environment['site'])) {
-	Error::siteFolderNotFound("Folder was not found.", __LINE__, __FILE__, Core::getAppConfigPath("environments.local"), DIR_APP_SITES);
+if (!file_exists(Path::getAppSite()) || empty($environment['site'])) {
+	Error::siteFolderNotFound("Folder was not found.", __LINE__, __FILE__, Config::getEnvs()['path'], DIR_APP_SITES);
 }
 
 /*
@@ -44,24 +46,24 @@ if (!App::fileExists(Core::getSitePath()) || empty($environment['site'])) {
 |		  		DATABASE CONFIG
 |--------------------------------|
 */
-$dbFile = Core::getDbConfigPath($environment['database']);
-$dbConfig = Core::getDbConfig($dbFile);
+$db = Config::getDb();
 
-if (!isset($dbConfig['host'])) {
-	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $dbFile, 'host', 'localhost');
-} else if (!isset($dbConfig['name'])) {
-	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $dbFile, 'name', 'roducks');
-} else if (!isset($dbConfig['user'])) {
-	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $dbFile, 'user', 'xxxxxx');
-} else if (!isset($dbConfig['password'])) {
-	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $dbFile, 'password', 'xxxxxx');
+if (!isset($db['data']['host'])) {
+	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $db['path'], 'host', 'localhost');
+} else if (!isset($db['data']['name'])) {
+	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $db['path'], 'name', 'roducks');
+} else if (!isset($db['data']['user'])) {
+	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $db['path'], 'user', 'xxxxxx');
+} else if (!isset($db['data']['password'])) {
+	Error::missingDbConfig("Missing database config", __LINE__, __FILE__, $db['path'], 'password', 'xxxxxx');
 }
 
-App::define('DB_HOST', $dbConfig['host']); // localhost
-App::define('DB_PORT', $dbConfig['port']); // 3306
-App::define('DB_NAME', $dbConfig['name']);
-App::define('DB_USER', $dbConfig['user']);
-App::define('DB_PASSWORD', $dbConfig['password']);
+App::define('DB_FILE', $db['path']);
+App::define('DB_HOST', $db['data']['host']); // localhost
+App::define('DB_PORT', $db['data']['port']); // 3306
+App::define('DB_NAME', $db['data']['name']);
+App::define('DB_USER', $db['data']['user']);
+App::define('DB_PASSWORD', $db['data']['password']);
 
 /*
 |--------------------------------|

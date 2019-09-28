@@ -1,0 +1,10 @@
+css:
+    - admin.css
+js:
+    - jquery-libs/jquery-v3.1.1.min.js
+plugins:
+    - bootstrap
+    - roducks
+js.inline: {  }
+js.onready:
+    - rdks.ready

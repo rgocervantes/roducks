@@ -60,12 +60,12 @@ class Error
 		}
 	}
 
-	static function pageNotFound()
+	static function page($method = 'notFound')
 	{
 		if (Environment::inCLI()) {
 			CLI::printError("Fatal Error.");
 		} else {
-			Core::loadPage('', Helper::PAGE_NOT_FOUND, "pageNotFound");
+			Render::view(Path::getCorePage(), 'Page', $method);
 			exit;
 		}
 	}
@@ -185,7 +185,7 @@ class Error
 			} else {
 				if (!Helper::isBlock($file) && !Helper::isBlockDispatched()) {
 					self::logger($title, $error, $file);
-					self::pageNotFound();
+					self::page();
 				}
 			}
 

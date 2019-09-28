@@ -52,14 +52,14 @@ class Page extends GenericPage
 	protected function hasData($bool)
 	{
 		if (!$bool) {
-			$this->pageNotFound();
+			$this->notFound();
 		}
 	}
 
 	protected function isData(array $data)
 	{
 		if (empty($data)) {
-			$this->pageNotFound();
+			$this->notFound();
 		}
 	}
 
@@ -86,34 +86,46 @@ class Page extends GenericPage
 
 		$this->view = $view;
 		$this->view->parentPage($this->_getParentClassName());
+		$this->view->page(1);
+		$this->view->meta('http-equiv','Content-Type', $this->getConfig('file:config', 'content.type', 'text/html; charset=utf-8'));
+
 		if ($this->_viewport) $this->view->meta('name','viewport', $this->getConfig('file:config', 'viewport', "width=device-width,initial-scale=1,shrink-to-fit=no"));
 	}
 
-	public function pageNotFound($overwrite = false)
+	public function notFound($overwrite = false)
 	{
 
 		Http::sendHeaderNotFound(false);
-	
+
 		$this->view->assets->css(["page-404.css"]);
 		$this->view->assets->jsOnReady(["page-404"]);
 
 		if (!$overwrite) {
+			$template = $this->getConfig('site', 'template.not.found', '404');
 			$this->view->setError();
-			$this->view->template("404");
+			$this->view->template($template);
 			$this->view->body();
 		}
 
 		return $this->view->output();
-		exit;
+
+	}
+
+	public function forbidden()
+	{
+		$this->view->setError();
+		$this->view->template('404');
+		$this->view->body();
+		return $this->notFound(true);
 	}
 
 	public function _lang($type, $lang)
 	{
 
-		$dir_languages = Core::getLanguagesPath($lang);
+		$dir_languages = Path::getLanguage($lang);
 		$set = true;
 
-		if (\App::fileExists($dir_languages)) {
+		if (file_exists($dir_languages)) {
 
 			if (Language::isMultilanguage()) {
 				$set = Language::set($lang);

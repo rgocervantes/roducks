@@ -1,0 +1,3 @@
+session.name: RDKS_ADMIN
+role.type: 1
+template.not.found: '404'

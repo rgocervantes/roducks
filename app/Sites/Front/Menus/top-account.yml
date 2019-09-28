@@ -1,0 +1,27 @@
+-
+    link: /account
+    text: Cuenta
+    access: all
+    icon: user
+-
+    link: /account/edit
+    text: 'Editar Datos'
+    access: edit
+    icon: pencil
+-
+    link: /account/picture
+    text: 'Foto de perfil'
+    access: picture
+    icon: picture
+-
+    link: /account/change-password
+    text: 'Cambiar contraseña'
+    access: reset
+    icon: lock
+-
+    separator: divider
+-
+    link: /logout
+    text: Salir
+    access: all
+    icon: log-out

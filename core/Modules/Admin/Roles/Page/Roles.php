@@ -178,7 +178,7 @@ class Roles extends AdminPage
 
 		// Can't edit role you belong to.
 		if($id_role == 1 || $id_role == User::getData('id_role') || $id_role < User::getData('id_role')){
-			$this->pageNotFound();
+			$this->notFound();
 		}
 
 		$db = $this->db();

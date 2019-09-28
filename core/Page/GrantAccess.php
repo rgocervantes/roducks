@@ -39,7 +39,7 @@ class GrantAccess
 		if ($this->_json) {
 			JSON::error(TEXT_GRANT_ACCESS_REQUIRED);
 		} else {
-			Error::pageNotFound();
+			Error::page();
 		}
 	}
 

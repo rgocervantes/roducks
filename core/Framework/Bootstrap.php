@@ -21,14 +21,19 @@
 # Default file extensions
 App::define('FILE_EXT', ".php");
 App::define('FILE_INC', ".inc");
+App::define('FILE_YML', ".yml");
 App::define('FILE_PHTML', ".phtml");
 App::define('FILE_TPL', ".tpl");
 
 # Paths
 include_once "Directories" . FILE_EXT;
 include_once "Core" . FILE_EXT;
+include_once "Config" . FILE_EXT;
+include_once "Path" . FILE_EXT;
+include_once RDKS_ROOT . "core/Libs/Files/File" . FILE_EXT;
 
 use Roducks\Framework\Core;
+use Roducks\Framework\Config;
 use Roducks\Framework\Error;
 use Roducks\Framework\CLI;
 
@@ -44,7 +49,7 @@ App::$composer = App::getComposerMap();
 |           CLASS ALIAS          |
 |--------------------------------|
 */
-App::$aliases = Core::getAliasesConfigFile();
+App::$aliases = Core::getAliases();
 
 /*
 |--------------------------------|
@@ -134,24 +139,24 @@ App::define('TEXT_METHOD_NOT_FOUND', TEXT_METHOD . " Not Found");
 |           APP CONFIG           |
 |--------------------------------|
 */
-$appConfig = Core::getAppConfigFile();
+$appConfig = Config::get()['data'];
 
 # Timezone
-date_default_timezone_set($appConfig['default_timezone']);
+date_default_timezone_set($appConfig['timezone']);
 
-if (isset($appConfig['domain_name']) && !empty($appConfig['domain_name']) && $appConfig['domain_name'] != '*') {
-  App::define('DOMAIN_NAME', $appConfig['domain_name']);
+if (isset($appConfig['domain.name']) && !empty($appConfig['domain.name']) && $appConfig['domain.name'] != '*') {
+  App::define('DOMAIN_NAME', $appConfig['domain.name']);
 }
 
-App::define('PAGE_TITLE', $appConfig['page_title']);
-App::define('EMAIL_FROM', $appConfig['email_from']);
-App::define('EMAIL_TO', $appConfig['email_to']);
-App::define('LOGO_IMAGE', $appConfig['logo_image']);
-App::define('FIND_URL_IN_DB', $appConfig['find_url_in_db']);
-App::define('ALLOW_SUBSCRIBERS_REGISTER', $appConfig['allow_subscribers_register']);
-App::define('SUBSCRIBERS_EXPIRE', $appConfig['subscribers_expire']);
-App::define('SUBSCRIBERS_EXPIRE_TIME', $appConfig['subscribers_expire_time']);
-App::define('SUBSCRIBERS_EXPIRE_IN', $appConfig['subscribers_expire_in']);
-App::define('MULTILANGUAGE', $appConfig['multilanguage']);
-App::define('BROWSER_LANGUAGE', $appConfig['browser_language']);
-App::define('DEFAULT_LANGUAGE', $appConfig['default_language']);
+App::define('PAGE_TITLE', $appConfig['site.title']);
+App::define('EMAIL_FROM', $appConfig['email']['from']);
+App::define('EMAIL_TO', $appConfig['email']['to']);
+App::define('LOGO_IMAGE', $appConfig['logo.image']);
+App::define('FIND_URL_IN_DB', $appConfig['find.url.in.db']);
+App::define('ALLOW_SUBSCRIBERS_REGISTER', $appConfig['subscribers']['allow.register']);
+App::define('SUBSCRIBERS_EXPIRE', $appConfig['subscribers']['expire']);
+App::define('SUBSCRIBERS_EXPIRE_TIME', $appConfig['subscribers']['how.long']);
+App::define('SUBSCRIBERS_EXPIRE_IN', $appConfig['subscribers']['period']);
+App::define('MULTILANGUAGE', $appConfig['language']['multilanguage']);
+App::define('BROWSER_LANGUAGE', $appConfig['language']['user.browser']);
+App::define('DEFAULT_LANGUAGE', $appConfig['language']['default']);

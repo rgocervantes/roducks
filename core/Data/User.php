@@ -20,7 +20,7 @@
 
 namespace Roducks\Data;
 
-use Roducks\Framework\Core;
+use Roducks\Framework\Config;
 use Roducks\Framework\EAV;
 use Roducks\Framework\Path;
 use Roducks\Framework\Hash;
@@ -70,13 +70,13 @@ class User extends EAV
 
 	private static function _getConfigData()
 	{
-		$siteConfig = Core::getSiteConfigFile("config", false);
-		$sessionName = (isset($siteConfig['SESSION_NAME'])) ? $siteConfig['SESSION_NAME'] : null;
-		$roleType = (isset($siteConfig['ROLE_TYPE'])) ? $siteConfig['ROLE_TYPE'] : null;
+		$siteConfig = Config::fromSite()['data'];
+		$sessionName = (isset($siteConfig['session.name'])) ? $siteConfig['session.name'] : null;
+		$roleType = (isset($siteConfig['role.type'])) ? $siteConfig['role.type'] : null;
 
 		return [
-			'session_name' => $sessionName,
-			'role_type' => $roleType
+			'session.name' => $sessionName,
+			'role.type' => $roleType
 		];
 
 	}
@@ -86,7 +86,7 @@ class User extends EAV
 
 		if (is_null(self::$_roleType)) {
 	    $siteConfig = self::_getConfigData();
-	    $roleType = $siteConfig['role_type'];
+	    $roleType = $siteConfig['role.type'];
 			self::$_roleType = $roleType;
 		}
 
@@ -98,7 +98,7 @@ class User extends EAV
 
 		if (is_null(self::$_sessionName)) {
 	    $siteConfig = self::_getConfigData();
-	    $sessionName = $siteConfig['session_name'];
+	    $sessionName = $siteConfig['session.name'];
 			self::$_sessionName = $sessionName;
 		}
 

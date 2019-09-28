@@ -216,7 +216,7 @@ class Asset
 			$this->_js_alt = "";
 		}
 
-		$pluginsFile = Core::getPluginsFile();
+		$pluginsFile = Config::getPlugins()['data'];
 
 		foreach ($options as $option) {
 			if (isset($pluginsFile[$option])) {

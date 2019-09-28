@@ -48,13 +48,13 @@ class URL
 		||	preg_match('/'.self::CSRF_ATTACK_RULE_4.'/', $baseURL)
 		||	preg_match('/'.self::CSRF_ATTACK_END_URL.'/', $relativeURL)
 		) {
-			Http::sendHeaderForbidden();
+			Error::page('forbidden');
 		}
 
 		if (!is_null($GETParams)) {
 
 			if (preg_match('/['.self::CSRF_ATTACK_GET_PARAMS .']+/', $GETParams)) {
-				Http::sendHeaderForbidden();
+				Error::page('forbidden');
 			}
 		}
 
@@ -213,12 +213,12 @@ class URL
 
 	static function getFrontURL($path = "", array $params = [], $complete = true)
 	{
-		return self::goToURL("local", Core::DEFAULT_SUBDOMAIN) . $path . self::setQueryString($params, $complete);
+		return self::goToURL("local", Path::DEFAULT_SUBDOMAIN) . $path . self::setQueryString($params, $complete);
 	}
 
 	static function getAdminURL($path = "", array $params = [], $complete = true)
 	{
-		return self::goToURL("admin.local", Core::ADMIN_SUBDOMAIN) . $path . self::setQueryString($params, $complete);
+		return self::goToURL("admin.local", Path::ADMIN_SUBDOMAIN) . $path . self::setQueryString($params, $complete);
 	}
 
 	static function setURL($url = "/", array $params = [], $complete = true)

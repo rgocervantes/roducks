@@ -1,0 +1,11 @@
+css:
+    - front.css
+js:
+    - jquery-libs/jquery-v3.1.1.min.js
+plugins:
+    - bootstrap
+    - roducks
+js.inline:
+    - comments
+js.onready:
+    - rdks.ready

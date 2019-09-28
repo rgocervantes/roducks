@@ -1,0 +1,15 @@
+-
+    text: Usuarios
+    link: /users
+    access: [users, view]
+    children: [{ link: /users/add, text: 'Crea Nuevo', access: [users, create] }]
+-
+    text: Suscriptores
+    link: /subscribers
+    access: [subscribers, view]
+    children: [{ link: /subscribers/add, text: 'Crea Nuevo', access: [subscribers, create] }]
+-
+    text: Clientes
+    link: /clients
+    access: [clients, view]
+    children: [{ link: /clients/add, text: 'Crea Nuevo', access: [clients, create] }]

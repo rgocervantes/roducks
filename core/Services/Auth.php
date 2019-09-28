@@ -184,7 +184,7 @@ class Auth extends Service
 	public function success($email, $password)
 	{
 		$config = User::getConfigData();
-		return $this->_login($config['session_name'], $config['role_type'], $email, $password);
+		return $this->_login($config['session.name'], $config['role.type'], $email, $password);
 	}
 
 	/**
