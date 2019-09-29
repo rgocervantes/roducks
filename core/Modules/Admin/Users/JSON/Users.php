@@ -24,7 +24,7 @@ use Roducks\Data\User;
 use Roducks\Framework\Role;
 use Roducks\Framework\Form;
 use Roducks\Framework\Helper;
-use Roducks\Framework\Event;
+use Roducks\Framework\Observer;
 use Roducks\Page\JSON;
 use Roducks\Page\View;
 use Roducks\Libs\Utils\Date;
@@ -91,7 +91,7 @@ class Users extends JSON
 
 			$this->_user->update($id, ['id_user_tree' => $id_user_tree]);
 
-			Event::dispatch('onEventCreateAccount', [$id, Role::TYPE_USERS]);
+			Observer::on('CreateAccount', [$id, Role::TYPE_USERS]);
 			$this->data('insert_id', $id);
 		} else {
 			$this->setError(0,"User already exists.");

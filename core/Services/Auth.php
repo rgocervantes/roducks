@@ -20,7 +20,7 @@
 
 namespace Roducks\Services;
 
-use Roducks\Framework\Event;
+use Roducks\Framework\Observer;
 use Roducks\Page\Service;
 use Roducks\Data\User;
 use Roducks\Libs\Request\Http;
@@ -92,7 +92,7 @@ class Auth extends Service
 						// Store user data in session to recover later
 						Session::set($session,$auth);
 
-						Event::dispatch('onEventLogin', [$auth['id_user']]);
+						Observer::on('Login', [$auth['id_user']]);
 
 						$user = UsersTable::open($db);
 						$user->update($auth['id_user'],['loggedin' => $logInOut, 'location' => $ip]);
@@ -206,7 +206,7 @@ class Auth extends Service
 
 	public function logout($userId)
 	{
-		Event::dispatch('onEventLogout', [$userId]);
+		Observer::on('Logout', [$userId]);
 		return $this->model('users/users')->logInOut($userId, 0);
 	}
 

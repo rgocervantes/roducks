@@ -25,7 +25,7 @@ use Roducks\Framework\Hash;
 use Roducks\Framework\Role;
 use Roducks\Framework\Form;
 use Roducks\Framework\Helper;
-use Roducks\Framework\Event;
+use Roducks\Framework\Observer;
 use Roducks\Page\JSON;
 use Roducks\Libs\Request\Http;
 use Roducks\Libs\Utils\Date;
@@ -106,7 +106,7 @@ class Home extends JSON
 				$id = $user->getId();
 				$user->update($id, ['id_user_tree' => '0']);
 
-				Event::dispatch('onEventCreateAccount', [$id, Role::TYPE_SUBSCRIBERS]);
+				Observer::on('CreateAccount', [$id, Role::TYPE_SUBSCRIBERS]);
 				$auth = AuthService::init()->success($fields['email'], $fields['password']);
 				$this->data("url_redirect", "/");
 			}

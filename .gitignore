@@ -35,3 +35,5 @@ config/*.local.yml
 app/Data
 app/Sites/*/Config/*.local.inc
 app/Sites/*/Config/*.local.yml
+app/Sites/*/Modules/*/Config/*.local.inc
+app/Sites/*/Modules/*/Config/*.local.yml

@@ -1,4 +1,0 @@
-onEventLogin: 'Register::onLogin'
-onEventLogout: 'Register::onLogout'
-onEventCreateAccount: 'Register::onCreateAccount'
-onLanguageSelector: 'LanguageSelector::onChange'

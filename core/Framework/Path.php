@@ -280,7 +280,7 @@ abstract class Path
 		return self::getAppSiteFolder(DIR_MODULES, $module, $site);
 	}
 
-  public static function getAny($dir, $file, array $exts)
+  public static function getAny($dir, $file, array $exts, $debug = false)
   {
     $paths = [];
     $ret = [];
@@ -306,6 +306,10 @@ abstract class Path
         return $f;
       }
 
+		}
+
+		if ($debug) {
+			return $ret;
 		}
 
     return end($ret);
@@ -359,9 +363,17 @@ abstract class Path
 		return Path::getAny(DIR_MENUS, $name, [FILE_YML, FILE_INC]);
 	}
 
-  public static function getEvent($name)
+  public static function getObserver($name)
   {
-    return self::getAny(DIR_EVENTS, $name, [FILE_EXT]);
+
+		if (defined('RDKS_MODULE')) {
+			$alt = Path::getAny(DIR_MODULES, RDKS_MODULE . DIRECTORY_SEPARATOR .  DIR_OBSERVERS . $name, [FILE_EXT]);
+			if (file_exists($alt)) {
+				return $alt;
+			}
+		}
+
+    return self::getAny(DIR_OBSERVERS, $name, [FILE_EXT]);
 	}
 
   public static function getBlock($name)

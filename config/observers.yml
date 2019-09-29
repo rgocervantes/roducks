@@ -1,0 +1,4 @@
+Login: 'User::onLogin'
+Logout: 'User::onLogout'
+CreateAccount: 'User::onCreateAccount'
+ChooseLanguage: 'LanguageSelector::onChange'

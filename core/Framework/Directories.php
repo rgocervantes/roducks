@@ -28,7 +28,7 @@ App::define('DIR_PAGE', "Page/");
 App::define('DIR_SITES', "Sites/");
 App::define('DIR_BLOCKS', "Blocks/");
 App::define('DIR_SERVICES', "Services/");
-App::define('DIR_EVENTS', "Events/");
+App::define('DIR_OBSERVERS', "Observers/");
 App::define('DIR_MENUS', "Menus/");
 App::define('DIR_XMLS', "Xmls/");
 App::define('DIR_MODELS', "Models/");

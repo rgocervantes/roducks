@@ -59,7 +59,7 @@ App::$aliases = Core::getAliases();
 spl_autoload_register(function($class) {
 
     $composer = false;
-    $isEvent = false;
+    $isObserver = false;
 
     if (isset(App::$aliases[$class])) {
       class_alias(App::$aliases[$class], $class);
@@ -86,19 +86,19 @@ spl_autoload_register(function($class) {
     }
 
     if (!$composer) {
-      $isEvent = preg_match('#/Events/#', $path);
+      $isObserver = preg_match('#/Observers/#', $path);
     }
 
     list($realPath, $fileExists) = ($composer) ? App::getComposerPath($path) : App::getRealPath($path);
 
-    if ($fileExists || $isEvent) {
+    if ($fileExists || $isObserver) {
 
-      if (!$isEvent)
+      if (!$isObserver)
           include_once $realPath;
 
   		if (!class_exists($class) && !preg_match('#Interfaces#', $class)) {
           if (php_sapi_name() != "cli") {
-              if (!$isEvent)
+              if (!$isObserver)
                   Error::classNotFound(TEXT_CLASS_NOT_FOUND,__LINE__, __FILE__, $path, $class);
           } else {
               CLI::println("Class '{$class}' was not found.", CLI::FAILURE);
@@ -107,7 +107,7 @@ spl_autoload_register(function($class) {
     } else {
 
         if (php_sapi_name() != "cli") {
-            if (!$isEvent)
+            if (!$isObserver)
                 Error::debug(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $path);
         } else {
             CLI::println("Script file not found: {$path}", CLI::FAILURE);

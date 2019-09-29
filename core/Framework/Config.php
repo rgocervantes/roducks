@@ -218,9 +218,9 @@ abstract class Config
     return self::getAny('database', $default);
   }
 
-  public static function getEvents($default = false)
+  public static function getObservers($default = false)
   {
-    return self::getAny('events', $default);
+    return self::getAny('observers', $default);
   }
 
   public static function getPlugins($default = false)

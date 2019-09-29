@@ -18,31 +18,17 @@
  *
  */
 
-namespace App\Sites\All\Events;
+namespace Roducks\Framework;
 
-use Roducks\Framework\Event;
-use Roducks\Libs\Request\Http;
-use Roducks\Libs\Utils\Date;
-use Roducks\Services\Storage;
+use Roducks\Page\Frame;
 
-class Register extends Event
+abstract class Observer extends Frame
 {
 
-	public function onLogin($id_user)
-	{
-		Storage::user($id_user)->unique("log_date", Date::getCurrentDate());
-		Storage::log($id_user)->add("logIn", ['time' => Date::getCurrentTime(), 'ip' => Http::getIPClient()], true);
-	}
+	protected $_pageType = 'OBSERVER';
 
-	public function onLogout($id_user)
+	static function on($e, $settings = "")
 	{
-		Storage::user($id_user)->unique("log_date", Date::getCurrentDate());
-		Storage::log($id_user)->add("logOut", ['time' => Date::getCurrentTime(), 'ip' => Http::getIPClient()], true);
+		Render::observer($e, $settings);
 	}
-
-	public function onCreateAccount($id_user, $type)
-	{
-		// @TODO
-	}
-
 }

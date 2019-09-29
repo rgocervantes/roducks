@@ -35,7 +35,7 @@ return [
 	'Config' 					=> 'Roducks\\Framework\\Config',
 	'Router' 					=> 'Roducks\\Framework\\Router',
 	'Setup' 					=> 'Roducks\\Framework\\Setup',
-	'Event' 					=> 'Roducks\\Framework\\Event',
+	'Observer' 				=> 'Roducks\\Framework\\Observer',
 	'Crypt\\Hash' 		=> 'Roducks\\Framework\\Hash',
 	'API' 						=> 'Roducks\\API\\API',
 	'User' 						=> 'Roducks\\Data\\User',

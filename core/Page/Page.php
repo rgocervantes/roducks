@@ -28,7 +28,7 @@ use Roducks\Framework\Helper;
 use Roducks\Framework\Path;
 use Roducks\Data\User;
 use Roducks\Libs\Request\Http;
-use Roducks\Framework\Event;
+use Roducks\Framework\Observer;
 
 class Page extends GenericPage
 {
@@ -143,7 +143,7 @@ class Page extends GenericPage
 					$url = DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $split);
 				}
 
-				Event::dispatch('onLanguageSelector', [$lang, $url]);
+				Observer::on('ChooseLanguage', [$lang, $url]);
 
 				Http::redirect($url);
 			}

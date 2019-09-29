@@ -18,17 +18,16 @@
  *
  */
 
-namespace Roducks\Framework;
+namespace Roducks\Observers;
 
-use Roducks\Page\Frame;
+use Roducks\Framework\Observer;
 
-abstract class Event extends Frame
+class LanguageSelector extends Observer
 {
 
-	protected $_pageType = 'EVENT';
-
-	static function dispatch($e, $settings = "")
+	public function onChange($lang, $url)
 	{
-		Render::event($e, $settings);
+
 	}
+
 }

@@ -53,24 +53,24 @@ abstract class Render
     return self::view($path, $class, NULL, array(), $settings, TRUE);
   }
 
-	static function event($e, $settings)
+	static function observer($e, $settings)
 	{
 		if (!is_array($settings)) {
 			$settings = [$settings];
 		}
 
-    $events = Config::getEvents()['data'];
+    $observers = Config::getObservers()['data'];
 
-		if (isset($events[$e])) {
-			$dispatch = $events[$e];
+		if (isset($observers[$e])) {
+			$dispatch = $observers[$e];
 
 			if (Helper::regexp('#::#', $dispatch)) {
 				list($class, $method) = explode("::", $dispatch);
 
-        $path = Path::getEvent($class);
+        $path = Path::getObserver($class);
         
 				if (file_exists($path)) {
-					include_once $path;
+          include_once $path;
         }
 
         $cpath = Path::clean($path);
@@ -116,7 +116,7 @@ abstract class Render
         'url_dispatcher' => true
       ];
 
-      if (Helper::isService($cpath) || Helper::isEvent($cpath)) {
+      if (Helper::isService($cpath) || Helper::isObserver($cpath)) {
 				$pageObj['url_dispatcher'] = false;
 			}
 
