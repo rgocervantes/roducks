@@ -29,7 +29,28 @@ class Environment
 	const PRO = 3;
 	const CLI = 4;
 
-	static function getConfig()
+	private static function _getMode($key)
+	{
+		switch ($key) {
+			case '@dev':
+				$id = self::DEV;
+				break;
+			case '@qa':
+				$id = self::QA;
+				break;
+			case '@cli':
+				$id = self::CLI;
+				break;
+			case '@pro':
+			default:
+				$id = self::PRO;
+				break;
+		}
+
+		return $id;
+	}
+
+	public static function getConfig()
 	{
 		$config = Config::getEnvs()['data'];
 		$serverName = str_replace(['https://', 'http://'], '', Http::getServerName());
@@ -60,7 +81,7 @@ class Environment
 
 		$site = (isset($config[$subdomain]['site'])) ? $config[$subdomain]['site'] : "Front";
 		$database = (isset($config[$subdomain]['database'])) ? $config[$subdomain]['database'] : "database";
-		$mode = (isset($config[$subdomain]['mode'])) ? $config[$subdomain]['mode'] : self::PRO;
+		$mode = (isset($config[$subdomain]['mode'])) ? self::_getMode($config[$subdomain]['mode']) : self::PRO;
 		$errors = ($mode == self::DEV) ? true : false;
 
 		return [
@@ -72,22 +93,22 @@ class Environment
 		];
 	}
 
-	static function inDEV()
+	public static function inDEV()
 	{
 		return (RDKS_MODE == self::DEV);
 	}
 
-	static function inCLI()
+	public static function inCLI()
 	{
 		return (RDKS_MODE == self::CLI);
 	}
 
-	static function inQA()
+	public static function inQA()
 	{
 		return (RDKS_MODE == self::QA);
 	}
 
-	static function inPRO()
+	public static function inPRO()
 	{
 		return (RDKS_MODE == self::PRO);
 	}

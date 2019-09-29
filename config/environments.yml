@@ -1,6 +1,6 @@
 www:
     site: Front
-    mode: 1
+    mode: '@pro'
 admin:
     site: Admin
-    mode: 1
+    mode: '@pro'

@@ -1,6 +1,6 @@
 local.roducks.test:
     site: Front
-    mode: 1
+    mode: '@dev'
 admin.local.roducks.test:
     site: Admin
-    mode: 1
+    mode: '@dev'

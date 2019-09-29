@@ -176,33 +176,24 @@ abstract class Core
 	/**
 	*	Load file
 	*/
-	static function loadFile($path, $file)
+	public static function loadFile($path)
 	{
-		if (empty($path) || empty($file)) return false;
+		if (empty($path)) return;
 
-		$resource = $path.$file;
-
-		list($realPath, $fileExists) = \App::getRealPath($resource);
-
-		if ($fileExists) {
-			include_once $realPath;
+		if (file_exists($path)) {
+			include_once $path;
 		} else {
-			Error::debug("File Not Found", __LINE__, __FILE__, $resource);
+			Error::debug("File Not Found", __LINE__, __FILE__, $path);
 		}
 	}
 
-	static function loadConfig($name)
+	public static function loadAppLanguages($iso = NULL)
 	{
-		self::loadFile(DIR_CORE_CONFIG, $name . FILE_INC);
+		$lang = (is_null($iso)) ? Language::get() : $iso;
+		self::loadFile(Path::getLanguage($lang));
 	}
 
-	static function loadAppLanguages($iso = "")
-	{
-		$lang = (empty($iso)) ? Language::get() : $iso;
-		self::loadFile(DIR_APP_LANGUAGES, $lang . FILE_INC);
-	}
-
-	static function CLI($arguments)
+	public static function CLI($arguments)
 	{
 		$params = [];
 		$values = [];
