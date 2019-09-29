@@ -26,6 +26,7 @@ use Roducks\Framework\Post;
 use Roducks\Framework\Path;
 use Roducks\Framework\Form;
 use Roducks\Framework\Config;
+use Roducks\Framework\Error;
 use Roducks\Framework\Settings;
 use Roducks\Libs\Request\Http;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -120,11 +121,14 @@ class GenericPage extends Frame
 
 			extract($store);
 	
-			$html = Helper::extractHtml($tpl);
+			ob_start();
+			include $tpl;
+			$html = ob_get_contents();
+			ob_end_clean();
 
 			$mail = new PHPMailer(true);
-			$smtp = Config::getSmtp();
-	
+			$smtp = Config::getSmtp()['data'];
+
 			try {
 					//Server settings
 					$mail->SMTPDebug = 0;                                       // Enable verbose debug output
@@ -155,8 +159,11 @@ class GenericPage extends Frame
 					return true;
 	
 			} catch (PHPMailerException $e) {
-				Error::debug("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+				Error::debug("PHPMailer", __LINE__, __FILE__, $tpl, "Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
 			}
+		
+		} else {
+			Error::debug(TEXT_FILE_NOT_FOUND, __LINE__, __FILE__, $tpl, "Email template does not exist.");
 		}
 
 		return false;

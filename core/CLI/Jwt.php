@@ -33,13 +33,14 @@ class Jwt extends CLI
 	public function secret()
 	{
 
-		$file = 'jwt.local.inc';
+		$file = 'jwt.local';
+		$ext = FILE_YML;
 		$hash = Hash::getToken();
 		$secret = substr($hash, 0, 32);
 
-		Config::set('jwt.local', ['secret' => $secret]);
+		Config::set($file, ['secret' => $secret]);
 
-		$this->success("File: " . DIR_APP_CONFIG . "{$file} was created successfully!");
+		$this->success("File: " . DIR_APP_CONFIG . "{$file}{$ext} was created successfully!");
 
 		parent::output();
 	}
