@@ -344,6 +344,13 @@ abstract class Core
 
 	}
 
+	static function requireConfig(array $config)
+	{
+		if (!file_exists($config['full_path'])) {
+			Error::debug(TEXT_FILE_NOT_FOUND,__LINE__, __FILE__, $config['path']);
+		}
+	}
+
 	static function checkApp($config)
 	{
 		if ($config['missing_domain_name']) {

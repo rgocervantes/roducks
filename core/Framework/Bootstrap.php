@@ -139,24 +139,27 @@ App::define('TEXT_METHOD_NOT_FOUND', TEXT_METHOD . " Not Found");
 |           APP CONFIG           |
 |--------------------------------|
 */
-$appConfig = Config::get()['data'];
+$appConfig = Config::get();
+$appConfigData = $appConfig['data'];
 
 # Timezone
-date_default_timezone_set($appConfig['timezone']);
-
-if (isset($appConfig['domain.name']) && !empty($appConfig['domain.name']) && $appConfig['domain.name'] != '*') {
-  App::define('DOMAIN_NAME', $appConfig['domain.name']);
+if (isset($appConfigData['timezone'])) {
+  date_default_timezone_set($appConfigData['timezone']);
 }
 
-App::define('PAGE_TITLE', $appConfig['site.title']);
-App::define('EMAIL_FROM', $appConfig['email']['from']);
-App::define('EMAIL_TO', $appConfig['email']['to']);
-App::define('LOGO_IMAGE', $appConfig['logo.image']);
-App::define('FIND_URL_IN_DB', $appConfig['find.url.in.db']);
-App::define('ALLOW_SUBSCRIBERS_REGISTER', $appConfig['subscribers']['allow.register']);
-App::define('SUBSCRIBERS_EXPIRE', $appConfig['subscribers']['expire']);
-App::define('SUBSCRIBERS_EXPIRE_TIME', $appConfig['subscribers']['how.long']);
-App::define('SUBSCRIBERS_EXPIRE_IN', $appConfig['subscribers']['period']);
-App::define('MULTILANGUAGE', $appConfig['language']['multilanguage']);
-App::define('BROWSER_LANGUAGE', $appConfig['language']['user.browser']);
-App::define('DEFAULT_LANGUAGE', $appConfig['language']['default']);
+if (isset($appConfigData['domain.name']) && !empty($appConfigData['domain.name']) && $appConfigData['domain.name'] != '*') {
+  App::define('DOMAIN_NAME', $appConfigData['domain.name']);
+}
+
+App::define('PAGE_TITLE', $appConfigData['site.title']);
+App::define('EMAIL_FROM', $appConfigData['email']['from']);
+App::define('EMAIL_TO', $appConfigData['email']['to']);
+App::define('LOGO_IMAGE', $appConfigData['logo.image']);
+App::define('FIND_URL_IN_DB', $appConfigData['find.url.in.db']);
+App::define('ALLOW_SUBSCRIBERS_REGISTER', $appConfigData['subscribers']['allow.register']);
+App::define('SUBSCRIBERS_EXPIRE', $appConfigData['subscribers']['expire']);
+App::define('SUBSCRIBERS_EXPIRE_TIME', $appConfigData['subscribers']['how.long']);
+App::define('SUBSCRIBERS_EXPIRE_IN', $appConfigData['subscribers']['period']);
+App::define('MULTILANGUAGE', $appConfigData['language']['multilanguage']);
+App::define('BROWSER_LANGUAGE', $appConfigData['language']['user.browser']);
+App::define('DEFAULT_LANGUAGE', $appConfigData['language']['default']);

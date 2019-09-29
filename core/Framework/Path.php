@@ -338,8 +338,7 @@ abstract class Path
 
 	public static function getPageView($module, $name)
 	{
-		$page = preg_replace('/^([a-zA-Z]+)\/.+$/', '$1', $module);
-		return Path::getAny(DIR_MODULES, $page . DIRECTORY_SEPARATOR .  DIR_PAGE . DIR_VIEWS . $name, [FILE_PHTML, FILE_TPL]);
+		return Path::getAny(DIR_MODULES, $module . DIRECTORY_SEPARATOR .  DIR_PAGE . DIR_VIEWS . $name, [FILE_PHTML, FILE_TPL]);
 	}
 
 	public static function getCorePage()

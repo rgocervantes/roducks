@@ -253,7 +253,7 @@ class Dispatch
 		$getGETParams = URL::getQueryString();
 		$routerPath = Config::getRouter()['full_path'];
 		$params = URL::getParams();
-		$dispatcher = ['dispatch' => 'Page/Page::notFound'];
+		$dispatcher = ['dispatch' => 'Page::notFound'];
 
 		$found = false;
 		$rowUrl = [];
@@ -278,7 +278,7 @@ class Dispatch
 		include $routerPath;
 		$routers = Router::dispatch();
 
-		$router['/_lang/(?P<LANG>\w{2}).*'] = ['dispatch' =>  'Page/Page::_lang'];
+		$router['/_lang/(?P<LANG>\w{2}).*'] = ['dispatch' =>  'Page::_lang'];
 		$router['/_(page|json|xml|factory)/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_data_'];
 		$router['/_block/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_block_'];
 		$router['/_service/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_service_'];
@@ -428,7 +428,7 @@ class Dispatch
 		// Let's see if module is enabled
 		if (
 			(!isset($modulesMap[$module]) || $modulesMap[$module] === FALSE)
-		&& ($page != 'Output' && !Helper::isService($page) && !Helper::isApi($page) && $page != 'Page/Page')
+		&& ($page != 'Output' && !Helper::isService($page) && !Helper::isApi($page) && $page != 'Page')
 		) {
 			Error::moduleDisabled("Module is disabled or undefined", __LINE__, __FILE__, $siteModules['path'], $module);
 		} else {
@@ -954,8 +954,15 @@ class Dispatch
 
 		Core::duckling();
 
-		if ($page == 'Page/Page') {
+		if ($page == 'Page') {
 			$pagePath = Path::getCorePage();
+		}
+
+		if (Helper::isModule($pagePath)) {
+			if (!Helper::isUrlDispatch()) {
+				$page = $module;
+			}
+			\App::define('RDKS_MODULE', $page);
 		}
 
 		// Load page

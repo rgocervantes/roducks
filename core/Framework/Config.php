@@ -29,7 +29,7 @@ abstract class Config
   /**
    * VAR
    */
-  private static function _get($path, $name, $required)
+  private static function _get($path, $name)
   {
 
     $local = "{$name}.local";
@@ -86,32 +86,33 @@ abstract class Config
     File::remove(Path::get(DIR_APP_CONFIG) . $name . FILE_YML);
   }
 
-  public static function get($name = 'config', $required = true)
+  public static function get($name = 'app')
   {
-    return self::_get(Path::get(DIR_APP_CONFIG), $name, $required);
+    return self::_get(Path::get(DIR_APP_CONFIG), $name);
   }
 
-  public static function fromSite($name = 'config', $site = NULL, $required = true)
+  public static function fromSite($name = 'config', $site = NULL)
   {
     $path = Path::getAppSite($site) . DIR_CONFIG;
-    return self::_get($path, $name, $required);
+    return self::_get($path, $name);
   }
 
-  public static function fromModule($module, $name = 'config', $site = NULL, $required = true)
+  public static function fromModule($module, $name = 'config', $site = NULL)
   {
-    $path = Path::getAppSiteModule($module, $site) . DIR_CONFIG;
-    return self::_get($path, $name, $required);
+    $path = Path::getAppSiteModule($module . DIRECTORY_SEPARATOR, $site) . DIR_CONFIG;
+    return self::_get($path, $name);
   }
 
-  public static function fromGlobal($config = 'config', $required = true)
+  public static function fromGlobal($config = 'config')
   {
-    return self::fromSite($config, Path::SITE_ALL, $required);
+    return self::fromSite($config, Path::SITE_ALL);
   }
 
   private static function _search($config)
   {
 
     $tree = [
+      'module',
       'site',
       'global',
       'default'
@@ -119,8 +120,27 @@ abstract class Config
 
     foreach ($tree as $key => $value) {
       switch ($value) {
+        case 'module':
+
+          if (!defined('RDKS_MODULE')) {
+            continue;
+          }
+
+          $ret = self::fromModule(RDKS_MODULE, $config, Path::SITE_ALL);
+          if (!empty($ret['data'])) {
+            return $ret;
+          }
+
+          $ret = self::fromModule(RDKS_MODULE, $config);
+          if (empty($ret['data'])) {
+            continue;
+          }
+
+            return $ret;
+          break;
+
         case 'site':
-          $ret = self::fromSite($config, null, false);
+          $ret = self::fromSite($config);
           if (empty($ret['data'])) {
             continue;
           }
@@ -167,7 +187,7 @@ abstract class Config
 
     return self::_get($path, $name, false);
 
-  } 
+  }
 
   public static function getRouter()
   {

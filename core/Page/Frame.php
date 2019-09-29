@@ -287,7 +287,7 @@ abstract class Frame
 				$class = Helper::getClassName($this->pageObj->className);
 				$module = (!is_null($type)) ? Helper::getCamelName($type) : $class;
 				$index = (is_null($key)) ? $default : $key;
-				$data = Config::fromModule("{$module}/", $index);
+				$data = Config::fromModule($module, $index);
 				break;
 
 			case 'file':
@@ -298,7 +298,7 @@ abstract class Frame
 				$class = Helper::getClassName($this->pageObj->className);
 				$module = (!is_null($type)) ? Helper::getCamelName($type) : $class;
 				$index = (is_null($key)) ? $default : $key;
-				$data = Config::fromModule("{$module}/", $index, Helper::getCamelName($tag));
+				$data = Config::fromModule($module, $index, Helper::getCamelName($tag));
 				break;
 
 		}
