@@ -20,7 +20,7 @@
 
 namespace Roducks\Framework;
 
-class Router
+abstract class Router
 {
 
 	static 
@@ -28,17 +28,22 @@ class Router
 		$_version = "",
 		$_dispatch = [];
 
-	static function init($routes)
+	public static function init(callable $routes)
 	{
 		$routes();
 	}
 
-	static function dispatch()
+	public static function dispatch()
 	{
 		return self::$_dispatch;
 	}
 
-	static function _add($endpoint, $data)
+	public static function clean()
+	{
+		self::$_dispatch = [];
+	}
+
+	private static function _add($endpoint, $data)
 	{
 
 		if (is_array($endpoint)) {
@@ -96,37 +101,37 @@ class Router
 		self::_add($endpoint, $data);		
 	}
 
-	static function auth($endpoint, $dispatch, $params)
+	public static function auth($endpoint, $dispatch, $params)
 	{
 		self::_method('POST', false, $endpoint, $dispatch, $params);
 	}
 
-	static function post($endpoint, $dispatch, $params = "")
+	public static function post($endpoint, $dispatch, $params = "")
 	{
 		self::_method('POST', self::$_jwt, $endpoint, $dispatch, $params);
 	}
 
-	static function get($endpoint, $dispatch, $params = "")
+	public static function get($endpoint, $dispatch, $params = "")
 	{
 		self::_method('GET', self::$_jwt, $endpoint, $dispatch, $params);
 	}
 
-	static function get_post($endpoint, $dispatch, $params = "")
+	public static function get_post($endpoint, $dispatch, $params = "")
 	{
 		self::_method('GET_POST', self::$_jwt, $endpoint, $dispatch, $params);
 	}
 
-	static function put($endpoint, $dispatch, $params)
+	public static function put($endpoint, $dispatch, $params)
 	{
 		self::_method('PUT', self::$_jwt, $endpoint, $dispatch, $params);
 	}
 
-	static function delete($endpoint, $dispatch, $params = "")
+	public static function delete($endpoint, $dispatch, $params = "")
 	{
 		self::_method('DELETE', self::$_jwt, $endpoint, $dispatch, $params);
 	}
 
-	static function api($endpoint, $dispatch, $params)
+	public static function api($endpoint, $dispatch, $params)
 	{
 		$path1 = [
 			'dispatch' => $dispatch,
@@ -171,7 +176,7 @@ class Router
 		self::_add(['uri' => $endpoint, 'id' => "/(?P<id>\d+)"], $path2);
 	}
 
-	static function prefix($uri, $callback, $version = "", $jwt = false)
+	public static function prefix($uri, $callback, $version = "", $jwt = false)
 	{
 		if (!empty($version)) {
 			self::$_version = "/{$version}";

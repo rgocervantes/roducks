@@ -234,6 +234,16 @@ abstract class Path
 		return str_replace(RDKS_ROOT, '', $path);
 	}
 
+	public static function getCurrentSite()
+	{
+		return RDKS_SITE;
+	}
+
+	public static function isSiteAll()
+	{
+		return self::getCurrentSite() == self::SITE_ALL;
+	}
+
   /**
    * DEFAULT
    */
@@ -244,7 +254,7 @@ abstract class Path
 			return false;
 		}
 
-    return (is_null($site)) ? RDKS_SITE : $site;
+    return (is_null($site)) ? self::getCurrentSite() : $site;
   }
 
 	public static function getLanguage($lang)
@@ -270,6 +280,11 @@ abstract class Path
     return self::get($path);
 	}
 
+  public static function getAppAllSite()
+  {
+    return self::getAppSite(self::SITE_ALL);
+	}
+
   public static function getAppSiteFolder($dir, $folder, $site = NULL)
   {
     return self::getAppSite($site) . $dir . $folder;
@@ -288,9 +303,9 @@ abstract class Path
     $paths[] = self::getAppSiteFolder($dir, $file);
     $paths[] = self::getAppSiteFolder($dir, $file, self::SITE_ALL);
 
-		$paths[] = self::getCore($dir, RDKS_SITE . DIRECTORY_SEPARATOR . $file);
+		$paths[] = self::getCore($dir, self::getCurrentSite() . DIRECTORY_SEPARATOR . $file);
 		$paths[] = self::getCore($dir, self::SITE_ALL . DIRECTORY_SEPARATOR . $file);
-		
+
 		if (!in_array($dir, [DIR_MODULES, DIR_MENUS])) {
 			$paths[] = self::getCore($dir, $file);
 		}

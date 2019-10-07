@@ -251,7 +251,8 @@ class Dispatch
 		/* ------------------------------------*/
 		$requestMethod = Http::getRequestMethod();
 		$getGETParams = URL::getQueryString();
-		$routerPath = Config::getRouter()['full_path'];
+		$routerConfig = Config::getRouter();
+		$routerPath = $routerConfig['path'];
 		$params = URL::getParams();
 		$dispatcher = ['dispatch' => 'Page::notFound'];
 
@@ -273,9 +274,11 @@ class Dispatch
 		/* ------------------------------------*/
 		/* 		ROUTER URLS
 		/* ------------------------------------*/
+		if (Path::isSiteAll()) {
+			Error::debug("Can't dispatch URL", __LINE__, __FILE__, Path::clean(Path::getAppAllSite()), "Can't use 'All' site folder to dispatch URLs.<br>It is used to <b>extend</b> classes to the other available sites and avoid duplicated code.");
+		}
 
-
-		include $routerPath;
+		Core::requireConfig($routerConfig);
 		$routers = Router::dispatch();
 
 		$router['/_lang/(?P<LANG>\w{2}).*'] = ['dispatch' =>  'Page::_lang'];
