@@ -53,14 +53,13 @@ class Page extends GenericPage
 	{
 		if (!$bool) {
 			$this->notFound();
+			exit;
 		}
 	}
 
 	protected function isData(array $data)
 	{
-		if (empty($data)) {
-			$this->notFound();
-		}
+		$this->hasData(!empty($data));
 	}
 
 	protected function forbiddenRequest()

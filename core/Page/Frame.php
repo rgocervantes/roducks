@@ -53,6 +53,13 @@ abstract class Frame
 //	PRIVATE METHODS
 //---------------------------------
 */
+	private function _jsonError()
+	{
+		if (!Environment::inDEV() && in_array($this->_pageType, ['SERVICE', 'JSON'])) {
+			Error::json();
+		}
+	}
+
 	private function _autoLoad($params)
 	{
 
@@ -63,7 +70,8 @@ abstract class Frame
 		if ($class == Helper::PAGE_NOT_FOUND
 			|| $this->getParentClassName() == '\Roducks\Page\HelperPage'
 			|| $this->_pageType == 'DATA'
-			|| $this->_pageType == 'OBSERVER'
+			|| $this->_pageType == 'OBSERVER' 
+			|| $this->_pageType == 'SERVICE' 
 			|| ($this->_pageType == 'BLOCK' && $url[0] == '_page')
 		) {
 			return;
@@ -582,7 +590,7 @@ abstract class Frame
 		$url = (!Environment::inCLI() && $settings['url_dispatcher']) ? URL::getParams() : [];
 		$tag = (isset($url[0])) ? $url[0] : "";
 
-		if ($this->_pageType == 'PAGE' || Helper::isDispatch($tag))
+		if (in_array($this->_pageType, ['PAGE', 'SERVICE', 'JSON']) || Helper::isDispatch($tag))
 			$this->_autoLoad(URL::getQueryString());
 
 	}

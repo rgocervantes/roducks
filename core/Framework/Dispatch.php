@@ -189,21 +189,24 @@ class Dispatch
 	static function init()
 	{
 
-		$URI = URL::getRelativeURL();
-
 		/* ------------------------------------*/
 		/* 		PREVENT POSSIBLE CSRF ATTACK
 		/* ------------------------------------*/
 		URL::preventCSRFAttack();
 		/* ------------------------------------*/
 
+		/* ------------------------------------*/
+		/* 		ROUTER URLS
+		/* ------------------------------------*/
+		if (Path::isSiteAll()) {
+			Error::debug("Can't dispatch URL", __LINE__, __FILE__, Path::clean(Path::getAppAllSite()), "Can't use 'All' site folder to dispatch URLs.<br>It is used to <b>extend</b> classes to the other available sites and avoid duplicated code.");
+		}
 
 		/* ------------------------------------*/
 		/* 		START SESSION
 		/* ------------------------------------*/
 		Session::start();
 		/* ------------------------------------*/
-
 
 		/* ------------------------------------*/
 		/* 		LOG OUT
@@ -246,56 +249,37 @@ class Dispatch
 			}
 		}
 
-		/* ------------------------------------*/
-		/* 		INITIAL VARS
-		/* ------------------------------------*/
-		$requestMethod = Http::getRequestMethod();
-		$getGETParams = URL::getQueryString();
 		$routerConfig = Config::getRouter();
 		$routerPath = $routerConfig['path'];
-		$params = URL::getParams();
-		$dispatcher = ['dispatch' => 'Page::notFound'];
-
+		$URI = URL::getRelativeURL();
+		$path = Path::getCorePage();
+		$baseURL = URL::getBaseURL();
+		$params = URl::getSplittedURL();
+		$module = 'Page';
+		$method = 'notFound';
+		$prefix = '';
+		$type = 'module';
+		$queryString = URL::getQueryString();
+		$urlParams = [];
+		$dispatcher = [];
+		$urlData = [];
 		$found = false;
-		$rowUrl = [];
-		$mainPath = "";
-
-		$router = [];
-		$routers = [];
-		$subRouter = [];
-		$urlPattern = [];
-		$allowedMethods = [];
-		$missingGETParams = [];
-		$missingPOSTParams = [];
-		$unknownGETParams = [];
-		/* ------------------------------------*/
-
-
-		/* ------------------------------------*/
-		/* 		ROUTER URLS
-		/* ------------------------------------*/
-		if (Path::isSiteAll()) {
-			Error::debug("Can't dispatch URL", __LINE__, __FILE__, Path::clean(Path::getAppAllSite()), "Can't use 'All' site folder to dispatch URLs.<br>It is used to <b>extend</b> classes to the other available sites and avoid duplicated code.");
-		}
+		$urlDispatcher = false;
 
 		Core::requireConfig($routerConfig);
-		$routers = Router::dispatch();
+		$router = Router::dispatch();
 
-		$router['/_lang/(?P<LANG>\w{2}).*'] = ['dispatch' =>  'Page::_lang'];
-		$router['/_(page|json|xml|factory)/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_data_'];
-		$router['/_block/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_block_'];
-		$router['/_service/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::_service_'];
-
-		/* ------------------------------------*/
-		/* 		DISPATCHER
-		/* ------------------------------------*/
+		$_router['/_lang/(?P<LANG>\w{2}).*'] = ['dispatch' =>  'Page::_lang'];
+		$_router['/_(page|json|xml|factory)/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::module'];
+		$_router['/_block/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::block'];
+		$_router['/_service/' . Helper::REGEXP_URL_DISPATCH] = ['dispatch' => 'Output::service'];
 
 		// We are in root
 		if ($URI == DIRECTORY_SEPARATOR) {
 
 			// Default view controller
-			if (isset($routers[$URI])) {
-				$dispatcher = $routers[$URI];
+			if (isset($router[$URI])) {
+				$dispatcher = $router[$URI];
 				$found = true;
 			} else {
 				Error::defaultPageIsMissing("Undefined default page",__LINE__, __FILE__, $routerPath);
@@ -303,80 +287,69 @@ class Dispatch
 
 		} else {
 
-			if (isset($params[0]) && !Helper::isDispatch($params[0])) {
+			if (Helper::isUrlDispatch()) {
+				$router = $_router;
+				$urlDispatcher = true;
+			} else {
 
-				$subRouter = $params;
-				$mainPath = DIRECTORY_SEPARATOR.$params[0];
-				$altMainPath = $mainPath . DIRECTORY_SEPARATOR;
+				$prefix = DIRECTORY_SEPARATOR . $params[0];
+				
+				if (isset($router[$prefix]['path']) ) {
+					$routerx = $router[$prefix];
+					$count = count($params);
 
-				if ($altMainPath == $URI) {
-					$mainPath = $altMainPath;
-					$params = [];
-				}
-
-				if (isset($routers[$mainPath]) || isset($routers[$altMainPath])) {
-
-					if (!isset($routers[$mainPath])) {
-						$mainPath = $altMainPath;
-					}
-
-					if (count($params) > 1) {
-						unset($subRouter[0]);
-						$subRouter = Helper::resetArray($subRouter);
-						$subURI = DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $subRouter);
-
-						if (isset($routers[$mainPath]['path'])) {
-							$router = $routers[$mainPath]['path'];
-						}
-
+					if ($count > 1) {
+						$router = $routerx['path'];
+					} else if ($count == 1 && Helper::regexp('/\/$/', $URI)) {
+						$router = [];
+						$router[$prefix.DIRECTORY_SEPARATOR] = $routerx;
+						$prefix = '';
 					} else {
-						$router[$mainPath] = $routers[$mainPath];
-						$mainPath = "";
+						unset($router[$prefix]);
+						$prefix = '';
 					}
-				} else {
-					$router = $routers;
-					$mainPath = "";
-				}
 
+				} else {
+					$prefix = '';
+				}
 			}
 
-			// Let's find a URL
-			foreach($router as $key => $value) {
+			// Let's take a look 
+			foreach ($router as $url => $dispatcher) {
 
-		        $key = preg_replace_callback('#{([a-zA-Z_]+):(int|chars|str|slug)}#', function($match) {
+				$url = preg_replace_callback('#{([a-zA-Z_]+):(int|chars|str|slug)}#', function ($match) {
 
-		            switch ($match[2]) {
-		                case 'int':
-		                    $type = '\d';
-		                    break;
+					switch ($match[2]) {
+							case 'int':
+									$type = '\d';
+									break;
 
-										case 'chars':
-		                    $type = '\w';
-		                    break;
+							case 'chars':
+									$type = '\w';
+									break;
 
-		                case 'str':
-		                    $type = '.';
-		                    break;
+							case 'str':
+									$type = '.';
+									break;
 
-		                case 'slug':
-		                    $type = '[a-z0-9\-]';
-		                    break;
+							case 'slug':
+									$type = '[a-z0-9\-]';
+									break;
 
-		            }
+					}
 
-		            $name = $match[1];
+					$name = $match[1];
 
-		            return "(?P<{$name}>{$type}+)";
+					return "(?P<{$name}>{$type}+)";
 
-		        }, $key);
+				}, $url);
 
-				// Let's look if a URL matches
-				if (preg_match('#^'. $mainPath . $key . URL::REGEXP_GET .'$#', $URI, $urlPattern)) {
-					$dispatcher = $value;
+				if (preg_match('#^' . $prefix . $url . URL::REGEXP_GET . '$#', $URI, $urlParams)) {
 					$found = true;
 					break;
 				}
 			}
+
 		}
 
 		// Let's search URL in database
@@ -397,558 +370,210 @@ class Dispatch
 			// It was found it
 			if ($queryUrl->rows()) {
 
-				$rowUrl = $queryUrl->fetch();
-				$dispatcher = ['dispatch' => $rowUrl['dispatch']];
+				$urlData = $queryUrl->fetch();
+				$dispatcher = ['dispatch' => $urlData['dispatch']];
 
-				if ($rowUrl['url'] == $baseURL && !empty($rowUrl['url_redirect'])) {
+				if ($urlData['url'] == $baseURL && !empty($urlData['url_redirect'])) {
 
 					if (!Environment::inDEV()) {
 						Http::sendHeaderMovedPermanently(false);
 					}
 
-					Http::redirect($rowUrl['url_redirect']);
+					Http::redirect($urlData['url_redirect']);
 				}
 			}
 
 		}
 
-		// Make sure we have a valid dispatcher
-		if (isset($dispatcher['dispatch'])) {
-			if (Helper::regexp('#::#', $dispatcher['dispatch'])) {
-				list($page,$method) = explode("::", $dispatcher['dispatch']);
+		if ($found) {
+
+			// Make sure we have a valid dispatcher
+			if (isset($dispatcher['dispatch'])) {
+				if (Helper::regexp('#::#', $dispatcher['dispatch'])) {
+					list($class, $method) = explode("::", $dispatcher['dispatch']);
+				} else {
+					Error::debug("Bad dispatcher syntax",__LINE__, __FILE__, $routerPath);
+				}
 			} else {
-				Error::debug("Bad dispatcher syntax",__LINE__, __FILE__, $routerPath);
+				Error::missionDispatchIndex($URI ,'Missing "dispatch" index',__LINE__, __FILE__, $routerPath);
 			}
-		} else {
-			Error::missionDispatchIndex($URI ,'Missing "dispatch" index',__LINE__, __FILE__, $routerPath);
+
+			if ($urlDispatcher) {
+
+				$module = Helper::getCamelName($params[1]);
+
+				if ($method != '_lang') {
+					$urlParams = Helper::getUrlParams($params);
+					$queryString = URL::getQueryString();
+				}
+
+				$type = $method;
+
+				switch ($type) {
+					case 'module':
+
+						switch ($params[0]) {
+
+							case '_page':
+								$path = Path::getModulePage($module);
+								$method = 'index';
+							break;
+
+							case '_json':
+								$path = Path::getModuleJson($module);
+								$method = 'encoded';
+							break;
+
+							case '_xml':
+								$path = Path::getModuleXml($module);
+								$method = 'preview';
+							break;
+						}
+
+						break;
+
+					case 'block':
+						$path = Path::getBlock($module);
+						$method = 'output';
+						break;
+
+					case 'service':
+						$path = Path::getService($module);
+						$method = 'rest';
+					break;
+					
+				}
+
+				if (isset($params[2]) && $method != '_lang') {
+					$method = Helper::getCamelName($params[2], false);
+				}
+
+			} else {
+
+				/**
+				 * API
+				 */
+				if (Helper::isApi($class)) {
+
+					$api = Helper::getClassName($class);
+					$path = Path::getAPI($api);
+					$module = 'API';
+
+					$requestMethod = Http::getRequestMethod();
+					$allowedMethods = self::_httpRequestMethods($dispatcher);
+
+					if (count($allowedMethods) > 0) {
+						CORS::methods($allowedMethods);
+
+						$params = [];
+						$u = 0;
+
+						if (empty($method)) {
+							switch ($requestMethod) {
+								case 'POST':
+									$method = 'store';
+									break;
+								case 'PUT':
+									$method = 'update';
+									break;
+								case 'DELETE':
+									$method = 'remove';
+									break;
+							}
+
+							if (in_array($requestMethod, ['PUT','DELETE'])) {
+								$request = Http::getBody();
+							}
+
+							if ($requestMethod == 'GET') {
+								$request = $queryString;
+							}
+
+							if ($requestMethod == 'POST') {
+								$request = Post::stData();
+							}
+
+							$params['request'] = self::_getRequestBody($request);
+
+						}
+
+						foreach ($urlParams as $key => $value) {
+							if (!Helper::isInteger($key)) {
+								$params[$key] = (Helper::isInteger($value)) ? intval($value) : $value;
+								$u++;
+							}
+						}
+
+						if ($requestMethod == 'GET') {
+
+							if ($u > 0) {
+								$method = 'row';
+								unset($params['request']);
+							} else {
+								$method = 'catalog';
+							}
+
+						}
+
+						if (isset($dispatcher['jwt']) && $dispatcher['jwt'] === TRUE) {
+							$params['jwt'] = true;
+						}
+
+						$urlParams = $params;
+
+					}
+				
+				} else if(Helper::isService($class)) {
+					$module = Helper::getClassName($class);
+					$path = Path::getService($module);
+					$type = 'service';
+				} else {
+					$path = Path::getModule($class);
+					$module = Helper::getModule($class);
+				}
+
+				/* ----------------------------------------------*/
+				// Cross Domain
+				/* ----------------------------------------------*/
+				if (isset($dispatcher['headers'])) {
+					CORS::headers($dispatcher['headers']);
+				}
+
+				if (isset($dispatcher['cors'])) {
+
+					CORS::allowDomains($dispatcher['cors']);
+
+					if (isset($dispatcher['max-age'])) {
+						CORS::maxAge($dispatcher['max-age']);
+					} else {
+						CORS::maxAge();
+					}
+
+				}
+
+			}
+
+			if (Helper::isModule($path)) {
+				\App::define('RDKS_MODULE', $module);
+			}
+
 		}
 
 		// Modules Map
 		$siteModules = Config::getSiteModules();
 		$modulesMap = $siteModules['data'];
-		$module = Helper::getModule($page);
 
-		// Let's see if module is enabled
-		if (
-			(!isset($modulesMap[$module]) || $modulesMap[$module] === FALSE)
-		&& ($page != 'Output' && !Helper::isService($page) && !Helper::isApi($page) && $page != 'Page')
-		) {
+		if ((!isset($modulesMap[$module]) || $modulesMap[$module] === FALSE) && !in_array($module, ['Page', 'API']) && $type == 'module') {
 			Error::moduleDisabled("Module is disabled or undefined", __LINE__, __FILE__, $siteModules['path'], $module);
-		} else {
-
-			if (Helper::isApi($page)) {
-				$allowedMethods = self::_httpRequestMethods($dispatcher);
-			}
-
-			// Let's take a look if there's POST Params
-			if (isset($dispatcher['POST']) && is_array($dispatcher['POST']) && $requestMethod == 'POST') {
-
-				if (isset($dispatcher['POST'][':empty'])) {
-					if (!Post::stSentData()) {
-						if (Helper::regexp('#::#', $dispatcher['POST'][':empty'])) {
-							list($page,$method) = explode("::", $dispatcher['POST'][':empty']);
-						} else {
-							Error::debug("Bad dispatcher syntax",__LINE__, __FILE__, $routerPath);
-						}
-					}
-					unset($dispatcher['POST'][':empty']);
-				} else {
-					Post::stRequired();
-				}
-
-				foreach ($dispatcher['POST'] as $key => $value) {
-
-					$val = (is_array($value)) ? array_keys($value)[0] : $value;
-
-					if (!Post::stSent($key) && !Helper::isOptionalParam($val)) {
-						$missingPOSTParams[] = "Post param <b style=\"color: #c00;\">{$key}</b> is <b>required.</b>";
-					} else {
-
-						if (Post::stSent($key)) {
-
-							// Let's validate expecting match value
-							if (is_array($value)) {
-
-								$k = array_keys($value);
-								$v = array_values($value);
-
-								$match = $v[0];
-								$value = $k[0];
-
-								$err = "Param <b>{$key}</b> does not match with this regular expression: {$match}";
-								$regexp_rule = $match;
-
-								if (Helper::isConditional($match)) {
-									$err = "Param <b>{$key}</b> <b style=\"color: #c00;\">ONLY</b> allows the next values: " . Helper::getOptions($match);
-									$regexp_rule = '/^'.$match.'$/';
-								}
-
-							}
-
-							switch ($value) {
-
-								case self::PARAM_STRING:
-								case self::OPTIONAL_PARAM_STRING:
-									$regexp = Helper::VALID_STRING;
-								break;
-
-								case self::PARAM_WORD:
-								case self::OPTIONAL_PARAM_WORD:
-									$regexp = Helper::VALID_WORD;
-								break;
-
-								case self::PARAM_WORDS:
-								case self::OPTIONAL_PARAM_WORDS:
-									$regexp = Helper::VALID_WORDS;
-								break;
-
-								case self::PARAM_INTEGER:
-								case self::OPTIONAL_PARAM_INTEGER:
-									$regexp = Helper::VALID_INTEGER;
-								break;
-
-								case self::PARAM_BOOL:
-								case self::OPTIONAL_PARAM_BOOL:
-									$regexp = Helper::VALID_BOOL;
-								break;
-
-								case self::PARAM_CLABE:
-								case self::OPTIONAL_PARAM_CLABE:
-									$regexp = Helper::VALID_CLABE;
-								break;
-
-								case self::PARAM_PASSWORD:
-								case self::OPTIONAL_PARAM_PASSWORD:
-									$regexp = Helper::VALID_PASSWORD;
-								break;
-
-								case self::PARAM_EMAIL:
-								case self::OPTIONAL_PARAM_EMAIL:
-									$regexp = Helper::VALID_EMAIL;
-								break;
-
-								case self::PARAM_USERNAME:
-								case self::OPTIONAL_PARAM_USERNAME:
-									$regexp = Helper::VALID_USERNAME;
-								break;
-
-							}
-
-							if (!Helper::regexp($regexp, Post::stValue($key))) {
-								$missingPOSTParams[] = "Param <b style=\"color: #c00;\">{$key}</b> must be <b>". str_replace('optional_', '', $value) ."</b>.";
-							}
-						}
-					}
-				}
-
-				// Send Error
-				if (count($missingPOSTParams) > 0) {
-					if ($params[0] == '_json' || preg_match('#JSON#', $page)) {
-
-						$jsonData = (Environment::inDEV()) ? $missingPOSTParams : [];
-
-						JSON::stOutput([
-							'code' => 501,
-							'success' => false,
-							'message' => TEXT_INVALID_REQUEST,
-							'format' => true,
-							'data' => $jsonData
-						]);
-					} else {
-						Error::missingParams('Missing POST params',__LINE__, __FILE__, $routerPath, $missingPOSTParams);
-					}
-				}
-			}
-
-			// Let's take a look if there's GET Params
-			if (isset($dispatcher['GET']) && is_array($dispatcher['GET']) && $requestMethod == 'GET') {
-
-				foreach($dispatcher['GET'] as $key => $value) {
-
-					// Let's validate expecting match value
-					if (is_array($value)) {
-
-						$k = array_keys($value);
-						$v = array_values($value);
-
-						$match = $v[0];
-						$value = $k[0];
-
-						$err = "Param <b>{$key}</b> does not match with this regular expression: {$match}";
-						$regexp = $match;
-
-						if (isset($getGETParams[$key])) {
-
-							if (!Helper::regexp($regexp, $getGETParams[$key])) {
-								Error::debug("Unexpected value",__LINE__, __FILE__, $routerPath,$err);
-							}
-						}
-					}
-
-					if (isset($getGETParams[$key])) {
-
-						if (Helper::isConditional($value)) {
-							$err = "Param <b>{$key}</b> <b style=\"color: #c00;\">ONLY</b> allows the next values: <b>" . Helper::getOptions($value) . "</b>";
-							$regexp = '/^'.$value.'$/';
-
-							if (!Helper::regexp($regexp, $getGETParams[$key])) {
-								Error::debug("Unexpected value",__LINE__, __FILE__, $routerPath,$err);
-							}
-
-						}
-
-					}
-
-					/* ----------------------------------------------*/
-					// OPTIONAL GET PARAMS
-					/* ----------------------------------------------*/
-					if (Helper::isOptionalParam($value)) {
-
-						if (isset($getGETParams[$key])) {
-
-							if (!empty($getGETParams[$key])) {
-
-								switch ($value) {
-
-									case self::OPTIONAL_PARAM_STRING:
-										$regexp = Helper::VALID_STRING;
-									break;
-
-									case self::OPTIONAL_PARAM_WORD:
-										$regexp = Helper::VALID_WORD;
-									break;
-
-									case self::OPTIONAL_PARAM_WORDS:
-										$regexp = Helper::VALID_WORDS;
-									break;
-
-									case self::OPTIONAL_PARAM_INTEGER:
-										$regexp = Helper::VALID_INTEGER;
-									break;
-
-									case self::OPTIONAL_PARAM_BOOL:
-										$regexp = Helper::VALID_BOOL;
-									break;
-
-									case self::OPTIONAL_PARAM_CLABE:
-										$regexp = Helper::VALID_CLABE;
-									break;
-
-									case self::OPTIONAL_PARAM_PASSWORD:
-										$regexp = Helper::VALID_PASSWORD;
-									break;
-
-									case self::OPTIONAL_PARAM_EMAIL:
-										$regexp = Helper::VALID_EMAIL;
-									break;
-
-									case self::OPTIONAL_PARAM_USERNAME:
-										$regexp = Helper::VALID_USERNAME;
-									break;
-
-								}
-
-								if (!Helper::regexp($regexp, $getGETParams[$key])) {
-									$missingGETParams[] = "Param <b>{$key}</b> must be <b>" . str_replace('optional_', '', $value) . "</b>.";
-								}
-
-
-							} else {
-								if (!Helper::isInteger($getGETParams[$key]))
-									$missingGETParams[] = "Param <b>{$key}</b> is empty.";
-							}
-
-						}
-
-					} else {
-
-					/* ----------------------------------------------*/
-					// OBLIGATORY GET PARAMS
-					/* ----------------------------------------------*/
-
-						if (!isset($getGETParams[$key])) {
-							$missingGETParams[] = "GET Param <b>{$key}</b> is required.";
-						} else {
-							if (!empty($getGETParams[$key])) {
-
-								switch ($value) {
-
-									case self::PARAM_STRING:
-										$regexp = Helper::VALID_STRING;
-									break;
-
-									case self::PARAM_WORD:
-										$regexp = Helper::VALID_WORD;
-									break;
-
-									case self::PARAM_WORDS:
-										$regexp = Helper::VALID_WORDS;
-									break;
-
-									case self::PARAM_INTEGER:
-										$regexp = Helper::VALID_INTEGER;
-									break;
-
-									case self::PARAM_BOOL:
-										$regexp = Helper::VALID_BOOL;
-									break;
-
-									case self::PARAM_CLABE:
-										$regexp = Helper::VALID_CLABE;
-									break;
-
-									case self::PARAM_PASSWORD:
-										$regexp = Helper::VALID_PASSWORD;
-									break;
-
-									case self::PARAM_EMAIL:
-										$regexp = Helper::VALID_EMAIL;
-									break;
-
-									case self::PARAM_USERNAME:
-										$regexp = Helper::VALID_USERNAME;
-									break;
-
-								}
-
-								if (!Helper::regexp($regexp, $getGETParams[$key])) {
-									$missingGETParams[] = "Param <b>{$key}</b> must be <b>$value</b>.";
-								}
-
-							} else {
-								if (!Helper::isInteger($getGETParams[$key]))
-								$missingGETParams[] = "Param <b>{$key}</b> is empty.";
-							}
-
-						}
-
-
-					} // end else
-
-				} // end foreach
-
-
-				// Unknown GET Params are not allowed
-				foreach ($getGETParams as $key => $value) {
-					if (!isset($dispatcher['GET'][$key])) {
-						$unknownGETParams[] = "Unknown param <b>{$key}</b>.";
-					}
-				}
-
-				// Send Error
-				if (count($unknownGETParams) > 0) {
-					Error::missingParams('Unknown GET param',__LINE__, __FILE__, $routerPath, $unknownGETParams);
-				}
-
-				// Send Error
-				if (count($missingGETParams) > 0) {
-					if (Helper::isApi($page) && !Environment::inDEV()) {
-						JSON::response(TEXT_INVALID_REQUEST, 501);
-					} else {
-						Error::missingParams('Invalid GET param',__LINE__, __FILE__, $routerPath, $missingGETParams);
-					}
-				}
-
-			}
-
-			/* ----------------------------------------------*/
-			// Cross Domain
-			/* ----------------------------------------------*/
-			if (count($allowedMethods) > 0) {
-				CORS::methods($allowedMethods);
-
-				$params = [];
-				$urlParams = 0;
-
-				if (isset($dispatcher['jwt']) && $dispatcher['jwt'] === TRUE) {
-					$params['jwt'] = true;
-				}
-
-				if (Helper::isApi($page) && empty($method)) {
-					switch ($requestMethod) {
-						case 'POST':
-							$method = 'store';
-							break;
-						case 'PUT':
-							$method = 'update';
-							break;
-						case 'DELETE':
-							$method = 'remove';
-							break;
-					}
-
-					if (in_array($requestMethod, ['PUT','DELETE'])) {
-						$request = Http::getBody();
-					}
-
-					if ($requestMethod == 'GET') {
-						$request = $getGETParams;
-					}
-
-					if ($requestMethod == 'POST') {
-						$request = Post::stData();
-					}
-
-					$params['request'] = self::_getRequestBody($request);
-
-				}
-
-				foreach ($urlPattern as $key => $value) {
-					if (!Helper::isInteger($key)) {
-						$params[$key] = (Helper::isInteger($value)) ? intval($value) : $value;
-						$urlParams++;
-					}
-				}
-
-				if ($requestMethod == 'GET') {
-
-					if ($urlParams > 0) {
-						$method = 'row';
-						unset($params['request']);
-					} else {
-						$method = 'catalog';
-					}
-
-				}
-
-			}
-
-			if (isset($dispatcher['headers'])) {
-				CORS::headers($dispatcher['headers']);
-			}
-
-			if (isset($dispatcher['cors'])) {
-
-				CORS::allowDomains($dispatcher['cors']);
-
-				if (isset($dispatcher['max-age'])) {
-					CORS::maxAge($dispatcher['max-age']);
-				} else {
-					CORS::maxAge();
-				}
-
-			}
-
-			/* ----------------------------------------------*/
-			// Pass URL Params in Class method
-			/* ----------------------------------------------*/
-			if (isset($params[0]) && !Helper::isDispatch($params[0])) {
-				$params = [];
-				foreach ($urlPattern as $k => $v) {
-					if (!Helper::isInteger($k)) {
-						$params[$k] = $v;
-					}
-				}
-			}
-
-			/* ----------------------------------------------*/
-			// Dispatch page
-			/* ----------------------------------------------*/
-			if (Helper::isService($page) || Helper::isApi($page)) {
-				list($type, $page) = $params;
-				$method = (!isset($params[2])) ? 'rest' : $params[2];
-				$page = Helper::getCamelName($page);
-				$pagePath = Path::getService($page);
-				$params = Helper::getUrlParams($params);
-			} else {
-
-				$pagePath = Path::getModule($page);
-
-				if ($method == 'notFound') {
-					$pagePath = Path::getCorePage();
-					$params = [];
-				}
-			}
-
-			if ($method == "_data_" || $method == "_block_") {
-
-				$invalidParam = self::_getLastParams($params);
-
-				if ($invalidParam) {
-
-					$method = "notFound";
-					$pagePath = Path::getCorePage();
-					$params = [];
-
-				} else {
-
-					list($type, $page) = $params;
-					$page = Helper::getCamelName($page);
-
-					switch ($method) {
-						case '_data_':
-
-							switch ($type) {
-
-								case '_page':
-									$pagePath = Path::getModulePage($page);
-									$action = 'encoded';
-								break;
-
-								case '_json':
-									$pagePath = Path::getModuleJson($page);
-									$action = 'encoded';
-								break;
-
-								case '_xml':
-									$pagePath = Path::getModuleXml($page);
-									$action = 'preview';
-								break;
-							}
-
-							break;
-
-						case '_block_':
-							$pagePath = Path::getBlock($page);
-							$action = 'output';
-							$urlPattern = URL::getQueryString();
-							break;
-
-					}
-
-					$method = (!isset($params[2])) ? $action : $params[2];
-					$params = Helper::getUrlParams($params);
-
-					if ((!isset($modulesMap[$page]) || $modulesMap[$page] === FALSE) && ($method == '_data_')) {
-						Error::moduleDisabled("Module is disabled or undefined", __LINE__, __FILE__, $siteModules['path'], $page);
-					}
-				}
-
-			} else if ($method == "_service_") {
-
-				$invalidParam = self::_getLastParams($params);
-
-				if ($invalidParam) {
-
-					$method = "notFound";
-					$pagePath = Path::getCorePage();
-					$params = [];
-
-				} else {
-
-					list($type, $page) = $params;
-					$method = (!isset($params[2])) ? 'rest' : $params[2];
-					$method = Helper::getCamelName($method, false);
-					$page = Helper::getCamelName($page);
-					$pagePath = Path::getService($page);
-					$params = Helper::getUrlParams($params);
-
-				}
-
-			}
-
 		}
-
-		// Avoid dispatching a page if factory exists
-		Error::cantDispatchFactory($pagePath, $page);
 
 		/*
 		|--------------------------------|
-		|		  SET LANGUAGE  		 |
+		|		  SET LANGUAGE
 		|--------------------------------|
 		*/
-		if (isset($rowUrl['id_lang']) && $method != "_lang") {
-			$iso = Language::getIso($rowUrl['id_lang']);
+		if (isset($urlData['id_lang']) && $method != '_lang') {
+			$iso = Language::getIso($urlData['id_lang']);
 
 			if ($iso != Language::get()) {
 				Http::redirect(URL::lang($iso));
@@ -957,19 +582,8 @@ class Dispatch
 
 		Core::duckling();
 
-		if ($page == 'Page') {
-			$pagePath = Path::getCorePage();
-		}
-
-		if (Helper::isModule($pagePath)) {
-			if (!Helper::isUrlDispatch()) {
-				$page = $module;
-			}
-			\App::define('RDKS_MODULE', $page);
-		}
-
-		// Load page
-		Render::view($pagePath, $page, $method, $urlPattern, $params, false, $rowUrl);
+		// Output data
+		Render::view($path, $module, $method, $queryString, $urlParams, false, $urlData);
 
 	} // end init method
 

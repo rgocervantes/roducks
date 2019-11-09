@@ -28,6 +28,8 @@ use Roducks\Libs\Request\CORS;
 class JSON extends GenericPage
 {
 
+	protected $_pageType = 'JSON';
+
 	protected $post;
 	protected $_authentication = false;
 	protected $_format = true;

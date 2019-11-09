@@ -48,9 +48,10 @@ abstract class Render
 
   public static function service($name, array $settings)
   {
-    $path = Path::getFile($name);
+    $path = Path::clean($name);
+    $cpath = Path::getFile($path);
     $class = Helper::getClassName($name);
-    return self::view($path, $class, NULL, array(), $settings, TRUE);
+    return self::view($cpath, $class, NULL, array(), $settings, TRUE);
   }
 
 	static function observer($e, $settings)
@@ -158,7 +159,7 @@ abstract class Render
         $obj->setVars($queryString);
       }
 
-			if (Helper::isApi($cpath) && isset($params['jwt'])) {
+			if ($pageObj['class'] == 'API' && isset($params['jwt'])) {
 				unset($params['jwt']);
 				$obj->verifyToken();
 			}

@@ -422,6 +422,11 @@ abstract class Path
     return self::getAny(DIR_EMAILS, $name, [FILE_TPL, FILE_PHTML]);
 	}
 
+  public static function getAPI($name)
+  {
+    return self::getAny(DIR_API, $name, [FILE_EXT]);
+	}
+
 	public static function getService($name)
   {
     return self::getAny(DIR_SERVICES, $name, [FILE_EXT]);
@@ -448,7 +453,7 @@ abstract class Path
 
 		if (preg_match('/^App\//', $path)) {
 			$path = str_replace(self::APP_NS, DIR_APP, $path);
-		} else if(preg_match('/^Roducks\//', $class)) {
+		} else if(preg_match('/^Roducks\//', $path)) {
 			$path = str_replace(self::RDKS_NS, DIR_CORE, $path);
 		}
 

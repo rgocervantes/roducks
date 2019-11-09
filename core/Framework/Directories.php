@@ -21,6 +21,7 @@
 App::define('APP_NS', "App");
 App::define('CORE_NS', "Roducks");
 
+App::define('DIR_API', 'API/');
 App::define('DIR_CONFIG', "Config/");
 App::define('DIR_EMAILS', "Emails/");
 App::define('DIR_MODULES', "Modules/");
