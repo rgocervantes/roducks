@@ -35,6 +35,7 @@ class Dispatch
 
 	static $httpMethods = ['GET','POST','OPTIONS','PUT','PATCH','DELETE'];
 
+	const PARAM_REGEXP = 'regexp';
 	const PARAM_STRING = 'string';
 	const PARAM_WORD = 'word';
 	const PARAM_WORDS = 'words';
@@ -45,6 +46,7 @@ class Dispatch
 	const PARAM_EMAIL = 'email';
 	const PARAM_USERNAME = 'username';
 
+	const OPTIONAL_PARAM_REGEXP = 'optional_regexp';
 	const OPTIONAL_PARAM_STRING = 'optional_string';
 	const OPTIONAL_PARAM_WORD = 'optional_word';
 	const OPTIONAL_PARAM_WORDS = 'optional_words';
@@ -65,6 +67,7 @@ class Dispatch
 	static function page($class, $method = "index")
 	{
 		$class = Helper::getCamelName($class);
+		$method = Helper::getCamelName($method, false);
 		return "{$class}/Page/{$class}::{$method}";
 	}
 
@@ -87,6 +90,7 @@ class Dispatch
 	static function json($class, $method = "output")
 	{
 		$class = Helper::getCamelName($class);
+		$method = Helper::getCamelName($method, false);
 		return "{$class}/JSON/{$class}::{$method}";
 	}
 
@@ -98,6 +102,7 @@ class Dispatch
 	static function xml($class, $method = "preview")
 	{
 		$class = Helper::getCamelName($class);
+		$method = Helper::getCamelName($method, false);
 		return "{$class}/XML/{$class}::{$method}";
 	}
 
@@ -109,6 +114,7 @@ class Dispatch
 	static function service($class, $method = "output")
 	{
 		$class = Helper::getCamelName($class);
+		$method = Helper::getCamelName($method, false);
 		return "Services/{$class}::{$method}";
 	}
 
@@ -120,6 +126,7 @@ class Dispatch
 	static function api($class, $method = "")
 	{
 		$class = Helper::getCamelName($class);
+		$method = Helper::getCamelName($method, false);
 		return "API/{$class}::{$method}";
 	}
 
@@ -183,6 +190,143 @@ class Dispatch
 		}
 
 		return $obj;
+
+	}
+
+	private static function _validateQueryString($type, array $settings)
+	{
+		$invalidParams = [];
+		$ret = [];
+		$dispatcher = $settings['dispatcher'];
+		$requestMethod = $settings['requestMethod'];
+		$queryString = $settings['queryString'];
+		$routerPath = $settings['routerPath'];
+
+		if (isset($dispatcher[$type]) && !empty($dispatcher[$type]) && $requestMethod == $type) {
+			
+			if ($requestMethod == 'POST') {
+				if (isset($dispatcher['POST'][':empty'])) {
+					if (!Post::stSentData()) {
+						if (Helper::regexp('#::#', $dispatcher['POST'][':empty'])) {
+							list($class, $method) = explode("::", $dispatcher['POST'][':empty']);
+							$ret = [
+								'class' => $class,
+								'method' => $method,
+							];
+						} else {
+							Error::debug("Bad dispatcher syntax",__LINE__, __FILE__, $routerPath);
+						}
+					}
+					unset($dispatcher['POST'][':empty']);
+				} else {
+					Post::stRequired();
+				}
+			}
+		
+			foreach ($dispatcher[$type] as $p => $v) {
+
+				switch ($requestMethod) {
+					case 'GET':
+						$pSent = isset($queryString[$p]);
+						$pValue = ($pSent) ? $queryString[$p] : ''; 
+						break;
+
+					case 'POST':
+						$pSent = Post::stSent($p);
+						$pValue = Post::stValue($p);
+						break;
+				}
+
+				if (is_array($v)) {
+					$x = array_keys($v);
+					$y = array_values($v);
+					$v = $x[0];
+
+					$rule = $y[0];
+					$regexp = $rule;
+
+					if (Helper::isConditional($regexp)) {
+						$regexp = '/^'.$rule.'$/';
+					}
+
+					if ($pSent) {
+						if (!Helper::regexp($regexp, $pValue)) {
+							$invalidParams[] = "Param <b style=\"color:#ffeb3b;\">{$p}</b> must match with this regular expression: <b style=\"color:#ffeb3b;\">{$rule}</b>";
+						}
+					}
+
+				} else {
+					switch ($v) {
+						case self::PARAM_STRING:
+						case self::OPTIONAL_PARAM_STRING:
+							$regexp = Helper::VALID_STRING;
+						break;
+
+						case self::PARAM_WORD:
+						case self::OPTIONAL_PARAM_WORD:
+							$regexp = Helper::VALID_WORD;
+						break;
+
+						case self::PARAM_WORDS:
+						case self::OPTIONAL_PARAM_WORDS:
+							$regexp = Helper::VALID_WORDS;
+						break;
+
+						case self::PARAM_INTEGER:
+						case self::OPTIONAL_PARAM_INTEGER:
+							$regexp = Helper::VALID_INTEGER;
+						break;
+
+						case self::PARAM_BOOL:
+						case self::OPTIONAL_PARAM_BOOL:
+							$regexp = Helper::VALID_BOOL;
+						break;
+
+						case self::PARAM_CLABE:
+						case self::OPTIONAL_PARAM_CLABE:
+							$regexp = Helper::VALID_CLABE;
+						break;
+
+						case self::PARAM_PASSWORD:
+						case self::OPTIONAL_PARAM_PASSWORD:
+							$regexp = Helper::VALID_PASSWORD;
+						break;
+
+						case self::PARAM_EMAIL:
+						case self::OPTIONAL_PARAM_EMAIL:
+							$regexp = Helper::VALID_EMAIL;
+						break;
+
+						case self::PARAM_USERNAME:
+						case self::OPTIONAL_PARAM_USERNAME:
+							$regexp = Helper::VALID_USERNAME;
+						break;
+					}
+
+					if ($pSent) {
+						if (!Helper::regexp($regexp, $pValue)) {
+							$invalidParams[] = "Param <b style=\"color:#ffeb3b;\">{$p}</b> must be <b>$v</b>.";
+						}
+					}
+
+				}
+
+				if (!$pSent && !Helper::isOptionalParam($v)) {
+					$invalidParams[] = "Param <b style=\"color:#ffeb3b;\">{$p}</b> is required.";
+				}
+
+			}
+
+			if (!empty($invalidParams)) {
+				if ($type == 'POST') {
+					Error::json();
+				}
+				Error::missingParams("Invalid {$type} params",__LINE__, __FILE__, $routerPath, $invalidParams);
+			}
+
+		}
+
+		return $ret;
 
 	}
 
@@ -259,6 +403,7 @@ class Dispatch
 		$method = 'notFound';
 		$prefix = '';
 		$type = 'module';
+		$requestMethod = Http::getRequestMethod();
 		$queryString = URL::getQueryString();
 		$urlParams = [];
 		$dispatcher = [];
@@ -450,6 +595,21 @@ class Dispatch
 
 			} else {
 
+				$validateQueryString = [
+					'dispatcher' => $dispatcher,
+					'requestMethod' => $requestMethod,
+					'queryString' => $queryString,
+					'routerPath' => $routerPath,
+				];
+
+				$getParams = self::_validateQueryString('GET', $validateQueryString);
+				$postParams = self::_validateQueryString('POST', $validateQueryString);
+
+				if (!empty($postParams)) {
+					$class = $postParams['class'];
+					$method = $postParams['method'];
+				}
+
 				/**
 				 * API
 				 */
@@ -458,8 +618,6 @@ class Dispatch
 					$api = Helper::getClassName($class);
 					$path = Path::getAPI($api);
 					$module = 'API';
-
-					$requestMethod = Http::getRequestMethod();
 					$allowedMethods = self::_httpRequestMethods($dispatcher);
 
 					if (count($allowedMethods) > 0) {

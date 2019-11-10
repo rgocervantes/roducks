@@ -32,7 +32,7 @@ class URL
 	const CSRF_ATTACK_RULE_4 = '\/-'; // slash + dash
 	const CSRF_ATTACK_END_URL = '[\?&=\.\-_,;:\$\(\)%*@]$';
 
-	const REGEXP_GET = '(\?[a-zA-Z0-9_\-=%&+]+)?';
+	const REGEXP_GET = '(\?[a-zA-Z0-9_\-\.=%&+]+)?';
 
 	static function preventCSRFAttack()
 	{
