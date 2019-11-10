@@ -305,7 +305,8 @@ class Dispatch
 
 					if ($pSent) {
 						if (!Helper::regexp($regexp, $pValue)) {
-							$invalidParams[] = "Param <b style=\"color:#ffeb3b;\">{$p}</b> must be <b>$v</b>.";
+							$d = ucfirst(str_replace('optional_', '', $v));
+							$invalidParams[] = "Param <b style=\"color:#ffeb3b;\">{$p}</b> must be <b>{$d}</b>.";
 						}
 					}
 
