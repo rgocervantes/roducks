@@ -344,7 +344,9 @@ class Dispatch
 		/* 		ROUTER URLS
 		/* ------------------------------------*/
 		if (Path::isSiteAll()) {
-			Error::debug("Can't dispatch URL", __LINE__, __FILE__, Path::clean(Path::getAppAllSite()), "Can't use 'All' site folder to dispatch URLs.<br>It is used to <b>extend</b> classes to the other available sites and avoid duplicated code.");
+			$message = "Can't use <b style=\"color:#ffeb3b;\">All</b> site folder to dispatch URLs.";
+			$message .= "<br>It is used to <b style=\"color:#ffeb3b;\">extend</b> classes to the other available <b style=\"color:#ffeb3b;\">sites</b> to avoid duplicate code.";
+			Error::debug("Can't dispatch URL", __LINE__, __FILE__, Path::clean(Path::getAppAllSite()), $message);
 		}
 
 		/* ------------------------------------*/
