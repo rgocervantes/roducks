@@ -56,19 +56,6 @@ abstract class Join extends ORM
 		return $this->join($table, $key);
 	}
 
-	public function last($limit = 1, array $orderBy = [])
-	{
-		if (!empty($orderBy)) {
-			if (count($orderBy) > 1) {
-				$this->orderBy($orderBy, "desc");
-			} else {
-				$this->orderBy([$orderBy[0] => "desc"]);
-			}
-		}
-		
-		return parent::first($limit);
-	}
-
   public function __construct(\mysqli $mysqli)
 	{
 		parent::__construct($mysqli, $this->_joins);

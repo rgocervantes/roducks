@@ -23,6 +23,8 @@ namespace Roducks\Libs\ORM;
 abstract class ORM extends Query
 {
 
+	protected $_orderByOn = true;
+
 /*
 //----------------------
 //		STATIC
@@ -80,9 +82,26 @@ abstract class ORM extends Query
 		return $this->limit($limit)->execute();
 	}
 
-	public function last($limit = 1, array $orderBy = [])
+	public function last($limit = 1)
 	{
-		return $this->orderBy([$this->id => 'desc'])->first($limit);
+		return $this->first($limit);
+	}
+
+	public function orderBy($field, $sort = "")
+	{
+		if ($this->_orderByOn) {
+			$this->_orderByOn = false;
+			if (empty($sort)) {
+				if (is_array($field) && count($field) > 1) {
+					$sort = 'desc';
+				} else {
+					$field = [$field => 'desc'];
+				}
+			}
+
+			parent::orderBy($field, $sort);
+		}
+		return $this;
 	}
 
 	public function filteredBy($field)

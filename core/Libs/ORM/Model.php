@@ -481,4 +481,13 @@ abstract class Model extends ORM
 		return $this->count($this->id);
 	}
 
+	public function last($limit = 1)
+	{
+		if ($this->_orderByOn) {
+			parent::orderBy($this->id);
+		}
+
+		return $this->first($limit);
+	}
+
 }
