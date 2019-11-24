@@ -319,9 +319,9 @@ abstract class Core
 			if (method_exists($class, $method)) {
 				$values = Helper::getCliParams($values);
 				if ($method == 'run') {
-					array_push($values, $cls);
+					$values = array_merge([$cls], $values);
 				}
-				call_user_func_array(array($class,$method), $values);
+				call_user_func_array(array($class, $method), $values);
 			} else {
 				CLI::println("Unknown command: {$cmd}", CLI::FAILURE);
 			}
