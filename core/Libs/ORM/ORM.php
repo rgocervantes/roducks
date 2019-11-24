@@ -24,6 +24,7 @@ abstract class ORM extends Query
 {
 
 	protected $_orderByOn = true;
+	protected $_orderByFilter = [];
 
 /*
 //----------------------
@@ -79,11 +80,17 @@ abstract class ORM extends Query
 
 	public function first($limit = 1)
 	{
+		if (!empty($this->_orderByFilter)) {
+			parent::orderBy($this->_orderByFilter);
+		}
+
 		return $this->limit($limit)->execute();
 	}
 
 	public function last($limit = 1)
 	{
+		$this->_orderByFilter = [];
+
 		return $this->first($limit);
 	}
 
@@ -91,10 +98,20 @@ abstract class ORM extends Query
 	{
 		if ($this->_orderByOn) {
 			$this->_orderByOn = false;
+
 			if (empty($sort)) {
-				if (is_array($field) && count($field) > 1) {
-					$sort = 'desc';
+				if (is_array($field)) {
+					if (count($field) > 1) {
+						$sort = 'desc';
+					}
+
+					$this->_orderByFilter = [
+						'fields' => $field,
+						'sort' => 'asc'
+					];
+
 				} else {
+					$this->_orderByFilter = [$field => 'asc'];
 					$field = [$field => 'desc'];
 				}
 			}

@@ -483,8 +483,10 @@ abstract class Model extends ORM
 
 	public function last($limit = 1)
 	{
+		$this->_orderByFilter = [];
+
 		if ($this->_orderByOn) {
-			parent::orderBy($this->id);
+			$this->_orderByFilter = [$this->id => 'desc'];
 		}
 
 		return $this->first($limit);

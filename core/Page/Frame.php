@@ -225,6 +225,11 @@ abstract class Frame
 		return $model::open($this->db());
 	}
 
+	protected function join($className)
+	{
+		return $this->model($className);
+	}
+
 	/*
 	//---------------------------------
 	//	Get configs
