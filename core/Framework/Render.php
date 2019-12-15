@@ -113,7 +113,7 @@ abstract class Render
         'params' 		=> $params,
         'filePath'		=> $cpath,
         'fileName' 		=> $cpath,
-        'urlParam'		=> $queryString,
+        'urlParam'		=> $params,
         'url_dispatcher' => true
       ];
 
