@@ -122,13 +122,6 @@ class Http
 		return $defaultSubdomain;
 	}
 
-	static function getDomain()
-	{
-		$url = self::getSplittedURL();
-
-		return "." . $url['DOMAIN'];
-	}
-
 	static function getURI()
 	{
 		$uri = filter_var($_SERVER['REQUEST_URI'], FILTER_SANITIZE_URL);
@@ -171,7 +164,7 @@ class Http
 	{
 		$name = str_replace('-', '_', $name);
 
-		return @$_SERVER['HTTP_X_'.strtoupper($name)];
+		return (isset($_SERVER['HTTP_X_'.strtoupper($name)])) ? $_SERVER['HTTP_X_'.strtoupper($name)] : null;
 	}
 
 	static function getAuthorizationHeader()

@@ -18,9 +18,7 @@
  *
  */
 
-use Roducks\Framework\Core;
 use Roducks\Framework\Error;
-use Roducks\Framework\Helper;
 use Roducks\Framework\Config;
 use Roducks\Framework\Path;
 

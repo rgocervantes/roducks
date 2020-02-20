@@ -22,7 +22,6 @@ namespace Roducks\Framework;
 
 use Roducks\Page\XML;
 use Roducks\Libs\Output\XML as XMLDoc;
-use Roducks\Libs\Files\Directory;
 
 abstract class Data extends XML
 {

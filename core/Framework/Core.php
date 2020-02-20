@@ -21,9 +21,7 @@
 namespace Roducks\Framework;
 
 use Roducks\Libs\ORM\DB;
-use Roducks\Page\View;
 use Roducks\Libs\Files\File;
-use Symfony\Component\Yaml\Yaml;
 
 abstract class Core
 {
