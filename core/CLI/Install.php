@@ -29,7 +29,7 @@ use Roducks\Services\Install as InstallService;
 
 class Install extends CLI
 {
-	public function run()
+	public function run($cmd)
 	{
     InstallService::init()->goLive();
 		$this->success(PAGE_TITLE . " is now installed!");

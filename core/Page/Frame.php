@@ -595,8 +595,10 @@ abstract class Frame
 		$url = (!Environment::inCLI() && $settings['url_dispatcher']) ? URL::getParams() : [];
 		$tag = (isset($url[0])) ? $url[0] : "";
 
-		if (in_array($this->_pageType, ['PAGE', 'SERVICE', 'JSON']) || Helper::isDispatch($tag))
+		if (!Environment::inCLI()) {
+			if (in_array($this->_pageType, ['PAGE', 'SERVICE', 'JSON']) || Helper::isDispatch($tag))
 			$this->_autoLoad(URL::getQueryString());
+		}
 
 	}
 

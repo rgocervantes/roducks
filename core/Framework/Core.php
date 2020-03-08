@@ -366,9 +366,9 @@ abstract class Core
 		$key = 'Install';
 
 		if ( Helper::onInstall() ) {
-			File::remove(Path::getAppConfig('config.local' . FILE_INC));
-			File::remove(Path::getAppConfig('database.local' . FILE_INC));
-			Render::view(Path::getCoreModulePageAll($key), Path::setModulePage($key), 'run');
+			File::remove(Path::getAppConfig('app.local' . FILE_YML));
+			File::remove(Path::getAppConfig('database.local' . FILE_YML));
+			Render::view(Path::getCoreModulePageAll($key), $key, 'run');
 			exit;
 		}
 	}
