@@ -123,6 +123,10 @@ class Date
            return implode($sep,[$d[3],$d[2],$d[1]]);
         }
 
+        if (preg_match(self::REGEXP_DATE_YYYY_MM_DD, $date, $d)) {
+            return implode($sep,[$d[1],$d[2],$d[3]]);
+        }
+
         return $date;
     }
 
@@ -150,6 +154,22 @@ class Date
     static function getFormatDMY($sep = "-")
     {
         return implode($sep, ["dd","mm","yyyy"]);
+    }
+
+    static function addZero($n)
+    {
+        return (strlen($n) < 2) ? "0{$n}" : $n;
+    }
+
+    static function getDateFromArray(array $values, $sep = "-")
+    {
+        $date = [];
+
+        foreach ($values as $value) {
+            $date[] = self::addZero($value);
+        }
+
+        return implode($sep, $date);
     }
 
     static function getCurrentDate($sep = "-", $ymd = true)
@@ -691,6 +711,43 @@ class Date
     }
 
     /*
+    *   Go to next monday
+    *
+    *   Saturday or Sunday returns next Monday
+    *   if not
+    *   Returns Given Date
+    */
+    static function goToMonday($date = '')
+    {
+
+        $N = empty($date) ? date('N') : date('N', strtotime($date));
+
+        switch ($N) {
+            case 6: // Saturday
+                $d = 2; // Go to Monday
+            break;
+            case 7: // Sunday
+                $d = 1; // Go to Monday
+            break;
+            default:
+                $d = 0;
+            break;
+        }
+
+        if (!empty($date)) {
+            if (in_array($N, [6, 7])) {
+                return self::addDays($date, $d);
+            }
+            else {
+                return $date;
+            }
+        }
+
+        return self::convert('+',$d,'day');
+
+    }
+
+    /*
     *   Is Monday?
     */
     static function isMonday()
@@ -845,6 +902,21 @@ class Date
     static function getLastDayOfCurrentMonth()
     {
         return self::getLastDayOfMonth(self::getCurrentYear(),self::getCurrentMonth());
+    }
+
+    static function getDiff($dt1, $dt2)
+    {
+        $d1 = strtotime($dt2);
+        $d2 = strtotime($dt1);
+        $min_date = min($d1, $d2);
+        $max_date = max($d1, $d2);
+        $i = 0;
+
+        while (($min_date = strtotime("+1 month", $min_date)) <= $max_date) {
+            $i++;
+        }
+       
+        return $i;
     }
 
 }

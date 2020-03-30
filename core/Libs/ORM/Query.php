@@ -906,12 +906,11 @@ class Query
 	 *	@param $fields string
 	 *	@return integer
 	 */
-	public function row($args, array $condition = [], $fields = "*")
+	public function row($args)
 	{
 
-		if (is_array($condition) && count($condition) > 0) {
-			$args = array_merge($args, $condition);
-		}
+		$args = array_merge($args, $this->_where([]));
+		$fields = (count($this->_fields) > 0) ? $this->_fields : '*';
 
 		$this->filter($args, $fields);
 		if ($this->rows()) {

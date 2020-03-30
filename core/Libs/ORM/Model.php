@@ -275,6 +275,16 @@ abstract class Model extends ORM
 		return false;
 	}
 
+  protected function getAll(array $conditions = [])
+  {
+    $filter = [
+      'deleted_at:null' => TRUE,
+    ];
+
+    return $this->filter($filter + $conditions);
+  }
+
+
 /*
 //----------------------
 //		PUBLIC
@@ -327,15 +337,11 @@ abstract class Model extends ORM
 		parent::__construct($mysqli, $table);
 	}
 
-	public function row($id, array $condition = [], $fields = '*')
+	public function row($id)
 	{
 		$args = [$this->id => $id];
 
-		if ($this->_unexcepted($condition)) {
-			return false;
-		}
-
-		return parent::row($args, $condition, $fields);
+		return parent::row($args);
 	}
 
 	public function getRow($id)
@@ -344,9 +350,7 @@ abstract class Model extends ORM
 		$this->_id = $id;
 		$args = [$this->id => $id];
 
-		$where = $this->_where([]);
-		$fields = (count($this->_fields) > 0) ? $this->_fields : '*';
-		$row = parent::row($args, $where, $fields);
+		$row = parent::row($args);
 
 		$this->_autoload($row);
 

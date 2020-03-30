@@ -175,7 +175,7 @@ class Error
 				} else {
 					$params = URL::getQueryString();
 
-					if (isset($params['rdks']) && $params['rdks'] == 1) {
+					if ((isset($params['rdks']) && $params['rdks'] == 1) || !Helper::isUrlDispatch()) {
 						echo self::block($title, $line, $path, $file, $error);
 						exit;
 					} else {

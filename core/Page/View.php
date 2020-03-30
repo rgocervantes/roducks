@@ -20,7 +20,6 @@
 
 namespace Roducks\Page;
 
-use Roducks\Framework\Core;
 use Roducks\Framework\Asset;
 use Roducks\Framework\Helper;
 use Roducks\Framework\Error;

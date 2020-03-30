@@ -73,4 +73,5 @@ return [
 	'Lib\\PDF' 				=> 'Roducks\\Libs\\Files\\PDF',
 	'Lib\\CSV' 				=> 'Roducks\\Libs\\Output\\CSV',
 	'Lib\\XML' 				=> 'Roducks\\Libs\\Output\\XML',
+	'Lib\\Cart' 			=> 'Roducks\\Libs\\Data\\Cart',
 ];

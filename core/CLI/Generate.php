@@ -62,7 +62,6 @@ use Lib\Directory as DirectoryHandler;
 use Lib\File;
 use Path;
 use Helper;
-use Request;
 
 class Generate extends CLI
 {
