@@ -234,7 +234,7 @@ abstract class Model extends ORM
 				switch ($fieldType) {
 					case self::TYPE_INTEGER:
 					case self::TYPE_DECIMAL:
-						$regexp = '/^\d+(\.\d+)?$/';
+						$regexp = '/^(\-)?\d+(\.\d+)?$/';
 						break;
 					case self::TYPE_BOOL:
 						$regexp = '/^(1|0)$/';
